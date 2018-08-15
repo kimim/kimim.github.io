@@ -1,0 +1,419 @@
+---
+layout: post
+title: Drawing UML with plantuml
+categories: [productivity]
+tags: [org-mode, uml, plantuml]
+---
+
+<p>
+In this article, I will demo how to use plantuml and org-mode to draw
+UML diagram and embedded the graphic inside the exported html file.
+</p>
+
+<p>
+PlantUML is used to draw UML diagram, using a simple and human
+readable text description.<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Installation and emacs setup</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In order to make use of plantuml you should install <code>graphviz</code> and
+download <code>plantuml.jar</code>. <code>plantuml.jar</code> uses <code>graphviz</code> as the
+backend to convert images.
+</p>
+
+<p>
+You can download <code>graphviz</code> here:
+<a href="http://www.graphviz.org/Download.php">http://www.graphviz.org/Download.php</a>. Or you can install graphviz
+from cygwin setup, actually, I'm using cygwin port of graphviz. My
+philosophy is that if some software is available as cygwin port, I
+will not install it as Windows software.
+</p>
+
+<p>
+In this link you can find all the guide on how to add cygwin mirror
+for <code>graphviz</code>: <a href="http://sourceware.org/cygwinports/">http://sourceware.org/cygwinports/</a>.
+</p>
+
+<p>
+Then you can find <code>plantuml.jar</code> from here:
+<a href="http://www.plantuml.com/download.html">http://www.plantuml.com/download.html</a>. The F.A.Q. says that:
+PlantUML is developped with continuous integration in mind. That
+means that there are new releases quite often. So you'd better to
+check update with following command:
+</p>
+
+<pre class="example">
+java -jar plantuml.jar -checkversion
+</pre>
+
+<p>
+Now lets assume that your <code>graphviz</code> dot.exe is located at
+<code>C:\cygwin\bin\dot.exe</code> and <code>plantuml.jar</code> can be found at
+<code>C:\plantuml\plantuml.jar</code>.
+</p>
+
+<p>
+You should add following elisp to your <code>.emacs</code> to make use of
+plantuml from emacs org-mode:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(<span style="color: #8b008b; font-weight: bold;">require</span> '<span style="color: #5f9ea0;">ob-plantuml</span>)
+(setenv <span style="color: #3a5fcd;">"GRAPHVIZ_DOT"</span> <span style="color: #3a5fcd;">"C:\\cygwin\\bin\\dot.exe"</span>)
+(setq org-plantuml-jar-path <span style="color: #3a5fcd;">"C:\\plantuml\\plantuml.jar"</span>)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((plantuml . t)
+   ))
+</pre>
+</div>
+
+<p>
+As normal, org-babel will evaluate plantuml source and generate an
+image file, and then attach the image file inside html file. But as
+I know svg type of image is just standard xml text, so it is
+possible to merge the svg xml with html file. You can add following
+redefined function to your .emacs to make this happen:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(<span style="color: #8b008b; font-weight: bold;">defun</span> <span style="color: #0000cd;">org-babel-result-to-file</span> (result <span style="color: #551a8b;">&amp;optional</span> description)
+  <span style="color: #3a5fcd;">"If result file is svg type, convert RESULT into html file and</span>
+<span style="color: #3a5fcd;">plugin the html text in the exported file."</span>
+  (<span style="color: #8b008b; font-weight: bold;">when</span> (stringp result)
+    (<span style="color: #8b008b; font-weight: bold;">if</span> (string= <span style="color: #3a5fcd;">"svg"</span> (file-name-extension result))
+        (<span style="color: #8b008b; font-weight: bold;">progn</span>
+          (<span style="color: #8b008b; font-weight: bold;">with-temp-buffer</span>
+            (<span style="color: #8b008b; font-weight: bold;">if</span> (file-exists-p (concat result <span style="color: #3a5fcd;">".html"</span>))
+                (delete-file (concat result <span style="color: #3a5fcd;">".html"</span>)))
+            (rename-file result (concat result <span style="color: #3a5fcd;">".html"</span>))
+            (insert-file-contents (concat result <span style="color: #3a5fcd;">".html"</span>))
+            (message (concat result <span style="color: #3a5fcd;">".html"</span>))
+            (format <span style="color: #3a5fcd;">"#+BEGIN_HTML</span>
+<span style="color: #3a5fcd;">&lt;div style=\"text-align: center;\"&gt;</span>
+<span style="color: #3a5fcd;">%s</span>
+<span style="color: #3a5fcd;">&lt;/div&gt;</span>
+<span style="color: #3a5fcd;">#+END_HTML"</span>
+                    (buffer-string)
+                    )))
+      (<span style="color: #8b008b; font-weight: bold;">progn</span>
+        (format <span style="color: #3a5fcd;">"[[file:%s]%s]"</span>
+                (<span style="color: #8b008b; font-weight: bold;">if</span> (and default-directory
+                         buffer-file-name
+                         (not (string= (expand-file-name default-directory)
+                                       (expand-file-name
+                                        (file-name-directory buffer-file-name)))))
+                    (expand-file-name result default-directory)
+                  result)
+                (<span style="color: #8b008b; font-weight: bold;">if</span> description (concat <span style="color: #3a5fcd;">"["</span> description <span style="color: #3a5fcd;">"]"</span>) <span style="color: #3a5fcd;">""</span>))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> First try with plantuml</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Now let try to draw some uml diagrams. In order to generate svg
+images, you should add following property to the plantuml source:
+</p>
+
+<pre class="example">
+#+BEGIN_SRC plantuml :file filename.svg
+</pre>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Sequence Diagram</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+"UML sequence diagrams model the flow of logic within your system in
+a visual manner, enabling you both to document and validate your
+logic, and are commonly used for both analysis and design
+purposes. Sequence diagrams are the most popular UML artifact for
+dynamic modeling, which focuses on identifying the behavior within
+your system.<sup><a id="fnr.2" name="fnr.2" class="footref" href="#fn.2">2</a></sup>"
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-plantuml">@startuml
+hide footbox
+actor Kimi
+actor Ivy
+Kimi -&gt; Ivy: Can I buy a pot of rosemary?
+loop 10 times
+    Ivy -&gt; Notebook: Check how many pots of rosemary we have
+    activate Notebook
+    Notebook --&gt; Ivy: Count of rosemary
+    deactivate Notebook
+end
+Ivy --&gt; Kimi: No, we have many pots.
+Kimi -&gt; Ivy: Can I buy a novel book?
+Ivy --&gt; Bookshelf: Check how many new books
+activate Bookshelf
+Bookshelf --&gt; Ivy: Count of new books
+deactivate Bookshelf
+Ivy --&gt; Kimi: No, you have lots of new books not finished.
+@enduml
+</pre>
+</div>
+
+<div style="text-align: center;">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="394pt" style="width:713px;height:394px;" version="1.1" viewBox="0 0 713 394" width="713pt"><defs><filter height="300%" id="f1" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><rect fill="#FFFFFF" filter="url(#f1)" height="31.7544" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="574" y="177.6519"/><rect fill="#FFFFFF" filter="url(#f1)" height="31.7544" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="663" y="311.6694"/><rect fill="#FFFFFF" filter="url(#f1)" height="83.2861" style="stroke: #000000; stroke-width: 2.0;" width="354" x="274" y="134.8745"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="21" x2="21" y1="86.1201" y2="393.9326"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="299" x2="299" y1="86.1201" y2="393.9326"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="579" x2="579" y1="86.1201" y2="393.9326"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="668" x2="668" y1="86.1201" y2="393.9326"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="26" x="5" y="83.0439">Kimi</text><ellipse cx="21" cy="10" fill="#FEFECE" filter="url(#f1)" rx="8" ry="8" style="stroke: #A80036; stroke-width: 2.0;"/><path d="M21,18 L21,45 M8,26 L34,26 M21,45 L8,60 M21,45 L34,60 " fill="#FEFECE" filter="url(#f1)" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="17" x="287.5" y="83.0439">Ivy</text><ellipse cx="299" cy="10" fill="#FEFECE" filter="url(#f1)" rx="8" ry="8" style="stroke: #A80036; stroke-width: 2.0;"/><path d="M299,18 L299,45 M286,26 L312,26 M299,45 L286,60 M299,45 L312,60 " fill="#FEFECE" filter="url(#f1)" style="stroke: #A80036; stroke-width: 2.0;"/><rect fill="#FEFECE" filter="url(#f1)" height="33.1201" style="stroke: #A80036; stroke-width: 1.5;" width="74" x="540" y="48"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="60" x="547" y="71.0439">Notebook</text><rect fill="#FEFECE" filter="url(#f1)" height="33.1201" style="stroke: #A80036; stroke-width: 1.5;" width="76" x="628" y="48"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="62" x="635" y="71.0439">Bookshelf</text><rect fill="#FFFFFF" filter="url(#f1)" height="31.7544" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="574" y="177.6519"/><rect fill="#FFFFFF" filter="url(#f1)" height="31.7544" style="stroke: #A80036; stroke-width: 1.0;" width="10" x="663" y="311.6694"/><polygon fill="#A80036" points="287,115.1201,297,119.1201,287,123.1201,291,119.1201" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="21" x2="293" y1="119.1201" y2="119.1201"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="167" x="28" y="115.0181">Can I buy a pot of rosemary?</text><rect fill="none" height="83.2861" style="stroke: #000000; stroke-width: 2.0;" width="354" x="274" y="134.8745"/><polygon fill="#EEEEEE" points="274,134.8745,347,134.8745,347,143.8745,337,153.8745,274,153.8745,274,134.8745" style="stroke: #000000; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="28" x="289" y="150.7725">loop</text><text fill="#000000" font-family="sans-serif" font-size="11" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="55" x="362" y="149.4805">[10 times]</text><polygon fill="#A80036" points="562,173.6519,572,177.6519,562,181.6519,566,177.6519" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="299" x2="568" y1="177.6519" y2="177.6519"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="251" x="306" y="173.5498">Check how many pots of rosemary we have</text><polygon fill="#A80036" points="310,205.4063,300,209.4063,310,213.4063,306,209.4063" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="304" x2="578" y1="209.4063" y2="209.4063"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="106" x="316" y="205.3042">Count of rosemary</text><polygon fill="#A80036" points="32,244.1606,22,248.1606,32,252.1606,28,248.1606" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="26" x2="298" y1="248.1606" y2="248.1606"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="139" x="38" y="244.0586">No, we have many pots.</text><polygon fill="#A80036" points="287,275.915,297,279.915,287,283.915,291,279.915" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0;" x1="21" x2="293" y1="279.915" y2="279.915"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="138" x="28" y="275.813">Can I buy a novel book?</text><polygon fill="#A80036" points="651,307.6694,661,311.6694,651,315.6694,655,311.6694" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="299" x2="657" y1="311.6694" y2="311.6694"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="166" x="306" y="307.5674">Check how many new books</text><polygon fill="#A80036" points="310,339.4238,300,343.4238,310,347.4238,306,343.4238" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="304" x2="667" y1="343.4238" y2="343.4238"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="114" x="316" y="339.3218">Count of new books</text><polygon fill="#A80036" points="32,371.1782,22,375.1782,32,379.1782,28,375.1782" style="stroke: #A80036; stroke-width: 1.0;"/><line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 2.0,2.0;" x1="26" x2="298" y1="375.1782" y2="375.1782"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="254" x="38" y="371.0762">No, you have lots of new books not finished.</text></g></svg>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Use Case Diagram</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+"UML 2 use case diagrams overview the usage requirements for a
+system.<sup><a id="fnr.3" name="fnr.3" class="footref" href="#fn.3">3</a></sup>"
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-plantuml">@startuml
+left to right direction
+actor Kimi &lt;&lt; Robot &gt;&gt;
+actor Ivy &lt;&lt; Human &gt;&gt;
+(Use the computer) as (Computer) &lt;&lt; Main &gt;&gt;
+(Use the iPad) as (iPad) &lt;&lt; Secondary &gt;&gt;
+Kimi --&gt; (Computer):emacs
+Ivy --&gt; (Computer):taobao, movie
+Kimi --&gt; (iPad):news, learning languages
+Ivy --&gt; (iPad):taobao, movie
+@enduml
+</pre>
+</div>
+
+<div style="text-align: center;">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="260pt" style="width:460px;height:260px;" version="1.1" viewBox="0 0 460 260" width="460pt"><defs><filter height="300%" id="f1" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><ellipse cx="49" cy="36.6201" fill="#FEFECE" filter="url(#f1)" rx="8" ry="8" style="stroke: #A80036; stroke-width: 2.0;"/><path d="M49,44.6201 L49,71.6201 M36,52.6201 L62,52.6201 M49,71.6201 L36,86.6201 M49,71.6201 L62,86.6201 " fill="#FEFECE" filter="url(#f1)" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="26" x="36" y="109.6641">Kimi</text><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="78" x="10" y="23.5439">&lt;&lt; Robot &gt;&gt;</text><ellipse cx="49" cy="186.6201" fill="#FEFECE" filter="url(#f1)" rx="8" ry="8" style="stroke: #A80036; stroke-width: 2.0;"/><path d="M49,194.6201 L49,221.6201 M36,202.6201 L62,202.6201 M49,221.6201 L36,236.6201 M49,221.6201 L62,236.6201 " fill="#FEFECE" filter="url(#f1)" style="stroke: #A80036; stroke-width: 2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="17" x="40.5" y="259.6641">Ivy</text><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="85" x="6.5" y="173.5439">&lt;&lt; Human &gt;&gt;</text><ellipse cx="377.9226" cy="72.1223" fill="#FEFECE" filter="url(#f1)" rx="75.9226" ry="28.1223" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="71" x="342.4226" y="65.798">&lt;&lt; Main &gt;&gt;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="111" x="322.4226" y="84.9181">Use the computer</text><ellipse cx="378.1881" cy="208.0601" fill="#FEFECE" filter="url(#f1)" rx="75.1881" ry="28.5601" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="108" x="324.1881" y="206.7173">&lt;&lt; Secondary &gt;&gt;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="80" x="338.1881" y="225.8374">Use the iPad</text><path d="M88.151,61.4 C139.134,63.271 230.756,66.633 297.167,69.07 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="302.305,69.259,293.4573,64.9325,297.3083,69.0761,293.1647,72.9271,302.305,69.259" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="39" x="177" y="58.8979">emacs</text><path d="M91.5322,210.293 C137.903,209.0312 214.042,202.1183 272,173 C305.117,156.362 334.721,125.683 353.986,102.486 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="357.224,98.54,348.4232,102.961,354.0527,102.4056,354.6081,108.0351,357.224,98.54" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="80" x="156.5" y="168.8979">taobao, movie</text><path d="M88.0078,80.798 C98.842,86.378 110.758,92.191 122,97 C186.873,124.75 207.655,120.047 272,149 C292.743,158.333 314.816,170.388 333.344,181.1659 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="337.976,183.8761,332.229,175.8778,333.6608,181.3505,328.1881,182.7822,337.976,183.8761" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="146" x="123.5" y="92.8979">news, learning languages</text><path d="M91.7338,225.7273 C101.5247,228.7434 112.016,231.4441 122,233 C187.872,243.2656 205.788,240.7737 272,233 C285.144,231.4568 299.027,228.8624 312.241,225.9141 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="317.465,224.723,307.801,222.8237,312.5901,225.8344,309.5793,230.6235,317.465,224.723" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="80" x="156.5" y="228.8979">taobao, movie</text></g></svg>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Class Diagram</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+"UML 2 class diagrams show the classes of the system, their
+interrelationships (including inheritance, aggregation, and
+association), and the operations and attributes of the
+classes. Class diagrams are used for a wide variety of purposes,
+including both conceptual/domain modeling and detailed design
+modeling.<sup><a id="fnr.4" name="fnr.4" class="footref" href="#fn.4">4</a></sup>"
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-plantuml">@startuml
+
+abstract class AbstractMother
+abstract AbstractFather
+abstract AbstractDaughter
+interface Mother
+interface Father
+interface Daughter
+
+interface Toy
+interface Cash
+
+abstract AbstractToy
+abstract AbstractCash
+
+Mother &lt;|-- AbstractMother
+Father &lt;|-- AbstractFather
+Daughter &lt;|-- AbstractDaughter
+
+Toy &lt;|-- AbstractToy
+Cash &lt;|-- AbstractCash
+
+Mother &lt;|-- Daughter
+Father &lt;|-- Daughter
+
+AbstractMother *- AbstractCash
+AbstractDaughter *- AbstractToy
+
+AbstractCash &lt;|-- RMB
+
+AbstractToy &lt;|-- ManhattanBall
+AbstractToy &lt;|-- FisherPrice
+
+AbstractMother &lt;|-- Ivy
+Ivy  *- RMB
+
+AbstractDaughter &lt;|-- Vivi
+Vivi *- ManhattanBall
+
+Vivi *- FisherPrice
+
+AbstractFather &lt;|-- Kimi
+interface Father {
+  work()
+}
+
+interface Mother {
+  cook()
+  pay_by_cash()
+}
+
+interface Daughter {
+  play_toy()
+  sing()
+  laugh()
+  cry()
+}
+
+class Ivy {
+  taobao()
+  watch_movie()
+}
+
+class Kimi {
+  cook()
+  read()
+  write()
+}
+
+class Vivi {
+  sleep()
+  drink_milk()
+}
+@enduml
+</pre>
+</div>
+
+<div style="text-align: center;">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="555pt" style="width:623px;height:555px;" version="1.1" viewBox="0 0 623 555" width="623pt"><defs><filter height="300%" id="f1" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><rect fill="#FEFECE" filter="url(#f1)" height="48" style="stroke: #A80036; stroke-width: 1.5;" width="114" x="6" y="176"/><ellipse cx="21" cy="192" fill="#A9DCDF" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M21.375,191.9844 L19.3906,191.9844 L18.7969,194.5 Q18.6563,195.1094 18.7891,195.4688 Q18.9219,195.8281 18.9219,195.8281 L19.5938,195.8281 L19.5938,196.2344 L16.1406,196.2344 L16.1406,195.8281 L16.3281,195.8281 Q16.5938,195.8281 16.7969,195.6641 Q17,195.5 17.0625,195.1094 L19.6563,184.9375 L21.5313,184.3281 L24.1719,195.1094 Q24.3125,195.5 24.5078,195.6641 Q24.7031,195.8281 24.7031,195.8281 L25.1719,195.8281 L25.1719,196.2344 L21.3125,196.2344 L21.3125,195.8281 L21.5781,195.8281 Q21.9844,195.8281 22.0781,195.6016 Q22.1719,195.375 22.0469,194.9063 L21.375,191.9844 Z M19.9844,186.0781 L19.9844,186.0781 L19.5313,191.5781 L21.3125,191.5781 L19.9844,186.0781 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="82" x="35" y="197.5576">AbstractMother</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="7" x2="119" y1="208" y2="208"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="7" x2="119" y1="216" y2="216"/><rect fill="#FEFECE" filter="url(#f1)" height="48" style="stroke: #A80036; stroke-width: 1.5;" width="112" x="274.5" y="176"/><ellipse cx="289.5" cy="192" fill="#A9DCDF" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M289.875,191.9844 L287.8906,191.9844 L287.2969,194.5 Q287.1563,195.1094 287.2891,195.4688 Q287.4219,195.8281 287.4219,195.8281 L288.0938,195.8281 L288.0938,196.2344 L284.6406,196.2344 L284.6406,195.8281 L284.8281,195.8281 Q285.0938,195.8281 285.2969,195.6641 Q285.5,195.5 285.5625,195.1094 L288.1563,184.9375 L290.0313,184.3281 L292.6719,195.1094 Q292.8125,195.5 293.0078,195.6641 Q293.2031,195.8281 293.2031,195.8281 L293.6719,195.8281 L293.6719,196.2344 L289.8125,196.2344 L289.8125,195.8281 L290.0781,195.8281 Q290.4844,195.8281 290.5781,195.6016 Q290.6719,195.375 290.5469,194.9063 L289.875,191.9844 Z M288.4844,186.0781 L288.4844,186.0781 L288.0313,191.5781 L289.8125,191.5781 L288.4844,186.0781 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="80" x="303.5" y="197.5576">AbstractFather</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="275.5" x2="385.5" y1="208" y2="208"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="275.5" x2="385.5" y1="216" y2="216"/><rect fill="#FEFECE" filter="url(#f1)" height="48" style="stroke: #A80036; stroke-width: 1.5;" width="128" x="141" y="337"/><ellipse cx="156" cy="353" fill="#A9DCDF" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M156.375,352.9844 L154.3906,352.9844 L153.7969,355.5 Q153.6563,356.1094 153.7891,356.4688 Q153.9219,356.8281 153.9219,356.8281 L154.5938,356.8281 L154.5938,357.2344 L151.1406,357.2344 L151.1406,356.8281 L151.3281,356.8281 Q151.5938,356.8281 151.7969,356.6641 Q152,356.5 152.0625,356.1094 L154.6563,345.9375 L156.5313,345.3281 L159.1719,356.1094 Q159.3125,356.5 159.5078,356.6641 Q159.7031,356.8281 159.7031,356.8281 L160.1719,356.8281 L160.1719,357.2344 L156.3125,357.2344 L156.3125,356.8281 L156.5781,356.8281 Q156.9844,356.8281 157.0781,356.6016 Q157.1719,356.375 157.0469,355.9063 L156.375,352.9844 Z M154.9844,347.0781 L154.9844,347.0781 L154.5313,352.5781 L156.3125,352.5781 L154.9844,347.0781 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="96" x="170" y="358.5576">AbstractDaughter</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="142" x2="268" y1="369" y2="369"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="142" x2="268" y1="377" y2="377"/><rect fill="#FEFECE" filter="url(#f1)" height="78.0459" style="stroke: #A80036; stroke-width: 1.5;" width="86" x="92" y="8"/><ellipse cx="114.65" cy="24" fill="#B4A7E5" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M111.2438,18.2813 L111.2438,17.875 L117.5563,17.875 L117.5563,18.2813 L115.025,18.2813 Q115.025,18.2813 115.1734,18.4141 Q115.3219,18.5469 115.3219,18.8125 L115.3219,28.2969 Q115.3219,28.5625 115.5406,28.6953 Q115.7594,28.8281 115.7594,28.8281 L117.5563,28.8281 L117.5563,29.2344 L111.2438,29.2344 L111.2438,28.8281 L112.775,28.8281 Q113.1031,28.8281 113.2359,28.6953 Q113.3688,28.5625 113.3688,28.2969 L113.3688,18.8125 Q113.3688,18.5469 113.2359,18.4141 Q113.1031,18.2813 112.775,18.2813 L111.2438,18.2813 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="37" x="130.35" y="29.5576">Mother</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="93" x2="177" y1="40" y2="40"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="93" x2="177" y1="48" y2="48"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="31" x="98" y="64.606">cook()</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="74" x="98" y="79.6289">pay_by_cash()</text><rect fill="#FEFECE" filter="url(#f1)" height="63.0229" style="stroke: #A80036; stroke-width: 1.5;" width="67" x="224.75" y="15.5"/><ellipse cx="239.75" cy="31.5" fill="#B4A7E5" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M236.3438,25.7813 L236.3438,25.375 L242.6563,25.375 L242.6563,25.7813 L240.125,25.7813 Q240.125,25.7813 240.2734,25.9141 Q240.4219,26.0469 240.4219,26.3125 L240.4219,35.7969 Q240.4219,36.0625 240.6406,36.1953 Q240.8594,36.3281 240.8594,36.3281 L242.6563,36.3281 L242.6563,36.7344 L236.3438,36.7344 L236.3438,36.3281 L237.875,36.3281 Q238.2031,36.3281 238.3359,36.1953 Q238.4688,36.0625 238.4688,35.7969 L238.4688,26.3125 Q238.4688,26.0469 238.3359,25.9141 Q238.2031,25.7813 237.875,25.7813 L236.3438,25.7813 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="35" x="253.75" y="37.0576">Father</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="225.75" x2="290.75" y1="47.5" y2="47.5"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="225.75" x2="290.75" y1="55.5" y2="55.5"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="33" x="230.75" y="72.106">work()</text><rect fill="#FEFECE" filter="url(#f1)" height="108.0918" style="stroke: #A80036; stroke-width: 1.5;" width="83" x="155.75" y="146"/><ellipse cx="170.75" cy="162" fill="#B4A7E5" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M167.3438,156.2813 L167.3438,155.875 L173.6563,155.875 L173.6563,156.2813 L171.125,156.2813 Q171.125,156.2813 171.2734,156.4141 Q171.4219,156.5469 171.4219,156.8125 L171.4219,166.2969 Q171.4219,166.5625 171.6406,166.6953 Q171.8594,166.8281 171.8594,166.8281 L173.6563,166.8281 L173.6563,167.2344 L167.3438,167.2344 L167.3438,166.8281 L168.875,166.8281 Q169.2031,166.8281 169.3359,166.6953 Q169.4688,166.5625 169.4688,166.2969 L169.4688,156.8125 Q169.4688,156.5469 169.3359,156.4141 Q169.2031,156.2813 168.875,156.2813 L167.3438,156.2813 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="51" x="184.75" y="167.5576">Daughter</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="156.75" x2="237.75" y1="178" y2="178"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="156.75" x2="237.75" y1="186" y2="186"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="49" x="161.75" y="202.606">play_toy()</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="28" x="161.75" y="217.6289">sing()</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="34" x="161.75" y="232.6519">laugh()</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="24" x="161.75" y="247.6748">cry()</text><rect fill="#FEFECE" filter="url(#f1)" height="48" style="stroke: #A80036; stroke-width: 1.5;" width="52" x="421" y="176"/><ellipse cx="436" cy="192" fill="#B4A7E5" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M432.5938,186.2813 L432.5938,185.875 L438.9063,185.875 L438.9063,186.2813 L436.375,186.2813 Q436.375,186.2813 436.5234,186.4141 Q436.6719,186.5469 436.6719,186.8125 L436.6719,196.2969 Q436.6719,196.5625 436.8906,196.6953 Q437.1094,196.8281 437.1094,196.8281 L438.9063,196.8281 L438.9063,197.2344 L432.5938,197.2344 L432.5938,196.8281 L434.125,196.8281 Q434.4531,196.8281 434.5859,196.6953 Q434.7188,196.5625 434.7188,196.2969 L434.7188,186.8125 Q434.7188,186.5469 434.5859,186.4141 Q434.4531,186.2813 434.125,186.2813 L432.5938,186.2813 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="20" x="450" y="197.5576">Toy</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="422" x2="472" y1="208" y2="208"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="422" x2="472" y1="216" y2="216"/><rect fill="#FEFECE" filter="url(#f1)" height="48" style="stroke: #A80036; stroke-width: 1.5;" width="61" x="530.75" y="23"/><ellipse cx="545.75" cy="39" fill="#B4A7E5" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M542.3438,33.2813 L542.3438,32.875 L548.6563,32.875 L548.6563,33.2813 L546.125,33.2813 Q546.125,33.2813 546.2734,33.4141 Q546.4219,33.5469 546.4219,33.8125 L546.4219,43.2969 Q546.4219,43.5625 546.6406,43.6953 Q546.8594,43.8281 546.8594,43.8281 L548.6563,43.8281 L548.6563,44.2344 L542.3438,44.2344 L542.3438,43.8281 L543.875,43.8281 Q544.2031,43.8281 544.3359,43.6953 Q544.4688,43.5625 544.4688,43.2969 L544.4688,33.8125 Q544.4688,33.5469 544.3359,33.4141 Q544.2031,33.2813 543.875,33.2813 L542.3438,33.2813 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="29" x="559.75" y="44.5576">Cash</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="531.75" x2="590.75" y1="55" y2="55"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="531.75" x2="590.75" y1="63" y2="63"/><rect fill="#FEFECE" filter="url(#f1)" height="48" style="stroke: #A80036; stroke-width: 1.5;" width="97" x="397.75" y="337"/><ellipse cx="412.75" cy="353" fill="#A9DCDF" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M413.125,352.9844 L411.1406,352.9844 L410.5469,355.5 Q410.4063,356.1094 410.5391,356.4688 Q410.6719,356.8281 410.6719,356.8281 L411.3438,356.8281 L411.3438,357.2344 L407.8906,357.2344 L407.8906,356.8281 L408.0781,356.8281 Q408.3438,356.8281 408.5469,356.6641 Q408.75,356.5 408.8125,356.1094 L411.4063,345.9375 L413.2813,345.3281 L415.9219,356.1094 Q416.0625,356.5 416.2578,356.6641 Q416.4531,356.8281 416.4531,356.8281 L416.9219,356.8281 L416.9219,357.2344 L413.0625,357.2344 L413.0625,356.8281 L413.3281,356.8281 Q413.7344,356.8281 413.8281,356.6016 Q413.9219,356.375 413.7969,355.9063 L413.125,352.9844 Z M411.7344,347.0781 L411.7344,347.0781 L411.2813,352.5781 L413.0625,352.5781 L411.7344,347.0781 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="65" x="426.75" y="358.5576">AbstractToy</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="398.75" x2="493.75" y1="369" y2="369"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="398.75" x2="493.75" y1="377" y2="377"/><rect fill="#FEFECE" filter="url(#f1)" height="48" style="stroke: #A80036; stroke-width: 1.5;" width="106" x="508.5" y="176"/><ellipse cx="523.5" cy="192" fill="#A9DCDF" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M523.875,191.9844 L521.8906,191.9844 L521.2969,194.5 Q521.1563,195.1094 521.2891,195.4688 Q521.4219,195.8281 521.4219,195.8281 L522.0938,195.8281 L522.0938,196.2344 L518.6406,196.2344 L518.6406,195.8281 L518.8281,195.8281 Q519.0938,195.8281 519.2969,195.6641 Q519.5,195.5 519.5625,195.1094 L522.1563,184.9375 L524.0313,184.3281 L526.6719,195.1094 Q526.8125,195.5 527.0078,195.6641 Q527.2031,195.8281 527.2031,195.8281 L527.6719,195.8281 L527.6719,196.2344 L523.8125,196.2344 L523.8125,195.8281 L524.0781,195.8281 Q524.4844,195.8281 524.5781,195.6016 Q524.6719,195.375 524.5469,194.9063 L523.875,191.9844 Z M522.4844,186.0781 L522.4844,186.0781 L522.0313,191.5781 L523.8125,191.5781 L522.4844,186.0781 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacingAndGlyphs" textLength="74" x="537.5" y="197.5576">AbstractCash</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="509.5" x2="613.5" y1="208" y2="208"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="509.5" x2="613.5" y1="216" y2="216"/><rect fill="#FEFECE" filter="url(#f1)" height="48" style="stroke: #A80036; stroke-width: 1.5;" width="58" x="530.5" y="337"/><ellipse cx="545.5" cy="353" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M544.0781,358.3594 Q542.2188,358.3594 541.125,356.9688 Q540.0313,355.5781 540.0313,352.5938 Q540.0313,350.0625 541.1953,348.4063 Q542.3594,346.75 544.3438,346.75 Q545.8125,346.75 546.2813,346.9141 Q546.75,347.0781 546.75,347.0781 Q546.75,347.0781 546.75,347.0078 Q546.75,346.9375 547.3594,346.0156 L548.4063,349.6719 L547.0781,350.0781 Q546.6094,348.5313 545.9453,347.8672 Q545.2813,347.2031 544.2188,347.2031 Q543.8281,347.2031 543.0625,348.7344 Q542.2969,350.2656 542.2969,352.5156 Q542.2969,354.9844 542.9609,356.375 Q543.625,357.7656 544.1563,357.7656 Q545.2188,357.7656 545.9766,357 Q546.7344,356.2344 547.0781,354.5781 L548.4063,355.1719 Q548.0781,356.5781 547.1797,357.4688 Q546.2813,358.3594 544.0781,358.3594 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="26" x="559.5" y="358.5576">RMB</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="531.5" x2="587.5" y1="369" y2="369"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="531.5" x2="587.5" y1="377" y2="377"/><rect fill="#FEFECE" filter="url(#f1)" height="48" style="stroke: #A80036; stroke-width: 1.5;" width="110" x="404" y="483"/><ellipse cx="419" cy="499" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M417.5781,504.3594 Q415.7188,504.3594 414.625,502.9688 Q413.5313,501.5781 413.5313,498.5938 Q413.5313,496.0625 414.6953,494.4063 Q415.8594,492.75 417.8438,492.75 Q419.3125,492.75 419.7813,492.9141 Q420.25,493.0781 420.25,493.0781 Q420.25,493.0781 420.25,493.0078 Q420.25,492.9375 420.8594,492.0156 L421.9063,495.6719 L420.5781,496.0781 Q420.1094,494.5313 419.4453,493.8672 Q418.7813,493.2031 417.7188,493.2031 Q417.3281,493.2031 416.5625,494.7344 Q415.7969,496.2656 415.7969,498.5156 Q415.7969,500.9844 416.4609,502.375 Q417.125,503.7656 417.6563,503.7656 Q418.7188,503.7656 419.4766,503 Q420.2344,502.2344 420.5781,500.5781 L421.9063,501.1719 Q421.5781,502.5781 420.6797,503.4688 Q419.7813,504.3594 417.5781,504.3594 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="78" x="433" y="504.5576">ManhattanBall</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="405" x2="513" y1="515" y2="515"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="405" x2="513" y1="523" y2="523"/><rect fill="#FEFECE" filter="url(#f1)" height="48" style="stroke: #A80036; stroke-width: 1.5;" width="95" x="273.75" y="483"/><ellipse cx="288.75" cy="499" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M287.3281,504.3594 Q285.4688,504.3594 284.375,502.9688 Q283.2813,501.5781 283.2813,498.5938 Q283.2813,496.0625 284.4453,494.4063 Q285.6094,492.75 287.5938,492.75 Q289.0625,492.75 289.5313,492.9141 Q290,493.0781 290,493.0781 Q290,493.0781 290,493.0078 Q290,492.9375 290.6094,492.0156 L291.6563,495.6719 L290.3281,496.0781 Q289.8594,494.5313 289.1953,493.8672 Q288.5313,493.2031 287.4688,493.2031 Q287.0781,493.2031 286.3125,494.7344 Q285.5469,496.2656 285.5469,498.5156 Q285.5469,500.9844 286.2109,502.375 Q286.875,503.7656 287.4063,503.7656 Q288.4688,503.7656 289.2266,503 Q289.9844,502.2344 290.3281,500.5781 L291.6563,501.1719 Q291.3281,502.5781 290.4297,503.4688 Q289.5313,504.3594 287.3281,504.3594 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="63" x="302.75" y="504.5576">FisherPrice</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="274.75" x2="367.75" y1="515" y2="515"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="274.75" x2="367.75" y1="523" y2="523"/><rect fill="#FEFECE" filter="url(#f1)" height="78.0459" style="stroke: #A80036; stroke-width: 1.5;" width="85" x="20.75" y="322"/><ellipse cx="53.75" cy="338" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M52.3281,343.3594 Q50.4688,343.3594 49.375,341.9688 Q48.2813,340.5781 48.2813,337.5938 Q48.2813,335.0625 49.4453,333.4063 Q50.6094,331.75 52.5938,331.75 Q54.0625,331.75 54.5313,331.9141 Q55,332.0781 55,332.0781 Q55,332.0781 55,332.0078 Q55,331.9375 55.6094,331.0156 L56.6563,334.6719 L55.3281,335.0781 Q54.8594,333.5313 54.1953,332.8672 Q53.5313,332.2031 52.4688,332.2031 Q52.0781,332.2031 51.3125,333.7344 Q50.5469,335.2656 50.5469,337.5156 Q50.5469,339.9844 51.2109,341.375 Q51.875,342.7656 52.4063,342.7656 Q53.4688,342.7656 54.2266,342 Q54.9844,341.2344 55.3281,339.5781 L56.6563,340.1719 Q56.3281,341.5781 55.4297,342.4688 Q54.5313,343.3594 52.3281,343.3594 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="13" x="71.75" y="343.5576">Ivy</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="21.75" x2="104.75" y1="354" y2="354"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="21.75" x2="104.75" y1="362" y2="362"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="41" x="26.75" y="378.606">taobao()</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="73" x="26.75" y="393.6289">watch_movie()</text><rect fill="#FEFECE" filter="url(#f1)" height="78.0459" style="stroke: #A80036; stroke-width: 1.5;" width="66" x="172" y="468"/><ellipse cx="194.2" cy="484" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M192.7781,489.3594 Q190.9188,489.3594 189.825,487.9688 Q188.7313,486.5781 188.7313,483.5938 Q188.7313,481.0625 189.8953,479.4063 Q191.0594,477.75 193.0438,477.75 Q194.5125,477.75 194.9813,477.9141 Q195.45,478.0781 195.45,478.0781 Q195.45,478.0781 195.45,478.0078 Q195.45,477.9375 196.0594,477.0156 L197.1063,480.6719 L195.7781,481.0781 Q195.3094,479.5313 194.6453,478.8672 Q193.9813,478.2031 192.9188,478.2031 Q192.5281,478.2031 191.7625,479.7344 Q190.9969,481.2656 190.9969,483.5156 Q190.9969,485.9844 191.6609,487.375 Q192.325,488.7656 192.8563,488.7656 Q193.9188,488.7656 194.6766,488 Q195.4344,487.2344 195.7781,485.5781 L197.1063,486.1719 Q196.7781,487.5781 195.8797,488.4688 Q194.9813,489.3594 192.7781,489.3594 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="18" x="209.8" y="489.5576">Vivi</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="173" x2="237" y1="500" y2="500"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="173" x2="237" y1="508" y2="508"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="34" x="178" y="524.606">sleep()</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="54" x="178" y="539.6289">drink_milk()</text><rect fill="#FEFECE" filter="url(#f1)" height="93.0688" style="stroke: #A80036; stroke-width: 1.5;" width="57" x="304.75" y="314.5"/><ellipse cx="319.75" cy="330.5" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M318.3281,335.8594 Q316.4688,335.8594 315.375,334.4688 Q314.2813,333.0781 314.2813,330.0938 Q314.2813,327.5625 315.4453,325.9063 Q316.6094,324.25 318.5938,324.25 Q320.0625,324.25 320.5313,324.4141 Q321,324.5781 321,324.5781 Q321,324.5781 321,324.5078 Q321,324.4375 321.6094,323.5156 L322.6563,327.1719 L321.3281,327.5781 Q320.8594,326.0313 320.1953,325.3672 Q319.5313,324.7031 318.4688,324.7031 Q318.0781,324.7031 317.3125,326.2344 Q316.5469,327.7656 316.5469,330.0156 Q316.5469,332.4844 317.2109,333.875 Q317.875,335.2656 318.4063,335.2656 Q319.4688,335.2656 320.2266,334.5 Q320.9844,333.7344 321.3281,332.0781 L322.6563,332.6719 Q322.3281,334.0781 321.4297,334.9688 Q320.5313,335.8594 318.3281,335.8594 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="25" x="333.75" y="336.0576">Kimi</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="305.75" x2="360.75" y1="346.5" y2="346.5"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="305.75" x2="360.75" y1="354.5" y2="354.5"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="31" x="310.75" y="371.106">cook()</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="30" x="310.75" y="386.1289">read()</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="33" x="310.75" y="401.1519">write()</text><path d="M108.145,104.32 C96.3049,129.152 83.0511,156.948 73.9842,175.964 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="101.9049,101.144,116.831,86.104,114.542,107.169,101.9049,101.144" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M281.253,96.766 C293.909,123.309 308.979,154.915 318.979,175.887 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="274.86,99.623,272.57,78.557,287.497,93.597,274.86,99.623" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M200.705,274.643 C201.836,297.118 202.999,320.221 203.828,336.714 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="193.7,274.714,199.686,254.387,207.682,274.01,193.7,274.714" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M446.727,244.437 C446.539,274.271 446.297,312.701 446.146,336.852 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="439.729,244.076,446.855,224.12,453.729,244.164,439.729,244.076" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M561,91.499 C561,119.052 561,153.583 561,175.959 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="554,91.263,561,71.263,568,91.263,554,91.263" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M158.375,104.93 C163.878,118.331 169.722,132.566 175.155,145.796 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="151.766,107.264,150.645,86.104,164.717,101.946,151.766,107.264" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M238.148,97.141 C231.853,112.724 224.866,130.019 218.463,145.869 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="231.674,94.479,245.656,78.557,244.655,99.723,231.674,94.479" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M89.3988,165.978 C106.079,147.365 129.378,126.091 155.5,116 C221.212,90.616 407.072,89.893 472.5,116 C502.603,128.012 528.335,155.67 544.168,175.982 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="80.8371,175.956,87.7799,174.0073,88.6514,166.849,81.7086,168.7978,80.8371,175.956" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M236.877,327.464 C254.936,310.938 278.983,292.72 304.5,284 C328.052,275.951 337.265,275.079 360.5,284 C387.914,294.525 412.036,318.351 427.608,336.733 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="227.23,336.657,234.3331,335.4135,235.9172,328.3786,228.8141,329.622,227.23,336.657" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M560.454,244.437 C560.078,274.271 559.595,312.701 559.291,336.852 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="553.458,244.03,560.709,224.12,567.457,244.206,553.458,244.03" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M449.906,405.263 C452.209,430.778 455.032,462.0516 456.917,482.9213 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="442.915,405.685,448.089,385.136,456.859,404.426,442.915,405.685" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M412.718,400.341 C389.883,426.647 360.333,460.6883 341.034,482.9213 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="407.52,395.651,425.917,385.136,418.092,404.828,407.52,395.651" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M63,244.4 C63,268.598 63,298.462 63,321.774 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="56.0001,244.12,63,224.12,70.0001,244.12,56.0001,244.12" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M100.5283,312.118 C111.995,300.738 125.568,290.157 140.5,284 C213.022,254.098 422.294,251.088 493.5,284 C516.919,294.824 535.039,318.607 546.225,336.896 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="91.4085,321.786,98.4354,320.1665,99.6431,313.0573,92.6162,314.6768,91.4085,321.786" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M205,405.325 C205,425.193 205,448.5447 205,467.7533 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="198,405.136,205,385.136,212,405.136,198,405.136" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M242.916,458.5327 C251.962,450.1666 262.285,442.669 273.5,438 C312.069,421.942 327.883,424.737 367.5,438 C393.913,446.8429 418.802,466.6498 435.934,482.7843 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="233.619,467.8591,240.6878,466.4336,242.0907,459.3602,235.0219,460.7858,233.619,467.8591" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M251.161,507 C258.677,507 266.193,507 273.709,507 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="238.078,507,244.078,511,250.078,507,244.078,503,238.078,507" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M330.817,244.306 C331.226,265.969 331.721,292.19 332.136,314.188 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="323.815,244.248,330.436,224.12,337.812,243.984,323.815,244.248" style="stroke: #A80036; stroke-width: 1.0;"/></g></svg>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> Activity Diagram</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+UML 2 activity diagrams are typically used for business process
+modeling, for modeling the logic captured by a single use case or
+usage scenario, or for modeling the detailed logic of a business
+rule.<sup><a id="fnr.5" name="fnr.5" class="footref" href="#fn.5">5</a></sup>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-plantuml">@startuml
+title Kimi's daily life
+(*)--&gt; get up/have breakfast
+--&gt; read Deutsch/Francais news
+if "work day" then
+  -left-&gt;[yes] "wait shuttle bus"
+  --&gt; "hard working"
+  --&gt; "back to home"
+else
+  -right-&gt;[no] "write article"
+  if "Vivi and Ivy wake up" then
+    --&gt; [yes] "play with Vivi"
+    --&gt; "go out with Vivi and Ivy"
+    -left-&gt; "back to home"
+  endif
+endif
+"back to home" --&gt; "give a bath to Vivi"
+--&gt; "sleep"
+--&gt;(*)
+@enduml
+</pre>
+</div>
+
+<div style="text-align: center;">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="767pt" style="width:343px;height:767px;" version="1.1" viewBox="0 0 343 767" width="343pt"><defs><filter height="300%" id="f1" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="116" x="118.25" y="20.6279">Kimi's daily life</text><ellipse cx="171.25" cy="42.583" fill="#000000" filter="url(#f1)" rx="10" ry="10" style="stroke: none; stroke-width: 1.0;"/><rect fill="#FEFECE" filter="url(#f1)" height="36.3887" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="137" x="103" y="94.583"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="117" x="113" y="118.335">get up/have breakfast</text><rect fill="#FEFECE" filter="url(#f1)" height="36.3887" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="178" x="82.75" y="172.583"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="158" x="92.75" y="196.335">read Deutsch/Francais news</text><polygon fill="#FEFECE" filter="url(#f1)" points="171.25,256.583,183.25,268.583,171.25,280.583,159.25,268.583,171.25,256.583" style="stroke: #A80036; stroke-width: 1.5;"/><rect fill="#FEFECE" filter="url(#f1)" height="36.3887" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="106" x="9.75" y="250.583"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="86" x="19.75" y="274.335">wait shuttle bus</text><rect fill="#FEFECE" filter="url(#f1)" height="36.3887" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="91" x="17" y="372.583"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="71" x="27" y="396.335">hard working</text><rect fill="#FEFECE" filter="url(#f1)" height="36.3887" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="94" x="15.25" y="506.583"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="74" x="25.25" y="530.335">back to home</text><rect fill="#FEFECE" filter="url(#f1)" height="36.3887" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="82" x="223.25" y="250.583"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="62" x="233.25" y="274.335">write article</text><polygon fill="#FEFECE" filter="url(#f1)" points="264.25,328.583,276.25,340.583,264.25,352.583,252.25,340.583,264.25,328.583" style="stroke: #A80036; stroke-width: 1.5;"/><rect fill="#FEFECE" filter="url(#f1)" height="36.3887" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="88" x="220.75" y="428.583"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="68" x="230.75" y="452.335">play with Vivi</text><rect fill="#FEFECE" filter="url(#f1)" height="36.3887" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="140" x="194.25" y="506.583"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="120" x="204.25" y="530.335">go out with Vivi and Ivy</text><rect fill="#FEFECE" filter="url(#f1)" height="36.3887" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="113" x="6" y="584.583"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="93" x="16" y="608.335">give a bath to Vivi</text><rect fill="#FEFECE" filter="url(#f1)" height="36.3887" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="51" x="37" y="662.583"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="31" x="47" y="686.335">sleep</text><ellipse cx="62.25" cy="750.583" fill="none" filter="url(#f1)" rx="10" ry="10" style="stroke: #000000; stroke-width: 1.0;"/><ellipse cx="62.75" cy="751.083" fill="#000000" rx="6" ry="6" style="stroke: none; stroke-width: 1.0;"/><path d="M171.25,52.754 C171.25,62.08 171.25,76.885 171.25,89.31 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="171.25,94.466,175.25,85.466,171.25,89.466,167.25,85.466,171.25,94.466" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M171.25,130.829 C171.25,141.615 171.25,155.619 171.25,167.249 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="171.25,172.406,175.25,163.406,171.25,167.406,167.25,163.406,171.25,172.406" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M171.25,208.829 C171.25,221.551 171.25,238.751 171.25,251.252 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="171.25,256.295,175.25,247.295,171.25,251.295,167.25,247.295,171.25,256.295" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="52" x="123.8639" y="239.8589">work day</text><path d="M119.878,268.583 C134.733,268.583 149.278,268.583 159.077,268.583 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="114.834,268.583,123.834,272.583,119.834,268.583,123.834,264.583,114.834,268.583" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="21" x="125.75" y="261.481">yes</text><path d="M62.25,286.776 C62.25,307.984 62.25,344.081 62.25,367.37 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="62.25,372.422,66.25,363.422,62.25,367.422,58.25,363.422,62.25,372.422" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M62.25,408.84 C62.25,432.457 62.25,474.89 62.25,501.009 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="62.25,506.322,66.25,497.322,62.25,501.322,58.25,497.322,62.25,506.322" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M183.408,268.583 C192.362,268.583 205.155,268.583 217.929,268.583 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="223.006,268.583,214.006,264.583,218.006,268.583,214.006,272.583,223.006,268.583" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="14" x="195.75" y="261.481">no</text><path d="M264.25,286.886 C264.25,298.02 264.25,312.396 264.25,323.319 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="264.25,328.375,268.25,319.375,264.25,323.375,260.25,319.375,264.25,328.375" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="116" x="128.4438" y="318.4738">Vivi and Ivy wake up</text><path d="M264.25,352.713 C264.25,369.498 264.25,401.631 264.25,423.338 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="264.25,428.344,268.25,419.344,264.25,423.344,260.25,419.344,264.25,428.344" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="21" x="265.25" y="396.481">yes</text><path d="M264.25,464.829 C264.25,475.615 264.25,489.619 264.25,501.249 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="264.25,506.406,268.25,497.406,264.25,501.406,260.25,497.406,264.25,506.406" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M114.88,524.583 C141.31,524.583 167.741,524.583 194.171,524.583 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="109.594,524.583,118.594,528.583,114.594,524.583,118.594,520.583,109.594,524.583" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M62.25,542.829 C62.25,553.615 62.25,567.619 62.25,579.249 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="62.25,584.406,66.25,575.406,62.25,579.406,58.25,575.406,62.25,584.406" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M62.25,620.829 C62.25,631.615 62.25,645.619 62.25,657.249 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="62.25,662.4057,66.25,653.4057,62.25,657.4057,58.25,653.4057,62.25,662.4057" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M62.25,698.7423 C62.25,709.9997 62.25,724.5526 62.25,735.2019 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="62.25,740.3769,66.25,731.3769,62.25,735.3769,58.25,731.3769,62.25,740.3769" style="stroke: #A80036; stroke-width: 1.0;"/></g></svg>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-5" class="outline-3">
+<h3 id="sec-2-5"><span class="section-number-3">2.5</span> State Diagram</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+"UML state machine diagrams depict the various states that an
+object may be in and the transitions between those states. In fact,
+in other modeling languages, it is common for this type of a
+diagram to be called a state-transition diagram or even simply a
+state diagram.<sup><a id="fnr.6" name="fnr.6" class="footref" href="#fn.6">6</a></sup>"
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-plantuml">@startuml
+[*] -&gt; Wakeup
+Wakeup --&gt; Thinking : earlier than 9:00
+Wakeup --&gt; Playing : later than 9:00
+Thinking -&gt; Playing : timeout
+Thinking -left-&gt; Writing: have idea
+Writing -&gt; Playing : timeout
+
+state Writing {
+  [*] --&gt; Research : stopped
+  Research --&gt; Typing : materials found
+  Typing --&gt; Preview : succeeded
+  Preview --&gt; Publish : succeeded
+  Preview --&gt; Typing : failed
+  Typing --&gt; Research : blocked
+}
+
+Writing --&gt; [*] : Succeeded / Save Result
+Writing --&gt; [*] : Aborted
+Playing --&gt; [*] : Tired
+@enduml
+</pre>
+</div>
+
+<div style="text-align: center;">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="747pt" style="width:521px;height:747px;" version="1.1" viewBox="0 0 521 747" width="521pt"><defs><filter height="300%" id="f1" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><ellipse cx="284" cy="33" fill="#000000" filter="url(#f1)" rx="10" ry="10" style="stroke: none; stroke-width: 1.0;"/><rect fill="#FEFECE" filter="url(#f1)" height="50" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="72" x="364" y="8"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="364" x2="436" y1="37.1201" y2="37.1201"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="52" x="374" y="29.0439">Wakeup</text><rect fill="#FEFECE" filter="url(#f1)" height="50" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="74" x="286" y="364"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="286" x2="360" y1="393.1201" y2="393.1201"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="54" x="296" y="385.0439">Thinking</text><rect fill="#FEFECE" filter="url(#f1)" height="50" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="66" x="441" y="364"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="441" x2="507" y1="393.1201" y2="393.1201"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="46" x="451" y="385.0439">Playing</text><ellipse cx="289" cy="730" fill="none" filter="url(#f1)" rx="10" ry="10" style="stroke: #000000; stroke-width: 1.0;"/><ellipse cx="289.5" cy="730.5" fill="#000000" rx="6" ry="6" style="stroke: none; stroke-width: 1.0;"/><rect fill="#FEFECE" filter="url(#f1)" height="501.1201" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="188" x="6" y="138.5"/><rect fill="#FFFFFF" height="466" rx="12.5" ry="12.5" style="stroke: #FFFFFF; stroke-width: 1.0;" width="182" x="9" y="170.6201"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="6" x2="194" y1="167.6201" y2="167.6201"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="44" x="78" y="159.5439">Writing</text><ellipse cx="75.7067" cy="190.6201" fill="#000000" filter="url(#f1)" rx="10" ry="10" style="stroke: none; stroke-width: 1.0;"/><rect fill="#FEFECE" filter="url(#f1)" height="50" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="81" x="35.4567" y="256.6201"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="35.4567" x2="116.4567" y1="285.7402" y2="285.7402"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="61" x="45.4567" y="277.6641">Research</text><rect fill="#FEFECE" filter="url(#f1)" height="50" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="63" x="44.4567" y="362.6201"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="44.4567" x2="107.4567" y1="391.7402" y2="391.7402"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="43" x="54.4567" y="383.6641">Typing</text><rect fill="#FEFECE" filter="url(#f1)" height="50" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="69" x="41.4567" y="468.6201"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="41.4567" x2="110.4567" y1="497.7402" y2="497.7402"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="49" x="51.4567" y="489.6641">Preview</text><rect fill="#FEFECE" filter="url(#f1)" height="50" rx="12.5" ry="12.5" style="stroke: #A80036; stroke-width: 1.5;" width="66" x="42.7067" y="574.6201"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="42.7067" x2="108.7067" y1="603.7402" y2="603.7402"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="46" x="52.7067" y="595.6641">Publish</text><path d="M75.7067,200.8091 C75.7067,212.5621 75.7067,233.4861 75.7067,250.9611 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="75.7067,256.2601,79.7067,247.2601,75.7067,251.2601,71.7067,247.2601,75.7067,256.2601" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="76.7067" y="234.5181">stopped</text><path d="M35.4405,305.3451 C29.086,310.8001 23.4024,317.2291 19.7067,324.6201 C11.7023,340.6291 24.426,355.6101 39.7548,366.8341 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="44.1323,369.8981,39.0533,361.4599,40.0362,367.0307,34.4654,368.0137,44.1323,369.8981" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="88" x="20.7067" y="340.5181">materials found</text><path d="M44.6526,412.7231 C39.7857,418.0511 35.4608,424.0801 32.7067,430.6201 C29.2568,438.8121 29.2568,442.4281 32.7067,450.6201 C34.8153,455.6271 37.8447,460.3351 41.3331,464.6571 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="44.6526,468.5171,41.817,459.0853,41.3924,464.7262,35.7515,464.3016,44.6526,468.5171" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="63" x="33.7067" y="446.5181">succeeded</text><path d="M75.7067,518.7411 C75.7067,533.7284 75.7067,553.1023 75.7067,569.0165 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="75.7067,574.2696,79.7067,565.2696,75.7067,569.2696,71.7067,565.2696,75.7067,574.2696" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="63" x="76.7067" y="552.5181">succeeded</text><path d="M91.506,468.6051 C94.4771,462.9291 97.1405,456.7411 98.7067,450.6201 C100.9102,442.0091 100.9102,439.2311 98.7067,430.6201 C97.5565,426.1251 95.8146,421.5931 93.7936,417.2551 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="91.506,412.6351,91.9146,422.4755,93.7245,417.116,99.084,418.9259,91.506,412.6351" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="30" x="100.7067" y="446.5181">failed</text><path d="M100.7051,362.2171 C104.8031,356.8381 108.4449,350.8671 110.7067,344.6201 C113.7327,336.2621 113.7327,332.9781 110.7067,324.6201 C109.0103,319.9351 106.5377,315.4041 103.6786,311.1631 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="100.7051,307.0231,102.7069,316.6664,103.6221,311.084,109.2044,311.9992,100.7051,307.0231" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="45" x="113.7067" y="340.5181">blocked</text><path d="M294.422,33 C315.803,33 337.184,33 358.565,33 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="363.708,33,354.708,29,358.708,33,354.708,37,363.708,33" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M363.953,51.36 C349.765,60.207 334.981,72.428 327,88 C281.107,177.543 302.196,302.766 315.311,358.839 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="316.475,363.724,318.2809,354.0421,315.3165,358.8601,310.4986,355.8957,316.475,363.724" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="93" x="328" y="103.8979">earlier than 9:00</text><path d="M416.421,58.064 C421.869,67.094 427.444,77.677 431,88 C463.871,183.42 471.624,304.271 473.445,358.874 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="473.604,363.948,477.3218,354.8278,473.4483,358.9504,469.3257,355.0769,473.604,363.948" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="83" x="437" y="103.8979">later than 9:00</text><path d="M360.326,389 C383.304,389 412.683,389 435.818,389 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="440.954,389,431.954,385,435.954,389,431.954,393,440.954,389" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="43" x="378.5" y="381.8979">timeout</text><path d="M199.569,389 C230.307,389 262.269,389 285.965,389 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="194.249,389,203.249,393,199.249,389,203.249,385,194.249,389" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="54" x="212.5" y="381.8979">have idea</text><path d="M194.037,170.56 C206.444,157.158 220.377,145.339 236,136 C253.548,125.51 261.557,135.787 282,136 C324.674,136.444 343.098,113.442 378,138 C451.003,189.367 468.507,304.154 472.693,358.872 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="473.057,363.976,476.4066,354.7142,472.7013,358.9887,468.4268,355.2834,473.057,363.976" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="43" x="237" y="103.8979">timeout</text><path d="M70.1608,639.522 C75.9646,657.7461 84.6395,674.8763 97,690 C119.351,717.3476 231.793,725.9905 273.448,728.279 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="278.616,728.55,269.8375,724.0849,273.6228,728.2886,269.4192,732.074,278.616,728.55" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="146" x="98" y="685.8979">Succeeded / Save Result</text><path d="M194.223,559.003 C230.609,624.267 267.049,689.6281 281.967,716.3858 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="284.498,720.9241,283.609,711.1154,282.0632,716.557,276.6216,715.0112,284.498,720.9241" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="45" x="267" y="685.8979">Aborted</text><path d="M466.655,414.178 C452.413,459.683 418.825,560.616 378,640 C365.823,663.6781 363.591,670.9392 345,690 C332.147,703.178 314.267,714.726 302.197,721.7683 " fill="none" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="297.723,724.3278,307.5213,723.3307,302.063,721.845,303.5487,716.3867,297.723,724.3278" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="28" x="362" y="685.8979">Tired</text></g></svg>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-6" class="outline-3">
+<h3 id="sec-2-6"><span class="section-number-3">2.6</span> Other UML Diagrams</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+In UML 2 there are other diagrams such as Component Diagram and
+Objects Diagram which are supported also by PlantUML.
+</p>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+<a href="http://www.plantuml.com/faq.html">What's the goal of PlantUML ?</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.2" name="fn.2" class="footnum" href="#fnr.2">2</a></sup> <p class="footpara">
+<a href="http://www.agilemodeling.com/artifacts/sequenceDiagram.htm#sthash.uLZLZUmE.dpuf">UML 2 Sequence Diagrams: An Agile Introduction</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.3" name="fn.3" class="footnum" href="#fnr.3">3</a></sup> <p class="footpara">
+<a href="http://www.agilemodeling.com/artifacts/useCaseDiagram.htm#sthash.x1XX0qza.dpuf">UML 2 Use Case Diagrams: An Agile Introduction</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.4" name="fn.4" class="footnum" href="#fnr.4">4</a></sup> <p class="footpara">
+<a href="http://www.agilemodeling.com/artifacts/classDiagram.htm">UML 2 Class Diagrams: An Agile Introduction</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.5" name="fn.5" class="footnum" href="#fnr.5">5</a></sup> <p class="footpara">
+<a href="http://agilemodeling.com/artifacts/activityDiagram.htm">UML 2 Activity Diagrams: An Agile Introduction</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.6" name="fn.6" class="footnum" href="#fnr.6">6</a></sup> <p class="footpara">
+<a href="http://www.agilemodeling.com/artifacts/stateMachineDiagram.htm">UML 2 State Machine Diagrams: An Agile Introduction</a>
+</p></div>
+
+
+</div>
+</div>

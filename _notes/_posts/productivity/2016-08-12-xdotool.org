@@ -1,0 +1,56 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Linux 下用命令行工具 xdotool 模拟图形界面的鼠标键盘操作
+categories: [productivity]
+tags: [Linux]
+---
+#+END_HTML
+
+最近发现一个叫 xdotool 的 Linux 工具，可以用来在命令行下操作鼠标移动、点击以及键
+盘输入，同时也支持窗口管理动作比如切换窗口，移动窗口等。[fn:1]
+
+至于我为什么找这个工具的原因是这样的。我们的这边团队开发任务管理用的是一个基于
+Web 的应用，工程师登录到网页中更新任务时间，然后服务器会自动产生进度状态报表。为
+了提高开发进度的透明度，我把这个报表投放到办公室墙上的电视机上，大家抬头就能清楚
+的看到开发进展。电视机通过一个 RaspberryPi 自动连到服务器获取进度报表，并展示在
+全屏浏览器中。
+
+那么问题来了，有时候自动打开的网页需要按一个登录按钮才能登录进去，但是我们的电视
+机和 RaspberryPi 是挂在墙上的，没有连接鼠标和键盘。为了可以通过远程 ssh 的终端去
+虚拟鼠标移动和点击动作，就需要一个命令行操作鼠标键盘的工具。所以就找到了 xdotool。
+
+
+* 安装
+
+安装非常方便，在 Debian 系统里只要运行如下命令即可：
+
+#+BEGIN_QUOTE
+pi@maserati ~ $ sudo apt-get install xdotool
+#+END_QUOTE
+
+* 使用
+
+以下命令移动鼠标动 1050 85 的位置（我们网页程序登录按钮所在的位置），然后点击鼠
+标左键：
+
+#+BEGIN_QUOTE
+pi@maserati ~ $ xdotool mousemove 1050 85 click 1
+#+END_QUOTE
+
+如果是远程 ssh 登录到 Linux 终端还需要设置显示器变量：
+
+#+BEGIN_QUOTE
+pi@maserati ~ $ export DISPLAY=:0.0
+#+END_QUOTE
+
+不然会报如下错误：
+#+BEGIN_QUOTE
+pi@maserati ~ $ xdotool mousemove 1050 85
+Error: Can't open display: (null)
+Failed creating new xdo instance
+#+END_QUOTE
+
+* Footnotes
+
+[fn:1] http://www.semicomplete.com/projects/xdotool/

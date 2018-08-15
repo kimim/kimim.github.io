@@ -1,0 +1,103 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 單詞本：法語單詞 an 和 année
+categories: [language]
+tags:
+  - Français
+---
+#+END_HTML
+
+#+BEGIN_VERSE
+Bonne année et bonne santé.
+#+END_VERSE
+
+#+BEGIN_HTML
+<a href="http://www.flickr.com/photos/kimim-photo/11882330863/" title="Flickr 上 kimim-photo 的 DSCF1652"><img src="http://farm4.staticflickr.com/3694/11882330863_af68413a2b_z.jpg" width="640" height="427" alt="DSCF1652"></a>
+#+END_HTML
+
+- année :: Jahr^(de) ，Vuosi^(fi)
+
+* 法語中的新年祝福
+Bonne année et bonne santé 是法語中新年祝福語：新年快樂身體健康。更簡單一點的說法是“Bonne année”。但是“Bonne année et bonne santé”是更經典一些的用法。這樣說一方面表達了美好的祝願，另一方面加了“bonne santé”顯得更加押韻朗朗上口。
+
+法語中其他新年祝福還有：
+- Bonne et heureuse année.
+- Meilleurs vœux[fn:1].
+- Meilleurs vœux pour le Nouvel An
+
+* 法國新年習俗
+在法國，12 月 31 日叫做 la Saint-Sylvestre[fn:2]。這一天通常會有慶祝宴會，叫做 le Réveillon de Saint-Sylvestre。晚宴的特色食物是香檳 champagne 和鵝肝 foie gras，同時還會有舞會 une soirée dansante。
+
+在午夜時分，大家在 Mistletoe[fn:3] 下互相親吻或者貼面吻，相互致意最真摯的新年祝福。
+
+
+* An 和 Année 的區別
+和漢語一樣，法語中也區分時刻和時間，比如 2000 年和 3 年，三點和三小時。法語中比如有：
+- an 和 année
+- jour 和 journée
+- matin 和 matinée
+- soir 和 soirée
+
+但是在英語中貌似不區分這兩種概念，所以英語母語的人可能會理解困難。但是我們應該問題不大。
+
+前述單詞對中，短版的那一組通常是陽性的，表示一段時間，我們稱之為 *時刻單詞* 。
+
+比如：
+- Je suis en Chine depuis trois jours. :: 我三天前來中國。
+- Il est heureux ce soir. :: 今晚他很嗨。
+
+而長版的那組單詞則全是陰性的，表示一段時間，用來強調實際時間長度，我們稱之為 *時間單詞* 。
+
+比如：
+- Nous avons travaillé pendant toute la matinée. :: 我們干了一個早晨的活兒。
+- J'ai travaillé cinq années dans cette entreprise. :: 我在這家企業工作了五年。
+
+* 由 An/Année 組成的詞組和例句
+- année bissextile :: 閏年，Schaltjahr^(de) ，leap year^(en) ，karkausvuosi^(fi) 。Se dit d’une année qui comporte 366 jours au lieu de 365 habituellement. Le jour ajouté est le 29 février. 2012 est une année bissextile.
+- année commune :: durée de 365 jours, par opposition à l’année bissextile.
+- année grégorienne :: année julienne, réformée par le pape Grégoire XIII, en 1582, et généralement adoptée aujourd’hui partout.
+- année homme :: 人年，Personenjahre^(de) ，man-year^(en) 。Unité de mesure correspondant au travail d’une personne pendant une année. Ce projet demande 1 année-homme pour être réalisé. 其他還有 heure-homme，jour-homme，mois-homme，semaine-homme。
+- année-lumière :: 光年，Lichtjahr^(de) ，lightyear^(en) 。Unité de longueur utilisée en astronomie, de symbole al, correspondant à la distance parcourue par la lumière dans le vide en une année julienne. Par la définition du mètre, une année-lumière vaut exactement 9 460 730 472 580 800 mètres, soit environ 9,46 pétamètres.
+- décennal :: Qui dure dix ans ou qui revient tous les dix ans. Fêtes décennales.
+- bon an mal an [fn:4] :: 年復一年，year in, year out^(en) ，jahraus, jahrein^(de)。Ceux-ci constituent la main-d'œuvre la plus importante en Europe; ils effectuent souvent des taches qui se trouvent au-dessus de leurs forces et travaillent 24 h sur 24, bon an, mal an.^(fr) Sie bilden die größte Gruppe von Arbeitnehmern in Europa; sie heben oft mehr als sie selbst wiegen und arbeiten rund um die Uhr, und zwar jahraus, jahrein.^(de) These constitute the largest workforce in Europe, they often perform tasks that are beyond their strengths and work 24 hours on 24, year in, year out.^(en) 例句：Jahraus, jahrein haben wir auf unser Recht hingewiesen, die Bank zu kontrollieren.
+
+* 擴展學習
+** 德語新年祝福
+- Ein gutes neues Jahr!
+- Viel Glück im neuen Jahr!
+- Ich wünschen dir Glück zu Neujahr!
+- Ich wünschen Ihnen Glück zu Neujahr!
+- Herzlichen Glückwunsch zum Jahreswechsel!
+- Ich wünsche Ihnen ein gesundes neues Jahr!
+** 芬蘭語新年祝福
+- Onnellista Uutta Vuotta[fn:5]
+
+* Footnotes
+
+[fn:1] http://en.wikipedia.org/wiki/%C5%92#Encodings to input œ, you should type =C-x 8 RET 153 RET= in emacs.
+
+[fn:2] Sylvestre I^er (ou Silvestre) ou saint Sylvestre fut le 33^e pape de 314 à 335, pendant le règne de l'empereur Constantin I^er , qui instaura la tolérance du christianisme au sein de l'Empire romain. 教宗西爾維斯特一世，（生年、地不詳—卒年、地不詳），於314年1月至335年12月31日在位為羅馬教宗。
+
+[fn:3] http://www.essortment.com/myths-mistletoe-64799.html
+
+Mistletoe was said to be the sacred plant of Frigga, the goddess of love. When her son, Balder, dreamed of his death, Frigga rushed about seeking promises that her son would not die. Unfortunately, Balder's enemy, Loki, tipped an arrow with Mistletoe and gave it to Hoder, the blind god of winter who killed Balder with it. He was brought back to life by his mother when she shed tears that turned into Mistletoe berries, so Frigga kissed everyone who passed under the tree on which it grew. From that time on, anyone who stood under the mistletoe would receive only a kiss; no harm could come to him.
+
+An Anglo-Saxon legend of Freya, goddess of love, said men must kiss any young girl who stood under a sprig of Mistletoe hung from the ceiling. Another custom required all the Mistletoe in the house to be burned on Twelfth Night, or the couples who kissed under it will never marry.
+
+北歐神話中，有一天，天父奧丁及他的妻子弗麗嘉（Frigg）的兒子光明神巴德爾（Balder）做了自己將會死去的惡夢，於是擔心的 Frigg 拜託世上所有的事物發誓皆不可傷害 Balder，獨漏了一隻細小的槲寄生樹苗沒發誓。而洛基利用眼盲的霍德爾（Hoder），騙其向 Balder 擲出此樹，而槲寄生正是世上唯一可以傷害 Balder 的東西，枝條貫穿並殺死了 Balder，世界因此陷入了黑暗。Balder的母親 - 愛神 Frigg 得知後痛不欲生，於是她和眾神想盡辦法挽救 Balder 的生命，最後終於救活了他。Frigg 非常感激，因此承諾無論誰站在槲寄生下，便賜給那個人一個親吻。於是，造成聖誕節槲寄生下親吻的習俗。而且也將槲寄生象徵的涵義：愛、和平、寬恕，永遠保存下來，這三者也正是聖誕節的精神本質。傳說中，在槲寄生下親吻的情侶，會廝守到永遠。
+
+另一種版本的神話中，在 Balder 被槲寄生枝條穿刺而死，但 Frigg 不願放棄希望，她請託赫爾莫德（Hermod）騎著奧丁的八足神馬斯萊布尼爾（Sleipnir）前往死亡之國。死界女王海拉（Hel）開出條件是：如果所有的生命及無生命都為 Balder 哭泣的話，才可讓 Balder 復活。於是，萬物都哭泣了，相傳這眼淚就是早晨時的露水。唯獨一個女巨人索克（Thokk。煤）住在地底，她並不需要光明，所以她不肯為 Balder 哭泣，所以 Balder 只能繼續留在死亡之國。然而另一說法中，這女巨人其實是洛基為了妨礙巴德爾的復活而變的。
+
+[fn:4] http://www.expressio.fr/expressions/bon-an-mal-an.php
+
+Employée au moins depuis le XVIIe siècle, cette expression se comprend aisément.
+
+Elle a d'abord été associée à des activités répétitives sur une longue durée ; la 'moyenne' tient compte des bonnes et des mauvaises années qui se succèdent.
+Ainsi en est-il dans un vignoble, par exemple, de la production de vin dont la qualité et le volume varient au fil des ans mais qui, bon an, mal an, restent sans grandes surprises, si les techniques n'évoluent pas, ni les surfaces cultivées.
+
+Elle s'utilise maintenant beaucoup plus largement, même si la durée n'est plus un multiple d'années.
+
+Il ne faut pas oublier que 'an' vient du latin 'annus' qui désignait l'année mais aussi la récolte. La variabilité de la qualité et du volume des récoltes dans le temps, a un très probable lien avec la naissance de l'expression.
+
+[fn:5] http://www.babla.cn/%E6%89%8B%E5%86%8C/%E4%B8%AA%E4%BA%BA/%E7%A5%9D%E7%A6%8F/%E4%B8%AD%E6%96%87-%E8%8A%AC%E5%85%B0%E8%AF%AD/

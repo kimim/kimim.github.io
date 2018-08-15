@@ -1,0 +1,110 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之花菜
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* 前言
+
+本文是食物系列单词学习的第四篇，蔬菜子系列的第三篇，前面我们学习了：
+- [[http://kimi.im/2016-08-14-english-food][August 14, 2016 » 单词本：谷物]]
+- [[http://kimi.im/2016-08-16-english-vegetable][August 16, 2016 » 单词本：蔬菜之萝卜和胡萝卜]]
+- [[http://kimi.im/2016-08-17-english-cabbage][August 17, 2016 » 单词本：蔬菜之卷心菜]]
+
+慢慢的发现，食物系列真是个大坑啊，好多平时常吃的食物的单词都挺陌生的，学习一下还
+是挺有必要的。
+
+言归正传，今天继续学习蔬菜系列单词 cauliflower
+
+* cauliflower
+
+a cabbage of a variety that bears a large immature flower head of small
+creamy-white flower buds. 花椰菜是卷心菜的一种，只是它又一簇非常大的不成熟的花丛，
+看起来像奶油一样白（creamy-white）。我们餐桌上吃的是它的花，所以称之为花菜。
+
+- These cauliflower fritters are a healthier and lower carb alternative to
+  potato pancakes.[fn:1] 花菜馅饼比土豆煎饼更健康更低热量。
+- Adults appreciate the excellent taste of the mild, tender cauliflower and
+  sweet, toothsome shrimp simmered in coconut milk with lots of aromatic
+  flavors.[fn:2]
+- Kids have long seen cauliflower as a mortal enemy. Adults, however, often
+  recognize cauliflower's nutritional value.[fn:3] 小孩子一直视花菜为死敌，大人
+  则认为其很有营养价值。附录这篇文章介绍了一种以印度方式烹制花菜的方法可以极大提
+  高口味。
+
+英语中花菜看起来像是个专有名词，但是据说很可能来自法语 chou-fleur^(fr)。
+
+法语和德语的组词方式就很像中文了：
+- der Blumenkohl^(de)：die Blume(n) 花，der Kohl^(de) 卷心菜。另外南德也称花菜为
+  der Karfiol^(de)，大概是比较靠近法国受法语影响吧，有点接近 chou-fleur^(fr) 了。
+  也叫 Italienischer Kohl 可能源自意大利。
+- le chou-fleur^(fr)：la fleur^(fr)：花，le chou^(fr)：卷心菜。
+
+** cauliflower ear
+
+被打肿成花菜一样的耳朵。
+
+- Cauliflower ears: Badge of honor for wrestlers.[fn:4] 想看看什么样子的话可以点
+  进去看看这个链接[fn:4]，比较血腥暴力就不放图了。
+- Cauliflower ear is a condition that occurs when the external portion of the
+  ear suffers a blow, blood clot or other collection of fluid under the
+  perichondrium.[fn:5]
+- Le terme /oreilles en choux-fleur/ désigne l'aspect du pavillon de l'oreille
+  secondaire à une périchondrite.[fn:6]
+- Das /Blumenkohlohr/ oder Ringerohr ist eine bleibende Entstellung des äußeren
+  Ohres, die durch Blutergüsse in der Ohrmuschel (Othämatome) entsteht, wenn es
+  zur bindegewebigen Organisation des Blutergusses kommt oder die Versorgung des
+  Knorpelgewebes mit Nährstoffen verhindert wird und dieses zugrunde geht.[fn:7]
+
+** cauliflower fungus
+
+#+BEGIN_QUOTE
+An edible fungus which forms a distinctive fruiting body with a yellowish lobed
+surface, growing on wood and other plant debris. Also called brain fungus.[fn:8]
+#+END_QUOTE
+
+甘蓝菌。不知道为什么不称之为花菜菌。看起来好像是一种长的像花菜的银耳。但好像比银
+耳要厚实一点。也叫 brain fungus 脑菌……
+
+* Broccoli
+
+西兰花，因为和花菜比起来颜色是绿色的，所以又叫绿菜花、青花菜。
+
+Brokkoli schmeckt sehr gut und ist noch dazu gesund.（http://www.brokkoli.net）
+居然有德国人专门为西兰花建了个网站。那是多么热爱这个蔬菜啊。
+
+** Broccolini
+
+Broccolini (original Japanese: ブロッコリーニ) is a green vegetable similar to
+broccoli but with smaller florets and longer, thin stalks. Often misidentified
+as young broccoli, it is a hybrid of broccoli and kai-lan.[fn:9]
+
+一种来自日本的西蓝花和芥蓝杂交的蔬菜。好像在哪儿看到过……
+
+* 小结
+
+今天主要学了俩单词奶白色的花菜 caulliflower 和青绿色的西兰花 broccoli。以后吃这
+两种蔬菜就知道英语单词是不一样的了。
+
+* Footnotes
+
+[fn:1] http://kirbiecravings.com/2016/08/cauliflower-fritters.html
+
+[fn:2] http://www.wnyc.org/story/flavorwalla/
+
+[fn:3] http://www.timesjournal.com/community/article_0946d7bd-6c06-59b8-873a-d6690cf97e18.html
+
+[fn:4] http://www.usatoday.com/story/sports/olympics/rio-2016/2016/08/14/wrestling-cauliflower-ears-kyle-snyder/88714754/
+
+[fn:5] https://en.wikipedia.org/wiki/Cauliflower_ear
+
+[fn:6] https://fr.wikipedia.org/wiki/Oreille_en_chou-fleur
+
+[fn:7] https://de.wikipedia.org/wiki/Blumenkohlohr
+
+[fn:8] http://www.oxforddictionaries.com/definition/english/cauliflower-fungus
+
+[fn:9] https://en.wikipedia.org/wiki/Broccolini

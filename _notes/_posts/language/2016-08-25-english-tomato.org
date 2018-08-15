@@ -1,0 +1,59 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之番茄
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* Tomato
+
+今天的主题是番茄。法语 la tomate^(fr)，德语 die Tomate^(de)。德语法语中都是阴性
+名词。可能番茄是从墨西哥纳瓦特人那边引进的，所以这个单词发源于纳瓦特（Nahuatl）
+语言 tomatl。
+
+除了 tomatl，还有比如 chocolate 巧克力，源自纳瓦特语 xocolātl，本意为苦水；
+avacado 牛油果，源自 ahuacatl; coyote 丛林狼，源自 coyotl；ocelot 山猫来自
+ocelotl。[fn:1] 有没有发现一个规律，就是纳瓦特语特别喜欢在每个单词后面加上 l，就
+如同他们的语言 Nahuatl 一样。
+
+* cherry tomato
+
+还有一种我们常吃的小番茄，又叫圣女果，英语名字叫 cherry tomato 樱桃番茄。好像我
+们有时候也叫它樱桃番茄。叫圣女果是因为台湾有一种小番茄的品种名叫“圣女”。台湾还有
+个说法叫车厘茄，这是中西合璧的结晶。
+
+法语叫 tomate cerise^(fr)，德语叫 Johannisbeertomate^(de)。
+
+法语还是很好理解的cerise^(fr) 就是樱桃。
+
+但是德语 Johannisbeer 是什么东西呢？原来是醋栗 currant^(en) ，一种小小的红红的酸
+甜的小浆果。记得在芬兰的时候经常吃到醋栗酱。而德国人每年6 月 24 日施洗者圣约翰节
+的时候会吃一吃，所以就叫 Johannisbeere 了。die Beere^(de) 浆果，草莓就叫 die
+Erdbeere^(de)。另外圣约翰是耶稣基督的表兄，在耶稣基督开始传福音之前在旷野向犹太
+人劝勉悔改，并为耶稣基督施洗。施洗者圣约翰节在每年的6月24日。[fn:2]
+
+* spoon tomato
+
+比圣女果还要小的番茄，一勺能兜起一大把。
+
+Spoon tomato plants get as tall as regular cherry tomato plants. It produce many
+small tomatoes. Tomatoes are small but you can harvest many so it's fun! Kids
+love them. [fn:3]
+
+* Summary
+
+Tomato 这种欧美世界通用的单词也没什么好多说的，唯一考究一下它的来源还是挺好玩的，
+头一次知道有纳瓦特语。还知道了巧克力，牛油果，丛林狼，山猫都是来自纳瓦特语的单词。
+
+另外还学习了番茄的两个品种 cherry tomato 和 spoon tomato。另外从小番茄的德语名字
+Johannisbeertomate 中，我们了解到了每年的 6 月 24 日是西方施洗者圣约翰节。
+
+* Footnotes
+
+[fn:1] https://en.wikipedia.org/wiki/Nahuatl
+
+[fn:2] http://ask.rednet.cn/question/81125
+
+[fn:3] http://www.reimerseeds.com/worlds-smallest-tomato.aspx

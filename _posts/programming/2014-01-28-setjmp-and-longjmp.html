@@ -1,0 +1,497 @@
+---
+layout: post
+title: setjmp 和 longjmp
+categories: [programming]
+tags:
+  - c prog
+---
+
+<p>
+在 Unix/Linux 環境下 C 語言標準函數庫 <code>setjmp.h</code> 提供了兩個函數 <code>setjmp()</code> 和 <code>longjmp()</code> 用以實現非本地跳轉（non-local jump）。這兩個函數可以用來構建複雜的流程控制，比如異常處理，多任務調度等。
+</p>
+
+<p>
+想要理解 <code>setjmp()</code> 和 <code>longjmp()</code> 的工作原理，必須透過現象看本質，理解計算機的底層工作機制。在計算機系統中，一個程序的狀態是完全由它的內存和寄存器值決定的。
+</p>
+
+<p>
+內存信息包括：
+</p>
+<ul class="org-ul">
+<li>代碼（ code ）
+</li>
+<li>全局變量（ global variable, Variable globale<sup>(fr)</sup>,globale Variable<sup>(de)</sup> ）
+</li>
+<li>堆（ heap, le tas<sup>(fr)</sup>, der Haufen<sup>(de)</sup> ）
+</li>
+<li>棧（ stack, la pile d'exécution<sup>(fr)</sup>, Aufrufstapel<sup>(de)</sup> ）
+</li>
+</ul>
+
+<p>
+寄存器信息有：
+</p>
+<ul class="org-ul">
+<li>棧指針（ stack pointer, sp ）
+</li>
+<li>幀指針（ frame pointer, fp ）
+</li>
+<li>程序計數器（ program counter - pc ）/指令指针（ instruction pointer - ip ）
+</li>
+</ul>
+
+<p>
+<code>setjmp()</code> 的任務只不過就是將寄存器的信息保存起來，然後 <code>longjmp()</code> 可以之後將這些值恢復回來。這樣 <code>longjmp()</code> 就能幫助程序返回到調用了 <code>setjmp()</code> 的那個時刻的寄存器和內存狀態。
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> setjmp() 和 longjmp() 的定義和實現</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> setjmp() 的定義：</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+
+<pre class="src src-C">#include <span style="color: #3a5fcd;">&lt; setjmp.h &gt;</span>
+<span style="color: #551a8b;">int</span> <span style="color: #0000cd;">setjmp</span>(<span style="color: #551a8b;">jmp_buf</span> <span style="color: #0000ff; font-style: italic;">env</span>);
+</pre>
+</div>
+
+<p>
+這個函數將當前程序寄存器的狀態保存到 <code>env</code> 中。在 <code>setjmp.h</code> 中定義了 <code>jmp_buf</code> 如下：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #8b008b; font-weight: bold;">typedef</span> <span style="color: #8b008b; font-weight: bold;">struct</span> {
+  <span style="color: #551a8b;">unsigned</span> <span style="color: #551a8b;">long</span> <span style="color: #0000ff; font-style: italic;">eax</span>;
+  <span style="color: #551a8b;">unsigned</span> <span style="color: #551a8b;">long</span> <span style="color: #0000ff; font-style: italic;">ebx</span>;
+  <span style="color: #551a8b;">unsigned</span> <span style="color: #551a8b;">long</span> <span style="color: #0000ff; font-style: italic;">ecx</span>;
+  <span style="color: #551a8b;">unsigned</span> <span style="color: #551a8b;">long</span> <span style="color: #0000ff; font-style: italic;">edx</span>;
+  <span style="color: #551a8b;">unsigned</span> <span style="color: #551a8b;">long</span> <span style="color: #0000ff; font-style: italic;">esi</span>;
+  <span style="color: #551a8b;">unsigned</span> <span style="color: #551a8b;">long</span> <span style="color: #0000ff; font-style: italic;">edi</span>;
+  <span style="color: #551a8b;">unsigned</span> <span style="color: #551a8b;">long</span> <span style="color: #0000ff; font-style: italic;">ebp</span>;
+  <span style="color: #551a8b;">unsigned</span> <span style="color: #551a8b;">long</span> <span style="color: #0000ff; font-style: italic;">esp</span>;
+  <span style="color: #551a8b;">unsigned</span> <span style="color: #551a8b;">long</span> <span style="color: #0000ff; font-style: italic;">eip</span>;
+} <span style="color: #551a8b;">jmp_buf</span>[1];
+</pre>
+</div>
+
+<p>
+這個詭異的類型聲明是定義了一個叫 <code>jmp_buf</code> 的類型，它是一個長度為 9 的 <code>unsigned long</code> 32 位整型數組類型<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>。這 9 個整型數值對應了 9 個處理器寄存器：
+</p>
+<ul class="org-ul">
+<li>通用寄存器 <code>eax, ebx, ecx, edx</code> 
+</li>
+<li>索引指針寄存器 <code>esi, edi, ebp, esp</code> 
+</li>
+<li>以及程序計數器（program counter）又叫指令指針（instruction pointer） <code>eip</code>
+</li>
+</ul>
+
+<p>
+這些寄存器完全決定了一個程序的運行行為。
+</p>
+
+<p>
+當你調用 <code>setjmp()</code> ，時，傳遞一個指向 <code>env</code> 的指針，讓程序把當前寄存器的值保存到 <code>env</code> 中，并返回 0。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> longjmp() 的定義</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+
+<pre class="src src-C">longjmp(<span style="color: #551a8b;">jmp_buf</span> <span style="color: #0000ff; font-style: italic;">env</span>, <span style="color: #551a8b;">int</span> <span style="color: #0000ff; font-style: italic;">val</span>);
+</pre>
+</div>
+
+<p>
+<code>longjmp()</code> 函數把 <code>env</code> 中的值恢復到 CPU 的寄存器中。
+</p>
+
+<p>
+注意， <code>longjmp()</code> 函數調用是不會再返回了的。因為它讓程序恢復到上一次調用 <code>setjmp()</code> 時候的狀態，就好像那之後啥也沒發生過一樣。很有一種浮生若夢的感覺吧？
+</p>
+
+<p>
+一旦調用了 <code>longjmp()</code> ， <code>eip</code> 的值也恢復原樣了。唯一不同的是， <code>setjmp()</code> 的返回值被 <code>longjmp()</code> 修改成傳遞給 <code>longjmp()</code> 的參數 <code>val</code> 了。
+</p>
+
+<p>
+不同的返回值可以用來判斷 <code>setjmp()</code> 是第一次被調用還是調用了 <code>longjmp()</code> 之後返回。
+即非零的返回值意味著程序是從 <code>longjmp()</code> 返回。因此，需要注意，传递给 <code>long_jmp()</code> 的参数不可以是 0。當然好的庫實現在調用最後會判斷 <code>val</code> 是否為 0，如果是 0 會強制被設成 1<sup><a id="fnr.2" name="fnr.2" class="footref" href="#fn.2">2</a></sup>。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> setjmp() 和 longjmp() 應用舉例</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+我们来看看最简单的使用场景：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #999988; font-style: italic;">/* </span><span style="color: #228b22; font-style: italic;">setjmp_01.c </span><span style="color: #999988; font-style: italic;">*/</span>
+#include <span style="color: #3a5fcd;">&lt;stdio.h&gt;</span>
+#include <span style="color: #3a5fcd;">&lt;stdlib.h&gt;</span>
+#include <span style="color: #3a5fcd;">&lt;setjmp.h&gt;</span>
+
+<span style="color: #551a8b;">void</span> <span style="color: #0000cd;">main</span>()
+{
+  <span style="color: #551a8b;">jmp_buf</span> <span style="color: #0000ff; font-style: italic;">env</span>;
+  <span style="color: #551a8b;">int</span> <span style="color: #0000ff; font-style: italic;">i</span>;
+
+  i = setjmp(env);
+  printf(<span style="color: #3a5fcd;">"i = %d\n"</span>, i);
+
+  <span style="color: #8b008b; font-weight: bold;">if</span> (i != 0) exit(0);
+
+  longjmp(env, 2);
+  printf(<span style="color: #3a5fcd;">"Printed or not?\n"</span>);
+}
+</pre>
+</div>
+
+<p>
+上面這段函數的運行結果如下：
+</p>
+
+<pre class="example">
+kimim@Mars ~/code$ ./setjmp_01
+i = 0
+i = 2
+</pre>
+
+<p>
+第一次調用 <code>sejmp()</code> 的時候，這個函數返回 0 ，當我們調用了 <code>longjmp()</code> 之後， <code>setjmp()</code> 的返回值被改成了 2。緊接著判斷發現 <code>if (i != 0)</code> 成立，於是程序退出。最後一句話也不會被打印出來了。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 寄存器內存分析</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+現在，我們知道 <code>setjmp()</code> 會把所有寄存器的值保存到 <code>env</code> 中，包括 <code>sp</code> 和 <code>fp</code> 。那麼當某個函數調用了 <code>setjmp()</code> 之後返回了，就意味著，保存在 <code>env</code> 中的寄存器的值都不再有效了。
+</p>
+
+<p>
+因為 <code>env</code> 中保存了調用 <code>setjmp()</code> 的函數的 <code>sp</code> 和 <code>fp</code> ，如果這個函數返回退出了，程序棧的狀態和之前調用 <code>setjmp()</code> 時候是不一致的，這時候又從 <code>env</code> 中把 <code>sp</code> 和 <code>fp</code> 恢復回來，程序就會運行出錯，比如 <code>setjmp_02.c</code> 程序：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #999988; font-style: italic;">/* </span><span style="color: #228b22; font-style: italic;">setjmp_02.c </span><span style="color: #999988; font-style: italic;">*/</span>
+#include <span style="color: #3a5fcd;">&lt;stdio.h&gt;</span>
+#include <span style="color: #3a5fcd;">&lt;stdlib.h&gt;</span>
+#include <span style="color: #3a5fcd;">&lt;setjmp.h&gt;</span>
+
+<span style="color: #551a8b;">void</span> <span style="color: #0000cd;">func_a</span>(<span style="color: #551a8b;">jmp_buf</span> <span style="color: #0000ff; font-style: italic;">env</span>)
+{
+    <span style="color: #551a8b;">int</span> <span style="color: #0000ff; font-style: italic;">i</span> = 0;
+    <span style="color: #551a8b;">char</span> *<span style="color: #0000ff; font-style: italic;">s</span> = <span style="color: #3a5fcd;">"Kimim"</span>;
+    printf(<span style="color: #3a5fcd;">"Entering func_a\n"</span>);
+    i = setjmp(env);
+    printf(<span style="color: #3a5fcd;">"Return from setjmp = %d\n"</span>, i);
+    printf(<span style="color: #3a5fcd;">"s = %s\n"</span>, s);
+    printf(<span style="color: #3a5fcd;">"Leaving func_a\n"</span>);
+    <span style="color: #8b008b; font-weight: bold;">return</span>;
+}
+
+<span style="color: #551a8b;">int</span> <span style="color: #0000cd;">func_b</span>(<span style="color: #551a8b;">jmp_buf</span> <span style="color: #0000ff; font-style: italic;">env</span>)
+{
+    <span style="color: #551a8b;">int</span> <span style="color: #0000ff; font-style: italic;">i</span> = 1;
+    <span style="color: #551a8b;">int</span> <span style="color: #0000ff; font-style: italic;">k</span> = 2;
+    printf(<span style="color: #3a5fcd;">"Entering func_b\n"</span>);
+    longjmp(env, i);
+    printf(<span style="color: #3a5fcd;">"Leaving func_b\n"</span>);
+}
+
+<span style="color: #551a8b;">void</span> <span style="color: #0000cd;">main</span>()
+{
+    <span style="color: #551a8b;">jmp_buf</span> <span style="color: #0000ff; font-style: italic;">env</span>;
+    func_a(env);
+    func_b(env);
+}
+</pre>
+</div>
+
+<p>
+运行上面程序，输出结果如下：
+</p>
+
+<pre class="example">
+kimim@Mars ~/code$ ./setjmp_02
+Entering func_a
+Return from setjmp = 0
+s = Kimim
+Leaving func_a
+Entering func_b
+Return from setjmp = 1
+Segmentation fault (core dumped)
+</pre>
+
+<p>
+當我們調用了 <code>longjmp()</code> 之後，又一次進入了 <code>func_a</code> ，打印了 "Return from setjmp = 1" 之後，程序就出錯了（段錯誤 - segmentation fault）。
+</p>
+
+<p>
+分析一下程序運行時候棧的狀態看看發生了什麽情況。當我們第一次調用 <code>main</code> 函數的時候，棧內存分佈如下：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ditaa">|----------------|
+|                |
+|                | 
+|                |
+|                |
+|                |
+|                | &lt;--------- sp
+| env[0]         |
+| env[1]         |
+| env[2]         |               pc = main
+| env[3]         |
+| ....           |
+| env[8]         |
+| ....           |
+| &#26855;&#22522;&#22336;         | &lt;--------- fp
+|--------------- |
+</pre>
+</div>
+
+<p>
+然後， <code>main</code> 調用了 <code>func_a</code> 。CPU 首先把傳給 <code>func_a</code> 的參數壓入程序棧，然後調用 <code>jsr</code> ，把返回的 <code>pc</code> 值， <code>main</code> 的 <code>fp</code> 壓入棧。然後 <code>fp</code> ，=sp= 一起更改為 <code>func_a()</code> 留出一個空的棧：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ditaa">               |----------------|
+               |                |
+               |                | &lt;--------- sp, fp
+/------------- | main &#37324;&#33290;&#30340; fp |
+|              | main &#37324;&#33290;&#30340; pc |
+|         /--- | env &#30340;&#25351;&#37341;     | 
+|         \--&gt; | env[0]         |
+|              | env[1]         |
+|              | env[2]         |               pc = func_a
+|              | env[3]         |
+|              | ....           |
+|              | env[8]         |
+|              | ....           |
+\------------&gt; | &#26855;&#22522;&#22336;         | 
+               |--------------- |
+</pre>
+</div>
+
+<p>
+<code>func_a</code> 首先給局部變量 <code>i</code> 和 <code>s</code> 分配空間：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ditaa">               |----------------|
+               |                | &lt;--------- sp
+  <span style="color: #3a5fcd;">"Kimim"</span>&lt;---- |  s = <span style="color: #3a5fcd;">"Kimim"</span>   | 
+               |  i             | &lt;--------- fp
+/------------- | main &#37324;&#33290;&#30340; fp |
+|              | main &#37324;&#33290;&#30340; pc |
+|         /--- | env &#30340;&#25351;&#37341;     | 
+|         \--&gt; | env[0]         |
+|              | env[1]         |
+|              | env[2]         |               pc = a
+|              | env[3]         |
+|              | ....           |
+|              | env[8]         |
+|              | ....           |
+\------------&gt; | &#26855;&#22522;&#22336;         | 
+               |--------------- |
+</pre>
+</div>
+
+<p>
+然後 <code>func_a</code> 打印出： 
+</p>
+<pre class="example">
+Entering func_a
+</pre>
+
+<p>
+緊接著調用 <code>setjmp()</code> 把當前寄存器的狀態保存到 <code>env</code> 數組中。這些寄存器包括 <code>sp</code> ， <code>fp</code> ， <code>pc</code> 。接著打印出：
+</p>
+<pre class="example">
+Return from setjmp = 0
+s = Kimim
+Leaving func_a
+</pre>
+
+<p>
+然後函數返回到 <code>main()</code> 。這時候的程序棧恢復成之前的樣子，除了 <code>env</code> 中保存了調用 <code>func_a</code> 時候的機器狀態：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ditaa">|----------------|
+|                |
+|                | 
+|                |
+|                |
+|                |
+|                | &lt;----------- sp
+| env[0]         |
+| env[1]         |
+| env[2]         |               pc = main
+| env[3]         |
+| ....           |
+| env[8]         |
+| ....           |
+| &#26855;&#22522;&#22336;         | &lt;--------- fp
+|--------------- |
+</pre>
+</div>
+
+<p>
+然後調用 <code>func_b()</code> ，這時候棧狀態如下：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ditaa">               |----------------|
+               |                |
+               |                | &lt;--------- sp, fp
+/------------- | main &#37324;&#33290;&#30340; fp |
+|              | main &#37324;&#33290;&#30340; pc |
+|         /--- | env &#25351;&#37341;       | 
+|         \--&gt; | env[0]         |
+|              | env[1]         |
+|              | env[2]         |               pc = func_b
+|              | env[3]         |
+|              | ....           |
+|              | env[8]         |
+|              | ....           |
+\------------&gt; | &#26855;&#22522;&#22336;         | 
+               |--------------- |
+</pre>
+</div>
+
+<p>
+<code>func_b()</code> 首先給兩個局部變量分配空間，然後打印
+</p>
+<pre class="example">
+Entering func_b
+</pre>
+
+<p>
+這時候程序棧狀態如下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ditaa">               |----------------|
+               |                | &lt;--------- sp
+               | k = 2          |
+               | i = 1          | &lt;--------- fp
+/------------- | main &#37324;&#33290;&#30340; fp |
+|              | main &#37324;&#33290;&#30340; pc |
+|         /--- | env &#25351;&#37341;       | 
+|         \--&gt; | env[0]         |
+|              | env[1]         |
+|              | env[2]         |               pc = func_b
+|              | env[3]         |
+|              | ....           |
+|              | env[8]         |
+|              | ....           |
+\------------&gt; | &#26855;&#22522;&#22336;         | 
+               |--------------- |
+</pre>
+</div>
+
+<p>
+接著調用 <code>longjmp()</code> 。寄存器的值恢復到在 <code>func_a</code> 中調用 <code>setjmp()</code> 時候的值， <code>pc</code> 的值也恢復到 <code>func_a</code> 。可是這個時候程序棧還是調用 <code>func_a</code> 時候的狀態：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ditaa">               |----------------|
+               |                | &lt;--------- sp
+               |  k = 2         | 
+               |  i = 1         | &lt;--------- fp
+/------------- | main &#37324;&#33290;&#30340; fp |
+|              | main &#37324;&#33290;&#30340; pc |
+|         /--- | env &#30340;&#25351;&#37341;     | 
+|         \--&gt; | env[0]         |
+|              | env[1]         |
+|              | env[2]         |               pc = a
+|              | env[3]         |
+|              | ....           |
+|              | env[8]         |
+|              | ....           |
+\------------&gt; | &#26855;&#22522;&#22336;         | 
+               |--------------- |
+</pre>
+</div>
+
+<p>
+此時， <code>setjmp()</code> 的返回值是 1，所以第一句打印出來為：
+</p>
+<pre class="example">
+Return from setjmp = 1
+</pre>
+
+<p>
+接著 <code>func_a</code> 中的打印語句試圖在 k 的值 2 所指向的內存地址尋找一個字符串來打印：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C">printf(<span style="color: #3a5fcd;">"s = %s\n"</span>, s);
+</pre>
+</div>
+
+<p>
+這就導致了段錯誤（segmentation fault），因為這個進程是不允許訪問該內存地址的。<sup><a id="fnr.3" name="fnr.3" class="footref" href="#fn.3">3</a></sup>
+</p>
+
+<p>
+以上是使用 <code>setjmp()</code> 和 <code>longjmp()</code> 的時候最常遇到的 bug。所以切記： <b>千萬不要從調用 <code>setjmp()</code> 的函數中返回</b> 。
+</p>
+
+
+<p>
+本文主要翻譯自田納西大學 James S. Plank 的講稿 “CS360 Lecture notes &#x2013; Setjmp”<sup><a id="fnr.4" name="fnr.4" class="footref" href="#fn.4">4</a></sup>，并做了不少擴展和修改。
+</p>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+舉一個更簡單的例子比如：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #8b008b; font-weight: bold;">typedef</span> <span style="color: #551a8b;">int</span> <span style="color: #551a8b;">int_buf</span>[10];
+</pre>
+</div>
+
+<p class="footpara">
+這個類型聲明定義了一個叫 <code>int_buf</code> 的類型，它是一個長度為 10 的數組類型。
+</p></div>
+
+<div class="footdef"><sup><a id="fn.2" name="fn.2" class="footnum" href="#fnr.2">2</a></sup> <p class="footpara">
+如果给 <code>longjmp()</code> 第二个参数传了 0，那么 <code>setjmp()</code> 的返回值默认为 1。
+</p></div>
+
+<div class="footdef"><sup><a id="fn.3" name="fn.3" class="footnum" href="#fnr.3">3</a></sup> <p class="footpara">
+<a href="http://en.wikipedia.org/wiki/Segmentation_fault">http://en.wikipedia.org/wiki/Segmentation_fault</a> Different operating systems have different signal names to indicate that a segmentation fault has occurred. On Unix-like operating systems, a signal called SIGSEGV (abbreviated from segmentation violation) is sent to the offending process. On Microsoft Windows, the offending process receives a STATUS<sub>ACCESS</sub><sub>VIOLATION</sub> exception.
+</p></div>
+
+<div class="footdef"><sup><a id="fn.4" name="fn.4" class="footnum" href="#fnr.4">4</a></sup> <p class="footpara">
+<a href="http://web.eecs.utk.edu/~huangj/cs360/360/notes/Setjmp/lecture.html">http://web.eecs.utk.edu/~huangj/cs360/360/notes/Setjmp/lecture.html</a>
+</p></div>
+
+
+</div>
+</div>

@@ -1,0 +1,115 @@
+#+BEGIN_HTML
+---
+layout: post
+title:  單詞本：德語單詞 Ding
+categories: [language]
+tags:
+  - Deutsch
+---
+#+END_HTML
+
+#+BEGIN_VERSE
+Gott gebe mir die Gelassenheit,
+Dinge hinzunehmen, die ich nicht ändern kann, den Mut,
+Dinge zu ändern, die ich ändern kann, und die Weisheit,
+das eine vom anderen zu unterscheiden.
+                                -- Niebuhr
+#+END_VERSE
+
+2014 年新年快樂。早上起床看到口袋德語君的新年祝福：
+#+BEGIN_QUOTE
+Die besten Dinge des Lebens kosten kein Geld: Familie, Freunde, Liebe, Lachen, Küssen, Umarmungen.
+#+END_QUOTE
+其中有一個單詞：Dinge。我們來展開學習一下這個單詞。
+#+BEGIN_HTML
+<a href="http://www.flickr.com/photos/kimim-photo/10378890104/" title="Flickr 上 kimim-photo 的 IMG_4328"><img src="http://farm3.staticflickr.com/2808/10378890104_582b2171e1_z.jpg" width="640" height="427" alt="IMG_4328"></a>
+#+END_HTML
+* 注釋
+- Das Ding :: 這個單詞源自古高地德語(Althochdeutsch^de ，簡稱 OHG 或 Ahd)[fn:1] ding，荷蘭語 ding，英語 thing，丹麥語 ting。在德語中，“物品”“物質”“事物”的非書面表達，相當於普通話的“東西”。書面語一般用 Gegenstand（對象）。
+
+Ding 有兩種複數形式，Dinge 和 Dinger。其中 Dinge 是東西、事物的統稱，而 Dinger 則用來指代某一類東西。另外，Dinger 用來表示小姑娘，以及不太文雅的意思。
+
+** die Dinge
+
+Ding 的最常用的形式是複數形式的 Dinge。
+- viele Dinge :: 很多東西。
+- guter Dinge :: in cheerful sprits，這裡的 Dinge 是抽象的精神面貌的意思。
+- estaunliche Dinge :: astonishing things，令人震驚的事情。
+- geschäftliche Dinge :: business matters，商業事項。
+- private Dinge :: private matters，私事。
+- sehenswerte Dinge :: things worth seeing，值得看的東西。
+- weltliche Dinge :: temporals，時事。
+- alle guten Dinge :: all good things，所有好事。
+- alle möglichen Dinge :: all sorts of things，所有可能的事情。
+- all wichtigen Dinge :: all the important things，所有重要的事情。
+- die allermeisten Dinge :: the vast majority of the things，大多數事情。
+- Gang der Dinge :: cource of things，事情的起因。
+- ganz unterschiedliche Dinge :: different things，不同的事情。
+- Internet der Dinge :: Internet of Things，物聯網。
+- die Lage der Dinge, der Stand der Dinge :: state of affairs，事態。
+- der Lauf der Dinge, der Verlauf der Dinge :: run of events，事件進展。
+
+*** Dinge 相關的詞組
+- All Dinge ändern sich :: All things change.
+- nach Lage der Dinge :: under the circumstances, as things are， according to the state of things。在……情況下。
+- wie die Dinge lagen :: as it were
+- wie die Dinge liegen :: as is, as matters stand, as it stands.
+
+*** Dinge 相關的動詞短語
+- die Dinge aufklären :: to clear things up，整理。
+- die Dinge aufschieben :: to procrastinate，拖延。
+- die Dinge auseinanderhalten :: to keep things separate，分離。
+- die Dinge durcheinanderbringen :: to mess things up，弄亂。
+- die Dinge laufen lassen :: to let things slide, to ignore the things that one is supposed to do。推卸責任。
+  - I am afraid that I let the matter slide while I was recovering from my operation. If I let things slide for even one day, I get hopelessly behind in my work.
+  - Wir können die Dinge nicht einfach laufen lassen.^de Les choses ne peuvent plus durer telles qu'elles sont.^fr
+  - Das ist, wie wenn man sagte, man solle die Dinge laufen lassen und grßere Risiken eingehen.^de Cela revient à dire que ce qu'il convient de faire, c'est laisser les choses en l'état et courir de sérieux risques.^fr
+- die große Dinge schaffen :: to achieve great things，成就大事。
+- spaßige Dinge sagen :: to say witty things，說笑話。
+- mehrere Dinge gleichzeitig tun :: to multi-task，同時做很多事情。
+- keine halben Dinge tun :: to do nothing halfway，不半途而廢。
+- die Dinge in Ordnung bringen :: to put things straight。
+
+*** Dinge 的例句
+- Werte sind wichtiger als Dinge. :: Values are more important than things.
+- Nahrung, Kleidung und Wohnung sind Dinge, die jeder braucht. :: Food, clothes and a home are things that everyone needs.
+- Aller guten Dinge sind drei. ::  Third time lucky. All good things come/go by/in threes. The best things come in threes. The third time is the charm. [proverb]
+- Der Mensch ist das Maß aller Dinge. [Protagoras] :: Man is the measure of all things.
+- Das Richtige und das Durchführbare sind zwei verschiedene Dinge. [James Buchanan] :: What is right and what is practicable are two different things.
+- Die Dinge werden gut ausgehen. :: Things will turn out well.
+- Es gibt Dinge, die es wert sind dafür zu sterben. :: There are things worth dying for.
+- Es liegt in der Natur der Dinge, dass ... :: It's in the nature of things that ... [idiom]
+- Gott gebe mir die Gelassenheit, Dinge hinzunehmen, die ich nicht ändern kann, den Mut, Dinge zu ändern, die ich ändern kann, und die Weisheit, das eine vom anderen zu unterscheiden. [Niebuhr/Oetinger] :: God grant us the serenity to accept the things we cannot change, courage to change the things we can, and wisdom to know the difference.^en Seigneur, donne-moi d'accepter avec sérénité ce que je ne peux changer, donne-moi le courage de changer ce qui peut l'être, et donne-moi d'être assez sage pour voir la différence.^fr 這段是美國著名的神學家，也是政治哲學家尼布爾(1892-1971)在1934年的一段禱告。在二戰期間，每一位美國海軍士兵，在出發前都會拿到一份這樣的禱告詞。我的上帝，請賜我平靜，去接受我不能改變的；賜我勇氣，去改變我所能改變的；賜我智慧，去分辨兩者的區別。
+- Lass die Dinge einfach laufen. :: Let the chips fall where they may. [idiom]
+- Meistens belehrt uns erst der Verlust über den Wert der Dinge. [Arthur Schopenhauer] :: Mostly it is loss which teaches us about the worth of things.
+- Mit Gott sind alle Dinge möglich. :: With God, all things are possible. [Ohio state motto]
+- Sag Menschen nie, wie sie Dinge tun sollen. Sag ihnen, was zu tun ist, und sie werden dich mit ihrem Einfallsreichtum überraschen. :: Don't tell people how to do things. Tell them what to do and let them surprise you with their results. [George S. Patton Jr. - General of the US Army]
+- Zwei Dinge sind unendlich, das Universum und die menschliche Dummheit, aber bei dem Universum bin ich mir noch nicht ganz sicher. [Albert Einstein zugeschrieben] :: Only two things are infinite, the universe and human stupidity, and I'm not sure about the former. Two things are infinite: the universe and human stupidity; and I'm not sure about the universe. [Albert Einstein]
+- Herr Gott, Beherrscher aller Dinge [J. S. Bach, BWV 120a] :: Lord God, Ruler of All Things
+
+** die Dinger
+*** Dinger 的例句
+- Seine Töchter sind zwei nette junge Dinger. :: His daughters are two nice young things.[fn:3] 按照 wiktionary.org 上的說法，在德語里這樣的表述不會太不禮貌。不過考慮到 große Dinger 是大咪咪的意思，所以建議盡量避免這樣的表述吧。
+- Ich habe große Dinger :: 這是摘自 bild.de 的一段新聞，美國網球女運動員塞雷娜·威廉絲[fn:4]在 Harper's Bazar 時尚雜誌上描述自己的身材和姐姐維納斯·威廉絲之間的差異："Ich war 23 Jahre alt, als ich feststellte, dass ich nun mal nicht wie Venus bin. Ich bin extrem kurvig, ich habe große Dinger und und einen mächtigen Hintern. Sie ist groß, schmal wie ein Model und passt überall rein", sagte sie jetzt dem Magazin "Harper's Bazar".[fn:2] 前面句子中“große Dinger”即豐滿的胸部之意。
+#+BEGIN_HTML
+<a href="http://en.wikipedia.org/wiki/Serena_Williams" title="Serena Williams"><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Serena_Williams_US_Open_2013.jpg/406px-Serena_Williams_US_Open_2013.jpg" width="406" height="599" alt="Serena Williams"></a>
+#+END_HTML
+/塞雷娜·威廉絲/
+
+* 詞彙拓展
+- das Dingsbums, die Dingsbumse :: thingamajig，不知道什麼東西的東西。
+- Dingenskirchen :: So-and-So. Frau Dingenskirchen, Mrs So-and-So. Wir fuhren nach Dingenskirchen. We went to so-and-so.
+- der Gegenstand :: object, item, thing, article.^en Chose, objet.^fr
+- das Zeug :: stuff, gear.^en
+- die Sache :: affair.^en Chose, produit; Affaire, chose, cause..^fr
+- Dingé :: 丹熱，丹熱是法國伊勒-維萊訥省的一個市鎮，屬於雷恩區埃代縣。該市鎮總面積52.89平方公里，2009年時的人口為1543人。
+
+* Footnotes
+
+[fn:1] Als Althochdeutsch (abgekürzt Ahd.) bezeichnet man die älteste schriftlich bezeugte Form der hochdeutschen Sprache in der Zeit etwa von 750 bis 1050.  http://de.wikipedia.org/wiki/Althochdeutsch
+
+[fn:2] http://www.bild.de/sport/mehr-sport/williams/ich-habe-grosse-dinger-13257240.bild.html
+
+[fn:3] The plural Dinger is also used where the word means "girl" (or less often "boy"): Seine Töchter sind zwei nette junge Dinger. – "His daughters are two nice young things." (This usage is probably somewhat less disrespectful in German than it might be in English, but still not recommendable.)  http://en.wiktionary.org/wiki/Ding#German
+
+[fn:4] 小威廉絲，美國職業網球女運動員，網球史上最佳女子選手之一，美國最優秀的女子體育人物之一。她的姊姊維納斯·威廉絲亦是著名女子網球選手，故常稱呼塞雷娜小威廉絲，簡稱"小威"，而維納斯則為大威廉絲、大威。小威廉絲是第12位登上WTA單打排名第1的選手，共先後六度登頂。

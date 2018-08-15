@@ -1,0 +1,104 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之竹笋
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* bamboo
+
+上一篇介绍了芦笋，接着是竹笋 bamboo shoot。第一个单词是竹子 bamboo，德语 der
+Bambus^(de)，法语 le bambou^(fr)，这个奇怪的读音据说来自马来西亚的 bambu。提到马
+来西亚，不得不提一提我最近一直听到的神曲《Malaysia Chabor（来自马来西亚的查某）》
+
+http://c.y.qq.com/v8/playsong.html?songid=104995257&source=yqq#wechat_redirect
+
+* bamboo shoot
+
+那么为什么竹笋被叫做竹子射击呢？原来 shoot 不仅仅有射击的意思，还有快速长大的意
+思。竹笋的法语名字叫 la pousse de bambou^(fr)，和英语如出一撤，la pousse^(fr) 指
+的是快速生长，la pousse des ongles/cheveux 指甲/头发生长。德语也一样，叫 der
+Bambusspross^(de)，竹芽。Im Frühling sprossen wieder Bäume und Sträucher^(de) 春
+天草木抽新枝。
+
+** shoot up
+
+特指小孩子发育期快速长高，(especially of a child) grow taller rapidly:
+- When she hit thirteen she shot up to a startling 5 foot 9.
+
+所以 bamboo shoot 就是竹子快速长大的阶段，因为我们知道，雨后春笋般长高就是用来形
+容某些事物飞快发展。
+
+** mushroom
+
+不过据我所知，蘑菇也是下雨天之后快速长高的。所以蘑菇也常常做动词用，比如：
+- New houses have mushroomed on the edge of the town. 城市边缘的新建房屋犹如雨后
+  春笋。
+- The population mushroomed in the postwar decades. 战后数十年里人口快速增长。
+
+* bamboo ceiling
+
+提到竹子，还有一个奇怪的名词叫竹子天花板，是这么解释的：
+
+- Especially in America, a social barrier to further promotion or progression,
+  in employment and elsewhere, for a person of East Asian ethnicity.
+- In East Asia, a social barrier to further promotion or progression, in
+  employment and elsewhere, for women.
+
+bamboo ceiling 有两层含义，第一是，东亚裔在美国职场中遇到的升职发展瓶颈，第二是，
+东亚地区女人在职场中遇到的升职发展瓶颈。这是算是一种潜规则吧，就是东亚裔的黄皮肤
+黑头发的人在欧美发展到一定程度会遇到一种无形的阻力。就如同东亚的女人在职业发展中
+遇到的阻力一样。
+
+话又说回来，为什么叫竹子天花板呢？我猜可能是竹子在东亚地区分布最广的原因吧，所以
+提到竹子可能会联想到东亚人，主要也就是中国人，日本人和韩国人。所以竹子在西方人眼
+中有时候是中日韩黄种人的形象符号。wikipedia 对 bamboo ceiling 是这么解释的：
+
+The term "bamboo ceiling" was coined by Jane Hyun in her book focusing on Asians
+in the workplace, Breaking the Bamboo Ceiling: Career Strategies for Asians.[fn:1]
+
+原来是有个叫 Jane Hyun 的女人写了本书叫《打破竹子天花板：针对亚洲人的职业策略》。
+
+AlexZ 同学有一段经典的抱怨，很好的解释了 bamboo ceiling 的现象：不是你不努力，
+不是你不能干，只是你不是同一种人。[fn:2]
+
+Dan Harrison 有针对亚裔澳大利亚人的 bamboo ceiling 论述： 'Bamboo ceiling'
+blocking Asian Australians, says commissioner[fn:3] 看来 bamboo ceiling 不仅仅在
+美国，在所有西方欧美白人国家都存在啊。
+
+其实所谓的 bamboo ceiling 就是一种更具体的 glass ceiling 吧。
+
+** glass ceiling
+
+玻璃天花板是针对特定地区人群的一种不成文的升职阻力：
+
+#+BEGIN_QUOTE
+An unwritten, uncodified barrier to further promotion or progression, in
+employment and elsewhere, for a member of a specific demographic group.
+#+END_QUOTE
+
+那么具体到黄种人，就叫 bamboo ceiling 了，而 bamboo ceiling 又被黄种人应用到东亚
+女性身上就成了妇女职场发展阻力了。
+
+* Summary
+
+本文主要介绍作为蔬菜的竹笋的英法德单词是如何拼写的：
+- bamboo shoot
+- la pousse de bambou^(fr)
+- der Bambusspross^(de)
+
+然后由 shoot 联想到 shoot up 以及 mashroom。
+
+又碰巧遇到 bamboo ceiling 这一说法，进一步引出 glass ceiling 现象。
+
+最后，希望不管是白种人还是黄种人，都能享受竹笋的美味，而忘记竹子天花板吧！
+
+* Footnotes
+
+[fn:1] https://en.wikipedia.org/wiki/Bamboo_ceiling
+
+[fn:2] https://www.douban.com/note/293388096/
+
+[fn:3] http://www.smh.com.au/federal-politics/political-news/bamboo-ceiling-blocking-asian-australians-says-commissioner-20140710-3bq45.html

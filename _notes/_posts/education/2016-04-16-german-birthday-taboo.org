@@ -1,0 +1,44 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 德國人的生日習俗
+categories: [education]
+tags: [taboo]
+---
+#+END_HTML
+
+因為和德國人接觸比較多，所以對他們了解也會多一些，就比如他們的生日習俗有些注意事
+項。
+
+#+BEGIN_HTML
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/26450752245/in/dateposted-public/" title="Geburtstagskuchen"><img src="https://farm2.staticflickr.com/1718/26450752245_a09f153af7_z.jpg" width="640" height="427" alt="Geburtstagskuchen"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_HTML
+
+* 德國人生日習俗，生日傳統
+- 絕對不要在德國人的生日那天之前向他們祝福生日快樂。因為他們認為這是一件不吉利的
+  事情。德國人在生日那一天之前沒有生日祝福，沒有禮物，沒有蛋糕（der
+  Geburtstagskuchen），賀卡。
+- 在部分奧地利地區，他們在生日前一天晚上慶祝生日（Geburtstagfeier）。
+- 假如德國人邀請你參加他們的生日宴會，一般來說都是他們請客的。
+- 德國北部地區還有一個習俗，就是如果你在 30 歲生日的時候還是單身的話，好友們會要
+  求女生用牙刷幫他們清洗門把手，要求男生去公共場所去掃地。如果想避免懲罰，就得找
+  到一名異性來給你一個 kiss。
+- 16歲生日的時候，人們通常會往你頭上撒麵粉。
+- 18歲生日的時候，人們會往你頭上砸雞蛋。
+- 25歲生日的時候：
+  - 如果你還是單身男生，用在繩子上串上襪子（Sockenkranz），一直從你家連到生日
+    party。每隔幾米你就得喝掉一杯酒。在德語里，老襪子（alte Socke）表示光棍的意
+    思。
+  - 如果是女生，人們會掛上一串香煙盒。德語里， 老盒子（eine alte Schachtel）表示老處女的意思。
+- 小孩子生日的時候，大人們通常會準備一種叫 Geburtstagskranz 的木頭小圈，上面打了
+  小孔，可以插蠟燭。
+
+#+BEGIN_HTML
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/26450713515/in/dateposted-public/" title="Geburtstagskranz"><img src="https://farm2.staticflickr.com/1463/26450713515_b4f58f6aee_o.jpg" width="500" height="381" alt="Geburtstagskranz"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_HTML
+
+* 經驗教訓
+對於像生日，紀念日，忌日，宗教紀念日等日子的活動，有外賓在場的時候，最好能好好查
+一查，有什麼注意事項，避免出錯。
+
+還有飲食上面其實也有不少禁忌吧。

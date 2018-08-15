@@ -1,0 +1,90 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：英语单词 provisional（临时的）
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+今天上班的时候解决了一个困扰很久的程序故障，经过了长期测试，相当稳定，真是一块石
+头落了地，非常踏实的过周末了。
+
+前些日子读新闻的时候遇到一个单词 provisional（临时的）。当时忘记记录新闻内容，这
+会儿想不起来在那篇新闻里看到了。不管怎么样，学一学吧。
+
+* Provisional
+
+#+BEGIN_QUOTE
+Pronunciation: /prəˈvɪʒ(ə)n(ə)l/
+
+1. Arranged or existing for the present, possibly to be changed later, such as
+   'a provisional government' 'provisional bookings'
+2. A small piece of printed paper stuck on an item to be mailed, indicating that
+   postage has been paid.
+#+END_QUOTE
+
+第一个解释是作为形容词，“临时的”。比如
+- provisional government 临时政府
+- provisional charter 临时执照
+- provisional treaty 临时条约
+
+第二个解释是作名词用：临时邮票。wikipedia 有解释：
+
+#+BEGIN_QUOTE
+The issuance of provisional stamps might be occasioned by a change in name or
+government, by occupation of foreign territory, by a change in postal rates, by
+a change of currency, or by the need to provide stamps that are in short supply.
+#+END_QUOTE
+
+这种临时邮票一般发生在政权变更，外族殖民，汇率变更等短暂时期，所发行的临时邮票。
+
+* Derivation / 衍
+
+- provisionally 临时地
+- provisionality 暂时性。Hugo saw everything he wrote as an experiment, and was,
+  more than any other great poet of his century, aware of the provisionality of
+  every position, every thought, every work of art. Some is provisionality, some
+  is long-standing. 有的是暂时性，有的长期存在。
+
+* Example / 例
+
+真正学好一个单词必须要有充足的例句来培养对单词的熟悉感，所以呢，我搜罗了一些典型
+的例子给大家：
+- The provisional calendar for the 2017 FIM Motocross World Championship is
+  announced complete with some awesome new venues such as Pangkal Pinang,
+  Indonesia and Baldasserona, San Marino. [fn:1] 这句话来自 dirtrider 泥泞越野网
+  站上的新闻。大概说 2017 年的世界越野摩托车锦标赛临时日程安排已经公布。FIM 是
+  Fédération Internationale de Motocyclisme^fr 国际摩托车赛车协会[fn:2]的缩写，很明显，
+  这是源自法国的一个协会。
+- For the last 8 months, the two adults and the three children live in a
+  provisional “shelter” made of carton boxes they have places in a corner of an
+  abandoned and half-constructed building.[fn:3] 这句话摘自一个忧伤的新闻。希腊
+  帕特雷一家五口人，父母和三个孩子，在过去的八个月里，住在一个纸盒子做的“帐篷”里。
+
+* Multilanguage / 异
+
+这个词在法语里是 provisoire^fr, 读若“普霍唯刷赫”，在德语里变成 provisorisch^de
+读若”普霍唯造黑兮“。我一直觉得，英法德就好比是我们的台湾，温州和杭州话的差异罢了。
+
+我居然找到了一个叫 provisorisch.com 的网站，专门介绍啥是 provisorisch:
+
+#+BEGIN_QUOTE
+Das Adjektiv “provisorisch” leitet sich ab von dem aus dem Lateinischen
+stammenden Substantiv “Provisorium”. Unter einem Provisorium versteht man einen
+temporär begrenzten, behelfsmäßigen Umstand als Übergangslösung.[fn:4]
+#+END_QUOTE
+
+感兴趣的朋友可以点进去看看吧。
+
+快十点半了，我得去睡觉了。
+
+* Footnotes
+
+[fn:1] http://www.dirtrider.com/2017-fim-motocross-world-championship-provisional-calendar
+
+[fn:2] https://en.wikipedia.org/wiki/F%C3%A9d%C3%A9ration_Internationale_de_Motocyclisme
+
+[fn:3] http://whatreallyhappened.net/ko/content/patras-homeless-family-5-lives-carton-boxes#axzz4DpENnjgs
+
+[fn:4] http://provisorisch.com

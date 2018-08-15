@@ -1,0 +1,99 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 在 Swift 中增加对 Dropbox 访问的支持
+categories: [technology]
+tags: [iOS Swift]
+---
+#+END_EXPORT
+
+最近想开发一款支持 Dropbox 文件同步的基于 orgmode 的任务管理 App，但是 iOS 程序
+开发基础基本为零。所以一切都是全新的。
+
+* 第一步
+
+先试着使用 Dropbox API。首先你得注册一个 Dropbox 开发者账户， 然后注册你的 App，
+在此链接中填写相关信息：https://www.dropbox.com/developers/apps，需要注意的是，
+在第二个选项“Choose the type of access you need”中，如果选 App folder 的话，就只
+能访问与你的 App 同名的文件夹，为了灵活，最好还是选择 Full dropbox，全盘访问。注
+册好之后，可以得到一个 App key。
+
+* 安装 SDK
+
+ 访问 SwiftyDropbox，一步一步照着做就好了。用 CocoaPods 比较方便，全部自动完成了：
+ https://github.com/dropbox/SwiftyDropbox#cocoapods
+
+* 配置项目的 .plist 文件
+
+https://github.com/dropbox/SwiftyDropbox#configure-your-project
+
+ 添加两个 Key：
+
+#+BEGIN_SRC xml
+<key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>dbapi-8-emm</string>
+        <string>dbapi-2</string>
+    </array>
+
+<key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>db-<APP_KEY></string>
+            </array>
+            <key>CFBundleURLName</key>
+            <string></string>
+        </dict>
+    </array>
+
+#+END_SRC
+
+其中 APP KEY 就是在 Dropbox 注册的那一串字符。
+
+* 增加代码支持
+** 创建 Dropbox 客户端
+
+#+BEGIN_SRC swift
+import SwiftyDropbox
+
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    DropboxClientsManager.setupWithAppKey("<APP_KEY>")
+    return true
+}
+#+END_SRC
+
+** 添加访问事件
+
+#+BEGIN_SRC swift
+import SwiftyDropbox
+
+func myButtonInControllerPressed() {
+    DropboxClientsManager.authorizeFromController(UIApplication.shared,
+                                                  controller: self,
+                                                  openURL: { (url: URL) -> Void in
+                                                    UIApplication.shared.openURL(url)
+                                                  })
+}
+#+END_SRC
+
+** 返回 App
+
+#+BEGIN_SRC swift
+import SwiftyDropbox
+
+func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    if let authResult = DropboxClientsManager.handleRedirectURL(url) {
+        switch authResult {
+        case .success:
+            print("Success! User is logged into Dropbox.")
+        case .cancel:
+            print("Authorization flow was manually canceled by user!")
+        case .error(_, let description):
+            print("Error: \(description)")
+        }
+    }
+    return true
+}
+#+END_SRC

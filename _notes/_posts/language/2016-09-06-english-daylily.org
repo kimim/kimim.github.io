@@ -1,0 +1,82 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之黄花菜
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+#+BEGIN_QUOTE
+« Un jour, j’ai vu le soleil se coucher quarante-trois fois! »
+
+Et un peu plus tard tu ajoutais:
+
+« Tu sais... quand on est tellement triste on aime les couchers de soleil... »
+
+« Le jour des quarante-trois fois tu étais donc tellement triste? »
+
+Mais le petit prince ne répondit pas.
+
+-- Le Petit Prince, Chapitre VI
+#+END_QUOTE
+
+* daylily
+
+惊奇的发现，黄花菜原来是一种萱草属植物又叫黄花菜属。萱草在英语里叫 daylily，德语
+die Taglilien^(de) 白日百合花。其学名叫 Hemerocallis，故法语中称之为
+l(a)'hémérocalle^(fr)，其描述为：
+
+#+BEGIN_QUOTE
+Ces plantes vivaces doivent leur nom au grec ἡμέρα (hemera), « jour », et καλός
+(kalos), « beauté ».[fn:1]
+#+END_QUOTE
+
+此花之名源自希腊，hemera 意为白日，而 kalos 意为美人。所以可不可以这么认为，英语
+之 daylily 与德语之 Taglilien 皆为希腊白日美人之意译。
+
+据说萱草有忘忧之功效。在《诗经·卫风·伯兮》中就有记载：
+
+#+BEGIN_QUOTE
+伯兮朅兮，邦之桀兮。伯也执殳，为王前驱。自伯之东，首如飞蓬。岂无膏沐？谁适为容！
+其雨其雨，杲杲出日。愿言思伯，甘心首疾。焉得谖草？言树之背。愿言思伯，使我心痗。
+[fn:2]
+#+END_QUOTE
+
+这首诗描述了当年陈蔡卫等小国的武士跟随周王讨伐郑伯时，留在国中的女人们思念丈夫的
+心情。因为当时的周王已经很弱了，而陈蔡卫又是小国，他们讨伐的郑伯当时却很强大，所
+以女人们对于外出行军的丈夫能否回归很是担心，于是就吟诵道“焉得谖草，言树之背。愿
+言思伯，使我心痗。”，谖草就是萱草，她们希望靠解忧的萱草暂时忘忧。
+
+西晋张华撰写的《博物志》中说：“萱草，食之令人好欢乐，忘忧思，故曰忘忧草。”李时珍
+《本草纲目》中是这么说的：“萱本作谖。谖，忘也。《诗》云︰焉得谖草？言树之背。谓
+忧思不能自遣，故欲树此草，玩味以忘忧也。吴人谓之疗愁。《董子》云故也。其苗烹食，
+气味如葱，而鹿食九种解毒之草，萱乃其一，故又名鹿葱。”江南吴人称萱草为疗愁，萱草
+还是鹿喜欢吃的解毒草之一，所以又叫鹿葱。[fn:3]
+
+所以呢，我们经常吃的黄花菜原来是忘忧草的一种，这么想来，下次吃到黄花菜时，得好好
+体会体会忘忧的感觉。
+
+* golden needles
+
+其实呢，黄花菜更准确的翻译应该是 golden needles 金针。
+
+* yellow flower vegetables
+
+或者逐字翻译 yellow flower vegetables。
+
+* Summary
+
+在学习黄花菜的时候惊喜的发现，原来黄花菜是一种萱草（daylily，die Taglilien^(de)，
+l'hémérocalle^(fr) ），而萱草又叫谖草，忘忧草，疗愁，鹿葱。从诗经时代就被人们发
+现具有忘忧之功效。不过黄花菜更准确一些的翻译应该是 golden needles 或者 yellow
+flower vegetables。
+
+* Footnotes
+
+[fn:1] https://fr.wikipedia.org/wiki/H%C3%A9m%C3%A9rocalle
+
+[fn:2] http://www.gushiwen.org/GuShiWen_b349d99eab.aspx
+
+[fn:3] 很多介绍黄花菜的文章提到苏东坡的诗：“莫道农家无宝玉，遍地黄花是金针。”可
+是我一直找不到诗歌全文以及出处。好郁闷！

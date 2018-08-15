@@ -1,0 +1,65 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Don't find execuses for yourself
+categories: [management]
+tags: [learning]
+---
+#+END_HTML
+
+On the way to management role, you will soon find that it is quite
+different from technical role. When there is disaster, people are not
+going to take responsible and analyze their problem. The first resort
+is to find execuse from others. They may look into history logs to
+find your mistakes and put blame on you.
+
+It really happens even though they used to be very nice
+apparently. The root cause for someone to pass the buck is the fear of
+failure. They are afraid of being blamed and dealing with the
+overwhelmed situation.
+
+In this case study, we can look from two point of view, and conclude
+some learning points.
+
+* Stop passing the buck
+
+  For whatever reasons, when people are not taking responsibility, he
+  will fail in his work, lose respects from others, and fail to grow.
+
+  Firstly, you should start from the reality and analyze the cause of
+  the problem, while not find cues to blame other.
+
+  Then, based on the result of the analyzing, you should find any
+  actions you can do to create workaround, if the case is quite urgent.
+
+  After that, you shall list all the actions strategically, list item
+  by item, group to small project, prioritize them, and schedule them.
+
+  Finally, when you complete all the actions needed to solve the
+  problem, you should retrospect the problem, and find process
+  improvement to avoid the same problem in the future. At this point,
+  you could frankly and nicely provide suggestions to others if their
+  mistake leads to the problem. I think they will trust you and
+  appreciate your help.
+
+* Avoid being the scapegoat
+
+  Well, as I mentioned in the beginning, there are always the guys who
+  will pass the buck to you. You should prepare for this in your work.
+
+  Here are some tips:
+  - The first thing you should always do is to be professional. Do not
+    leave the chance for others to blame you. That means you should
+    make high quality product. You should always improve your quality.
+  - Whatever risks you take, you should prepare for taking the
+    responsible. If others want you to rush for the deadline, you
+    should protect yourself. Otherwise, you can let others to write
+    down their responsible for the potential risk.
+  - Avoid being meek and submissive. If the criticism is unfair, you
+    should stand up. It is not the time to be nice. But you should
+    have the sufficient evidence that you are correct.
+  - Don't rush for fight, be cool, wait for enough supportive evidence
+    to fight.
+
+  Management role is always a dagerous role. It a long way for me to
+  be a professional manager.

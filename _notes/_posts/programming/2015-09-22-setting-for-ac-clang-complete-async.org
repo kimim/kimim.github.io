@@ -1,0 +1,126 @@
+#+BEGIN_HTML
+---
+layout: post
+title: How to setup ac-clang-complete-async
+categories: [programming]
+tags: [emacs, cprog, productivity]
+---
+#+END_HTML
+
+* Introduction
+
+=ac-clang-complete-async= is an emacs extension to complete C and C++
+code, it uses libclang to parse the source code on the fly and
+provides completion candidates to auto-complete
+(http://cx4a.org/software/auto-complete).[fn:1]
+
+This extension is deployed in two parts: server application
+=clang-complete= and client application written in elisp
+=auto-complete-clang-async.el=.
+
+If it is enabled, whenever you open a C/C++ file, emacs will fork a
+=clang-complete= server for that file. Then it will send whole buffer
+to the server for automatic completion candidates.
+
+#+BEGIN_HTML
+<a href="https://www.flickr.com/photos/kimim-photo/21608944085/in/dateposted-public/" title="ac-clang"><img src="https://farm6.staticflickr.com/5770/21608944085_2f1b934f63_z.jpg" width="640" height="554" alt="ac-clang"></a>
+#+END_HTML
+
+* Installation
+
+** lazy man's way
+Install =clang-complete= server with =brew=:
+#+BEGIN_SRC sh
+kimi.im$ brew install emacs-clang-complete-async
+#+END_SRC
+
+It will help you fetch the code and compile. =clang-complete= is
+installed in =/usr/local/bin=.
+
+Install =ac-clang-complete-async.el= with emacs package system:
+#+BEGIN_SRC
+M-x package-install<RET>
+Install package: auto-complete-clang-async
+#+END_SRC
+
+#+BEGIN_HTML
+<a href="https://www.flickr.com/photos/kimim-photo/21421951989/in/dateposted-public/" title="auto-complete-clang-async"><img src="https://farm6.staticflickr.com/5699/21421951989_0b0361693a_z.jpg" width="640" height="203" alt="auto-complete-clang-async"></a>
+#+END_HTML
+
+** manual installation
+Clone from https://github.com/Golevka/emacs-clang-complete-async, and
+compile =clang-complete= by yourself:
+#+BEGIN_SRC sh
+kimi.im$ git clone https://github.com/Golevka/emacs-clang-complete-async.git
+Cloning into 'emacs-clang-complete-async'...
+remote: Counting objects: 310, done.
+remote: Total 310 (delta 0), reused 0 (delta 0), pack-reused 310
+Receiving objects: 100% (310/310), 4.15 MiB | 925.00 KiB/s, done.
+Resolving deltas: 100% (157/157), done.
+Checking connectivity... done.
+
+kimi.im$ cd emacs-clang-complete-async
+
+kimi.im$ make
+make: llvm-config: Command not found
+make: llvm-config: Command not found
+./src/parse_results.c:1:10: fatal error: 'clang-c/Index.h' file not found
+#include <clang-c/Index.h>
+         ^
+1 error generated.
+#+END_SRC
+
+The fatal error indicates that =llvm-config= is not in your =PATH=,
+add =llvm-config= to your =PATH= or just remove =$(shell
+$(LLVM_CONFIG)= from =Makefile=, and run =make= again.
+
+* Configuration
+
+My configuration is to define a hook function and add it to
+=c-common-hook=:
+#+BEGIN_SRC elisp
+(require 'auto-complete-clang-async)
+
+(defun kimim/c-mode-ac-complete()
+  (global-auto-complete-mode t)
+  (setq ac-clang-complete-executable "clang-complete")
+  (add-to-list 'ac-sources 'ac-source-clang-async)
+  (if ac-clang-cflags
+      (setq ac-clang-cflags (cons ac-clang-cflags '("-I../inc" "-I../include")))
+    (setq ac-clang-cflags '("-I../inc" "-I../include")))
+  (ac-clang-launch-completion-process)
+  (ac-clang-update-cmdlineargs))
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (kimim/c-mode-ac-complete)))
+#+END_SRC
+
+* Some Tips
+1. =clang-complete= should be in =PATH=
+2. By default, buffer variable =ac-clang-cflags= is =nil=, set some
+   common used =inlcude= folder.
+3. =ac-clang-update-cmdlineargs= is used to tell =clang-complete= to
+   update =cflags=.
+
+If =clang-complete= doesn't work, you can try:
+- =M-x ac-clang-set-cflags= to set include folder such as =-I../inc"
+  "-I../include=, and then tell it to update =M-x
+  ac-clang-update-cmdlineargs=.
+- you can also set =clfags= with dir local file, for example:
+  #+BEGIN_SRC elisp
+  ((nil . ((indent-tabs-mode . t)
+         (tab-width . 8)
+         (fill-column . 80)))
+  (c-mode . ((c-file-style . "BSD")
+	    (ac-clang-cflags .
+			     ("-I/Users/kimim/Workspace/kimix/include"
+			      "-I/Users/kimim/Workspace/kimix/sys/include"
+			      "-I/Users/kimim/Workspace/kimix/usr/include"
+			      "-I../include"))
+	    )))
+  #+END_SRC
+
+* Footnotes
+
+[fn:1] https://github.com/Golevka/emacs-clang-complete-async

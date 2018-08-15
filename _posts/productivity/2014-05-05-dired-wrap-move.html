@@ -1,0 +1,45 @@
+---
+layout: post
+title: dired move line wrap up
+categories: [productivity]
+tags: [emacs]
+---
+
+<p>
+When the cursor is at the buffer end of <code>ibuffer</code>, it will wrap back
+to the beginning of the buffer list if I continue pressing <code>n</code> to next
+buffer. But in <code>dired</code>, this does not happen. The cursor will stay at
+the end of the file list, if I continue pressing <code>n</code> to navigate to
+next buffer.
+</p>
+
+<p>
+Here is the trick to wind the cursor up to the first item of the file
+list. I redefine the function <code>dired-next-line</code> and <code>dired-previous-line</code>:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(<span style="color: #8b008b; font-weight: bold;">defun</span> <span style="color: #0000cd;">dired-next-line</span> (arg)
+  <span style="color: #3a5fcd;">"Move down lines then position at filename.</span>
+<span style="color: #3a5fcd;">Optional prefix ARG says how many lines to move; default is one line."</span>
+  (interactive <span style="color: #3a5fcd;">"p"</span>)
+  (forward-line arg)
+  (<span style="color: #8b008b; font-weight: bold;">if</span> (eobp)
+      (<span style="color: #8b008b; font-weight: bold;">progn</span>
+        (goto-char (point-min))
+        (forward-line 2))) <span style="color: #228b22; font-style: italic;">;; </span><span style="color: #228b22; font-style: italic;">skip two lines: file path and summary</span>
+  (dired-move-to-filename))
+
+(<span style="color: #8b008b; font-weight: bold;">defun</span> <span style="color: #0000cd;">dired-previous-line</span> (arg)
+  <span style="color: #3a5fcd;">"Move up lines then position at filename.</span>
+<span style="color: #3a5fcd;">Optional prefix ARG says how many lines to move; default is one line."</span>
+  (interactive <span style="color: #3a5fcd;">"p"</span>)
+  (<span style="color: #8b008b; font-weight: bold;">if</span> (= 3 (line-number-at-pos)) <span style="color: #228b22; font-style: italic;">;; </span><span style="color: #228b22; font-style: italic;">line num of first item</span>
+      (<span style="color: #8b008b; font-weight: bold;">progn</span>
+        (goto-char (point-max))
+        (forward-line -1)) <span style="color: #228b22; font-style: italic;">;; </span><span style="color: #228b22; font-style: italic;">skip the last empty line</span>
+    (forward-line (- arg)))
+  (dired-move-to-filename))
+</pre>
+</div>

@@ -1,0 +1,87 @@
+#+BEGIN_HTML
+---
+layout: post
+title: x86 寄存器
+categories: [programming]
+tags: [comp arch]
+---
+#+END_HTML
+
+X86 處理器寄存器（Register^en ，le registre^fr ，das Register^de ，暫存器^tw ）是編寫 X86 彙編語言（Assembly Language^en ，langage d'assemblage ou langage assembleur^fr ，Assemblersprache^de ，組合語言^tw  ）程序的核心工具。寄存器相當於處理器的一些內部變量。寄存器讀寫速度比內存更快，指令週期更少。本文簡單介紹一些 X86 系列處理器寄存器的使用方法。本文描述的一些使用規則只是一些建議性規則，而不是強制性規則。有些操作可能需要某些特定寄存器，但對於大部份寄存器，可以完全由你自己決定怎麼使用。
+
+* 寄存器彙總
+
+X86 系列處理器總共有下列 16 個 32 位寄存器。這些寄存器大部份可以拆分成 16 位或者 8 位寄存器使用。
+
+- 通用寄存器（General purpose registers-GPRs）
+=EAX EBX ECX EDX=
+- 區段寄存器（Segment registers^en ，des registres de segments^fr ）
+=CS DS ES FS GS SS=
+- 索引和指針（Index and pointer，le registre d'index et le pointeur^fr ，Die Indexregister und Der Zeiger^de ）
+=ESI EDI EBP EIP ESP=
+- 狀態寄存器（status register, flag register, or condition code register^en ，das Zustandsregister order das Statusregister^de ）
+=EFLAGS=
+
+=EAX= 等寄存器的前綴 =E= 來自英語 Extended（擴展的）。因為最初的 Intel 8086/8088 處理器只有 14 個 16 位寄存器。其中 4 個通用寄存器（AX，BX，CX，DX）；2 個指針寄存器（SP，BP），2 個索引寄存器（SI，DI），4 個區段寄存器（CS，DS，SS，ES），1 個狀態寄存器（FLAGS），1 個指令指針寄存器（IP）。而 32 位的 80386 處理器把其中的 16 位的通用寄存器，指針寄存器，索引寄存器，指令指針寄存器，以及狀態寄存器擴展成 32 位寄存器。比如 AX 寄存器對應到了新的 32 位寄存器 EAX 的低 16 位，SI 寄存器對應到 32 位寄存器 ESI 的低 16 位。注意，區段寄存器沒有 =E= 前綴，仍然保留 16 位的大小。
+
+* 通用寄存器（General Purpose Registers - GPRs^en ）
+我們大部份時間大部份指令都在用的寄存器叫做通用寄存器。這些寄存器可以再分解成 16 位或者 8 位的寄存器。
+
+| 32 位寄存器 | EAX EBX ECX EDX         |
+| 16 位寄存器 | AX BX CX DX             |
+| 8 位寄存器  | AH AL BH BL CH CL DH DL |
+
+H 和 L 分别表示 16 位中的高 8 位和低 8 位。
+
+我们再看看这四组通用寄存器其有哪些细微的差别。
+
+- EAX,AX,AH,AL :: 累加寄存器（Accumulator register^en ，le accumulateur^fr ，der Akkumulator^de ）一般用来处理 I/O 端口访问，数学计算，中断调用等。
+- EBX,BX,BH,BL :: 基址寄存器（Base register^en ）一般用以內存訪問時候的基址指針，以及獲取某些中斷函數的返回值。
+- ECX,CX,CH,CL :: 計數寄存器（Counter register^en ）一般用在循環計數和位移操作中，還用來獲取某些中斷函數的返回值。
+- EDX,DX,DH,DL :: 數據寄存器（Data register^en ）和累加寄存器一樣用来处理 I/O 端口访问，数学计算，中断调用等。
+
+* 區段寄存器（Segment registers^en ）
+
+區段寄存器保存若干區段的地址。區段寄存器只能通過通用寄存器或者特殊指令修改。
+- CS :: 代碼段寄存器（Code segment register）記錄程序運行的代碼段地址。人為修改會導致程序無法正確運行。
+- DS :: 數據段寄存器（Data segment register）記錄程序訪問的數據段地址。人為修改可能導致錯誤的數據。
+- ES,FS,GS :: 這幾個額外的區段寄存器用以 =far= 指針訪問，比如視頻內存等。
+- SS :: 棧區段寄存器（Stack segment register）記錄程序使用的棧區段地址。有時候 SS 和 DS 是一樣的。人為修改會導致無法預期的數據結果。
+
+* 索引和指針寄存器（Indexes and pointers^en ）
+
+索引和指針寄存器用作區段地址的偏移量。 =E= 開頭的寄存器只在保護模式（Protected Mode^en ）下使用。
+
+- ES:EDI EDI DI :: 目的索引寄存器（Destination index register^en ）用作字符串、數組拷貝目的地址，以及和 =ES= 配合 =far= 指針尋址。
+- DS:ESI ESI SI :: 源索引寄存器（Source index register^en ）用作字符串、數組拷貝的源地址。
+- SS:EBP EBP BP :: 棧基址指針寄存器（Stack Base pointer register^en ）保存程序棧的基地址。
+- SS:ESP ESP SP :: 棧指針寄存器（Stack pointer register^en ）保存程序棧的棧頂地址。
+- CS:EIP EIP IP :: 程序指針（Instruction Pointer^en ）保存下一條指令的偏移地址。
+
+* 狀態寄存器（EFLAGS register）
+
+=EFLAGS= 狀態寄存器保存當前處理器的狀態。 =EFLAGS= 用作條件跳轉，條件循環，數值比較。每一位都可以用來表示上一條特定指令的執行結果。每一位的功能如下：
+
+|    位 | 標記 | 描述                           |
+|-------+------+--------------------------------|
+|     0 | CF   | Carry flag                     |
+|     1 |      | Reserved                       |
+|     2 | PF   | Parity flag                    |
+|     3 |      | Reserved                       |
+|     4 | AF   | Auxiliary carry flag           |
+|     6 | ZF   | Zero flag                      |
+|     7 | SF   | Sign flag                      |
+|     8 | TF   | Trap flag                      |
+|     9 | IF   | Interrupt enable flag          |
+|    10 | DF   | Direction flag                 |
+|    11 | OF   | Overflow flag                  |
+| 12-13 | IOPL | I/O Privilege level            |
+|    14 | NT   | Nexted task flag               |
+|    15 |      | Reserved                       |
+|    16 | RF   | Resume flag                    |
+|    17 | VM   | Virtual 8086 mode flag         |
+|    18 | AC   | Alignment check flag           |
+|    19 | VIF  | Virtual interrupt flag         |
+|    20 | VIP  | Virtual interrupt pending flag |
+|    21 | ID   | ID flag                        |
+| 22-31 |      | Reserved                       |

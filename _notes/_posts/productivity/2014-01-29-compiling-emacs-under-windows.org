@@ -1,0 +1,46 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Windows 下通過 MinGW 編譯安裝 emacs
+categories: [productivity]
+tags: [emacs]
+---
+#+END_HTML
+
+* 準備編譯環境 MinGW 和 MSYS[fn:1]
+- 從 http://sourceforge.net/projects/mingw/files/ 下載安裝 mingw-get-setup.exe
+- 在 mingw-get 包管理工具中安裝 gcc, make 和 bash.
+- 在 PATH 中添加 MinGW 路徑：
+#+BEGIN_SRC 
+D:\>set PATH=%PATH%;C:\MinGW\bin\;C:\MinGW\msys\1.0\bin\
+#+END_SRC
+
+* 下載最新版 emacs 并解壓
+http://ftp.gnu.org/gnu/emacs/
+
+* 編譯
+** configure
+#+BEGIN_SRC
+D:\emacs-24.3\nt>configure.bat
+#+END_SRC
+
+** make
+#+BEGIN_SRC 
+D:\emacs-24.3\nt>mingw32-make SHELL=cmd.exe
+#+END_SRC
+
+** install
+#+BEGIN_SRC 
+D:\emacs-24.3\nt>mingw32-make SHELL=cmd.exe install INSTALL_DIR=C:/emacs
+#+END_SRC
+
+* Enjoy, and Happy Emacsing! 
+#+BEGIN_HTML
+<a href="http://www.flickr.com/photos/kimim-photo/12200140965/" title="Flickr 上 kimim-photo 的 emacs"><img src="http://farm3.staticflickr.com/2857/12200140965_e372ceacd0_z.jpg" width="636" height="478" alt="emacs"></a>
+#+END_HTML
+
+* Footnotes
+
+[fn:1] http://mingw.org/
+
+

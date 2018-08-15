@@ -1,0 +1,60 @@
+#+BEGIN_HTML
+---
+layout: post
+title: How to Improve Technical Skill as a First Line Manager
+categories: [management]
+tags: [leadership]
+---
+#+END_HTML
+
+
+As you know, a manager at line level is frequently involved in a lot
+of meetings, such as line topic discussion meeting with other team
+leaders, project management synchronization meeting, sprint planning
+and sprint review meeting, interview talk with new candidates, etc. It
+seems that my 8 hours are cut into pieces. I cannot find time longer
+than 1 hour for code reading, or debugging. Here are some proposals on
+how to better use my work time as a technical line manager.
+
+* Pair work with subordinates who comes across impediments.
+
+We have daily standing meeting every morning. In the meeting, each
+team member tell others what they have achieved last day, what they
+plan to do in the following day and what impediment they
+encountered. The last question is very important for me. I will listen
+carefully and ask for the detail after the meeting.
+
+Then I will follow the problem. If this problem blocks them again in
+the coming day, I will try to find some time to pair work with this
+team member. What I do is sitting together with him, and asking what
+he have tried and what he plans to do. And then I analyze the problem
+and the actions have done. It is quite often that at some degree there
+is some systematically missing point. That usually is the key element
+for solving the problem.
+
+* Review design and code
+
+The programmers usually focuses on implementation while underestimate
+the importance of design and documentation. I frequently inspect the
+design description from the developers. It is important to find the
+missing point from the design. Besides document review, code review is
+also very good point for estimating the code quality and checking who
+is implementing with good qualily sense. In the review record, you may
+find some one treat other's code carefully and provide many
+constructive comments. This is also good materials for yearly personal
+performance appraisal.
+
+* Work for small tasks
+
+As line manager's time is scattered over different kind of meetings
+and discussions, it is hard to allocatge large time amount to focus on
+difficult problems. So it is possible to claim some small tasks such
+as investigation on new technology, developing small tool to improve
+test and configuration management.
+
+* Read related books
+
+In order to provide guidance to team member on design principle, it is
+necessary that a line manager should continuously learn good design
+patterns, code quality practice, domain knowleges. Therefore, it is
+better to allocate time to read books.

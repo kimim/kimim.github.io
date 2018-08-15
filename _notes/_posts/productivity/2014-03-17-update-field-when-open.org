@@ -1,0 +1,42 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 打開 M$ Word 文檔的時候自動更新域
+categories: [productivity]
+tags: [MS office]
+---
+#+END_HTML
+
+今天編輯設計文檔的時候，每次更新了文檔標題信息后要選中標題域（Field）點擊更新才可以更新到最新的字符。Google 了一下發現一個 VBS 腳本[fn:1]可以做到每次打開文檔的時候自動把文檔内的域更新。
+
+#+BEGIN_SRC vb
+Sub AutoOpen()
+    '
+    ' AutoOpen Macro
+    '
+    '
+    Dim aStory As Range
+    Dim aField As Field
+
+    ' Check that document is not in Protected View before doing anything
+    If Application.ActiveProtectedViewWindow Is Nothing Then
+
+           For Each aStory In ActiveDocument.StoryRanges
+
+              For Each aField In aStory.Fields
+                 aField.Update
+              Next aField
+
+           Next aStory
+
+         ' set document as unchanged (prevents save dialog popping up when
+         'closing) - further changes will set this back
+         ActiveDocument.Saved = True
+    End If
+End Sub
+#+END_SRC
+
+* Footnotes
+
+[fn:1] http://superuser.com/questions/458595/word-2010-template-with-automatically-updated-fields
+

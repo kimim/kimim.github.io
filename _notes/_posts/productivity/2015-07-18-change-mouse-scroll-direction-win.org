@@ -1,0 +1,28 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Change mouse scroll direction under Windows
+categories: [productivity]
+tags: [Windows]
+---
+#+END_HTML
+
+最近以 16360 元的價格買了一台 iMac。 擁有 5K 分辨率的華麗顯示技術。但
+是遇到一個小小的麻煩，蘋果鼠標的滾動方式是和手指滑動方向一直的，也就是
+說手指觸著鼠標朝上滾動，頁面內容也朝上滾動。而 Windows 的鼠標滾輪方式
+則是滾輪朝上滾，手指朝上推，內容則朝下滾動。這樣在不同系統間切換使用起
+來就有些困惑。
+
+好在找到了修改 Windows 鼠標滾輪方向的辦法。
+
+首先到鼠標屬性裡面找到鼠標的 Hardware ID：
+
+#+BEGIN_HTML
+<a data-flickr-embed="true" data-header="true" data-footer="true"  href="https://www.flickr.com/photos/kimim-photo/19040616053/in/dateposted-public/" title="mouse_hwid"><img src="https://farm1.staticflickr.com/307/19040616053_184280cf83_z.jpg" width="565" height="619" alt="mouse_hwid"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_HTML
+
+然後在 Registry Editor 中找到相應的 HID 鼠標的參數設置，如果有
+FlipFlopWheel 這個鍵值則將他改為 1， 如果沒有則創建一個，並設置成 1。
+#+BEGIN_HTML
+<a data-flickr-embed="true" data-header="true" data-footer="true"  href="https://www.flickr.com/photos/kimim-photo/19038971824/in/dateposted-public/" title="mouse_regedit"><img src="https://farm1.staticflickr.com/295/19038971824_a6af0babdc_z.jpg" width="640" height="398" alt="mouse_regedit"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_HTML

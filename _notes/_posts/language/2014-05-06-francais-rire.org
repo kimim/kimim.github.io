@@ -1,0 +1,230 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 單詞本：法語單詞 rire
+categories: [language]
+tags: [Français]
+---
+#+END_HTML
+
+星期天的早晨，寶貝們還在睡覺。懷著愉快的心情翻開法語詞典看看。隨便一翻
+就看到 risible 這個單詞。它的意思是可笑的。因爲 rire 是笑的意思，於是很
+自然的想到，risible，rire 應該是起源于某個相同的祖先。字典裏還有一個單
+詞 risée 嘲笑的名詞，附近的另一個單詞 risette 孩子的微笑。然後我再查看
+漢法詞典裏的笑，於是又發現微笑 sourire 無非就是在 rire 前面添加了個詞綴
+sou-。至此，關於笑得幾個單詞似乎都被聯係在了一起。接下來就去網上索搜研
+究一下，看看他們之間是什麽樣的一種關係。
+
+* 單詞釋義
+
+  *rire*:
+  - 笑。Marquer un sentiment de gaieté par un mouvement de la bouche
+    accompagné souvent de bruit et par une expression correspondante
+    des regards et des traits du visage. marguer: 表示。sentiment: 感覺，
+    感情。gaieté: 歡樂，快活。la bouche: 嘴巴。bruit: 喧閙聲。trait: 特
+    徵，臉部特徵。Il a des traits fins et réguliers. 他臉部輪廓細膩端正。
+    - Elle rentrait de l'école, son *rire* s'envolait.
+    - Rira bien qui *rira* le dernier. [諺]最後笑的人笑得最好。
+    - *rire* comme une baleine 笑得像頭鯨魚 => 笑得合不攏嘴。
+  - 開玩笑。Railler; badiner; ne pas parler ou ne pas agir
+    sérieusement. railler: 開玩笑，取笑。badiner: 開玩笑，說笑話。
+    - Nous serons en joyeuse compagnie, nous *rirons* bien. Venez avec
+      nous, nous *rirons*. C’est un bon garçon qui aime à *rire*.
+    - C'est pour *rire*. C'est pour de *rire*. 这是開開玩笑的。
+  - 顯得順利，呈現喜悅。Être agréable, plaire, en parlant des choses.
+    - La campagne *rit* sous le soleil. la campagne: 平原，田野。
+  - 嘲笑，取笑。(Rire à quelqu’un) Être favorable.
+    - Ne riez pas de lui.
+  - 無視，對……付之一笑。
+    - *rire* des menaces de qn
+  - 高興，快樂，玩耍。
+    - faire *rire* qn　使某人高興
+    - aimer à *rire* 喜歡玩耍
+    - Plus on est de fous, plus on *rit*.　人越多越熱鬧。
+  - 嘲弄。Se moquer de quelqu’un. se moquer: to mock, make fun of[fn:1]. 嘲笑，愚弄。
+    - Elle *se rit* de vous. Il *se rit* de vos vains projets.
+
+* 詞源
+
+  Du latin populaire *rīdĕre, en latin classique rīdēre.[fn:2] rire 源
+  自拉丁語 rīdēre. 意大利語 ridere 看起來和拉丁語非常像，應該有直接的繼
+  承關係。而英語的 laugh 和德語的 lachen 看起來則源於另外一個單詞。
+
+* 詞彙擴展
+
+  - risible :: 可笑的。funny, droll, ridiculous, ludicrous, risible^en.
+  - reur, rieuse :: Celui, celle qui rit facilement. Je voudrais bien
+                    savoir comment vous feriez à ma place, messieurs
+                    les rieurs? Celui, celle qui aime à rire. C’est un
+                    grand rieur, une grande rieuse. Cette jeune fille
+                    est très rieuse. Des yeux rieurs. 不過 la rieuse 有
+                    另外一個意思：紅嘴鷗，又叫笑鷗[fn:3]。原因是它們的
+                    叫聲是難聽的 "kee-agh", "ha-ha-ha"所以洋人叫它們“笑
+                    鷗”[fn:4]。
+  - rieusement :: adv. de manière rieuse, en riant, gaiement^fr;
+                  lachend^de; laughingly^en, cheerfully^en.
+  - la risée :: 哄笑，笑柄。laughingstock. Il a été la *risée* de tous
+                ses amis.
+  - la risette :: 微笑，強笑。
+  - sourire :: v.i. 微笑。sourire à qn. Tout sourit à la
+               jeunesse. v.t. 致以微笑，惠及。sourire à qn, to smile
+               on sb.(=être favoble à). n.m. 微笑。avec le sourire,
+               with smile. faire sourire à qn, to give sb a
+               smile. Cacher un couteau derrière son sourire. 【諺語】
+               笑裡藏刀。
+  - s'esclaffer :: éclater de rire, to burst out laughing, explode
+                   with laughter. 放聲大笑，開懷大笑。
+  - regoler :: rire. 笑。to laugh. J'ai bien rigolé en regardant ce
+               film. 看這電影我笑抽了。I laughed a lot while watching
+               this movie. s'amuser, 嬉戲。to have fun. On a bien
+               rigolé. 我們玩得很開心。plaisanter, 開玩笑。to joke. tu
+               rigoles!  you are kidding! il ne faut pas rigoler avec
+               ce genre de maladie. 這病可不是開玩笑的。an illness
+               like this has to be taken seriously.  J'ai dit ça pour
+               rigoler. 我是說著玩兒呢。It was just a joke.
+  - la rigolade :: a bit of fun
+  - rigolard :: (adj)grinning, ready for a laugh
+  - rigolo ::  (adj)funny
+  - un rigolo :: comic, funny person
+  - plaisanter :: to joke. plaisanter sur, to joke about. on ne
+                  plaisante pas avec cela. 這是個嚴肅的話題。 this is
+                  not laughing matter.
+  - blaguer :: to joke. 說笑，胡謅，吹牛。Il blagua, nous blaguons.
+  - marrer :: to laugh,. On s'est bien marrés. We had a good
+                 laugh.= We had a great time. se marrer. 捧腹大笑。
+  - bidonner :: to laugh. Les Américains se bidonnent maintenant parce
+                que le gouvernement du Canada vient de leur servir cet
+                avantage sur un plateau d'argent. Elle n'arrête jamais
+                de se bidonner - She never stops laughing[fn:5]. On
+                s’est tous bien bidonnés en regardant ce film.
+  - se poiler :: rire beaucoup. il n'y a pas de quoi se poiler!
+  - mourir de rire :: “Mourir de rire” does not mean that you are
+                      dying while laughing (though I udnerstand it can
+                      happened).It means that you are finding
+                      something very hilarious and are laughing very
+                      much indeed. Est-ce que tu vois souvent des
+                      choses qui te font mourir de rire? Do you often
+                      see things that make you laugh very hard?[fn:6]
+  - rêter à rire :: Donner sujet de rire par quelque chose de
+                    ridicule. Ne croyez-vous pas que, par cette
+                    conduite, vous prêtez à rire à tout le
+                    monde?[fn:7]
+  - rire jaune :: 笑黃了。苦笑，強笑。force a laugh, to give a hollow
+                  laugh, to give a sickly smile. se forcer à rire. Le
+                  jaune, lorsqu’il est éclatant, est le symbole des
+                  dieux. A l’inverse, lorsqu’il est mat, il représente
+                  le soufre, donc l’enfer, mais aussi la
+                  perfidie. Cependant l’expression "rire jaune"
+                  provient surtout du fait que les hépatiques sont
+                  souvent de mauvaise humeur, et lorsqu’ils se forcent
+                  à rire, la bile teinte leur visage de cette couleur
+                  jaune pâle. Par extension, cette expression
+                  s’applique à toute personne qui semble se forcer à
+                  rire, tenter de calmer sa colère ou qui ne veut pas
+                  montrer qu’elle est vexée.[fn:8] Un « rire jaune »
+                  ou un « sourire jaune » est en fait un rire forcé ou
+                  un faux rire.[fn:9] gezwungenes Lachen^de. J'espère
+                  que le Japon te sourit et que vous ne riez pas
+                  jaune. I hope Japan is working out well and you're
+                  not just putting a brave face on things.[fn:10]
+
+  - avoir le mot pour rire :: Être amusant, de bonne humeur, qui ne se
+       prend pas au sérieux, dire qqchose d'amusant (parfois employé
+       ironiquement pour se moquer de ce qui vient d'être dit), à qqun
+       qui vient de faire de l'esprit . Il a toujours *le mot pour
+       rire*.[fn:11] Cet homme a toujours *le mot pour rire*.
+  - pince-sans-rire :: Personne qui affecte un air sérieux ; personne
+       rigide, stricte, compassée, jamais souriante ; ironie à froid,
+       ironie avec sérieux. 一個嚴肅冷酷認真的人，一個不會笑的鉗子。la
+       pince: pincer^en; Die Kneifzange^de; 鉗子；鑷子。Rarement il
+       ouvre la bouche, mais c'est toujours pour punir. On le craint
+       comme le feu, il a été surnommé pince-sans-rire ou
+       tape-sec.[fn:12] 英語有個單詞叫 poker-faced（撲克臉）也是形容這
+       類人，像撲克上面的人物一樣嚴肅認真不會笑。法語維基百科
+       pince-sans-rire 有個詞條： L'humour pince-sans-rire est une
+       forme particulière d'humour, caractérisée notamment par l'air
+       sérieux de la personne qui en fait preuve, que l'on peut
+       rapprocher de l'humour noir[fn:13]. 冷面笑匠（Poker-Faced
+       Comedian、dry wit），形容一位演说笑话时自身不笑的喜剧演员，常与
+       笑话本身形成对比效果[fn:14]。卓別林就是其中的傑出代表。不過德語
+       好像沒有專門的單詞：Trockener Humor ist eine Technik des
+       Humors, die ihre Wirkung wesentlich aus der Tatsache bezieht,
+       dass die jeweilige Äußerung nicht erkennbar von Emotionen
+       begleitet ist und deshalb nur indirekt als Witz entlarvt werden
+       kann. Besonders häufig ist der Inhalt einer solcherart
+       vorgebrachten Äußerung sarkastisch.[fn:15] Trockener: dry, 乾的。
+  - pisser de rire :: faire pisser de rire, 笑尿了。Elles avançaient
+                      avec des mouvements de cou à faire pisser de
+                      rire une poule. 她們扭著脖子前進的樣子笑尿了一隻
+                      母雞。
+  - rire comme une baleine, rire comme un bossu :: rire à gorge
+       déployée, rire à perdre haleine, rire à ventre déboutonné, rire
+       à se décrocher la mâchoire, rire aux éclatsx, rire aux larmes,
+       rire comme un dératé, rire comme une baleine, rire comme un
+       fou, rire très fort, éclater de rire.
+  - rire dans sa barbe :: rire sous cape, laugh in one's sleeve, 窃笑，
+       偷偷笑。躲在鬍子裡面笑。la barbe: 鬍子。la cape: 斗篷。
+
+  TODO: 還有一些關於笑的詞組還沒整理。
+
+#+BEGIN_COMMENT
+    apprêter à rire (Désuet)
+    donner à rire
+    mort de rire, mdr
+    pouffer de rire
+    pour rire
+    rire à gorge déployée
+    rire aux anges
+    rire aux dépens d’autrui (se divertir à relever les défauts, les ridicules de quelqu’un)
+    rire aux éclats
+    rire au nez (se moquer de quelqu’un en face)
+    rire du bout des dents
+    rire du bout des lèvres
+    rire en soi-même
+    rire intérieurement
+    rerire (Rare)
+    se chatouiller pour se faire rire (s’exciter à la gaieté, à la joie, pour un faible sujet ou même sans sujet, se forcer pour rire)
+    se rire dessus
+#+END_COMMENT
+
+* 題外話
+
+  笑是一種健康的運動[fn:16]。1995 年 Madan Kataria 醫生還發明了“笑瑜伽” En
+  1995, le Dr Madan Kataria, médecin généraliste en Inde, a mis au
+  point le Yoga du rire - ou Rire sans raison[fn:17].
+
+* Footnotes
+
+[fn:1] [[http://french.about.com/od/verb_conjugations/a/moquer.htm][Se moquer - to mock, make fun of]]
+
+[fn:2] [[http://fr.wiktionary.org/wiki/rire#.C3.89tymologie][Du latin populaire *rīdĕre, en latin classique rīdēre.]]
+
+[fn:3] [[http://www.frdic.com/dicts/fr/rieuse][法語助手：rieuse]]
+
+[fn:4] [[http://baike.baidu.com/view/1607122.htm][笑鸥]]
+
+[fn:5] [[http://french.about.com/od/vocabulary/g/bidonner.htm][se bidonner]]
+
+[fn:6] [[http://frenchtutor.net.au/?p%3D3][Mourir de rire]]
+
+[fn:7] [[http://fr.wiktionary.org/wiki/pr%25C3%25AAter_%25C3%25A0_rire][prêter à rire]]
+
+[fn:8] [[http://www.linternaute.com/expression/langue-francaise/107/rire-jaune/][Rire jaune]]
+
+[fn:9] [[http://lyricstranslate.com/en/rire-jaune][Un « rire jaune » ou un « sourire jaune » est en fait un rire forcé ou un faux rire.]]
+
+[fn:10] [[http://forum.wordreference.com/showthread.php?t%3D580401][J'espère que le Japon te sourit et que vous ne riez pas jaune]]
+
+[fn:11] [[http://www.languefrancaise.net/bob/detail.php?id%3D46303][avoir le mot pour rire]]
+
+[fn:12] [[http://www.languefrancaise.net/bob/detail.php?id%3D12440#79199][pince-sans-rire]]
+
+[fn:13] [[http://fr.wikipedia.org/wiki/Pince-sans-rire][Wikipedia: Pince-sans-rire]]
+
+[fn:14] [[http://zh.wikipedia.org/zh-tw/%25E5%2586%25B7%25E9%259D%25A2%25E7%25AC%2591%25E5%258C%25A0][冷面笑匠]]
+
+[fn:15] [[http://de.wikipedia.org/wiki/Trockener_Humor][Trockener Humor]]
+
+[fn:16] [[http://www.lapresse.ca/vivre/sante/201010/05/01-4329580-le-rire-cest-la-sante.php?utm_categorieinterne%3Dtrafficdrivers&utm_contenuinterne%3Dcyberpresse_vous_suggere_4329577_article_POS1][Le rire, c'est la santé]]
+
+[fn:17] [[http://www.lapresse.ca/vivre/sante/201010/05/01-4329577-sentrainer-a-sesclaffer.php?utm_categorieinterne%3Dtrafficdrivers&utm_contenuinterne%3Dcyberpresse_vous_suggere_4329580_article_POS1][S'entraîner à s'esclaffer]]

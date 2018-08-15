@@ -1,0 +1,125 @@
+---
+layout: post
+title: 談一談 ABB 智能傳感器解決方案
+categories: [technology]
+tags: [industry]
+---
+
+<p>
+自從上次看到漢諾威展上德國總理默克爾和美國總統奧巴馬一同參觀 ABB 最新的智能傳感器解決方案之後就一直想深入了解一下這個方案的具體細節。
+</p>
+
+<p>
+後來，在 5 月 18，19 日兩天去武漢參加了 ABB 自動化世界活動，很慶幸能夠近距離欣賞了一下。
+</p>
+
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/27264263575/in/dateposted-public/" title="DSCF1203"><img src="https://c8.staticflickr.com/8/7326/27264263575_3d5e43ba37_z.jpg" width="640" height="427" alt="DSCF1203"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+
+<p>
+這張照片是 ABB 自動化世界開幕式上 CEO Spiesshofer 介紹 ABB IoTSP 成功案例時候拍的照片，當時他手上拿的就是本文介紹的智能傳感器。
+</p>
+
+<p>
+再上一組近距離拍攝的圖片吧：
+</p>
+
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/26987979860/in/dateposted-public/" title="DSCF1279"><img src="https://c5.staticflickr.com/8/7440/26987979860_9fdc7160d3_z.jpg" width="640" height="427" alt="DSCF1279"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/26987984360/in/dateposted-public/lightbox/" title="DSCF1281"><img src="https://c1.staticflickr.com/8/7192/26987984360_21e90557f4_z.jpg" width="640" height="427" alt="DSCF1281"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+
+<p>
+從圖中可以看到，智能傳感器就是小小的半個手掌大的一片固定在低壓電機上面，通過震動和溫度傳感器測量電機的震動，溫度并計算出工作時長，并將這些數據發送到遠程數據分析軟件進行分析。基於振幅大小，溫度高低以及工作時長可以算出來電機的工作狀況是否正常，是否需要停機檢修，是否需要更換。分析軟件以圖表的形式展示這些數據給現場操作人員供其參考。
+</p>
+
+<p>
+根據 CEO Ulrich Spiesshofer 宣稱：
+</p>
+<blockquote>
+<p>
+這個簡易的傳感裝置可以安裝在大部分的新老電機上面，根據傳感器分析報告進行保養維護可以減少 70％ 的宕機時間，延長 30％ 電機使用壽命，同時減少 10％ 的能源消耗。按照預估，如果把此裝備安裝到當今 3 億臺運轉的電機上，節省的能源相當於 100 個發電站的電量。<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>
+</p>
+</blockquote>
+
+<p>
+看起來很美好，不過我不清楚這些數據是怎麼計算出來的，還是保持懷疑態度吧。看看什麼時候有機會可以進一步了解一下。
+</p>
+
+<p>
+再來看看產品技術細節。根據報道，這個傳感器是由 Swatch 集團子公司 EM
+Microelectronic 根據 ABB 的需求開發的。<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>
+</p>
+
+<p>
+根據 EM Microelectronic 官網描述：
+</p>
+
+<blockquote>
+<p>
+EM Microelectronic is a semiconductor manufacturer specialized in the design and
+production of ultra low power, low voltage integrated circuits for
+battery-operated and field-powered applications in consumer, automotive and
+industrial areas.
+</p>
+</blockquote>
+
+<p>
+這是一家專門服務于消費電子，汽車和工業領域客戶，專注電池供電現場供電的超低能耗、低壓集成電路開發 35 年的高科技公司。
+</p>
+
+<p>
+因為 EM Microelectronic 是藍牙 SIG<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup> 成員，所以我們可以猜到，他們給 ABB 做的智能傳感器可能是通過低功耗藍牙通信將數據傳輸給工廠現場的分析軟件服務器的。
+</p>
+
+<p>
+再根據 EM Microelectronic 描述的公司優勢<sup><a id="fnr.4" class="footref" href="#fn.4">4</a></sup>：
+</p>
+
+<blockquote>
+<p>
+EM Microelectronic as reliable and confidential long term partner is leader in
+ultra-low power with its own development-, technology- and production know-how
+in the following fields:
+</p>
+
+<ul class="org-ul">
+<li>Ultra-low power integrated circuits – allows many years of battery life</li>
+<li>Ultra-low power wireless solutions  - communication with proprietary and standard protocols</li>
+<li>Ultra-low power sensor interface circuits – unloads main MCU</li>
+<li>Energy harvesting circuits – supports energy sources</li>
+</ul>
+</blockquote>
+
+<p>
+很有可能，這個智能傳感器還具有”Energy harvesting“ 功能，比如可能可以利用電機震動發電。
+</p>
+
+<p>
+這樣歸納起來，這個方案還是挺美好的：
+</p>
+
+<p>
+一旦安裝上之後，就能感知電機的震動和溫度，并能從電機震動中獲得電力，然後以低功耗的藍牙無線通信將數據傳輸給數據分析服務器，分析軟件以直觀漂亮的圖表形式展示電機的工作狀態給操作人員。操作人員根據這些信息安排維修保養，從而減少電機點擊事件，能源消耗并延長了電機的使用壽命。
+</p>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+<a href="http://www.abb.com.cn/cawp/seitp202/999fc8d8b0d21007c1257fa00054a5c7.aspx">http://www.abb.com.cn/cawp/seitp202/999fc8d8b0d21007c1257fa00054a5c7.aspx</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+<a href="http://www.emmicroelectronic.com/">http://www.emmicroelectronic.com/</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://www.bluetooth.org/en-us">https://www.bluetooth.org/en-us</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.4" class="footnum" href="#fnr.4">4</a></sup> <div class="footpara"><p class="footpara">
+<a href="http://www.emmicroelectronic.com/applications/industrial">http://www.emmicroelectronic.com/applications/industrial</a>
+</p></div></div>
+
+
+</div>
+</div>

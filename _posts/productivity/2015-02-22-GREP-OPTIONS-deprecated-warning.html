@@ -1,0 +1,75 @@
+---
+layout: post
+title: Remove GREP_OPTIONS is deprecated warning
+categories: [productivity]
+tags: [emacs]
+---
+
+<pre class="example">
+$ grep --version
+grep (GNU grep) 2.21
+Copyright (C) 2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Mike Haertel and others, see &lt;http://git.sv.gnu.org/cgit/grep.git/tree/AUTHORS&gt;.
+</pre>
+
+<p>
+The new version of grep(version 2.21) seems deprecated the usage of
+<code>GREP_OPTIONS</code>. When I execute grep command in <code>emacs</code>, the warning:
+'<code>grep: warning: GREP_OPTIONS is deprecated; please use an alias or
+script</code>' will always show as below:-
+</p>
+
+<pre class="example">
+-*- mode: grep; default-directory: "c:/emacs/" -*-
+Grep started at Mon Feb 16 09:53:48
+
+find . -type f -print0 | xargs -0 -e grep -n -e GREP_OPTIONS
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+./share/emacs/24.4/lisp/progmodes/grep.el:80:markers for highlighting and GREP_OPTIONS to add the --color
+./share/emacs/24.4/lisp/progmodes/grep.el:470:    (setenv "GREP_OPTIONS"
+./share/emacs/24.4/lisp/progmodes/grep.el:471:	    (concat (getenv "GREP_OPTIONS")
+Binary file ./share/emacs/24.4/lisp/progmodes/grep.elc matches
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+
+Grep exited abnormally with code 123 at Mon Feb 16 09:53:50
+</pre>
+
+<p>
+When I dug into the <code>elisp</code> code
+<code>c:/emacs/share/emacs/24.4/lisp/progmodes/grep.el::470</code>, I find
+<code>GREP_OPTIONS</code> are used:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-lisp">(setenv <span style="color: #3a5fcd;">"GREP_OPTIONS"</span>
+    (concat (getenv <span style="color: #3a5fcd;">"GREP_OPTIONS"</span>)
+        <span style="color: #3a5fcd;">" --color="</span> (<span style="color: #8b008b; font-weight: bold;">if</span> (eq grep-highlight-matches 'always)
+                <span style="color: #3a5fcd;">"always"</span> <span style="color: #3a5fcd;">"auto"</span>)))
+</pre>
+</div>
+
+<p>
+You can just comment above lines of code, the world will be quiet
+again. Remember to byte compile <code>grep.el</code> again.
+</p>
+
+<pre class="example">
+-*- mode: grep; default-directory: "c:/emacs/" -*-
+Grep started at Mon Feb 16 09:53:48
+
+find . -type f -print0 | xargs -0 -e grep -n -e GREP_OPTIONS
+./share/emacs/24.4/lisp/progmodes/grep.el:80:markers for highlighting and GREP_OPTIONS to add the --color
+./share/emacs/24.4/lisp/progmodes/grep.el:470:;;    (setenv "GREP_OPTIONS"
+./share/emacs/24.4/lisp/progmodes/grep.el:471:;;	    (concat (getenv "GREP_OPTIONS")
+Binary file ./share/emacs/24.4/lisp/progmodes/grep.elc matches
+</pre>

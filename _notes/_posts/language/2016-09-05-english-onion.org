@@ -1,0 +1,105 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之洋葱
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* onion
+
+洋葱应该也算是一种葱吧。小香葱叫 chives，大葱叫 leek，而洋葱却叫 onion，作为中国
+人，我觉得很恼火，为什么他们要给不同的葱取那么多不同的名字呢？
+
+德语 die Zwiebel[`tsvi:bl]^(de)，法语 l(e)'oignon^(fr)。其实有时候觉得法语德语的
+词性还是很讨厌的，法语有阴阳性，而德语居然还有中性。更麻烦的是，德语法语中同样的
+东西还可能不同性。比如洋葱，德语里是阴性，而法语里却是阳性。
+- Die Zwiebel hat mehrere Häute. 洋葱有好几层外皮。
+- La vie est comme un oignon, on retient toujours ses larmes en
+  l'épluchant.^(fr) 人生就像一个洋葱，人们泪汪汪的将它层层剥开。
+
+到底还是邻国日韩的文字的感觉更熟悉些。日语洋葱叫玉葱（たまねぎ，tamanegi）^(jp)，
+我记得日语鸡蛋叫玉子 (たまご，tamago)^(ja)，所以，是不是可以推断日本人管白色的东西
+叫玉呢？而朝鲜语叫 양파（yangpa）^(ko)，파：葱。看来和我们一样，洋葱是从西洋引进
+的，所以都叫洋葱。
+
+另外，我找到了关于洋葱的 40 个事实：
+
+#+BEGIN_QUOTE
+1. Onions are vegetables
+2. Onions are edible
+3. They make you cry…
+4. They make good dip
+5. Onions grow underground
+6. They taste bad raw
+7. They give you bad breath
+8. Onions come in 3 designer colours (red yellow and white)
+9. They can predict the weather in winter
+10. They go good in a BBQ
+11. They are not sweet
+12. Onions have layers
+13. If you chew gum while cooking them you wont cry
+14. They are about 30 calories
+15. They can be sliced, chopped and diced
+16. Onions are shallot‘s cousin
+17. They can be pickled
+18. Onions are like ogres
+19. They can be peeled
+20. They are highly water based
+21. Onion breath can be cured with some parsley
+22. Onion in Japanese is onion
+23. If you leave them out in the sun for too long they start to grow roots
+24. They are eaten heaps in Libya
+25. The heaviest onion was 10 pounds and 14 ounces
+26. Onions don’t grow on the moon
+27. Onion spelled backwards is noinO
+28. They are not like cakes
+29. Onion is pronounced UN-YIN
+30. If onion was a number it would be 151491514
+31. An onion can make a bland sauce
+32. Onions has 3 vowels
+33. Onions have skins
+34. Onions don’t like garlic
+35. there are nice deep fried as rings
+36. Onion rhymes with bunion
+37. Onions make really bad gifts…
+38. Alliumphobia is the fear of smelling onion and garlic
+39. Onions wont stop vampires…
+40. Onions should NEVER be juiced
+#+END_QUOTE
+
+** to know one's onions
+
+形容某人在某一方面很在行：
+- That car salesman certainly knew his onions, didn't he? 那个汽车销售一定（对汽
+  车销售）很在行，不是吗？
+
+那么问题又来了，为什么“知道自己的洋葱”是很在行的意思呢？根据我的调查，是因为一百
+多年前，有一个叫 Charles Talbut Onions 的人，他参与了牛津英语词典（Oxford
+English Dictionary）编撰，是位单词专家，后来不知道为什么就有 to know one's
+onions 的说法，用来形容某人在某一行业很在行的意思。欲知详情，请点击附录链接阅读。
+[fn:1]
+
+** traiter qn aux petits oignons
+
+精心照顾某人。把某人放到小洋葱里（层层呵护）？法国人的浪漫气息体现在在日常生活中
+啊。
+- Je les traite aux petits oignons.^(fr) I give them total care. 我精心照顾他们。
+
+
+** Occupe-toi de tes oignons
+
+管好自己的事情。管好自己的洋葱？Mind your own business.
+
+* Summary
+
+这次学习了洋葱的英法德写法，并且尝试性的扩展到了日韩的单词学习。感觉有点心有余而
+力不足啊……
+
+I feel that, in vacabulary study, I am not the one who knows his onions, but I
+will try to learn as many as possible.
+
+* Footnotes
+
+[fn:1] http://www.phrases.org.uk/meanings/know-your-onions.html

@@ -1,0 +1,47 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Authentication realm failed during SVN operation in Jenkins
+categories: [productivity]
+tags: [Windows]
+---
+#+END_HTML
+
+I installed Jenkins on a Windows 7 machine, and use Jenkins bundled
+SVNkit to check out source code from SVN repository. Source code
+checking out is successful, after I put authentication user name and
+password at the first checking out failure.
+
+Later I want to get SVN statistic information by executing svn log
+command as below:
+
+#+BEGIN_SRC
+C:\Jenkins\workspace\Application>svn log "C:\Jenkins\workspace\Application" -v --xml 1>"C:\Jenkins\workspace\Application\svn.log"
+Authentication realm: <http://cn-w-017svn1:80> ?\147kimi.im?\148
+Password for 'SYSTEM': Build was aborted
+Aborted by kimi
+Finished: ABORTED
+#+END_SRC
+
+This command is pending that password is required. But I am calling
+the batch by Execute Windows batch command, there is no way for me to
+interactively type in user name and password.
+
+From the log above, we can see that SYSTEM is the user running Jenkins
+server by Windows. The solution that we try to execute SVN command
+when we log in as SYSTEM.
+
+There is one small tool named
+PsTools(https://technet.microsoft.com/en-us/sysinternals/bb896649.aspx),
+which can be used to execute process with SYSTEM user.
+
+Download PsTools and execute following command to run CMD with SYSTEM:
+
+#+BEGIN_SRC
+psexec -i -s cmd.exe
+#+END_SRC
+
+=-i= means interactive, =-s= means SYSTEM.
+
+Then execute SVN in cmd, and type correct user name and password. SVN
+will save all the authentication information for your next execution.

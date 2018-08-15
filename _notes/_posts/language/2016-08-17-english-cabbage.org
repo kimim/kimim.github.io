@@ -1,0 +1,59 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之卷心菜
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+上一篇学习到蔬菜类食物的萝卜和胡萝卜[fn:1]，今天继续学习蔬菜单词。
+
+* cabbage
+
+包菜、甘蓝、卷心菜。德语 der Kohl^de，法语 le chou^fr。
+- We have fresh cabbage, celery, lettuce and spinach. 我们有新鲜的卷心菜、芹菜、
+  生菜和菠菜。
+- Spinach, egg-plant, cabbage, cauliflower, cucumber and radish are our
+  fabourite vegetables. 菠菜、茄子、卷心菜、花菜、黄瓜和萝卜都是我们爱吃的蔬菜。
+
+说来也奇怪，卷心菜在英语里还有纸钞（paper money）的意思。比如
+- I'd have /cabbage/ galore in the bank if I were more frugal. 我如果节省一点的话，
+  银行里就会有些钞票结余。
+
+另外卷心菜可能给人一种笨笨的感觉，所以也用来形容一个人很木讷， le légume^fr：
+- Oh My God, Lily! Your such a cabbage! 总之这种说法都是比较不太礼貌的用法，知道
+  就好，最好别乱用……
+
+卷心菜还有植物人之意 a person whose physical or mental activity is impaired or
+destroyed by injury or illness，不过这样的说法依然有些不太礼貌，知道就好。
+- After the car crash, he became a cabbage.
+
+德语和法语里用 Vegetable 来形容：
+- nach seinem Unfall vegetierte er hur noch dahin 他车祸后成了植物人
+- l'éta végétatif 植物人状态
+
+* Chinese cabbage
+
+我们常吃的大白菜，大概是中国特有的白菜吧。le chou chinois^fr， 连芬兰语都叫中国
+包菜 kiinankaali^fi。
+
+北方的大白菜，叫 Chinese cabbage，也叫 celery cabbage，英国人叫 Chinese leaf。从
+日语传过去的叫 Napa cabbage。Bok Choy 广东话“白菜”的音译，和北方人说的大白菜不是
+一个东西，其实是北方人说的油菜，上海人说的小青菜，或上海青。[fn:2]
+
+- Napa cabbage is the main ingredient in traditional kimchi.[fn:3]
+
+* Summary
+
+总算知道了 cabbage 是包菜，甘蓝，卷心菜这一类蔬菜，而 Chinese cabbage 指的是东北
+大白菜，而 Bok Choy 则是小白菜、小青菜。
+
+
+* Footnotes
+
+[fn:1] http://kimi.im/2016-08-16-english-vegetable
+
+[fn:2] http://icade.me/questions/2164
+
+[fn:3] http://www.maangchi.com/ingredient/napa-cabbage

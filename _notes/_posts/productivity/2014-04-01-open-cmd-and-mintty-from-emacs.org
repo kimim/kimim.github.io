@@ -1,0 +1,48 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Open current working directory in cmd/mintty from emacs 
+categories: [productivity]
+tags: [emacs, cygwin]
+---
+#+END_HTML
+
+When I'm using doublecmd to manage files and folders, I frequently open the folder in cmd.exe or cygwin terminal mintty for managing the file with svn, git or other command line tools. Thus I create two shortcuts for the two applications: F9 and Shift-F9.
+
+When I press F9, an windows cmd will open for me, and Shift-F9, a mintty terminal is available for me. Cygwin mintty is a comfortable terminal in windows. Chad Austin has written a blog about Why mintty is the best terminal on Windows[fn:1].
+
+The same requirement is needed when I'm using emacs, thus I created two elisp function to handle this tasks. Please be reminded that these functions are only applied to windows environment.
+
+#+BEGIN_SRC elisp
+(global-set-key [f9] 'kimim/cmd)
+(global-set-key  (kbd "S-<f9>") 'kimim/cyg)
+
+(defun kimim/cmd ()
+  "Open cmd.exe from emacs just as you type: Win-R, cmd, return."
+  (interactive)
+  (w32-shell-execute 
+   "open" "cmd"))
+
+(defun kimim/cyg ()  
+  "Open cygwin mintty from emacs."  
+  (interactive)  
+  (w32-shell-execute 
+   "open" "mintty" " -e bash"))
+#+END_SRC
+
+By the way, below is the doublecmd configuration screenshot:
+
+- Shortcut configuration for cmd.exe:
+#+BEGIN_HTML
+<a href="https://www.flickr.com/photos/kimim-photo/13556055835/" title="Flickr 上 kimim-photo 的 cmd_doublecmd"><img src="https://farm3.staticflickr.com/2928/13556055835_a664b0028b_z.jpg" width="640" height="527" alt="cmd_doublecmd"></a>
+#+END_HTML
+
+- Shortcut configuration for mintty:
+#+BEGIN_HTML
+<a href="https://www.flickr.com/photos/kimim-photo/13556171823/" title="Flickr 上 kimim-photo 的 mintty_doublecmd"><img src="https://farm4.staticflickr.com/3689/13556171823_77ffb7f4b9_z.jpg" width="640" height="527" alt="mintty_doublecmd"></a>
+#+END_HTML
+
+* Footnotes
+
+[fn:1] [[http://chadaustin.me/2009/10/reasons-why-mintty-is-the-best-terminal-on-windows][9 Reasons Why MinTTY is the Best Terminal on Windows]]
+

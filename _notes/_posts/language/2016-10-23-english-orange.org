@@ -1,0 +1,114 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：水果之橙子
+categories: [language]
+tags: [English, Deutsch, Fraiçais]
+---
+#+END_HTML
+
+
+* Orange
+
+昨天“暗地有光”同学回复消息说，好久没看到我更新了，督促我快点更新。算来距离上次的
+推送已经有两周了，再不耕耘就要荒芜了。
+
+最近没有及时更新有这么些原因：
+- 家里有些忙，杂事比较多
+- 写作工具升级，需要配置更新一些脚本插件
+- 天气也有些凉意，晚上睡得早，早上起得晚，学习的时间也越来越少
+
+顺便截个图给大家看看，我是用 Emacs[fn:1] + orgmode[fn:2] 写文章的，Emacs 是编辑
+器之神，而 orgmode 则是文本文档编辑神器，不过 orgmode 只有在 Emacs 里才能用，据
+说很多人是为了 orgmode 而使用 Emacs。今后有空可以给大家专题介绍一下，先看下截图
+吧：
+
+TODO: add the picture later when flickr service is available
+
+
+言归正传，今天要学的单词是 Orange 橙子。
+
+像橙子这样稀疏平常的水果，德语法语英语里面拼法都是一样的，而且德语法语里都是阴性
+的名词：
+- Orange
+- die Orange^{(de)}
+- l(a)'orange^{(fr)}
+
+- The woman cut up the orange and share it out among the four children. 这个女人
+  把桔子切成了几半分给4个孩子。
+- Children shouldn't drink so much orange juice. 小孩子不好喝太多橙汁。
+- J’ai envie de manger une orange.^{(fr)} 我想吃个橙子。
+
+
+* der Chinaapfel/die Apfelsine^{(de)}
+
+从字面看是中国苹果，但是其实是 alternative Bezeichnung für die Apfelsine oder
+Orange，甜橙或橙子的另一种称呼。
+
+原因是这样的：
+
+#+BEGIN_QUOTE
+Die seit dem 16. Jahrhundert in Europa bekannte, aus China stammende Frucht
+nannte man Anfang des 18. Jahrhunderts im Niederdeutschen Apel de Sina und
+Appelsina. Die verhochdeutschte Pluralform lautete Äpfelsina. Auch kamen die
+Namen Apfel von Sina, Chinaapfel und Sineser Apfel vor. In der Zeit um 1700 war
+Sina die gängige Bezeichnung von China. Ab 1750 dominierte die hochdeutsche Form
+Apfelsine im nord- und mitteldeutschen Sprachraum, während in Süddeutschland der
+Name Orange verwendet wurde.[fn:3]
+#+END_QUOTE
+
+大概在 16 世纪开始，欧洲就从中国进口橙子，那时候荷兰德语称之为 Apel de Sina，
+Appelsina，到了德国就转变成 Apfel von Sina，Chinaapfel 以及 Sineser Apfel。后来
+在 1750 年代德国北部就一直称呼橙子为 Apfelsine 和 Chinaapfel 了。而德国南部可能
+受到法国影响，管橙子叫 Orange。
+
+不过据说瑞士是没有这个说法的：The word Apfelsine is not used in Switzerland.[fn:4]
+Beispiele:
+- Ich habe viele Apfelsine eingekauft.^{(de)} 我买了很多橙子。
+
+
+* Mandarin Orange
+
+我们常吃的橘子叫做 Mandarin Orange：
+
+#+BEGIN_QUOTE
+The mandarin orange (Citrus reticulata; Chinese: 橘子, Pinyin júzi; Cantonese:
+柑, kam or gam), also known as the mandarin, is a small citrus tree with fruit
+resembling other oranges.[fn:5]
+#+END_QUOTE
+
+另外，我惊奇的发现，Mandarin 有如下几个意思：
+- n. 普通话
+- n. （旧时）中国政府的高级官员
+- n. 柑橘， A mandarin or a mandarin orange is a small orange whose skin comes
+  off easily. （橘子皮容易剥真是太形象的描述了）
+- adj. 官僚的； 中国式服装的； 过分文雅的
+
+一直以为 Mandarin 就是普通话，普通话就是 Mandarin，不曾想到，Mandarin 还有这些个
+意思，尤其是柑橘这层意思，有些出人意料之外。标准普通话听起来有柑橘的韵味？
+
+Example:
+- Canned mandarin oranges are prepared with the unique speciality of Hunan
+  province - Fu Rong mandarin oranges. 独具风味的糖水桔子罐头，主要是采用了湖南
+  省的特产 -- 芙蓉蜜柑所制成。
+
+* Summary
+
+今天的主题是橙子，调查后发现英法德橙子的拼写都是一样的。然后我们发现德国北部有些
+地方橙子叫做  der Chinaapfel/die Apfelsine^{(de)} 中国苹果，于是我们进一步了解了
+其中的渊源。
+
+另外，这次我们顺带还了解到，橘子叫 Mandarin orange，而 Mandarin 不仅仅是普通话的
+意思，还直接有橘子的意思。
+
+* Footnotes
+
+[fn:1] https://www.gnu.org/software/emacs/
+
+[fn:2] http://orgmode.org/
+
+[fn:3] https://de.wiktionary.org/wiki/Apfelsine
+
+[fn:4] http://forum.wordreference.com/threads/apfelsine-vs-orange.1329938/
+
+[fn:5] https://en.wikipedia.org/wiki/Mandarin_orange

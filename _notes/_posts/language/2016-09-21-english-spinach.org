@@ -1,0 +1,111 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之菠菜
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* Spinach
+
+大概 70、80 后的大叔大婶们的集体记忆中都认为对吃菠菜长力气。那是因为在我们的童年，
+有一部很有名的动画片，叫做《大力水手》，水手波派（Popeye the Sailor[fn:1]），和
+女友奥利佛开心的生活在一起。波派和奥利佛的幸福生活引起了坏蛋的布鲁托的嫉妒，他千
+方百计要将奥利佛抢走。于是，每一集中布鲁托总是想尽办法来抢奥利佛，每每在他即将得
+手的时候，波派总能得到他的救命符——菠菜(spinach)。只要吃了菠菜，波派就能变得力大
+无穷，布鲁托的亦会随之被无敌的波派制服！[fn:2]
+
+《大力水手》之所以拿菠菜作为救命稻草，可能是因为菠菜的营养价值比较高。菠菜有“营
+养模范生”之称，它富含类胡萝卜素、维生素C、维生素K、矿物质（钙质、铁质等）、辅酶
+Q10 等多种营养素。
+
+菠菜在英语中写作 spinach[ˈspɪnɪdʒ, ˈspɪnɪtʃ]，据说是来自古法语 espinache^{(old
+fr)}，而古法语则从波斯引入 aspānāḵ^{(Persian)}。而现在的法语则写成
+l(e)'épinard[epinaʀ]^{(fr)}，德语也长得差不多 der Spinat[Spinat]^{(de)}，估计都
+是从波斯传入。
+
+菠菜的历史源头可以追溯到 2000 年前亚洲西部的波斯（今伊朗），并经北非，由摩尔人传
+到西欧西班牙等国。L'épinard est originaire de Perse. Il a été introduit en
+France au début du XII siècle, puis a été popularisé par Catherine de Médicis à
+la Renaissance. 菠菜大概在公元 12 世纪传入法国，并在凯瑟琳皇后时期流行开来。
+
+另外，《唐会要》上明确记载：菠菜种子是唐太宗时从尼泊尔作为贡品传入中国的。
+
+我们再来看一看中文里的菠菜，其实有一半是音译，“菠”不就是 aspānāḵ 中 “pānā” 么。
+
+终上所述，菠菜来自波斯伊朗，中英法德里的菠菜基本上都音译自波斯语 aspānāḵ。
+
+- Eating /spinach/ is supposed to make you strong.^{(en)} 据说吃菠菜变强壮。估计
+  是从大力水手那里听说的。
+- Les /épinards/ contiennent du fer.^{(fr)} 菠菜含有铁质。似乎红色的物质都是含铁
+  的，比如鲜血。
+- Kinder essen nicht gern /Spinat/.^{(de)} 孩子们不喜欢菠菜。通常营养好的东西口
+  感都不怎么样。这个矛盾怎么破？
+
+** mettre du beurre dans les épinards
+
+往菠菜里加一点黄油 --> （通过加班等）增加收入，改善物质条件或生活条件。挺奇怪的
+一种说法。你知道为什么吗？
+
+#+BEGIN_QUOTE
+Le beurre est souvent associé à la richesse ("Faire son beurre", par exemple, ou
+bien "avoir le cul dans le beurre" chez nos amis Wallons). Probablement parce
+que c'est un aliment riche (en calories et lipides) qui fut, en certaines
+périodes troublées, réservé aux riches ou aux champions du marché noir.
+
+La métaphore de cette expression est parfaitement compréhensible : les épinards
+sans beurre, c'est diététique mais nettement moins bon pour nos palais actuels
+qu'avec du beurre ou de la crème.  Donc pour améliorer le goût de ses épinards
+(ses conditions de vie) mieux vaut y ajouter une bonne dose de beurre
+(d'argent).[fn:3]
+#+END_QUOTE
+
+原来黄油这种高热量的食物被认为是有钱人享受的，所以在菠菜（平凡生活）中添加一些黄
+油（钱）就能改善菠菜的口味。
+
+- Les actives d'aujourd'hui, en revanche, ne se contentent plus de mettre du
+  beurre dans les épinards.[fn:4] 相反的，如今的收入（？）根本不够改善生活啊。en
+  revanche^{(fr)} 相反地、作为报答；se contenter^{(fr)} 凑合。
+
+** to sweeten the pot
+
+英语里类似的成语是往锅里加点糖：
+
+- He sweetened the pot since there were no takers in the office pool.
+
+* recettes d'épinards^{(fr)}
+
+- Spinat mit Reisnudeln^{(de)} 菠菜粉丝
+- Spinat mit Ei^{(de)} 菠菜炒蛋
+- Spinat mit Knoblauch^{(de)} 蒜蓉菠菜
+- quiches aux épinards^{(fr)} 法式菠菜奶酪咸派[fn:5]
+- Épinards à la crème^{(fr)} 法式奶油菠菜[fn:6]
+
+* Summary
+
+本文的主题是菠菜，由菠菜想到70、80后的集体记忆《大力水手》。并发现，菠菜源自波斯，
+菠菜的名字也就自然源自波斯语：
+- aspānāḵ^{(Persian)}
+- spinach^{(en)}
+- l'épinard^{(fr)}
+- der Spinat^{(de)}
+- 菠菜^{(zh)}
+
+有趣的是法国人把赚外快补贴家用叫做菠菜加点黄油 mettre du beurre dans les
+épinards^{(fr)}。希望《单词本》系列文章的发展能为我的菠菜增加点黄油，lol，烦请帮
+忙转发推广下。
+
+* Footnotes
+
+[fn:1] https://en.wikipedia.org/wiki/Popeye
+
+[fn:2] http://baike.baidu.com/link?url=U8pn7XWR7bysZxG3sshZYnbiaYSsIkB7OwuVWXMMtIqeI52qnfwLEducb57Avd7KmjEBP1XwBsRu-_iFvUN7R0WFWy5MKwzK6o5Nc3PZj-a
+
+[fn:3] https://answers.yahoo.com/question/index?qid=20070223084225AAd0WPu
+
+[fn:4] http://www.collinsdictionary.com/dictionary/french-english/mettre-du-beurre-dans-les-%C3%A9pinards
+
+[fn:5] http://www.xiachufang.com/recipe/100625049/
+
+[fn:6] http://www.cuisine-libre.fr/epinards-a-la-creme

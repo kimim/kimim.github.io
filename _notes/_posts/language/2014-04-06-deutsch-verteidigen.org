@@ -1,0 +1,97 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 單詞本：德語單詞 verteidigen
+categories: [language]
+tags:
+  - Deutsch
+---
+#+END_HTML
+
+那天看德語新聞，看到 Verteidigungsminister 國防部長什麽的。就找來 verteidigen 單詞來調查學習一番。
+
+#+BEGIN_HTML
+<a href="https://www.flickr.com/photos/kimim-photo/12405410903/" title="Flickr 上 kimim-photo 的 西湖文化廣場銀泰"><img src="https://farm3.staticflickr.com/2839/12405410903_3f183c7a6d_z.jpg" width="640" height="427" alt="西湖文化廣場銀泰"></a>
+#+END_HTML
+
+* 單詞釋義
+verteidigen
+- 保衛，防衛，捍衛^zh ，to defend^en, to defend oneself^en, sich selbst verteidigen^de, to conduct one's own defence^en. sich verteidigen^de, se défender^fr.
+- 为...辩护
+- [律](出庭)为...辩护
+
+這個詞由 ver + teidigen 組成。
+
+德語前綴 ver- 有幾個不同的作用[fn:1]：
+- 表示動作的完善完成，突出表現在那些具有地點概念的動詞中
+  - heilen 醫治 → verheilen 治愈
+  - reisen 旅行 → verreisen 旅遊，旅行在外
+  - wehen 吹 → verwehen 吹走
+- 有加工、完善的意思
+  - arbeiten 工作 → verarbeiten 加工
+  - mauern 砌砖 → vermauern 堵牆，用磚砌沒
+- 添加到名詞，形容詞前面，成爲某樣東西，或成爲某种狀態
+  - der Film 電影 → verfilmen 拍攝成電影
+  - der Stein 石頭 → versteinern 變成石頭
+  - deutlich 清晰地 → verdeutlichen 使明瞭
+  - arm 貧窮的 → verarmen 變窮
+- 表示一個動作的漸漸終止
+  - verklingen 聲音漸漸微弱直至消失
+  - verhallen 回響漸漸變輕逐漸消失
+  - verschwinden 消失
+- 表示動作的錯誤
+  - drehen 旋轉 → verdrehen 扭曲
+  - kennen 認識 → verkennen 誤解
+  - laufen 走，跑 → sich verlaufen 迷路
+  - rechnen 計算 → sich verrechnen 算錯
+  - sehen 看 → sich versehen 看錯
+- 表達壞事或者不良的感覺
+  - verpesten 污染
+  - verseuchen 傳染流行病
+  - versalzen 放鹽過多
+
+根據 wiktionary 的解釋[fn:2]：
+
+#+BEGIN_QUOTE
+"defend", MHG verteidingen from vertagedingen, from teidinc, tagedinc (originally judgment, then talk, chatter, so Narrenteiding foolish chatter) of tac "day" and ding "negotiation"
+#+END_QUOTE
+
+teidigen 來自 teidinc/tagedinc, 意思大概是判斷，閒聊，瞎扯的意思。
+
+所以 ver-teidigen 可能是過多的瞎扯，和 versalzen （放過多的鹽）差不多吧。過多的瞎扯就衍生為辯論，辯護。
+
+* 詞彙擴展
+- der Verteidigungsminister^de, die Verteidigungsministerin^de (A female minister of defence), minister of defence^en, le ministre de la défense, 國防部長
+- das Verteidigungsministerium^de, ministry of defense, government department responsible for the security and safety of the country, ministry headed by the Minister of Security, le ministère de la Défense^fr, 國防部。
+- Verteidigungskrieg, defensive warfare, 防禦戰。
+- Verteidigungsbündnis^de, defence alliance^en, alliance de défense^fr, 防禦聯盟。
+- etw mit Zähnen und Klauen verteidigen, to defend sth tooth and nail. "My job is to defend you tooth and nail. You are my one and only responsibility. I have to fight as hard as I can to get your case dismissed[fn:3]." 這句話摘自一個律師的 blog，意思是律師的工作是用盡任何手段去為你辯護。to use a lot of effort to oppose someone or achieve something[fn:4].
+- Verteidigungsschrift^de, apology, vindication^en, 辯詞，辯護信，辯護函。
+- Verteidigungsmittel^de, means of defence^en. Mittel: agency, agent, average, means. instrument de défense^fr, les moyens de défense^fr. 辯護手段。
+
+* 例句
+- "Wenn Russland Truppen schickt, verteidigen wir uns"[fn:5]
+- Will der Verteidigungsminister sein Land verteidigen, geht er auf der Stelle[fn:6]
+- Kann ich mich vor Gericht selbst verteidigen?[fn:7]
+- Menschen neigen dazu, sowohl schlechtlaufende Ehen als auch ungerechte Systeme zu verteidigen. Aber sie tun das nicht automatisch.[fn:8]
+- Wir verteidigen unsere eigene Persönlichkeit, unsere Auffassungen, unsere Zivilisation^de. Nous protégeons notre propre personne, nos conceptions, notre civilisation^fr.
+- Die Meinungs-, Versammlungs- und Religionsfreiheit muss in der ganzen Welt verteidigt werden^de. La liberté d’ expression, de rassemblement et de culte doit être défendue dans le monde entier^fr.
+- Wir alle haben in einem gemeinsamen Europa viel zu gewinnen und zu verteidigen. Nous avons tous beaucoup de choses à obtenir et à défendre dans l'Europe commune.
+
+* Footnotes
+
+[fn:1] [[http://de.hujiang.com/new/p408972/][德語前綴解析：ver-]]
+
+[fn:2] http://en.wiktionary.org/wiki/verteidigen
+
+[fn:3] [[http://www.andrewflusche.com/blog/defending-you-tooth-and-nail/][Defending You Tooth and Nail]]
+
+[fn:4] [[http://idioms.thefreedictionary.com/fight%2Btooth%2Band%2Bnail][http://idioms.thefreedictionary.com/fight+tooth+and+nail]]
+
+[fn:5] [[http://www.welt.de/politik/ausland/article125234601/Wenn-Russland-Truppen-schickt-verteidigen-wir-uns.html][Welt.de]]
+
+[fn:6] [[http://diepresse.com/home/meinung/quergeschrieben/christianortner/760751/Will-der-Verteidigungsminister-sein-Land-verteidigen-geht-er-auf][DiePresse.com]]
+
+[fn:7] [[http://jetzt.sueddeutsche.de/texte/anzeigen/525629/Kann-ich-mich-vor-Gericht-selbst-verteidigen][jetzt.sueddeutsche.de]]
+
+[fn:8] [[http://www.spiegel.de/gesundheit/psychologie/psychologie-warum-menschen-eine-diktatur-verteidigen-a-840478.html][Psychologie: Warum Menschen eine Diktatur verteidigen]]

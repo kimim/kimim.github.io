@@ -1,0 +1,56 @@
+---
+layout: post
+title: Window 7 黑屏无法登陆
+categories: [productivity]
+tags: [Windows]
+---
+
+<p>
+同事 Fox 的笔记本开机蓝屏一次之后，再开机就挂在黑屏无法登陆系统。在黑黑的屏幕上只能移动鼠标。
+</p>
+
+<p>
+该错误是因为执行权限的问题。具体原因不知。网上查到的解决办法<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>是用 Windows 命令 <code>cacls</code> 修改 <code>C:\Windows\System32</code> 下系统文件的权限。
+</p>
+
+<ol class="org-ol">
+<li>重启狂按 <code>F8</code> 进入 Repair Mode
+</li>
+<li>打开 <code>cmd</code> 敲以下命令（可能要执行几分钟，可以泡杯咖啡等着）
+<div class="org-src-container">
+
+<pre class="src src-bat">cacls  C:\Windows\System32  /E  /T  /C  /G everyone:F
+</pre>
+</div>
+</li>
+<li>正常重启
+</li>
+<li><code>Ctrl-R</code> + <code>cmd</code> 打开 <code>cmd</code> ，用 <code>cacls</code> 恢复系统文件权限：
+<div class="org-src-container">
+
+<pre class="src src-bat">cacls  C:\Windows\System32  /E  /T  /C  /G  System:F  Administrators:R
+cacls  C:\Windows\System32  /E  /T  /C  /G  everyone:R
+</pre>
+</div>
+</li>
+</ol>
+
+<p>
+不过 Fox 说虽然可以看到登陆系统，但不久还是黑屏了。于是他把第二步改成以下命令，重启 OK 了。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-bat">cacls  C:\Windows  /E  /T  /C  /G everyone:F
+</pre>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+<a href="http://answers.microsoft.com/en-us/windows/forum/windows_7-system/windows-7-boots-to-black-screen-with-cursor-before/c3538f76-86a1-462e-8ad7-f319f207a922%0A">Windows 7 boots to black screen with cursor before login screen after changing permissions on the system32 directory</a>
+</p></div>
+
+
+</div>
+</div>

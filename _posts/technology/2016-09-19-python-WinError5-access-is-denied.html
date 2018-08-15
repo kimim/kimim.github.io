@@ -1,0 +1,31 @@
+---
+layout: post
+title: Solution to python error [WinError 5] Access is denied
+categories: [technology]
+tags: [python]
+---
+
+<p>
+Today I executed a python script to load an DLL file and come across an error:
+[WinError 5] Access is denied. Finnally, I found the reason, it is because the
+permission of DLL file is not correct, the original permision is group read,
+write and executable. So I should change the permission to 0x777:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">drwxrwxr-x+ 1 KIMIM Domain Users    0 Sep 18 10:13 ./
+drwxrwxr-x+ 1 KIMIM Domain Users    0 Sep 19 09:19 ../
+-rwx---rwx+ 1 KIMIM Domain Users 201K Sep 18 10:13 kimim.dll*
+-------rwx+ 1 KIMIM Domain Users  182 Sep 18 10:13 kimim.ini*
+kma@milkyway /cygdrive/c/lib
+$ chmod +777 *
+kma@milkyway /cygdrive/c/lib
+$ ls -al
+total 209K
+drwxrwxr-x+ 1 KIMIM Domain Users    0 Sep 18 10:13 ./
+drwxrwxr-x+ 1 KIMIM Domain Users    0 Sep 19 09:19 ../
+-rwxrwxrwx+ 1 KIMIM Domain Users 201K Sep 18 10:13 kimim.dll*
+-rwxrwxrwx+ 1 KIMIM Domain Users  182 Sep 18 10:13 kimim.ini*
+</pre>
+</div>

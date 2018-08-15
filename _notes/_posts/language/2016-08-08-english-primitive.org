@@ -1,0 +1,73 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：洪荒之力
+categories: [language]
+tags: [English, Deutsch, Français]
+---
+#+END_HTML
+
+今天被傅园慧的“洪荒之力”视频刷屏了：
+
+#+BEGIN_HTML
+<embed src="http://static.video.qq.com/TPout.swf?vid=a002170phjn&auto=0" allowFullScreen="true" quality="high" width="480" height="400" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash"></embed>
+#+END_HTML
+
+那么什么是洪荒呢？洪荒指的是混沌、蒙昧（不是萌妹）的状态，也指远古时代。谢灵运
+《三月三日侍宴西池》诗：“详观记牒，洪荒莫传。”《千字文》：“宇宙洪荒，天地玄黄。”
+指的都是那个远古的时代。
+
+再拆开来看，洪指的是大水，如山洪，洪水。荒指的是未开垦的，荒凉的地方。所以洪荒的
+字面意思就是泛着大水的荒凉时代。这就是上古时期的那个大洪水时代。[fn:1] 世界各地
+都有大洪水的传说，比如大禹治水，欧洲诺亚方舟，印度摩奴之舟等。
+
+所以呢，我觉得“洪荒之力”可以翻译成 power of the Great Flood 挺贴切的。如果了解人
+类历史上这段大洪水的历史的话，理解起来应该挺容易的。
+
+但是如果不太了解的话，那就有点费解。
+
+另外也可以意译成 primitive power， prehistorical power 或者 primeval power。可能相
+对比较容易理解。
+
+顺便提一下，奥特曼中的一个怪兽叫哥美斯[fn:2]，它的技能就是 primitive power，原始
+パワー^(jp)。它的必杀技是 Antiquity strike，上古强袭，上古ストライク^(jp)。
+
+Jason Buss 2013 年出了一本书叫《Primeval Power》[fn:3]，讲的大概是一个神秘武器的
+故事：
+
+#+BEGIN_QUOTE
+After an elite team of mercenaries break into one of the best protected military
+bases in the world to steal a secret weapon, a seemingly random group of
+civilians is recruited to find it. With an enemy that seems to know their every
+move before they make it, there’s no one they can trust. Before long, without
+issuing any demands, a terrorist turns the weapon on US cities. In a race
+against time, the small group tries to untangle the web of secrets around the
+weapon with one goal: stop the terrorist before he can strike again.
+#+END_QUOTE
+
+2007 年有一部电视剧《远古入侵》英文名为《Primeval》[fn:4]。
+
+
+In order to find out how to translate HongHuangZhiLi, I've utilized the primeval
+power to find the correct translation!
+
+CCTV News 用的是 prehistorical power 的：
+
+#+BEGIN_QUOTE
+"A new Internet meme has emerged after Chinese swimmer Fu Yuanhui reacted
+exaggeratedly to her personal best performance in Rio 2016 women's backstroke
+semi-final. "*I've been utilizing prehistorical powers.*" she told CCTV
+reporter. Her comment has also become part of the meme."
+#+END_QUOTE
+
+ 你觉得怎么翻译比较好呢？
+
+* Footnotes
+
+[fn:1] https://en.wikipedia.org/wiki/List_of_flood_myths
+
+[fn:2] http://baike.baidu.com/link?url=oSdxQzxDSDoEq_fknJLDiFftha-SzJiuZ43j50J5HClafKWHeYpGOgo5rHJBuPaTrFBVFPZeKg4MdvnMrPwkVK
+
+[fn:3] https://www.amazon.com/Primeval-Power-Jason-Buss/dp/1494738627/ref=sr_1_1?ie=UTF8&qid=1470662426&sr=8-1&keywords=primeval+power
+
+[fn:4] http://movie.mtime.com/52708/

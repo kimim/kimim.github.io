@@ -1,0 +1,54 @@
+---
+layout: post
+title: Compile Emacs Version 26.1
+categories: [productivity]
+tags: [Windows, emacs]
+---
+
+<p>
+Emacs version 26.1 was released yesterday, but there is no binary download for
+Windows. Now it is time to compile it manually:
+</p>
+
+<ol class="org-ol">
+<li>Download and install msys2 from <a href="https://sourceforge.net/projects/msys2/files/Base/x86_64">https://sourceforge.net/projects/msys2/files/Base/x86_64</a></li>
+<li><p>
+Run c:/msys64/msys2.exe and install necessary packages
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">pacman -S --needed base-devel <span style="color: #3a5fcd;">\</span>
+mingw-w64-x86_64-toolchain <span style="color: #3a5fcd;">\</span>
+mingw-w64-x86_64-xpm-nox <span style="color: #3a5fcd;">\</span>
+mingw-w64-x86_64-libtiff <span style="color: #3a5fcd;">\</span>
+mingw-w64-x86_64-giflib <span style="color: #3a5fcd;">\</span>
+mingw-w64-x86_64-libpng <span style="color: #3a5fcd;">\</span>
+mingw-w64-x86_64-libjpeg-turbo <span style="color: #3a5fcd;">\</span>
+mingw-w64-x86_64-librsvg <span style="color: #3a5fcd;">\</span>
+mingw-w64-x86_64-lcms2 <span style="color: #3a5fcd;">\</span>
+mingw-w64-x86_64-libxml2 <span style="color: #3a5fcd;">\</span>
+mingw-w64-x86_64-gnutls <span style="color: #3a5fcd;">\</span>
+mingw-w64-x86_64-zlib
+</pre>
+</div></li>
+
+<li><p>
+configure; make; make install
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">./autogen.sh
+<span style="color: #0000ff; font-style: italic;">PKG_CONFIG_PATH</span>=/mingw64/lib/pkgconfig ./configure --without-imagemagick
+make
+make install <span style="color: #0000ff; font-style: italic;">prefix</span>=/c/emacs
+</pre>
+</div></li>
+</ol>
+
+<p>
+Now you can run emacs from <code>C:/emacs/bin/runemacs</code>
+</p>
+
+<p>
+Quite easy :-)
+</p>

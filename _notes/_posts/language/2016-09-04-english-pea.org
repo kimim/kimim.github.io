@@ -1,0 +1,80 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之豆豆
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+上一篇我们一起学习了各种瓜瓜的名字，这篇再来一起学一学各种豆豆。
+
+* pea
+
+pea 是豌豆的名字：
+- Every Sunday, dad made a beautiful pean and ham soup. 每周日晚上老爸会做美味的
+  豌豆火腿汤。
+
+豌豆是豆类的一种，英语中豆类叫 legume，而法语中 le légume^(fr) 其实是蔬菜的统称。
+这个在之前的文章中有介绍（[[http://kimi.im/2016-08-16-english-vegetable][August 16, 2016 » 单词本：蔬菜]]）。我们是不是可以这样认
+为，英国人的豆类在法国人看来是蔬菜的代表性品种。
+
+** pea pod
+
+豌豆荚。iPod 是指某种智能豆荚吗？la cosse^(fr)，die Schote^(de)。
+
+** cowpea
+
+豇豆，直译是牛豆。这是为什么呢？是牛喜欢吃吗？
+
+** suger pea
+
+甜豆。大概是豌豆的一种，趁嫩的时候吃，口味甜甜的。
+
+** snow pea
+
+荷兰豆。豆荚扁扁的，连豆荚一起炒着吃的。
+
+** like two peas in a pod
+
+就像同一个豆荚里的俩豌豆，形容两个事物长的很像。
+- Doris and Flora are inseparable and they're like two peas in a pod. 多丽丝和福
+  罗拉总是不分开，就像一个豆荚里的两个豌豆。
+- You can tell they're brothers at a glance - they're like two peas in a pod. 你
+  一眼就能看出他俩是兄弟，他们就像一个豌豆荚里的两颗豌豆。
+
+** peabrain
+
+“没脑子”的不太文明的说法。
+- You're always knocking things over you stupid, stupid peabrain.
+
+* bean
+
+另外一种豆。比豌豆要大一些的另外一种豆。说实话，像我这样稻谷不分的人，真的不知道
+豌豆类豆子和大豆类豆子有什么差别。只能大概猜测一下，bean 应该是大黄豆这样的大豆
+子，而 pea 则是圆圆的小豌豆，小甜豆那一类的豆子。
+
+** soybean
+
+大豆。soy 酱油。也许因为主要用来做酱油，所以取名叫 soybean。
+
+** young soybean
+
+毛豆。年轻的大豆。
+
+** broad bean
+
+蚕豆。豆子扁扁宽宽的，所以就叫“宽豆”。
+
+** haricot bean
+
+扁豆，四季豆。
+
+** sword bean
+
+刀豆。
+
+* Summary
+
+说实在的，有关豆子的名词有些难到我了，因为我平时吃豆子真的不太关心豆子分别叫什么
+名字。不过系统的学了一下之后，渐渐还是有一些清晰直观的感受了。

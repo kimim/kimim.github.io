@@ -1,0 +1,105 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：代码分支不可至
+categories: [language]
+tags: [Deutsch]
+---
+#+END_EXPORT
+
+* 老北京炸酱面
+
+今晚在杭州滨江的东方郡外面议价面馆吃了晚饭。三四年前，有同事住在那里，大家一起去
+过那里，那时候周围一片黑。现在完全不一样了，各种小吃挨家挨户。
+
+我吃了碗老北京炸酱面，味道一般般，但是看起来真是很美味。
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31950693092/in/dateposted-public/" title="老北京炸酱面"><img src="https://c5.staticflickr.com/1/676/31950693092_8e5afde68a_z.jpg" width="640" height="427" alt="老北京炸酱面"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31950687112/in/dateposted-public/" title="炸酱面"><img src="https://c1.staticflickr.com/6/5524/31950687112_25931c1002_z.jpg" width="640" height="427" alt="炸酱面"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+如果不是因为有同事住在那里，以前我们也就不曾去过那里。就好像一个代码分支，永远不
+会执行到。
+
+今天读德国人写的几个 C 代码文件，看到这样一条注释：
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/32099140445/in/dateposted-public/" title="niemals vorkommen"><img src="https://c6.staticflickr.com/1/319/32099140445_2ab6a027cd_z.jpg" width="590" height="220" alt="niemals vorkommen"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+Zweig darf niemals vorkommen 的意思就是分支不可至。
+
+本着聚沙成塔、积少成多、厚积薄发的原则，我们就来好好学习学习这句德语中出现的单词
+吧。
+
+* 代码分支不可至
+
+代码分支不可至就是说图中的 else 这个条件分支不会被执行到。niemals vorkommen 就是
+绝不会发生的意思。在这个语境中，我认为，翻译成“尼玛，弗可能”就很贴切自然，意译音
+译完美贴合。为什么这么说呢？
+
+首先，程序员经常会遇到这种情况，各种分析规划设计后的代码，绝对不会跑进某个代码分
+支，但是在调试的时候，程序就是会跑进那个完全不可能进去的分支。这个时候，一句“尼
+玛，不可能！”最符合当时的心情了。
+
+其次，niemals vorkommen 读音为[ˈniːmaːls foːɐ̯ˌkɔmən]和“尼玛，弗可能”发音神似！
+
+再者，这样调侃一下，这两个单词真是很容易记住了。难怪小周同学会说“人生第一个能人
+的德语就这么被带歪了，记住了，忘不掉了，突如其来，躲闪不及。”
+
+接下来，我们逐个学习这条注释中的德语单词吧。
+
+* der Zweig
+
+对应英语单词就是 branch。有树枝，分支，家族分支，科学分支学科之意。其实英语单词
+twig 嫩枝和 Zweig 可能是同源的，一看俩词长得就很像。
+
+果然，荷兰语中 twijg，德语 Zweig，英语 twig 都源自原始印欧语。据说 two 和 twig 其实是同
+源的。最简单的分支方法不就是二分法嘛。
+
+这个网页[fn:1]还有卖名叫 Two Twig Branches 的 LED 灯呢。
+
+德语有个俗语 nie auf einen grünen Zweig kommen，发不了财，不会飞黄腾达之意。字面
+意思是没法走上一根绿色的枝条，绿色的枝条往往意味着希望和成长吧，所以也就不会飞黄
+腾达了。
+
+比如说：Mathe und Englisch, das sind Basics, wenn Du die nicht lernst, dann
+wirst Du nie auf einen grünen Zweig kommen. 数学和英语是很基础的知识，如果你不学
+好，就不会飞黄腾达。
+
+* niemals
+
+副词：从不，绝不。
+
+- Mathematik war niemals meine Stärke. 数学从来都不是我的强项。
+- So etwas hatte er noch niemals gesehen. 这样的东西他从来没有看过。
+
+* vorkommen
+
+发生，碰见，存在。也做为名词 das Vorkommen：出现的情况。
+
+- So etwas kann vorkommen. 这样的事情可能发生。
+- So etwas darf nicht wieder vorkommen! 这样的事情不许再发生了！
+- Das ist schon öfters vorgekommen. 这已经发生好多次了。
+- Das Vorkommen von Schangen in diesem Gebiet ist normal. 蛇在此处出现的情况是很
+  正常的。
+
+* Summary
+
+因为一条代码注释，我们有机会学习到这么多德语单词，这真是外语学习的乐趣所在了。就
+像网上流传的[fn:2]，犹太人对学习外语的信念所说的那样：“会说几门语言，你就具有几个人的
+价值。[fn:3]” 多学一门外语，就好像在世界地图上点亮了一块地方，就能有机会去了解那
+个地方的历史和正在发生的故事。
+
+* Footnotes
+
+[fn:1] http://www.binbin.net/compare/two-twig-branches.htm
+
+[fn:2] 犹太人会好几种语言这个故事，只是在网上经常看到，我没有查证过，不敢说这是
+不是真实的。但听起来挺美好的。
+
+[fn:3] http://learning.sohu.com/20160829/n466601229.shtml

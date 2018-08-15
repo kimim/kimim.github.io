@@ -1,0 +1,114 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：不许抄袭
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+昨天大概是特朗普的名模妻子 Melania 在共和党代表大会上演讲，为自己的丈夫塑造温情
+的一面。这事情听起来好像挺好的，可是演讲稿的撰写团队 C&P 了部分奥巴马妻子的演讲
+内容，于是各大媒体纷纷报道说她涉嫌抄袭。感觉好像是因为特朗普的地产大亨的身份，不
+怎么被大众待见，所以呢，被媒体纷纷报道嘲讽。
+
+当然了，本文的重点不是关注名模 Melania 是不是身材好没内涵。本文的重点是
+plagiarize（抄袭）这个单词。
+
+* plagiarize
+
+也写成 plagiarise，就好像 analyze analyse 一样。但是我不知道 -se 和 -ze 有什么细
+微区别没有。
+
+#+BEGIN_QUOTE
+Pronunciation: /ˈpleɪdʒərʌɪz/
+
+Take (the work or an idea of someone else) and pass it off as one’s own.
+#+END_QUOTE
+
+动词，剽窃，抄袭，作弊，拾人牙慧，拾人涕唾。
+
+- Donald Trump's wife, Melania, took centre stage on the first day of the
+  Republican National Convention but faced accusations that a portion of her
+  speech /plagiarised/ Michelle Obama.[fn:1]
+- Did Melania Trump /plagiarise/ Michelle Obama in her Republican Convention 2016
+  speech?[fn:2]
+
+
+* Origin / 源
+
+#+BEGIN_QUOTE
+In the 1st century, the use of the Latin word plagiarius (literally kidnapper)
+to denote stealing someone else's work was pioneered by the Roman poet Martial,
+who complained that another poet had "kidnapped his verses". "Plagiary", a
+derivative of "plagiarus" was introduced into English in 1601 by dramatist Ben
+Jonson to describe someone guilty of literary theft. [fn:3]
+#+END_QUOTE
+
+plagiarise 源自拉丁语 plagiarius，本意是绑架的意思。罗马诗人 Martial 抱怨他人绑
+架了他的诗歌。后来就被用来表示抄袭了。
+
+* Derivation / 衍
+
+plagiarism：抄袭行为
+- Melania Trump found herself at the centre of a /plagiarism/ row after it
+  appeared she had lifted a section of a speech by Michelle Obama.[fn:2]
+- The Trump campaign has denied accusations of plagiarism.[fn:4]
+- Trump campaign chairman denies Melania /plagiarism/ allegations.[fn:5]
+
+plagiaristic: 有抄袭行为的
+- Did Bill Clinton tweak Biden's /plagiaristic/ past? Number of pages into Bill
+  Clinton's "Back to Work" where one finds a curious comment about Joe
+  Biden.[fn:6] 克林顿在他的书中揭露了 Biden 的有抄袭行为的过去？原文是这么说的：
+  “Vice President Biden -- whose speeches provided much of the same information
+  and made many of the same arguments mine did ...”[fn:6]
+
+plagiarist: 抄袭者
+- Donald Trump’s campaign chairman says Melania Trump is no /plagiarist/ — she
+  just shares “common” values with the first lady and other Americans.[fn:5]
+
+plagiary: 抄袭行为，应该和 plagiarism 一个意思，但是好像后者用的比较广泛。
+- The sin of /plagiary/ is a development of modern civilisation.
+
+* MultiLanguage
+
+法语和英语同源，都来自拉丁语，只是略微有点变化：plagier
+- La polémique enfle déjà. Montée sur scène lundi 18 juillet lors de la
+  convention républicaine pour soutenir la candidature de son époux, Melania
+  Trump est accusée d'avoir /plagié/ des passages d'un discours de Michelle Obama,
+  prononcée en 2008.[fn:7]
+
+德语新闻里用 plagiieren。不过我也看到有直接用 klauen Zitate/Rede（偷窃引文/演讲）的。
+- Melania muss Obamas Rede von 2008 gemocht haben, wenn sie sie schon plagiiert.[fn:10]
+- Trumps Ehefrau /klaut Rede/ von Michelle Obama.[fn:8]
+- Trumps Ehefrau Melania scheitert beim Parteitag der US-Republikaner daran,
+  ihren Mann sympathischer wirken zu lassen. Alles dreht sich um /geklaute Zitate/
+  von Michelle Obama.[fn:9]
+- Melania Trump in der Plagiatsfalle.
+
+总之，大家都是从拉丁语抄袭来的，英国人抄袭成了 plagiarize，法国人抄袭成了plagier，
+德国人抄袭成了 plagiieren。抄袭的时候既保留了原词的样子，有添加了本国人的语言习
+惯。就像以前上课前抄同学的答案，抄的过程中纠正了错误的答案，结果比被抄袭的同学分
+数好一些。实在是有些无耻的。
+
+* Footnotes
+
+[fn:1] http://www.bbc.com/news/election-us-2016-36832095
+
+[fn:2] http://www.telegraph.co.uk/news/2016/07/19/did-melania-trump-plagiarise-michelle-obama-in-her-republican-co/
+
+[fn:3] https://en.wikipedia.org/wiki/Plagiarism
+
+[fn:4] https://www.theguardian.com/us-news/2016/jul/19/melania-trump-republican-convention-plagiarism-michelle-obama
+
+[fn:5] http://www.nydailynews.com/news/politics/trump-campaign-chairman-denies-melania-plagiarism-allegations-article-1.2716904
+
+[fn:6] https://www.bloomberg.com/view/articles/2011-11-09/did-bill-clinton-tweak-biden-s-plagiaristic-past-the-ticker
+
+[fn:7] http://www.france24.com/fr/20160719-us-etats-unis-melania-trump-plagie-discours-michelle-obama-convention-republicaine-clevelan
+
+[fn:8] http://www.20min.ch/community/stories/story/Trumps-Ehefrau-klaut-Rede-von-Michelle-Obama-15065340
+
+[fn:9] http://www.newsdeutschland.com/n/Top/759phpchs/Melania-Trump-in-der-Plagiatsfalle.htm
+
+[fn:10] http://www.watson.ch/International/USA/645401161-Melania-Trump-h%C3%A4lt-ihre-erste-grosse-Rede-%E2%80%93-und-klaut-mehrere-Abs%C3%A4tze-von-Michelle-Obama

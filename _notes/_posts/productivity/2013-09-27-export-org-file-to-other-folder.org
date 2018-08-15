@@ -1,0 +1,82 @@
+#+BEGIN_HTML
+---
+layout: post
+title: export .org to .html file in other folder
+categories: [productivity]
+tags: [emacs, org-mode]
+---
+#+END_HTML
+
+* Problem
+The =org-expoort-dispatch= command is very useful when I'm writing =.org= file and want to preview the exported =.html= file in web browser. The manual is copied from emacs on-line help:
+#+BEGIN_SRC 
+It is bound to C-c C-e, <menu-bar> <Org> <Export/Publish...>.
+
+(org-export-dispatch &optional ARG)
+
+Export dispatcher for Org mode.
+
+It provides an access to common export related tasks in a buffer.
+Its interface comes in two flavours: standard and expert.
+#+END_SRC
+
+Whenever I want to preview the article, I just press =C-c C-e h o=, emacs will convert the =.org= file to =.html= file and open it in my default web browser.
+
+But the problem is that the result =.html= file is stored at the same folder as =.org= file. I've been looking for the solution around the web, the emacs geeks just told us to look at =org-publish-project-alist=. But what I know is that =org-publish-project-alist= is used to set up a publish project and it is used to publish whole project to a destination folder. 
+
+This is not what I'm looking for.
+
+* Solution
+After several try, I found that in the =.html= export backend, =org-export-output-file-name= is used to generated the output file as following code:
+
+#+BEGIN_SRC lisp -n
+(defun org-html-export-to-html
+  (&optional async subtreep visible-only body-only ext-plist)
+  (interactive)
+  (let* ((extension (concat "." org-html-extension))
+	 (file (org-export-output-file-name extension subtreep))
+	 (org-export-coding-system org-html-coding-system))
+    (if async
+	(org-export-async-start
+	    (lambda (f) (org-export-add-to-stack f 'html))
+	  (let ((org-export-coding-system org-html-coding-system))
+	    `(expand-file-name
+	      (org-export-to-file
+	       'html ,file ,subtreep ,visible-only ,body-only ',ext-plist))))
+      (let ((org-export-coding-system org-html-coding-system))
+	(org-export-to-file
+	 'html file subtreep visible-only body-only ext-plist)))))
+#+END_SRC
+
+While =org-export-output-file-name= can accept three parameter:
+
+#+BEGIN_SRC lisp
+(defun org-export-output-file-name (extension &optional subtreep pub-dir)
+#+END_SRC
+
+When optional argument PUB-DIR is set, use it as the publishing directory. 
+
+Thus change line 5 of =org-html-export-to-html= function, add the third paramter =~/exports/=:
+
+#+BEGIN_SRC lisp -n 
+(defun org-html-export-to-html
+  (&optional async subtreep visible-only body-only ext-plist)
+  (interactive)
+  (let* ((extension (concat "." org-html-extension))
+	 (file (org-export-output-file-name extension subtreep "~/exports/"))
+	 (org-export-coding-system org-html-coding-system))
+    (if async
+	(org-export-async-start
+	    (lambda (f) (org-export-add-to-stack f 'html))
+	  (let ((org-export-coding-system org-html-coding-system))
+	    `(expand-file-name
+	      (org-export-to-file
+	       'html ,file ,subtreep ,visible-only ,body-only ',ext-plist))))
+      (let ((org-export-coding-system org-html-coding-system))
+	(org-export-to-file
+	 'html file subtreep visible-only body-only ext-plist)))))
+#+END_SRC
+
+Fantastique, now when you press =C-c C-e h o=, emacs will save the =.html= file in =~/exports/= and open it in web browser for your preview.
+
+For other kind of export, I think this method could also be applied. Good luck.

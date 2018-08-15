@@ -1,0 +1,66 @@
+#+BEGIN_HTML
+---
+layout: post
+title:  單詞本：德語單詞 aufbauen
+categories: [language]
+tags: [Deutsch]
+---
+#+END_HTML
+
+aufbauen 這個單詞是在上班看代碼註釋的時候遇到的。和人遇見是一種緣分，和代碼注釋
+中的單詞遇見也是一種緣分吧。沒有 Mik 就不會知道 ABB，也就不會看到德語註釋和德語
+文檔。如果還在 Nokia，可能現在看到的大部分就是芬蘭語了，也就可能每天在學芬蘭語了
+吧。
+
+#+BEGIN_HTML
+<a href="https://www.flickr.com/photos/kimim-photo/14050764440/"
+title="Flickr 上 kimim-photo 的 DSCF9203">
+<img src="https://farm3.staticflickr.com/2920/14050764440_fdf05613f8_z.jpg"
+width="640" height="427" alt="DSCF9203"></a>
+#+END_HTML
+
+* aufbauen
+
+aufbauen 有很多個解釋。其根本意義是“建成”。引申出來就有組織，組裝，化合，組合，
+堆砌等意思。
+
+1. aufstellen, errichten; zusammensetzen, aufrichten. aufstellen: 搭起，架起。除
+   此之外，aufstellen 还有佈置，排列，表達，列出，研製，創立，提名，動物豎起耳朵
+   等意思。errichten: 樹立，建造，設立。zusammensetzen: 裝配，聚在一起，組成。
+   aufrichten: 豎起，扶起，建立，鼓舞，寬慰。
+   - Kameras für eine Fernsehübertragung aufbauen. 搭起攝像頭轉播電視。
+     Fernsehübertragung:電視轉播。
+2. schaffen, organisieren; gestalten. schaffen: 創作，塑造，創立，建立，
+   獲得。gestalten: 塑造，刻畫，形成，構成，舉辦，制定。
+   - eine Partei zentralistisch aufbauen. zentralistisch: 集中制的，中
+     央集權的。
+   - 網上搜 aufbauen 搜到比較多的是 “Schnell Muskeln Aufbauen” 快速塑造肌肉。
+   - Ich baue mir eine neue Existenz auf. 我建立了新的生計。sich eine Existenz
+     aufbauen: to make a life for oneself^(en)
+3. etw. als Grundlage, Voraussetzung für etw. nehmen. Grundlage: 地基，基礎，前
+   提，培養基。Voraussetzung: 前提，先決條件，假設。
+   - eine Theorie auf einer Annahme aufbauen. 該理論基於一個猜想。Annahme: 猜想，
+     假設。
+   - die Anklage auf einem Gutachten aufbauen. 該指控基於一個堅定。Anklage: 控訴。
+     Gutachten: 鑒定。
+4. (Chemie) zu einer Verbindung zusammensetzen. 化合成。
+   - diese Moleküle bauen die Verbindung auf. 這些分子化合成此化合物。die
+     Verbindung: 化合物。
+5. sich zusammensetzen, gebildet sein. bilden: 建立， => gebildet: 有文
+   化，有教養的。
+   - der Stoff baut sich aus folgenden Elementen auf. 此物質有以下元素組成。
+
+* Derivation / 引
+
+- Bau :: building, construction^(en)
+- Aufbau :: structure
+- Gebäude :: building
+- Bauarbeiten :: construction work
+- Bauarbeiter(in) :: construction worker
+- bauen :: to build
+- anbauen :: to cultivate, to build on
+- Anbau :: cultivation
+
+* Footnotes
+
+[fn:1] http://dict.godic.net/dicts/search/aufbauen

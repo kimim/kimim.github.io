@@ -1,0 +1,59 @@
+---
+layout: post
+title: elisp function to toggle symbol highlight at the point
+categories: [productivity]
+tags: [emacs]
+---
+
+<p>
+There is the built-in function in emacs to highlight/unhighlight
+phrases:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(highlight-phrase REGEXP <span style="color: #551a8b;">&amp;optional</span> FACE)
+(unhighlight-regexp REGEXP)
+</pre>
+</div>
+
+<p>
+They are bounded to key <code>M-s h p</code> and <code>M-s h u</code> respectively. But they
+are not so convenient that they need the user to input the phrase
+interactively.
+</p>
+
+<p>
+So I write a small function to toggle highlight of the symbol at the point:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(setq kimim-color-list '(hi-yellow hi-green hi-blue hi-pink))
+(setq kimim-color-index 0)
+(setq kimim-color-list-length (length kimim-color-list))
+
+(<span style="color: #8b008b; font-weight: bold;">defun</span> <span style="color: #0000cd;">kimim/toggle-highlight-tap</span> ()
+  <span style="color: #3a5fcd;">"Toggle highlight pattern at the point"</span>
+  (interactive)
+  (<span style="color: #8b008b; font-weight: bold;">if</span> (and (listp (get-text-property (point) 'face))
+           (memq (car (get-text-property (point) 'face)) kimim-color-list))
+      (unhighlight-regexp (thing-at-point 'symbol))
+    (<span style="color: #8b008b; font-weight: bold;">progn</span>
+      (highlight-regexp (thing-at-point 'symbol) (nth kimim-color-index kimim-color-list))
+      (setq kimim-color-index (+ kimim-color-index 1))
+      (<span style="color: #8b008b; font-weight: bold;">if</span> (&gt;= kimim-color-index kimim-color-list-length)
+          (setq kimim-color-index 0))
+      )))
+
+(global-set-key [f7] 'kimim/toggle-highlight-tap)
+</pre>
+</div>
+
+<p>
+Firstly, a list of highlight color is defined for cycling different
+color for different symbols. Then the function
+<code>kimim/toggle-highlight-tap</code> is used to toggle the symbol to highlight
+or to unhighlight if it is highlighted. And finally, I bind this
+function to key <code>F7</code> for quick access.
+</p>

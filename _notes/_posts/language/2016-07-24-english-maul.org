@@ -1,0 +1,81 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：撕咬
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+据央视新闻消息，昨天下午两名自驾游女士在八达岭野生动物园遭遇老虎攻击，造成一死一
+伤。也许我孤陋寡闻，原来还可以自驾游进入有猛兽的野生动物园的。因为，我一直以来以
+为进这样的动物园是要配备专业持枪导游和带有铁笼的专业游览车的。换言之，就是让动物
+们在外面欣赏笼子里神情紧张的人类们。没想到可以开自己的车进野生动物园，更没想到游
+客还敢擅自开车门出去的。据说一位年轻姑娘发怒甩门而出，一位年长女士出去劝说，而导
+致惨剧发生。
+
+这件事有很多教训值得我们深思。首先，动物园方面是否应该配备安防人员和专业车辆？第
+二，动物园是否提供了充足的安全说明？第三，游客是否好好了解安全须知？第四，尽管天
+气燥热，年轻姑娘是不是应该控制好自己的情绪。第五，车里的人是不是不该让姑娘冒险胡
+来？
+
+不管时候想想有多少需要注意的事项，在血淋淋的事故之后都是那么的苍白无力。只能祈祷
+今后动物园在保障游客安全方面深思熟虑，游客能吸取教训时刻注意安全吧。
+
+BBC 今天的新闻标题是“Tigers maul two women at Beijing wildlife park[fn:1]”。这里老虎对
+游客的袭击用了 maul 这个单词。
+
+* maul
+
+maul 来自拉丁语 malleus^(latin)，原意是锤子 hammer。作为名词意为大槌，作为动词则
+有粗暴攻击之意。
+
+#+BEGIN_QUOTE
+1. hammer
+   1. A heavy hammer having a wedge-shaped head and used for splitting logs.
+   2. To split (wood) with a maul and wedge.
+2. Treat brutally
+   1. To savage; to injure or mutilate, as by scratching or beating
+   2. To handle or treat roughly, causing damage
+   3. (Rugby) rugby a loose scrum that forms around a player who is holding the
+      ball and on his feet
+#+END_QUOTE
+
+1.1：楔形头的劈柴大槌；1.2：用这种大槌劈柴；2.1：撕裂攻击使其毁伤；2.2：粗暴处理
+使其损坏；2.3：玩橄榄球围着带球队员的争夺。
+
+* Derivation
+
+** maulstick
+
+支腕杖，画家们用来支撑手腕用的杆子。也叫 mahlstick。我已开始以为这是锤子形状的原
+因才取这个名字，后来发现原来是从荷兰语里 maalstok 引入到英语中的。malen^(nl) 绘
+画，stok^(nl) 杆子。所以又叫 mahlstick。因此这个词中的 maul 和 hanmmer 之 maul
+没有任何关系啊。仅仅是长的一摸一样罢了。
+
+** mauler
+
+使用木槌之人，粗暴对待他人之人，拳击手，拳头。
+
+* Example
+
+- He was mauled by a tiger. Il a été mis en pièces par un tiger^(fr). 他被老虎袭
+  击。
+- She died after being mauled by a tiger. 被老虎袭击后她死了。
+- Her novel has been badly mauled by the critics. 她的小说横遭批评家抨击。
+- Tigers maul woman to death and wound another at Chinese Wildlife Park.[fn:2]
+- Sharks in South Africa that regularly maul people are now facing
+  extinction.[fn:3] 据本周发布的调研结果显示，南非大白鲨数量骤减，面临灭绝风险。
+- The South African coast is notorious for shark attacks, with regular cases of
+  deadly mauling of surfers and swimmers.[fn:3]
+- Rampant Lions maul Crusaders. [fn:4]
+
+* Footnotes
+
+[fn:1] http://www.bbc.com/news/world-asia-china-36877836
+
+[fn:2] http://vegassports-odds.com/2016/07/tigers-maul-woman-to-death-and-wound-another-at-chinese/
+
+[fn:3] http://www.thejournal.ie/sharks-decline-maul-2891009-Jul2016/
+
+[fn:4] http://www.sport24.co.za/Rugby/SuperRugby/rampant-lions-maul-crusaders-20160723

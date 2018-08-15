@@ -1,0 +1,101 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：英语单词 versatile
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+#+BEGIN_QUOTE
+I simply state that I'm a product of a /versatile/ mind in a restless generation —
+with every reason to throw my mind and pen in with the radicals.
+
+-- F. Scott Fitzgerald, author of The Great Gatsby
+#+END_QUOTE
+
+* versatile
+
+#+BEGIN_QUOTE
+versatile ['vɜː(r)sətaɪl]
+1. changing or fluctuating readily :  variable <a versatile disposition>
+2. embracing a variety of subjects, fields, or skills; also :  turning with ease from one thing to another
+3. having many uses or applications <versatile building material>
+#+END_QUOTE
+
+1. 多变的，易波动的。 比如 versatile disposition，多变的性格。
+2. 多才多艺的。比如 a versatile cook, writer 多才多艺的厨师，作家。versatile mind,
+   多面手。
+3. 多用途的。比如 versatile building material 多用途建材，versatile drill 万用钻，
+   versatile trunk 多用途卡车。
+
+* Etymology / 源
+
+#+BEGIN_QUOTE
+From Latin versātilis ‎(“turning easily”), from versātus, past participle of
+versō ‎(“I turn, change”), frequentative of vertō ‎(“I turn”).[fn:1]
+#+END_QUOTE
+
+这个单词源自拉丁语 versātilis，容易变化的意思。
+
+* Derivation / 衍
+
+从 versatile 的词源来看，vert 这个词根有 turn（转） 的意思。所以英语里很多带有词根
+vert 的单词都有转的意味。比如：
+- revert： 转回到之前的状态。“svn revert” 是最近常用的 subversion 命令，用来把当
+  前改变的文件内容全部恢复。revert to smoking when under stress 在压力下恢复了吸
+  烟的恶习；To revert to your earlier question, ... 让我们回到刚才的问题……；
+  revert to type, return to a natural or an original condition 回复到自然状况，
+  When we smell the dirty air, we want to revert to type.
+- avert：从某物上转开。avert sth from sth, 将某物移开；avert one's eye(gaze,
+  glance) from the terible sight, 将目光从可怕的情景上移开不去看；He managed to
+  avert syspicion. 他设法避嫌。
+- divert：转到别的地方。divert sb from sth to sth, 转移某人注意力从某事到另外某
+  事。divert traffic from one road to another, 转移车辆绕道行驶；divert sb‘s
+  attention, thoughts, energies 转移某人的注意力，思想和精力到别处；divert 还有
+  消遣娱乐的意思。大概也是从转移注意力这层含义衍生而来，Childre are easily
+  diverted. 孩子们很容易逗乐。
+- vertebra 脊椎。脊椎动物用来支撑身体转动脑袋用。
+
+再衍生出去的单词就更多了。
+
+基于 divert 的有 diversion 转移，改道，消遣娱乐，转移，偏离。diversity多样性；
+diverting 有趣的；diversify 多样化，diversify one‘s skills, interests；diverse
+多种多样的，people from diverse cultures。
+
+基于 avert 又有 averse 反对的， He seems to be averse to hard work. 看起来他不愿
+做脏活累活； aversion 厌恶感。I've always had an aversion to getting up
+early. 我一直有起床气；Smoking is one of my pet aversion. 吸烟是我特别讨厌的事情。
+
+* MultiLanguage / 异
+
+渐渐地发现，只要是源自拉丁语的单词，法语基本上和英语保持高度一致。从易变，多用途
+这层意思上看，法语里也是 versatile^fr，和英语拼写也完全一样。多才多艺在法语里写
+作 polyvalent^fr，poly- 多，valent 能力。
+
+德语易变的：wandlungsfähig, wendig，多用途的：vielseitig。
+- Der Schauspieler ist sehr wandlungsfähig. 演员的戏路很宽。
+- ein wandlungsfähiger Schauspieler 一个能演多种角色演员
+- Sie hat eine wandlungsfähige Stimme. 她有变化多端的歌喉。
+
+* Example / 例
+
+- Samsung Galaxy J2 2016 launched; Versatile, large-screen Galaxy J Max also
+  introduced[fn:2].
+- These are my top ten picks for the most versatile foods everyone should have
+  in their kitchen.[fn:3]
+- The most versatile robots can climb stairs and navigate other tight
+  spots[fn:4].
+- Newest Jazz players bring versatile skills to changing NBA[fn:5]
+
+* Footnotes
+
+[fn:1] https://en.wiktionary.org/wiki/versatile
+
+[fn:2] http://www.orissadiary.com/ShowBussinessNews.asp?id=68092
+
+[fn:3] http://www.onegreenplanet.org/vegan-food/versatile-foods-everyone-should-have-in-their-kitchen-and-how-to-use-them/
+
+[fn:4] http://www.indiatvnews.com/news/world-bomb-carrying-robot-used-by-dallas-police-raises-new-ethical-questions-338547
+
+[fn:5] http://www.usatoday.com/story/sports/nba/2016/07/08/newest-jazz-players-bring-versatile-skills-to-changing-nba/86881426/

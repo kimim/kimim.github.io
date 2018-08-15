@@ -1,0 +1,42 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Compile Emacs Version 26.1
+categories: [productivity]
+tags: [Windows, emacs]
+---
+#+END_EXPORT
+
+Emacs version 26.1 was released yesterday, but there is no binary download for
+Windows. Now it is time to compile it manually:
+
+1. Download and install msys2 from https://sourceforge.net/projects/msys2/files/Base/x86_64
+2. Run c:/msys64/msys2.exe and install necessary packages
+
+   #+BEGIN_SRC sh
+     pacman -S --needed base-devel \
+     mingw-w64-x86_64-toolchain \
+     mingw-w64-x86_64-xpm-nox \
+     mingw-w64-x86_64-libtiff \
+     mingw-w64-x86_64-giflib \
+     mingw-w64-x86_64-libpng \
+     mingw-w64-x86_64-libjpeg-turbo \
+     mingw-w64-x86_64-librsvg \
+     mingw-w64-x86_64-lcms2 \
+     mingw-w64-x86_64-libxml2 \
+     mingw-w64-x86_64-gnutls \
+     mingw-w64-x86_64-zlib
+   #+END_SRC
+
+3. configure; make; make install
+
+    #+BEGIN_SRC sh
+    ./autogen.sh
+    PKG_CONFIG_PATH=/mingw64/lib/pkgconfig ./configure --without-imagemagick
+    make
+    make install prefix=/c/emacs
+    #+END_SRC
+
+Now you can run emacs from =C:/emacs/bin/runemacs=
+
+Quite easy :-)

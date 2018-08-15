@@ -1,0 +1,93 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 从2016汉诺威工业展看工业4.0的发展现状
+categories: [technology]
+tags: [industry]
+---
+#+END_HTML
+
+在刚刚结束的汉诺威展上展示了很多工业和能源方面的创新科技，呈现了工业4.0从概念到
+现实的突破。虽然不能亲临现场参观观摩，但是从前方记者采集的资料学习学习还是会有收
+获的。
+
+
+* 美国，奥巴马
+
+首先值得一提的是，这次的 Hannover Messe 居然还吸引了美国总统奥巴马前来参观。展会
+开幕当晚，奥巴马和默克尔同台发表了演说表明了对汉诺威展的支持，以及对工业4.0发展
+的展望。根据参展人员介绍，奥马巴参观的两个展厅严格限制了闲杂人员的走动，相当具有
+安全意识，万一出岔子那是全世界要轰动的。
+
+* 全球工业 4.0 战略
+
+** 中国
+
+中国提出了中国制造 2025 计划。另外 2015 年 7 月 14 日中国工信部还和德国
+BMWi（Die Kommunikations- und Informationsplattform des Bundesministeriums für
+Wirtschaft und Energie^(de)，German Federal Ministry for Economic Affairs and
+Energy^(en)）[fn:1] 签订了谅解备忘录，旨在增强两国智能制造领域的创新合作。
+
+** 美国
+
+美国组建了 SMLC 协会（Smart Manufacturing Leadership Coalition），并提出了开放的
+平台标准： Open Smart Manufacturing Platform，其目标是整合开放的网络信息技术来帮
+助制造企业实现智能化生产，从而缩减制造成本，减少商业风险。
+
+** 日本
+
+日本经济产业省（経済産業省^(jp)，Ministry of Economy, Trade and Industry^(en)）
+以及企业组织提出了Industrial Value Chain Initiative（www.iv-i.org），旨在通过物
+联网技术和工业 4.0概念帮助制造企业实现高效协作。IVI 官网表明了其宗旨：The
+Industrial Value Chain Initiative (IVI) is a forum to design a new society by
+combining manufacturing and information technologies, and for all enterprises to
+take an initiative collaboratively.
+
+** 印度
+
+2014 年 9 月 25 日，印度首相 Narendra Modi 宣布了“Make in India”计划。目标是鼓励
+印度国内企业以及跨国公司在印度生产。另外印度还有一个数字印度计划（Digital India），
+目标是通过工业 4.0 技术以及智能信息化技术来构建印度数字社会和知识经济：The
+Digital India programme is a flagship programme of the Government of India with
+a vision to transform India into a digitally empowered society and knowledge
+economy.
+
+* 工业 4.0 成果
+
+目前已经实施的标准包括 OPC UA（OPC Unified Architecture），ISA95。另外 Plattform
+Industrie 4.0 和 IIC 在今年 3 月份提出的两个参考架构模型 Reference Architecture
+Model for Industry 4.0（RAMI4.0）和 Industrial Internet Reference
+Architecture（IIRA）。以下先简单了解下他们的概念，今后逐个学习一番：
+
+** OPC UA
+
+The OPC Unified Architecture (UA), released in 2008, is a platform independent
+service-oriented architecture that integrates all the functionality of the
+individual OPC Classic specifications into one extensible framework.[fn:2]
+
+** ISA95
+
+ISA-95 is an international standard that defines the terminology and models used
+in the integration of business systems at the enterprise level with control
+systems at the plant-floor level.
+
+** RAMI 4.0
+
+The German Industrie 4.0 platform, consisting of ZVEI, VDMA, and BITKOM, has
+jointly reached important milestones in the standardization of Industrie
+4.0. The first version of a reference architecture model for Industrie 4.0 (RAMI
+4.0) which precisely describes Industrie 4.0-compliant production equipment, has
+been developed.
+
+** IIRA
+
+The Industrial Internet Reference Architecture (IIRA) is a standard based open
+architecture for IISs. To maximize its value, the IIRA has broad industry
+applicability to drive interoperability, to 85 map applicable technologies, and
+to guide technology and standard development.
+
+* Footnotes
+
+[fn:1] http://www.bmwi.de/
+
+[fn:2] https://opcfoundation.org/about/opc-technologies/opc-ua/

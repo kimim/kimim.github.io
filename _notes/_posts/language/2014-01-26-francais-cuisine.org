@@ -1,0 +1,109 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 單詞本：法語單詞 cuisine
+categories: [language]
+tags:
+  - Français
+---
+#+END_HTML
+
+#+BEGIN_HTML
+<a href="http://www.flickr.com/photos/kimim-photo/12147699886/" title="Flickr 上 kimim-photo 的 cuisiner"><img src="http://farm3.staticflickr.com/2806/12147699886_c11350f9f8_z.jpg" width="640" height="426" alt="cuisiner"></a>
+#+END_HTML
+
+* Cuisine
+
+今天學習一個法語單詞 cuisine.
+
+- la cuisine :: n.f. 廚房，烹飪，廚藝，菜餚，伙食，<俗>詭計。
+
+* Cuisine 詞源
+
+這個單詞來自拉丁語 cŏcīna[fn:2], 是經典拉丁語 cŏquīna(cuisine, art culinaire^(fr)) 和 cŏquĕre(cuire, rôtir^(fr)) 的變形。西班牙語 cocina^(es), 意大利語 cucina^(it), 英語 kitchen^(en) 都是其同源詞。[fn:9]
+
+英語 cuisine[fn:3](烹飪，烹調法) 則來自法語 cuisine.
+
+* Cuisine 釋義
+1. Pièce où l'on prépare et fait cuire les aliments. 廚房，人們烹飪食物的地方。die Küche^(de), kitchen^(en).
+   - Zaheira disparut vers la cuisine, revint avec des plats alléchants, disposa gentiment l'eau et le pain sur la table. 薩艾拉消失在廚房中，隨後帶來了誘人的美食，優雅的把水和麵包放在桌上。
+2. Action de préparer à manger. 烹飪。das Kochen^(de), die Küche^(de), cookery^(en), cooking^(en), cuisine^(en).
+   - Il me quitte; il doit acheter du jambon et du vinaigre, car les officiers l'ont naturellement chargé de leur cuisine, comme ils en chargent immanquablement[fn:4] tout professeur, tout prêtre[fn:5], tout poète. — (Jean Giraudoux[fn:6], Retour d'Alsace[fn:7] - Août 1914, 1916)
+3. Art d'apprêter les mets, les aliments. 廚藝。
+   - Il apprend la cuisine.
+   - Il sait bien la cuisine.
+   - Livre de cuisine.
+   - cuisine bourgeoise.[fn:8] 家常菜；Bourgeoise Cuisine 家常法国菜派系
+   - La cuisine française.
+   - La cuisine italienne.
+   - La cuisine anglaise.
+4. Manœuvre, intrigue. 手段，手腕; 詭計，陰謀，勾當。
+   - a cuisine électorale, parlementaire.
+
+* 廚房用品
+- le frigo, le réfrigérateur^(fr), der Kühlschrank^(de), fridge, regrigerator^(en), 冰箱
+- le bac à glaçons^(fr), Eiswürfelschale^(de), ice cube tray^(en)[fn:1], 冰格
+- le congélateur
+- la cuisinière^(fr), cuisinière électrique, au charbon, à gaz. cooker^(en), der Herd, der Kocher^(de), 爐灶。
+- le brûleur^(fr), der Brenner, das Kochfeld^(de), burner, cooktop^(en), 燃烧器
+- le minuteur^(fr), die Schaltuhr, die Zeitschaltuhr^(de), timer^(en), 定時器／計時器
+- le gant (de cuisine, de cuir)^(fr), der Küchehandschuh^(de), 廚房手套
+- la mijoteuse^(fr), Schongarer, Langsamgarer^(de), slow cooker, crockpot, crock pot^(en), 煲湯鍋
+- le four à micro-ondes, le micro-onde^(fr), der Mikrowellenherd^(de), the microwave oven^(en), 微波爐
+- le grille-pain^(fr), der Toaster^(de), toaster^(en), 烤麵包機
+- le pain grillé, 烤麵包
+- le batteur (électrique)^(fr), der Schneebesen^(de), 打蛋器
+- le mixeur de cuisine^(fr), 攪拌機
+- la boîte (de conserve), 儲藏瓶
+- le couvercle^(fr), der Deckel^(de), lid, cap, top, cover^(en), 蓋子
+- l'ouvre-boîtes^(fr), can-opener, tin-opener^(en), 開瓶器
+- le bocal, der Krug, das Glas, jar, 罐子
+- l'évier^(fr), das Waschbecken^(de), sink, wash-basin^(en), 水槽
+- la vaisselle, das Geschirr, dish
+- l'essuie-tout, les serviettes en papier, Papierhandtücher, paper towels, 紙巾
+- l'éponge, der Schwamm, sponge, 海綿
+- le liquide vaisselle, le détergent à vaisselle^(fr), das Spülmittel^(de), dishwashing liquid, washing-up liquid^(en), 洗滌液
+- le lave-vaisselle, die Spülmaschine, dishwasher, 洗碗機
+- la casserole, der Topf, pot, 鍋
+- die Bratpfanne, frying pan, 平底鍋
+- la spatule[fn:10], der Spachtel, Spatula, 鏟子
+- la plaque de cuisson, die Backbleche, baking tray (oven-proof tray), 烤盘
+- la théière, der Teekessel, teakettle, teapot, 水壺
+- le thé, der Tee, tea, 茶
+- le couteau, das Messer, knife, 刀
+- der Teig 麵團
+- die Reibe, 擦丝器
+- la planche à découper, le conseil de la cuisine, das Schneidebrett, das Küchenbrett, the cutting board, the kitchen board, 砧板，廚房板
+- le rouleau à patisserie, das Nudelholz, rolling pin, 擀麵杖
+- la tablier, die Schürze, apron, 圍兜
+- die Durchschlag, 漏斗(?)
+- le tamis, das Sieb, the sieve, 篩子
+- la tasse à mesurer^(fr), die Messbecher^(de), measuring cup^(en), 量杯。
+- la cuillère-mesure, der Messlöffel, measuring spoon, 量勺
+- la cafetière^(fr), die Kaffeekanne^(de), coffee pot^(en), 咖啡壺
+- le café^(fr), der Kaffee^(de), coffee^(en), 咖啡
+- le moulin à café^(fr), die Kaffeemühle^(de), coffee grinder^(en), 咖啡磨豆機
+
+
+* Footnotes
+
+[fn:1]  A refrigerator accessory that can make and remake small uniform ice cubes.
+
+[fn:2] ŏ 這個字符的名字是 LATIN SMALL LETTER O BREVE. http://en.wikipedia.org/wiki/Breve. 和這個字符很相似的字符ǒ叫做 LATIN SMALL LEtter O WITH CARON. 前者是圓形的下半部，後者則是 V 字形。差不多是我們的第三聲符號。ī 這個字符則叫做 LATIN SMALL LETTER I MACRON. http://en.wikipedia.org/wiki/Macron
+
+[fn:3] http://dict.youdao.com/search?q=cuisine&keyfrom=dict.index
+
+[fn:4] adv. 必然地，确定地。近义词 à coup sûr, à tous les coups, évidemment, inévitablement, infailliblement, sûrement.
+
+[fn:5] n.m. 1（天主教的）教士，神甫；司铎 2（古代希腊、埃及等的）祭司 3<罕>和尚，道士，术士。
+adj. 教士的，神甫的；祭司的。le grand prêtre（希伯来教）大祭司
+
+[fn:6] 法国剧作家季洛杜
+
+[fn:7] 亞爾薩斯：http://cn.rendezvousenfrance.com/zh-hant/discover/28569
+
+[fn:8] n. 中产阶级的女人；资产阶级的女人
+
+[fn:9] http://fr.wiktionary.org/wiki/cuisine
+
+[fn:10] http://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Yellow_Billed_Spoonbill_PerthZoo_SMC_2005.jpg/439px-Yellow_Billed_Spoonbill_PerthZoo_SMC_2005.jpg

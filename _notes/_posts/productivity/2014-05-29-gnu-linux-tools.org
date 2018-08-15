@@ -1,0 +1,517 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Introduction to some useful *nix tools
+categories: [productivity]
+tags: [cygwin]
+---
+#+END_HTML
+
+* Introduction
+
+  In this article, I will explain some useful UNIX or GNU/Linux tools,
+  such as file & folder operations, finding files, archiving files,
+  and short introduction to editors.
+
+** Unix
+   What is Unix?
+   - Unix is a multitasking, multi-user computer operating system that
+     exists in many variants.
+   - The original Unix was developed at AT&T's Bell Labs research
+     center by Ken Thompson, Dennis Ritchie, and others.
+
+#+BEGIN_HTML
+<div align="center">
+<img src="http://upload.wikimedia.org/wikipedia/commons/8/8f/Ken_Thompson_%28sitting%29_and_Dennis_Ritchie_at_PDP-11_%282876612463%29.jpg" width="700">
+</div>
+#+END_HTML
+
+
+#+REVEAL: split
+
+#+BEGIN_HTML
+<div align="center">
+<img src="http://upload.wikimedia.org/wikipedia/commons/7/77/Unix_history-simple.svg" width="700">
+</div>
+#+END_HTML
+
+** GNU
+   What is GNU?
+   - GNU is a Unix-like computer operating system developed by the GNU
+     Project. It is composed wholly of free software. It is based on
+     the GNU Hurd kernel and is intended to be a "complete
+     Unix-compatible software system".
+   - GNU is a recursive acronym for "GNU's Not Unix!",chosen because
+     GNU's design is Unix-like, but differs from Unix by being free
+     software and containing no Unix code.
+
+#+BEGIN_HTML
+<div align="center">
+<img src="http://upload.wikimedia.org/wikipedia/en/thumb/2/22/Heckert_GNU_white.svg/535px-Heckert_GNU_white.svg.png" width="300">
+</div>
+#+END_HTML
+
+** Linux
+   What is Linux?
+   - Linux is a Unix-like computer operating system assembled under
+     the model of free and open source software development and
+     distribution.
+   - The defining component of Linux is the Linux kernel, an operating
+     system kernel first released on 5 October 1991 by Linus Torvalds.
+   - The Free Software Foundation uses the name GNU/Linux, which has
+     led to some controversy.
+
+#+BEGIN_HTML
+<div align="center">
+<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/512px-Tux.svg.png"
+width="300">
+</div>
+#+END_HTML
+
+* Installation
+** Cygwin
+
+  On Windows, you can use Cygwin to install most of the GNU/Linux
+  tools. The purpose of Cygwin is "Get that Linux feeling - on
+  Windows".[fn:1]
+  - a large collection of GNU and Open Source tools which provide
+    functionality similar to a Linux distribution on Windows.
+  - a DLL (=cygwin1.dll=) which provides substantial POSIX API
+    functionality.
+
+  You can download Cygwin setup here:
+  https://cygwin.com/install.html. With =setup.exe=, you can choose
+  most of the Linux tools you may be interesting in.
+
+** Mintty
+
+   Mintty is a terminal emulator for Cygwin.
+
+#+BEGIN_HTML
+<div align="center">
+<img src="https://farm3.staticflickr.com/2903/14235647424_f914e72e40_o.png"
+width="835" height="496" alt="mintty">
+</div>
+#+END_HTML
+
+** UnxUtils
+
+   UnxUtils ports common GNU utilities to native Win32.
+
+   Native means
+   - the executables do only depend on the Microsoft C-runtime (msvcrt.dll)
+   - and not an emulation layer like that provided by Cygwin tools.
+
+   http://unxutils.sourceforge.net/
+
+* Online help
+
+  There are two kind of online help you may frequently use when
+  playing with *nix.
+
+** man - online manual pages
+   man formats and displays the on-line manual pages. man is normally
+   the name of the manual page, which is typically the name of a
+   command, function, or file.
+
+#+BEGIN_HTML
+<div align="center">
+<img src="https://farm3.staticflickr.com/2934/14253922623_0e68e6574f_o.png"
+width="835" height="496" alt="man">
+</div>
+#+END_HTML
+
+** info - info pages
+
+   The GNU Project distributes most of its on-line manuals in the
+   "Info format", which you read using an "Info reader".
+
+   1. Info contains a lot more information than Man
+   2. Man is older and is slowly being replaced by Info
+   3. Man is displayed when there is no Info documentation found
+   4. Man is typically a single page while Info is spread across
+      multiple pages
+   5. Info allows navigation while Man does not[fn:3]
+
+#+REVEAL: split
+
+#+BEGIN_HTML
+<div align="center">
+<img src="https://farm3.staticflickr.com/2927/14210601276_e5db7dd8d4_o.png"
+width="835" height="496" alt="info">
+</div>
+#+END_HTML
+
+* Directory/File basic operation
+  - `ls': List directory contents
+  - `cp': Copy files and directories
+  - `mv': Move (rename) files
+  - `rm': Remove files or directories
+  - `shred': Remove files more securely
+  - `mkdir': Make directories
+  - `rmdir': Remove empty directories
+* Output files
+** `cat': Concatenate and write files
+   `cat' copies each FILE to standard output.
+
+#+BEGIN_SRC sh
+$ cat -n crc32.c
+     1  #define CHKSUM_BLOCK_SIZE       1
+     2  #define CHKSUM_DIGEST_SIZE      4
+     3
+     4  static u32 __crc32_le(u32 crc, unsigned char const *p, size_t len)
+     5  {
+     6          return crc32_le(crc, p, len);
+     7  }
+#+END_SRC
+
+** `nl': Number lines and write files
+
+   `nl' writes each FILE to standard output, with line numbers added
+   to some or all of the lines.
+
+#+BEGIN_SRC sh
+$ nl crc32.c
+     1  #define CHKSUM_BLOCK_SIZE       1
+     2  #define CHKSUM_DIGEST_SIZE      4
+     3
+     4  static u32 __crc32_le(u32 crc, unsigned char const *p, size_t len)
+     5  {
+     6          return crc32_le(crc, p, len);
+     7  }
+#+END_SRC
+
+** `head': Output the first part of files
+
+   `head' prints the first part (10 lines by default) of each FILE
+
+#+BEGIN_SRC sh
+$ head crc32.c
+#define CHKSUM_BLOCK_SIZE       1
+#define CHKSUM_DIGEST_SIZE      4
+
+static u32 __crc32_le(u32 crc, unsigned char const *p, size_t len)
+{
+        return crc32_le(crc, p, len);
+}
+
+/** No default init with ~0 */
+static int crc32_cra_init(struct crypto_tfm *tfm)
+#+END_SRC
+
+** `tail': Output the last part of files
+
+   `tail' prints the last part (10 lines by default) of each FILE
+
+#+BEGIN_SRC sh
+$ tail -f crc32.c
+{
+        crypto_unregister_shash(&alg);
+}
+
+module_init(crc32_mod_init);
+module_exit(crc32_mod_fini);
+
+MODULE_AUTHOR("Alexander Boyko <alexander_boyko@xyratex.com>");
+MODULE_DESCRIPTION("CRC32 calculations wrapper for lib/crc32");
+MODULE_LICENSE("GPL");
+
+  <--- waiting for update
+#+END_SRC
+
+* Summarizing files
+** `wc': Print newline, word, and byte counts
+
+   `wc' counts the number of bytes, characters, whitespace-separated
+   words, and newlines in each given FILE,
+
+#+BEGIN_SRC sh
+$ wc -l -w -c Makefile
+ 1486  6132 50289 Makefile
+#+END_SRC
+
+** `cksum': Print CRC checksum and byte counts
+
+   `cksum' computes a cyclic redundancy check (CRC) checksum for each
+   given FILE.
+
+#+BEGIN_SRC sh
+$ cksum Makefile
+182967537 50289 Makefile
+#+END_SRC
+
+** `md5sum': Print or check MD5 digests
+
+   `md5sum' computes a 128-bit checksum (or "fingerprint" or
+   "message-digest") for each specified FILE.
+
+#+BEGIN_SRC sh
+$ md5sum Makefile
+aedd785aa73b799394c58511162f96db *Makefile
+#+END_SRC
+
+* Archiving tools
+** `tar' and `gzip'
+
+   The tar program is used to create, modify, and access files
+   archived in the tar format.
+
+   "tar" stands for Tape ARchive. It is an archiving file format.
+
+   tar was originally developed in the early days of Unix for the
+   purpose of backing up files to tape-based storage devices.
+
+   Gzip reduces the size of the named files using Lempel-Ziv coding
+   (LZ77).
+
+** compress files
+
+#+BEGIN_SRC sh
+$ ls
+ffs-test.c  hcd-tests.sh  Makefile  testusb.c
+
+$ tar -czvf usb.tgz *
+ffs-test.c
+hcd-tests.sh
+Makefile
+testusb.c
+
+$ file usb.tgz
+usb.tgz: gzip compressed data, last modified: Wed May 21 16:19:37 2014, from Unix
+#+END_SRC
+
+** uncompress files
+
+   - .tgz and .tar.gz are very common in *nix world.
+
+#+BEGIN_SRC sh
+$ mv usb.tgz usb.tar.gz
+
+$ tar -xzvf usb.tar.gz
+ffs-test.c
+hcd-tests.sh
+Makefile
+testusb.c
+#+END_SRC
+
+#+REVEAL: split
+
+   - another compress format is bz2
+
+#+BEGIN_SRC sh
+$ tar -jxvf u-boot-2014.04-rc3.tar.bz2
+u-boot-2014.04-rc3/
+u-boot-2014.04-rc3/.checkpatch.conf
+u-boot-2014.04-rc3/.gitignore
+u-boot-2014.04-rc3/CREDITS
+#+END_SRC
+
+* Finding utils
+** `find'
+   `find' searches the directory tree rooted at each file name FILE by
+   evaluating the EXPRESSION on each file it finds in the tree.
+
+   - you can find file with wildcard:
+#+BEGIN_SRC sh
+$ find . -iname mm.*
+./arch/arm/mach-gemini/mm.c
+./arch/arm/mm/mm.h
+./arch/arm/xen/mm.c
+./arch/arm64/mm/mm.h
+./arch/powerpc/platforms/ps3/mm.c
+./arch/unicore32/mm/mm.h
+./drivers/gpu/drm/nouveau/core/core/mm.c
+./drivers/gpu/drm/nouveau/core/include/core/mm.h
+./include/linux/decompress/mm.h
+./include/linux/mm.h
+#+END_SRC
+
+#+REVEAL: split
+   - and add more filter:
+
+#+BEGIN_SRC sh
+$ find . -iname mm.* -and -not -iname *.h
+./arch/arm/mach-gemini/mm.c
+./arch/arm/xen/mm.c
+./arch/powerpc/platforms/ps3/mm.c
+./Documentation/x86/x86_64/mm.txt
+./drivers/gpu/drm/nouveau/core/core/mm.c
+#+END_SRC
+
+#+REVEAL: split
+
+   - or use regular expression:
+#+BEGIN_SRC sh
+$ find . -iname mm.[ch]
+./arch/arm/mach-gemini/mm.c
+./arch/arm/mm/mm.h
+./arch/arm/xen/mm.c
+./arch/arm64/mm/mm.h
+./arch/powerpc/platforms/ps3/mm.c
+./arch/unicore32/mm/mm.h
+./drivers/gpu/drm/nouveau/core/core/mm.c
+./drivers/gpu/drm/nouveau/core/include/core/mm.h
+./include/linux/decompress/mm.h
+./include/linux/mm.h
+#+END_SRC
+
+#+REVEAL: split
+
+   - or find file with specific modification time:
+
+#+BEGIN_SRC sh
+$ touch ./arm/mm/mm.h
+
+$ find . -name mm.*  -mtime -7
+./arm/mm/mm.h
+#+END_SRC
+
+#+REVEAL: split
+
+   - find file with specific size
+#+BEGIN_SRC sh
+$ find . -name '*.c' -size +100k | xargs ls -alh
+-rw-r--r-- 1 CNKIMA Domain Users 195K Mar 10 10:41 ./memcontrol.c
+-rw-r--r-- 1 CNKIMA Domain Users 116K Mar 10 10:41 ./memory.c
+-rw-r--r-- 1 CNKIMA Domain Users 182K Mar 10 10:41 ./page_alloc.c
+-rw-r--r-- 1 CNKIMA Domain Users 110K Mar 10 10:41 ./slab.c
+-rw-r--r-- 1 CNKIMA Domain Users 128K Mar 10 10:41 ./slub.c
+-rw-r--r-- 1 CNKIMA Domain Users 108K Mar 10 10:41 ./vmscan.c
+#+END_SRC
+
+** `grep'
+
+   `grep' searches input files for lines containing a match to a given
+   pattern list.
+
+   - grep any line contains "quicc"
+
+#+BEGIN_SRC sh
+$ grep quicc * -r
+arch/m68k/include/asm/commproc.h:/* mleslie: The uCquicc board is using no extra microcode in DPRAM */
+arch/m68k/include/asm/commproc.h:extern QUICC *pquicc;
+arch/m68k/include/asm/commproc.h:#if 0 /* use QUICC_BD declared in include/asm/m68360_quicc.h  */
+arch/m68k/include/asm/commproc.h:/* uCquicc has the following signals connected to Ethernet:
+arch/m68k/include/asm/commproc.h:#endif /* config_ucquicc */
+arch/m68k/include/asm/m68360.h:#include <asm/m68360_quicc.h>
+arch/m68k/include/asm/m68360_enet.h:#include <asm/quicc_simple.h>
+arch/m68k/include/asm/m68360_pram.h:struct quicc32_pram {
+#+END_SRC
+
+#+REVEAL: split
+
+   - more complacated example with regular expression:
+
+#+BEGIN_SRC sh
+$ grep mm idmap.c
+                pmd = pmd_alloc_one(&init_mm, addr);
+                pud_populate(&init_mm, pud, pmd);
+        idmap_pgd = pgd_alloc(&init_mm);
+ * results when turning off the mmu.
+void setup_mm_for_reboot(void)
+        cpu_switch_mm(idmap_pgd, &init_mm);
+
+$ grep mm[^,_u] idmap.c
+        idmap_pgd = pgd_alloc(&init_mm);
+        cpu_switch_mm(idmap_pgd, &init_mm);
+#+END_SRC
+
+* Combine them together
+
+  GNU utils provide =xargs= and =-exec= for passing result from last
+  command to next command.
+
+  - three ways to delete found files:
+
+#+BEGIN_SRC sh
+find . -name mm.* | xargs rm -f
+find . -name mm.* -exec rm -f '{}' \;
+find . -name mm.* -delete
+#+END_SRC
+
+#+REVEAL: split
+
+  - compress found files
+
+#+BEGIN_SRC sh
+$ find . -name mm.* -exec tar -czvf mm.tar.gz '{}' \;
+./arm/mach-gemini/mm.c
+./arm/mm/mm.h
+./arm/xen/mm.c
+./arm64/mm/mm.h
+./powerpc/platforms/ps3/mm.c
+./unicore32/mm/mm.h
+#+END_SRC
+
+#+REVEAL: split
+
+  - grep in found files
+
+#+BEGIN_SRC sh
+$ find . -name mm.* -exec grep mm_info '{}' \;
+        result = ps3_repository_read_mm_info(&map.rm.base, &map.rm.size,
+                panic("ps3_repository_read_mm_info() failed");
+
+$ find . -name mm.* -exec grep ps[_3a-z]*_info '{}' \;
+        result = ps3_repository_read_highmem_info(0, &r->base, &r->size);
+        result = ps3_repository_read_mm_info(&map.rm.base, &map.rm.size,
+                panic("ps3_repository_read_mm_info() failed");
+#+END_SRC
+
+* Editors
+** vi/vim
+
+   Vim stands for Vi IMproved. Vim is a text editor which includes
+   almost all the commands from the Unix program "Vi" and a lot of new
+   ones.
+
+   - Modal editing with sophisticated keyboard shortcuts
+   - Macros
+   - Extremely rich extensibility
+   - Simple for use
+   - Availability. Preinstalled in almost all the *nix operating system.
+
+** emacs
+
+   GNU Emacs is an extensible, customizable text editor. At its core
+   is an interpreter for Emacs Lisp to support text editing. With
+   =elisp=, emacs can go beyond an editor, emacs can be:
+
+   - a mail, newsgroup client with =gnus=
+   - file manager with =dired=
+   - calendar
+   - manage todo list and agenda
+   - calculator
+   - play game
+   - psychotherapist
+
+#+REVEAL: split
+
+   - emacs learning curve:
+
+#+BEGIN_HTML
+<div align="center">
+<img src="http://ergoemacs.org/emacs/i/emacs_learning_curves.png"
+width="700" alt="mintty">
+</div>
+#+END_HTML
+
+#+REVEAL: split
+
+   - emacs user at work:
+
+#+BEGIN_HTML
+<div align="center">
+<img src="http://ergoemacs.org/emacs/i/emacs_user_at_work_by_earlcolour.jpg"
+width="700"
+alt="mintty">
+</div>
+#+END_HTML
+
+* Footnotes
+
+[fn:1] [[http://cygwin.com][cygwin.com]]
+
+[fn:2] [[http://chadaustin.me/2009/10/reasons-why-mintty-is-the-best-terminal-on-windows/][9 Reasons Why MinTTY is the Best Terminal on Windows]]
+
+[fn:3] [[http://www.differencebetween.net/technology/software-technology/difference-between-man-and-info/][Difference Between Man and Info]]

@@ -1,0 +1,129 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：水果之浆果
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* 琐碎的前言
+
+天气冷了，真是越来越懒惰了，又是隔了好长时间才来更新。今天 Aira 同学给我留言说希
+望可以在单词旁边加上音标，于是触发了我要继续写一篇的念头。
+
+我记得之前有几篇里面的单词是加了音标的，比如：
+- [[http://kimi.im/2016-09-21-english-spinach][单词本：蔬菜之菠菜]]
+- [[http://kimi.im/2016-09-03-english-gourd][单词本：蔬菜之瓜瓜]]
+
+总之，要虚心接受大家的意见，以后附上单词的音标。
+
+另外，Aira 同学还说文章里面的链接都是失效的。原因是这样的，个人公众号是不能认证
+的，而未认证的公众号文章内的链接是不能直接跳转的，所以只能复制粘贴到浏览器的地址
+栏中访问。没办法，只能这样了，也许哪天订阅用户多了，腾讯会为我开放这个功能也说不
+定。
+
+* berry
+
+今天要学习的单词是 berry，这也是我最喜欢的水果之一。In everyday language, a
+berry is a small, pulpy and often edible fruit.[fn:1]
+
+berry 是那种软软的，捣碎了烂烂的小果子的统称。
+- We got a lot of sweet big berry this year. 我们今年收获了不少大而甜的浆果。
+
+德语叫 die Beere[`be:rə]^{(de)}.
+- Die Beere hängt am Strauch.^{(de)} 小树丛上挂满浆果。
+
+* berry color
+
+大概是因为不少浆果是红红黑黑的，所以也用来形容皮肤黝黑，比如：
+- Those three sturdy children as brown as a berry. 那三个健壮结实的孩子，皮肤黝
+  黑。
+
+* 各种 berry
+
+** blackberry
+
+提到黑莓，不得不提奥巴马代言的 BBM[fn:2]。从官网看，好像还没倒闭呢。可惜我从来没
+用过。不过，我倒是了解过 QNX[fn:3] 操作系统，Blackberry 旗下的实时操作系统，据说
+性能很好的微内核实现，有机会值得深入学习一下。
+
+德语 die Brombeere[Brọmbeere]^{(de)}。
+
+法语黑莓叫 la mûre[myʀ]^{(fr)}，也作为形容词，形容成熟的。大概莓类说过成熟的时候
+都有些黑红黑红，所以黑莓也用来表示成熟：
+- Est-ce que les pastèques sont mûres?^{(fr)} 西瓜熟了吗？
+- La poire est mûre.^{(fr)} 时机已经成熟。
+
+** blueberry
+
+蓝莓，再熟悉不过的水果了。味道酸酸甜甜，rich in antioxidants 富含抗氧化剂，可以清
+除体内杂质。
+
+德语 die Blaubeere^{(de)}，和英语组词方式一样，很好记。
+
+但是，法语的蓝莓叫 la myrtille[mirtij]^{(fr)}，这就有点麻烦了，英语
+myrtil[ˈmɜ:tl] 是香桃木。
+- J'ai fait une tarte aux myrtilles, tu en veux?^{(fr)} 我做了点蓝莓饼，要不要来
+  一点？
+
+我不知道为什么……
+
+** strawberry
+
+草莓。
+
+德语 die Erdbeere[ertber]^{(de)}，不过这里 die Erde^{(de)} 不是草的意思，而是泥
+土、地球的意思。可能草莓长的比较小，贴着泥土，所以德国人管它们叫土莓。
+- Reife Erdbeere sieht rot aus.^{(de)} 成熟的草（土）莓看起来是红色的。
+
+法语 la fraise[frɛz]^{(fr)}，法国人总是不太喜欢用合成词，增加记忆的麻烦！
+- Elle aime vraiment les fraises. 她真的很喜欢草莓。
+
+** raspberry
+
+树莓，木莓，覆盆子。
+
+RaspberryPi[fn:4] 是开源的 mini PC，是嵌入式系统爱好者床前案头必备的玩具。
+
+另外顺便欣赏一下苏东坡的覆盆子贴：
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31118004676/in/dateposted-public/" title="覆盆子贴"><img src="https://c5.staticflickr.com/6/5461/31118004676_29855df606_z.jpg" width="601" height="640" alt="覆盆子贴"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+德语 die Himbeere[Hịmbeere]^{(de)}，据说英语 hindberry 也就是 raspberry。
+
+顺带学一学 rasp[rɑ:sp]：vt. 以粗锉打磨，粗刮; 发出摩擦的刺耳声; 伤（人感情），使
+焦急; 用急躁刺耳的声音说; n. 粗锉，木锉; [机] 锉机，锉磨而发出的刺耳声音; （心里
+的） 焦急，烦躁
+- "Where've you put it?" he rasped. “你把它放在哪里了？”他尖声叫道。
+
+法语 la framboise[fʀɑ̃bwaz]^{(fr)}。法语一如既往的不喜欢用合成词。不过和草莓的 la
+fraise 有点神似，聊可帮助记忆吧。
+- Les framboise ressemblent aux fraises, mais ils sont plus petites.^{(fr)} 覆盆
+  子和草莓有点相似，但是比草莓更小一些。
+
+
+* Summary
+
+好了，今天的主题是各种莓 berry。黑莓，蓝莓，草莓，树莓。
+
+英语只要记住 berry 就很容易猜出这些莓：blackberry，blueberry，strawberry，
+raspberry。
+
+德语也一样，记住了 beere，就很容易记住这些莓子：die Brombeere，die Blaubeere，
+die Erdbeere，die Himbeere。而且都是阴性的。
+
+法语就麻烦一点了，他们很喜欢造新词：la mûre，la myrtille，la fraise，la
+framboise。
+
+* Footnotes
+
+[fn:1] https://en.wikipedia.org/wiki/Berry
+
+[fn:2] http://blackberry.com
+
+[fn:3] http://www.qnx.com/
+
+[fn:4] https://www.raspberrypi.org

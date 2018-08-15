@@ -1,0 +1,165 @@
+---
+layout: post
+title: 单词本：蔬菜之芹菜
+categories: [language]
+tags: [English]
+---
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1"><span class="section-number-2">1</span> celery</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+上一篇蔬菜系列学习了花菜（cauliflower）和西兰花（broccoli）。今天来看一看芹菜
+celery。这个单词在之前系列文章的例句中也出现过。现在来整理整理吧。
+</p>
+
+<p>
+不过 celery 不是我们国人常吃的那种细细的芹菜，而是很粗的西芹。细细的芹菜称之为
+Chinese celery。但是还有个单词 parsley 也是西芹欧芹。这样我就分不清 celery 和
+parsley 到底有什么区别了。
+</p>
+
+<p>
+还好有百度知道：
+</p>
+<blockquote>
+<p>
+celery 一般指平时所说的西芹，和我们在菜场看到的普通芹菜还不太一样，很粗大，可以直接作为蔬菜食用的，比如在西餐中作为烤鸡翅的配菜沾奶酪调味汁吃。
+</p>
+
+<p>
+parsley 并不是西芹，中文译名为欧芹或是法香，作为西餐中非常常用的一种香料，中餐馆里也用它作装饰，有扁叶和卷曲叶两种，两种植物并不是同一属，相差比较多。<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>
+</p>
+</blockquote>
+
+<ul class="org-ul">
+<li>Chinese celery is used in cooking more for its flavor than for its texture,
+and is rarely served by itself as a vegetable. It has a crunchy, watery
+flavor.<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup> 这里说芹菜主要用来调味，因为口感脆脆的淡淡的。但是我好像经常吃肉丝炒芹菜啊，口感脆脆的很好吃。</li>
+</ul>
+
+<p>
+据说西芹榨汁喝还能排除毒素<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>：
+</p>
+<blockquote>
+<p>
+Celery is chock-full of dietary fiber that keeps your bowels healthy and
+clean. It also contains antioxidants like quercetin and phenolic acids that
+fight inflammation and oxidative stress. The healthy veggie is used to treat
+treating joint pain, lower blood pressure, fight cancer and soothe the nervous
+system. Plus, it’s very low in calories.
+</p>
+</blockquote>
+
+<p>
+西芹 celery 法语 le céleri<sup>(fr)</sup>，德语 der Sellerie<sup>(de)</sup>。都是阳性，发音也都一样。最喜欢这样的单词了，很通用。
+</p>
+
+<ul class="org-ul">
+<li>a stick of celery 一根芹菜，une côte de céleri<sup>(fr)</sup></li>
+<li>a head of celery 一棵芹菜，un pied de céleri<sup>(fr)</sup></li>
+</ul>
+
+<p>
+欧芹 parsley 法语 le persil<sup>(fr)</sup>，德语 die Petersilie<sup>(de)</sup>。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2"><span class="section-number-2">2</span> Celery project</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+另外 Celery 还是 Python 的一个消息分发系统。
+</p>
+
+<blockquote>
+<p>
+Celery: Distributed Task QueueCelery is an asynchronous task queue/job queue
+based on distributed message passing.<sup><a id="fnr.4" class="footref" href="#fn.4">4</a></sup>
+</p>
+</blockquote>
+
+<p>
+用起来还挺方便的，比如以下例子创建一个任务执行器，然后用 @app.task 指定 hello()
+函数分发给该任务执行。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #8b008b; font-weight: bold;">from</span> celery <span style="color: #8b008b; font-weight: bold;">import</span> Celery
+
+<span style="color: #0000ff; font-style: italic;">app</span> = Celery(<span style="color: #3a5fcd;">'hello'</span>, broker=<span style="color: #3a5fcd;">'amqp://guest@localhost//'</span>)
+
+<span style="color: #551a8b;">@app.task</span>
+<span style="color: #8b008b; font-weight: bold;">def</span> <span style="color: #0000cd;">hello</span>():
+    <span style="color: #8b008b; font-weight: bold;">return</span> <span style="color: #3a5fcd;">'hello world'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3"><span class="section-number-2">3</span> Parsley JavaScript project</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+既然西芹被用作开源项目名字，欧芹也不能输。有个 JavaScript 项目叫 ParsleyJS<sup><a id="fnr.5" class="footref" href="#fn.5">5</a></sup>
+主要用来验证 HTML 页面表格输入是否合法。比如输入一个邮箱地址要有字符串中间要有 @，
+@ 后面要是合法的域名。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4"><span class="section-number-2">4</span> celeriac</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+这是另外一种芹菜，主要食用它的块根。le céleri-rave<sup>(fr)</sup> 我是没有见过也没有吃过的。据说可以放汤吃。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5"><span class="section-number-2">5</span> 总结</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+今天学习了这几个蔬菜：
+</p>
+<ul class="org-ul">
+<li>西芹： celery， le céleri<sup>(fr)</sup>，der Sellerie<sup>(de)</sup></li>
+<li>欧芹：parsley，le persil<sup>(fr)</sup>，die Petersilie<sup>(de)</sup></li>
+<li>根芹：celeriac，le céleri-rave<sup>(fr)</sup></li>
+</ul>
+
+<p>
+以及两个开源项目 celeryproject.org 和 parsleyjs.org。下回要发起 C 语言的开源项目可以考虑用 celeriac，这个单词结尾就是 C 呀。
+</p>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+<a href="http://zhidao.baidu.com/link?url=rui0t8MccCfQnxATrFcu07h1c2DHRBDR79uDs6X2Nb9EkgkJJs52Iq1wdrA8zuwt-S7BBegmIvsFZqh8Nzldj">http://zhidao.baidu.com/link?url=rui0t8MccCfQnxATrFcu07h1c2DHRBDR79uDs6X2Nb9EkgkJJs52Iq1wdrA8zuwt-S7BBegmIvsFZqh8Nzldj</a>_
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://en.wikipedia.org/wiki/Chinese_celery">https://en.wikipedia.org/wiki/Chinese_celery</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+<a href="http://health-flash.com/3-ingredient-celery-juice-to-quickly-detox-your-kidneys-heart-and-joints/">http://health-flash.com/3-ingredient-celery-juice-to-quickly-detox-your-kidneys-heart-and-joints/</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.4" class="footnum" href="#fnr.4">4</a></sup> <div class="footpara"><p class="footpara">
+<a href="http://www.celeryproject.org">http://www.celeryproject.org</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.5" class="footnum" href="#fnr.5">5</a></sup> <div class="footpara"><p class="footpara">
+<a href="http://parsleyjs.org">http://parsleyjs.org</a>
+</p></div></div>
+
+
+</div>
+</div>

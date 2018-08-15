@@ -1,0 +1,64 @@
+---
+layout: post
+title: Open current working directory in cmd/mintty from emacs 
+categories: [productivity]
+tags: [emacs, cygwin]
+---
+
+<p>
+When I'm using doublecmd to manage files and folders, I frequently open the folder in cmd.exe or cygwin terminal mintty for managing the file with svn, git or other command line tools. Thus I create two shortcuts for the two applications: F9 and Shift-F9.
+</p>
+
+<p>
+When I press F9, an windows cmd will open for me, and Shift-F9, a mintty terminal is available for me. Cygwin mintty is a comfortable terminal in windows. Chad Austin has written a blog about Why mintty is the best terminal on Windows<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>.
+</p>
+
+<p>
+The same requirement is needed when I'm using emacs, thus I created two elisp function to handle this tasks. Please be reminded that these functions are only applied to windows environment.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(global-set-key [f9] 'kimim/cmd)
+(global-set-key  (kbd <span style="color: #3a5fcd;">"S-&lt;f9&gt;"</span>) 'kimim/cyg)
+
+(<span style="color: #8b008b; font-weight: bold;">defun</span> <span style="color: #0000cd;">kimim/cmd</span> ()
+  <span style="color: #dd1144;">"Open cmd.exe from emacs just as you type: Win-R, cmd, return."</span>
+  (interactive)
+  (w32-shell-execute 
+   <span style="color: #3a5fcd;">"open"</span> <span style="color: #3a5fcd;">"cmd"</span>))
+
+(<span style="color: #8b008b; font-weight: bold;">defun</span> <span style="color: #0000cd;">kimim/cyg</span> ()  
+  <span style="color: #dd1144;">"Open cygwin mintty from emacs."</span>  
+  (interactive)  
+  (w32-shell-execute 
+   <span style="color: #3a5fcd;">"open"</span> <span style="color: #3a5fcd;">"mintty"</span> <span style="color: #3a5fcd;">" -e bash"</span>))
+</pre>
+</div>
+
+<p>
+By the way, below is the doublecmd configuration screenshot:
+</p>
+
+<ul class="org-ul">
+<li>Shortcut configuration for cmd.exe:
+</li>
+</ul>
+<a href="https://www.flickr.com/photos/kimim-photo/13556055835/" title="Flickr 上 kimim-photo 的 cmd_doublecmd"><img src="https://farm3.staticflickr.com/2928/13556055835_a664b0028b_z.jpg" width="640" height="527" alt="cmd_doublecmd"></a>
+
+<ul class="org-ul">
+<li>Shortcut configuration for mintty:
+</li>
+</ul>
+<a href="https://www.flickr.com/photos/kimim-photo/13556171823/" title="Flickr 上 kimim-photo 的 mintty_doublecmd"><img src="https://farm4.staticflickr.com/3689/13556171823_77ffb7f4b9_z.jpg" width="640" height="527" alt="mintty_doublecmd"></a>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+<a href="http://chadaustin.me/2009/10/reasons-why-mintty-is-the-best-terminal-on-windows">9 Reasons Why MinTTY is the Best Terminal on Windows</a>
+</p></div>
+
+
+</div>
+</div>

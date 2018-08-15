@@ -1,0 +1,95 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 單詞本：德語單詞 laufen
+categories: [language]
+tags: [Deutsch]
+---
+#+END_HTML
+
+#+BEGIN_HTML
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/26574029534/in/dateposted-public/" title="IMG_2381"><img src="https://farm8.staticflickr.com/7727/26574029534_604bf4aae5_z.jpg" width="360" height="640" alt="IMG_2381"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_HTML
+
+* Laufen
+
+德語動詞 laufen 作為不及物動詞使用時意思是跑，移動，運行；作為及物動詞
+表示跑出一段距離的意思。
+- 跑，奔跑
+  - Die Pferde laufen im Galopp. der Galopp: 馬的飛馳。[fn:1]
+  - Der Hund läuft hinter dem Auto her.
+- 走路，步行
+  - Das Kind kann noch nicht laufen.
+  - Ich laufe die Straße entlang. entlang: 沿著，順著。我順著街道走著。
+- 工作，運轉，發展
+  - Die Uhr läuft nicht.
+  - Der Computer läuft wieder!
+  - Er weiß, wie die Dinge laufen. 他知道事情如何發展。這裡 weiß 不是白
+    色的意思，而是 wissen 的第一、三人稱單數現在時。
+- 通向，走向
+  - Der Weg läuft bergauf. bergauf: adv. 上坡的嗎，上山的。向上的。累人的，煩人的。
+- 流水，漏出
+  - Das Fass läuft noch immer.
+  - Das Wasser läuft den Boden entlang. 水沿著地面流淌。
+- 有效，湊效
+  - Das Abkommen läuft noch fünf Monate.
+- 上映，放映
+  - etwas. ist über den Bildschirm gelaufen. der Bildschirm: 電視屏幕
+- 及物動詞：走過
+  - Wir sind einen Umweg gelaufen. der Umweg: 繞道，繞彎。
+  - jmd. [etwa.] läuft Gefahr， 某人為【某事】在冒著風險。這裡引申為承
+    擔風險的意思。可以理解為走了很多險路吧。die Gefahr: 危險，危急，危
+    害。反義詞為 Sicherheit。
+
+laufen 的動詞變位需要注意在 Indikativ Präteritum 過去時中：
+- ich laufe -> ich lief
+- du läufst -> du liefst
+- er/sie/es läuft -> er/sie/es lief
+- wir laufen -> wir liefen
+- ihr lauft -> ihr lieft
+- Sie laufen -> Sie liefen
+
+* Derivation of Prost / 引
+
+laufend 是 laufen 轉化而來的形容詞，有連續不斷和進行中的意思。
+- Die Produktion ist laufend gestiegen. gestiegen: adj. 升高的，增長的。
+- das laufende Jahr. 今年，正在經歷的一年。
+
+ablaufen: 到期，停止，結束。走壞，跑壞。流走，流下。to wear out^(en),
+to expire^(en). parcourir^(fr), se terminer^(fr).
+
+der Ablauf: process, procedure; expiry, expiration; flow, course. 流程，渠道。
+- Können Sie den vorgesehenen Ablauf noch einmal erklären? 可以再澄清一次既定流程嗎？
+- Durch diesen Ablauf kann das Regenwasser entweichen. 通過這個渠道，雨水可以流
+  走。大家有沒有發現流程和渠道看起來好像是非常像在說同一個東西。流水的歷程不就是
+  渠道麼？
+
+anlaufen: 開始，加熱，激活，啟動
+
+auslaufen: 起航、啟航、下水、下海
+
+einlaufen: 流進，流入
+
+entlaufen: 跑走。
+
+davonlaufen: 逃離，逃
+
+durchlaufen: vi.(穿越...)跑過，不間斷地跑，連續跑，流過，滲透，濾
+<BAR>vt.跑壞(鞋子)，跑傷，跑腫，跑步穿過，快步穿過，跑完(路程)，上完，
+念完(學校)，經歷過，熟悉
+
+eislaufen: 溜冰，滑冰
+
+heißlaufen: 過熱
+
+* Footnotes
+
+[fn:1] etwas im Galopp tun - etwas sehr schnell tun。另外，Galopp 也是
+    一種舞曲的名字，schneller Rundtanz im 2/4-Takt 是一种快速的德国舞曲，
+    名称来源于马的奔跑，是2/4拍子，舞蹈动作是以跳跃为主，18世纪初被引进
+    巴黎的上流社会（Galop），并迅速在欧洲风行，用于方阵舞蹈，作为其中最
+    快的结束部分。“圆舞曲之王“施特劳斯、李斯特、萧斯塔科维奇等都写作过
+    加洛普舞曲。
+
+    - Un cheval pure race espagnole au galop.
+    - Le galop d'un cheval retentit soudain.

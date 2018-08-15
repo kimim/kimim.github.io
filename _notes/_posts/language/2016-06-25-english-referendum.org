@@ -1,0 +1,96 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 單詞本：英語單詞 Referendum
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+最近英國脫歐公投（referendum）吸引了全世界的眼球。經過一年的籌劃，一個月的喧騰，
+一天的投票（vote），UK 的公民們最終決定脫離歐洲。
+
+#+BEGIN_HTML
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/27850744466/in/dateposted-public/" title="IMG_2307"><img src="https://c3.staticflickr.com/8/7385/27850744466_9304651453_z.jpg" width="640" height="640" alt="IMG_2307"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_HTML
+
+讓我們先來看看 Referendum 的意思：
+
+* Referendum
+
+British Dictionary 給出了如下解釋：
+
+#+BEGIN_QUOTE
+/ˌrɛfəˈrɛndəm/
+noun (pl) -dums, -da (-də)
+1. submission of an issue of public importance to the direct vote of the electorate
+2. a vote on such a measure
+3. a poll of the members of a club, union, or other group to determine their views on some matter
+4. a diplomatic official's note to his government requesting instructions
+See also (for senses 1, 2) plebiscite
+#+END_QUOTE
+
+1. 向全體選民提交重要公眾事務進行直接投票
+2. 對此事務的投票行為
+3. 向俱樂部，聯盟等組織的成員進行民意調查
+4. 外交官向政府提交的請示書
+
+其中 1 和 2 也可以用 plebiscite。
+* Etymology of Prost / 源
+
+Wikipedia 解釋了 Referendum 詞源：
+
+#+BEGIN_QUOTE
+'Referendum' is the gerund of the Latin verb refero, and has the meaning
+'bringing back' (i.e. bringing the question back to the people). The term
+'plebiscite' has a generally similar meaning in modern usage, and comes from the
+Latin plebiscita, which originally meant a decree of the Concilium Plebis
+(Plebeian Council), the popular assembly of the Roman Republic. Today, a
+referendum can also often be referred to as a plebiscite, but in some countries
+the two terms are used differently to refer to votes with differing types of
+legal consequences.
+#+END_QUOTE
+
+Referendum 是拉丁語 refero 的動名詞（gesund）。refero 意思是“交還”，即，把問題交
+還給人民。另外一個單詞 plebiscite 來自拉丁語 plebiscita，原始意思是來自羅馬平民
+議會的決定。
+
+#+BEGIN_QUOTE
+'Referendums' and 'referenda' are both commonly used as plurals of
+'referendum'. However, the use of 'referenda' is deprecated by the Oxford
+English Dictionary, which advises that:
+
+    'Referendums' is logically preferable as a plural form meaning 'ballots on
+    one issue' (as a Latin gerund, referendum has no plural). The Latin plural
+    gerundive 'referenda', meaning 'things to be referred', necessarily connotes
+    a plurality of issues.
+#+END_QUOTE
+
+在牛津英語詞典里對 Referendum 的複數形式也提出了建議。Referenda 和 Referendums
+都可以最為投票的複數形式，但是這兩個複數形式有些差別，是在拉丁語中，referenda
+指的是被提交的事務是複數的“things to be referred”，而拉丁語中作為動名詞的
+Referendum 是沒有複數形式的，添加 -s 表示“ballots on one issue”，是選票的複數。
+
+* MultiLanguage / 異
+
+德語里也用 Referendum，genitive 第二格寫成 Referendums，複數形式是
+Referenden^de. 和英語對照著看，還是需要小心的，作為複數的 Referendums 在德語里
+是第二個名詞。
+
+另外，德語中還有 Plebiszit^de ，我們掃一眼就知道，這個詞和 plebiscite^en 同源，
+都來自 plebiscita^latin. 與國家主權變更相關的全民公投就要用這個單詞了。
+
+德語種還有兩個本土單詞 Volksabstimmung（全民公投） 和 Volksentscheid（全民公決）。
+
+Volksabstimmung 由 Volks（民眾）＋Abstimmung（投票）組中，自然表示全民投票的意思。
+值得一提的是，我們馬路上常看到的 Volkswagen 大眾汽車，拆開來就是Volks（大眾）＋
+Wagen（汽車）。
+
+Volksentscheid 由 Volks ＋ Entscheid（公決） 組成。意思是 Entscheidung von
+Fragen der Gesetzgebung durch Volksabstimmung.
+
+法語出於發音的需要添加了兩個小小的閉音符 accent aigu^fr ，就搖身一變成了 le
+référendum^fr 。和英語德語大同小異。plebiscite 也戴上了小帽子成了 le plébiscite。
+
+和德語一樣，法語里也有更接地氣的詞：vote populaire，這個詞組看起來再直白不過了，
+大眾的投票，全民公投。

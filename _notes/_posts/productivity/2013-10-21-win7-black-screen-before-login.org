@@ -1,0 +1,33 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Window 7 黑屏无法登陆
+categories: [productivity]
+tags: [Windows]
+---
+#+END_HTML
+
+同事 Fox 的笔记本开机蓝屏一次之后，再开机就挂在黑屏无法登陆系统。在黑黑的屏幕上只能移动鼠标。
+
+该错误是因为执行权限的问题。具体原因不知。网上查到的解决办法[fn:1]是用 Windows 命令 =cacls= 修改 =C:\Windows\System32= 下系统文件的权限。
+
+1. 重启狂按 =F8= 进入 Repair Mode
+2. 打开 =cmd= 敲以下命令（可能要执行几分钟，可以泡杯咖啡等着）
+   #+BEGIN_SRC bat
+   cacls  C:\Windows\System32  /E  /T  /C  /G everyone:F
+   #+END_SRC
+3. 正常重启
+4. =Ctrl-R= + =cmd= 打开 =cmd= ，用 =cacls= 恢复系统文件权限：
+   #+BEGIN_SRC bat
+   cacls  C:\Windows\System32  /E  /T  /C  /G  System:F  Administrators:R
+   cacls  C:\Windows\System32  /E  /T  /C  /G  everyone:R
+   #+END_SRC
+
+不过 Fox 说虽然可以看到登陆系统，但不久还是黑屏了。于是他把第二步改成以下命令，重启 OK 了。
+   #+BEGIN_SRC bat
+   cacls  C:\Windows  /E  /T  /C  /G everyone:F
+   #+END_SRC
+
+* Footnotes
+
+[fn:1] [[http://answers.microsoft.com/en-us/windows/forum/windows_7-system/windows-7-boots-to-black-screen-with-cursor-before/c3538f76-86a1-462e-8ad7-f319f207a922%0A][Windows 7 boots to black screen with cursor before login screen after changing permissions on the system32 directory]]

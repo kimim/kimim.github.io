@@ -1,0 +1,139 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之瓜瓜
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* 回顾
+
+今天的主题是各类瓜瓜，在学习瓜瓜之前，我们来复习一下半个月时间学的食物类单词，回
+过头看看学过的单词还是很有成就感的，第一次坚持这么长时间一直不断写点东西：
+
+- [[http://kimi.im/2016-08-14-english-food][August 14, 2016 » 单词本：谷物]]
+- [[http://kimi.im/2016-08-16-english-vegetable][August 16, 2016 » 单词本：蔬菜之萝卜胡萝卜]]
+- [[http://kimi.im/2016-08-17-english-cabbage][August 17, 2016 » 单词本：蔬菜之卷心菜]]
+- [[http://kimi.im/2016-08-19-english-cauliflower][August 19, 2016 » 单词本：蔬菜之花菜]]
+- [[http://kimi.im/2016-08-20-english-celery][August 20, 2016 » 单词本：蔬菜之芹菜]]
+- [[http://kimi.im/2016-08-22-english-aubergine][August 22, 2016 » 单词本：蔬菜之茄子]]
+- [[http://kimi.im/2016-08-25-english-tomato][August 25, 2016 » 单词本：蔬菜之番茄]]
+- [[http://kimi.im/2016-08-26-english-chilli][August 26, 2016 » 单词本：蔬菜之红辣椒]]
+- [[http://kimi.im/2016-08-28-english-cucumber][August 28, 2016 » 单词本：蔬菜之黄瓜]]
+- [[http://kimi.im/2016-08-29-english-courgette][August 29, 2016 » 单词本：蔬菜之西葫芦]]
+- [[http://kimi.im/2016-08-31-english-pumpkin][August 31, 2016 » 单词本：蔬菜之南瓜]]
+
+看完上面的列表，心中真是满满的成就感。
+
+* gourd[gʊəd]
+
+自我满足之后，还是回到现实，踏踏实实继续学习吧。
+
+不少瓜的名字都带有 gourd，而 gourd 其实是葫芦的意思：a fleshy, typically large
+fruit with a hard skin, some varieties of which are edible。实际上西瓜（water
+melon），南瓜（pumpkin），黄瓜（cucumber）也属于 gourd，只是可能太常见了，就有了
+专属名字。
+
+另外，其实我一直有这么个疑问，gourd 和我朝的瓜（Guā）是否有一些联系，因为两者的
+读音很相似啊。有待继续考证，暂且不论。
+
+gourd，德语 der Kürbis[Kụ̈rbis]^(de)，法语 la calebasse[kalbas]^(fr)。
+
+** out of one's gourd
+
+离开某人的葫芦？形容一个人的心不在焉的样子，或者疯狂的状态。
+
+这令我想到了庄子《齐物论》篇中南郭子綦与颜成子游的一段对话：
+
+#+BEGIN_QUOTE
+南郭子綦隐机而坐，仰天而嘘，荅焉似丧其耦。颜成子游立侍乎前，曰：“何居乎？形固可
+使如槁木，而心固可使如死灰乎？今之隐机者，非昔之隐机者也。”子綦曰：“偃，不亦善乎，
+而问之也？今者吾丧我，汝知之乎？”
+#+END_QUOTE
+
+《齐物论》开篇描写了南郭子綦靠着桌子在那一坐，仰着头往天空吐一口气，吧嗒一下好像
+灵魂离开肉体。学生颜成子游站在旁边感觉很奇怪，说：“老师啊，今天你怎么回事？你的
+身体看起来像块烂木头，而你的心怎么像烧尽了的煤灰一样没有生机？今天靠在桌子边上的
+样子，跟往常不太一样啊。”老师就回答说：“小偃啊，你的问题问的太好了（潜台词就是：
+你太了解老师了，老师很喜欢你），你知道吗，今天我让我的那个灵魂飞出去玩了一圈，你
+不知道吧？”
+
+我觉得，南郭子綦“吧嗒”一下趴在桌子上的样子大概就是 out of his gourd 的状态，就是
+灵魂离开了身体的状态。用葫芦来形容一个人的肉体其实满贴切的，葫芦的样子看起来就好
+像是一个坐着的人么。
+
+- he was obviously stoned out of his gourd. 他已经石化，灵魂已经出体。
+- He's out of his gourd with 1,249-pound pumpkin.[fn:1] 1249 磅的南瓜让他魂不守舍（大
+  概是惊喜的意思吧）。
+
+* white gourd
+
+冬瓜的一个名字，大概因为它果皮比较白，所以叫 white gourd，此外它还有其他名字：
+
+The white gourd, also called winter melon（冬瓜）, ash gourd（灰葫芦）, wax
+gourd（蜡葫芦）, winter gourd（冬葫芦）, tallow gourd（脂葫芦）.[fn:2]
+
+
+德语叫 der Wachskürbis auch Wintermelone^(de)，法语叫 La courge cireuse^(fr)。
+
+还有其他好多名字，就不一一解释了：
+
+#+BEGIN_QUOTE
+Nom commun : courge cireuse, courge à la cire, bidao, bénincasa, pastèque de
+Chine. de : Wachskürbis ; en : winter melon, ash gourd, wax gourd ; es :
+calabaza blanca.[fn:3]
+#+END_QUOTE
+
+* towel gourd
+
+丝瓜。正如我们给它取名是因为它的瓤可以做洗碗丝，洋人叫它毛巾瓜，应该也是这个原因。
+
+另外丝瓜属的学名叫 luffa，所以有时候丝瓜也叫 luffa。法语和德语一样都叫 luffa。
+
+丝瓜络叫 loofah 大概就是从丝瓜属这个学名变过来的，法语 le loofa^(fr)，德语 der
+Luffaschwamm^(de)。
+
+* bitter gourd
+
+苦瓜。再来看看它的其他名字：
+
+#+BEGIN_QUOTE
+Momordica charantia, known as bitter melon, bitter gourd, bitter squash, or
+balsam-pear, has names in other languages which have entered English as
+loanwords, e.g. goya from Okinawan and karela from Sanskrit.[fn:4]
+
+Die Bittermelone (Momordica charantia, auch Bittergurke, Balsambirne oder
+Bittere Spring-Gurke; In Japan und vor allem Okinawa als Gōyā bekannt, in
+Sanskrit als Karela und in Malayalam als Pavaykka bekannt)[fn:5]
+
+La margose, melon amer ou momordique[fn:6]
+#+END_QUOTE
+
+归纳起来有这么几种来源：
+- 学名派 Momordica charantia，momordique^(fr)
+- 味道派 bitter melon, bitter squash, die Bittermelone^(de)，Bittergurke^(de)，
+  Bittere Spring-Gurke^(de)，melon amer^(fr)
+- 外来语派：从日本冲绳语借来的 goya，Gōyā^(de)，goyah^(fr)，冲绳方言拼法：ゴー
+  ヤー。从梵语里借来的叫 karela
+- 从花的样子联想到的 balsam-pear（凤仙花梨），Balsambirne^(de)。
+- 另外还有无法考证的法语名字 la margose^(fr)，
+
+* 小结
+
+本文主要学习了几种常见瓜类的名字，冬瓜 winter gourd，也叫 white gourd 等名字。丝
+瓜叫 towel gourd，苦瓜叫 bitter gourd。
+
+* Footnotes
+
+[fn:1] http://www.nydailynews.com/new-york/gourd-1-249-pound-pumpkin-article-1.228718
+
+[fn:2] https://en.wikipedia.org/wiki/Winter_melon
+
+[fn:3] https://fr.wikipedia.org/wiki/Courge_cireuse
+
+[fn:4] https://en.wikipedia.org/wiki/Momordica_charantia
+
+[fn:5] https://de.wikipedia.org/wiki/Bittermelone
+
+[fn:6] https://fr.wikipedia.org/wiki/Momordica_charantia

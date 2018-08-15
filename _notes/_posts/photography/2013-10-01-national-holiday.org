@@ -1,0 +1,32 @@
+#+BEGIN_HTML
+---
+layout: post
+title: National Day of the People's Republic of China
+categories: [photography]
+tags:
+  - holiday
+  - street-shots
+---
+#+END_HTML
+
+#+BEGIN_HTML
+<p>
+<a href="http://www.flickr.com/photos/kimim-photo/10033987903/" title="Flickr 上 kimim-photo 的 National Day of the People's Republic of China"><img src="http://farm8.staticflickr.com/7445/10033987903_ba06a6471a_z.jpg" width="640" height="427" alt="National Day of the People's Republic of China"></a>
+</p>
+#+END_HTML
+
+#+BEGIN_HTML
+<p>
+<a href="http://www.flickr.com/photos/kimim-photo/10033919756/" title="Flickr 上 kimim-photo 的 狮虎桥路"><img src="http://farm4.staticflickr.com/3828/10033919756_0f8cf024eb_z.jpg" width="640" height="427" alt="狮虎桥路"></a>
+</p>
+#+END_HTML
+
+64 周年國慶，國旗一夜間掛滿大街小巷。獅虎橋路人行道隨意拍了幾張照片。
+
+#+BEGIN_HTML
+<p>
+<a href="http://www.flickr.com/photos/kimim-photo/10033933626/" title="Flickr 上 kimim-photo 的 酷派宣传活动"><img src="http://farm6.staticflickr.com/5467/10033933626_57982e9fa5_c.jpg" width="534" height="800" alt="酷派宣传活动"></a>
+</p>
+#+END_HTML
+
+剛巧移動營業廳門口酷派手機推廣活動。搶答一個小問題，最新酷派手機屏幕尺寸是多少，贏得 USB 加濕器一隻。

@@ -1,0 +1,64 @@
+---
+layout: post
+title: Emacs coding system for correctly copy and paste Chinese characters
+categories: [productivity]
+tags: [emacs]
+---
+
+<p>
+As I'm using emacs under Windows 7, I want to correctly copy and paste
+Chinese characters from or to emacs. The important settings are
+language environment variables. Following code snippet is used to set
+the default language environment in English and make use of utf-8
+coding system as much as possible, while leaving the clipboard coding
+system as utf-16le, which is the coding system used in Windows system
+core:
+</p>
+
+<blockquote>
+<p>
+Windows作業系統核心中的字元表示為UTF-16小尾序，可以正確處理、顯示以4位元組儲存的字元。<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
+</p>
+</blockquote>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(set-locale-environment <span style="color: #3a5fcd;">"English"</span>)
+(set-language-environment 'English)
+(prefer-coding-system 'utf-8)
+(set-file-name-coding-system 'gbk)
+(set-buffer-file-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(set-clipboard-coding-system 'utf-16le)
+(set-w32-system-coding-system 'utf-8)
+</pre>
+</div>
+
+<p>
+One benefit of using utf-16e while not chinese-gbk or chinese-gb18030
+for clipboard coding system is that the special characters from French
+and German are correctly copy/paste from/to emacs. While with
+chinese-gbk/chinese-gb18030, only Chinese characters are encoded
+correct, characters such as ß, ê are not displayed as expected when
+copy from web browser.
+</p>
+
+<p>
+Also please pay attention that the file name coding system is using
+gbk which is used to display file names which Chinese
+characters. Windows weirdly use gbk for file name coding other than
+utf-16le. It is a painful experience to realize this issue.
+</p>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+<a href="http://zh.wikipedia.org/zh-tw/UTF-16">http://zh.wikipedia.org/zh-tw/UTF-16</a>
+</p></div>
+
+
+</div>
+</div>

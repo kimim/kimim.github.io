@@ -1,0 +1,18 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 單詞本：德語單詞 das Fisch
+categories: [language]
+tags:
+  - Deutsch
+---
+#+END_HTML
+
+I came across the BBC German learning website.
+
+Fischers Fritze fischte frische Fische. [fn:1]
+
+
+* Footnotes
+
+[fn:1] [[http://www.bbc.co.uk/languages/german/guide/facts.shtml][German tongue twister]]

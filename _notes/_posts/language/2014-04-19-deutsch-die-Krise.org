@@ -1,0 +1,107 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 單詞本：德語單詞 die Krise
+categories: [language]
+tags: [Deutsch]
+---
+#+END_HTML
+
+最近烏克蘭危機持續不斷報道，看 Tagesschau[fn:1] 新聞幾乎每天出現 Ukraine-Krise。今天就來學習學習 Krise 這個單詞以及相關的衍生詞。
+
+#+BEGIN_HTML
+<a href="https://www.flickr.com/photos/kimim-photo/13013608203/" title="Flickr 上 kimim-photo 的 DSCF4393"><img src="https://farm8.staticflickr.com/7445/13013608203_ca7a885700_z.jpg" width="640" height="427" alt="DSCF4393"></a>
+#+END_HTML
+
+* 單詞定義
+
+Krise
+- instabiler Zustand[fn:2]，不穩定的狀態。
+
+在古希腊語中有這個詞 κρίσις (krísis) [fn:3]，意思是
+- decision, determination, judgment
+- trial, sentence, accusation
+- quarrel, dispute
+- turning point or decisive point of disease progression
+
+可見該詞本身有轉機的意思。所以危機這個中文翻譯還是非常恰到好處的，有危也有機，危中有機，機在危中。
+
+法語單詞 la crise 和英語單詞 crisis 也是直接從希腊語 κρίσις 來的。德語可能更直接的從法語引入。詞彙發展綫索可能如下：
+
+#+BEGIN_VERSE
+κρίσις -> crisis^(en);
+κρίσις -> la crise^(fr) -> die Krise^(de);
+#+END_VERSE
+
+* 詞彙擴展
+
+die Beziehungskrise
+- (1) Störung einer Lebenspartnerschaft, meist hervorgerufen durch anderweitige Sexualkontakte oder Alltagsgewöhnung in der Partnerschaft. 由於日常行爲習慣或兩性關係引起的關係失調。die Störung: disorder. meist: usually. hervorgerufen: caused. durch: by. anderweitige Sexualkontakte: 第三者關係。 (2) übertragen: Probleme im Verhältnis mit Organisationen oder Staaten. 國家和組織之間的關係危機。Verhältnis: relation, ratio, relationship, affair (adulterous relationship).
+- <例句> Die beiden haben ihre Beziehungskrise überstanden und leben jetzt wieder glücklich zusammen. überstanden: survived. glücklich: lucky, happy.
+- <例句> Der Vater meiner Kinder wollte selbst Karriere machen, das war ein wesentlicher Grund für unsere Beziehungskrise.
+- Wenn eine Beziehung unausgeglichen ist entsteht eine Beziehungskrise. Die Beziehungskrise ist oft das Ende der Beziehung, welches ab und zu sogar tödlich für einen oder beide Beziehungsteilnehmer enden kann. [fn:4]
+
+die Ehekrise
+- mariage crisis. le crise conjugale^(fr)[fn:5]. 婚姻危機。
+
+die Finanzkrise
+- Störung oder Zusammenbruch des Finanzsystems. Zusammenbruch: collapse. 金融危機。la crise financière^(fr)
+- 2008 begann die größte Finanzkrise seit dem Zweiten Weltkrieg.
+- Die Finanzkrise ab 2007 ist eine globale Banken- und Finanzkrise als Teil der Weltwirtschaftskrise ab 2007, die im Sommer 2007 als US-Immobilienkrise (auch Subprimekrise) begann. [fn:6] Weltwirtschaftskrise: Great Depression. 大蕭條。
+
+die Identitätskrise
+- Krise, verursacht durch ein unsicheres Selbstbild. 定位危機，角色危機，身份危機。
+- Er hat die typisch deutsche Identitätskrise. Ich weiß nicht, ob das stimmt, vielleicht ist es nur eine literarische Idee, ein Bild, um seine Identitätskrise besser auszudrücken.[fn:7]
+
+die Lebenskrise
+- nach dem Ende eines Krieges auftretende Krise
+- Viele Frauen legen sich bei einer Lebenskrise eine neue Frisur zu.
+
+die Schuldenkrise
+- durch zu hohe Schulden verursachte Krise. 債務危機。debt crisis^(en).
+
+die Weltkrise
+- eine Krisensituation, die die gesamte Erde oder große Teile davon betrifft. Erde: 地球。
+
+die Wirtschaftskrise
+- economic crisis^(en), la crise éconmique^(fr)
+
+die Krisenbewältigung
+- die Bewältigung einer Krise. 危機之克服。die Bewältigung: 完成，结束，执行，克服，摆脱。
+- <例句> Aufruf an Kanzlerin Angela Merkel zur Initiierung einer Krisengruppe auf höchster politischer Ebene zur Krisenbewältigung in der Ukraine.[fn:8] die Initiierung: 开始。开端。initiation, beginning, commencement. die Ebene: plane, level.
+
+das Krisentreffen
+- Treffen, das aufgrund einer Krise stattfindet und dazu dient, sich über Maßnahmen zur Lösung der Krise auszutauschen. aufgrund: on the basis of, as a result of. Maßnahmen: measurement. auszutauschen: exchange. crisis meeting^(en).
+- Ein nächtliches Krisentreffen in der Ukraine ist ergebnislos geblieben. [fn:9]
+
+der Krisenstab
+- Personengruppe, die zur Lösung von Notsituationen zusammenkommt. 危機小組，緊急行動隊，應急工作隊，危機管理團隊。cabinet de crise^(fr), emergency task force^(en), crisis management group^(en).
+- Als Krisenstab bezeichnet man eine Stabsstelle innerhalb einer Organisation zum Notfall- oder Katastrophenschutz.[fn:10] innerhalb: within. Notfall: emergency.
+
+krisefest, krisensicher
+- im Fall einer Krise nicht bedroht. gegen Krisen gesichert, nicht anfällig für Krisen. 抗危機的。bedrotht: threatened. crisis-proof^(en), panic-proof^(en).
+- Die Tests sollen überprüfen, wie krisenfest die Kreditinstitute sind.[fn:11]
+
+* Footnotes
+
+[fn:1] http://www.tagesschau.de/
+
+[fn:2] http://de.wiktionary.org/wiki/Krise
+
+[fn:3] [[http://en.wiktionary.org/wiki/%25CE%25BA%25CF%2581%25CE%25AF%25CF%2583%25CE%25B9%25CF%2582][κρίσις]]
+
+[fn:4] http://www.stupidedia.org/stupi/Beziehungskrise
+
+[fn:5] [[http://www.psychonet.fr/2001/08/16/1321-crise-conjugale-quelle-attitude-adopter][Crise conjugale: quelle attitude adopter?]]
+
+[fn:6] http://de.wikipedia.org/wiki/Finanzkrise_ab_2007
+
+[fn:7] Die Zeit, 05.06.2009, Nr. 24. http://www.dwds.de/
+
+[fn:8] [[http://ukraine-nachrichten.de/aufruf-an-kanzlerin-angela-merkel-zur-initiierung-einer-krisengruppe-auf-hoechster-politischer-ebene-zur-krisenbewaeltigung-in-der-ukraine_3922_pressemitteilungen][ukraine-nachrichten.de]]
+
+[fn:9] [[www.huffingtonpost.de/2014/02/19/krisentreffen-ukraine-gescheitert_n_4812813.html][www.huffingtonpost.de]]
+
+[fn:10] http://de.wikipedia.org/wiki/Krisenstab
+
+[fn:11] [[http://www.n-tv.de/wirtschaft/13-deutsche-Institute-im-Stresstest-article3058906.html][Wie krisenfest sind die Banken?]]

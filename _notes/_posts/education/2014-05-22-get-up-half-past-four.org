@@ -1,0 +1,45 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Get up at half past four
+categories: [education]
+tags: [habit]
+---
+#+END_HTML
+
+#+BEGIN_HTML
+<a href="https://www.flickr.com/photos/kimim-photo/14050730808/" title="Flickr 上 kimim-photo 的 DSCF9202"><img src="https://farm6.staticflickr.com/5517/14050730808_c350ffc5bf_z.jpg" width="640" height="427" alt="DSCF9202"></a>
+#+END_HTML
+
+I've always planned to get up at half past four. Today, I wake up at
+4:24 and after a short refresh, I get up at 4:30.
+
+This idea is inspired by 中島孝志《朝4時起きの仕事術―誰も知らない「朝い
+ちばん」活用法》[fn:1]（4 點起床：最養生和高效的時間管理）[fn:2]. Thus in fact I
+get up half hour later than 4:00.
+
+Anyway, after I wash up myself, there are more than two hours left for
+me to make use of. During this time, I can read books, schedule my day
+plan, write blogs, study languages, water my plants or cook breakfast
+for my wife and daughter.
+
+Yesterday, when I was in the shuttle bus back home, I was wondering
+that I cannot find enough time to learn German and French. Because I
+get office at 8:30, have lunch at 12:00 for half hour, and continue
+work at 12:30, then leave office at 17:05. When I'm back to home, I
+should drive to our parents' to have supper. And after that we play
+with Vivi until 20:30 when Vivi fall sleep. Then we have one or two
+hours free, but very tired. It is not a good idea to use brain
+exhaustedly just before sleep.
+
+So what? 2 hours in the morning(5:00~7:00) is the gold time learning
+and creative activities.
+
+BTW: It takes 40 minutes(5:00~5:40) for me to write this
+article. Inefficient!
+
+* Footnotes
+
+[fn:1] [[http://www.amazon.co.jp/%25E6%259C%259D4%25E6%2599%2582%25E8%25B5%25B7%25E3%2581%258D%25E3%2581%25AE%25E4%25BB%2595%25E4%25BA%258B%25E8%25A1%2593%25E2%2580%2595%25E8%25AA%25B0%25E3%2582%2582%25E7%259F%25A5%25E3%2582%2589%25E3%2581%25AA%25E3%2581%2584%25E3%2580%258C%25E6%259C%259D%25E3%2581%2584%25E3%2581%25A1%25E3%2581%25B0%25E3%2582%2593%25E3%2580%258D%25E6%25B4%25BB%25E7%2594%25A8%25E6%25B3%2595-%25E4%25B8%25AD%25E5%25B3%25B6-%25E5%25AD%259D%25E5%25BF%2597/dp/4833417987][《朝4時起きの仕事術―誰も知らない「朝いちばん」活用法》]]
+
+[fn:2] [[http://www.amazon.cn/4%25E7%2582%25B9%25E8%25B5%25B7%25E5%25BA%258A-%25E6%259C%2580%25E5%2585%25BB%25E7%2594%259F%25E5%2592%258C%25E9%25AB%2598%25E6%2595%2588%25E7%259A%2584%25E6%2597%25B6%25E9%2597%25B4%25E7%25AE%25A1%25E7%2590%2586-%25E4%25B8%25AD%25E5%25B2%259B%25E5%25AD%259D%25E5%25BF%2597/dp/B005LFN1QE/ref%3Dsr_1_1/475-6531526-0375029?s%3Dbooks&ie%3DUTF8&qid%3D1400706451&sr%3D1-1][《4点起床:最养生和高效的时间管理》]]

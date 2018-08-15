@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Open current working directory in cmd/mintty from emacs</title>
+    
+    <meta name="author" content="Kimi MA">
+
+    <!-- Enable responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
+    <link href="assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link rel="shortcut icon" type="image/ico" href="/assets/favicon.ico">
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+
+    <!-- atom & rss feed -->
+    <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
+    <link href="/rss.xml" type="application/rss+xml" rel="alternate" title="Sitewide RSS Feed">
+
+  </head>
+
+  <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-narrow">
+          <a class="brand" href="/">Die Welt ist meine Vorstellung</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories">Topics</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-narrow">
+
+      <div class="content">
+        
+
+<div class="page-header">
+  <h1>Open current working directory in cmd/mintty from emacs </h1>
+</div>
+
+<div class="row-fluid post-full">
+  <div class="span12">
+    <div class="date">
+      <span>01 April 2014</span>
+    </div>
+    <div class="content">
+      <p>
+When I'm using doublecmd to manage files and folders, I frequently open the folder in cmd.exe or cygwin terminal mintty for managing the file with svn, git or other command line tools. Thus I create two shortcuts for the two applications: F9 and Shift-F9.
+</p>
+
+<p>
+When I press F9, an windows cmd will open for me, and Shift-F9, a mintty terminal is available for me. Cygwin mintty is a comfortable terminal in windows. Chad Austin has written a blog about Why mintty is the best terminal on Windows<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>.
+</p>
+
+<p>
+The same requirement is needed when I'm using emacs, thus I created two elisp function to handle this tasks. Please be reminded that these functions are only applied to windows environment.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(global-set-key [f9] 'kimim/cmd)
+(global-set-key  (kbd <span style="color: #3a5fcd;">"S-&lt;f9&gt;"</span>) 'kimim/cyg)
+
+(<span style="color: #8b008b; font-weight: bold;">defun</span> <span style="color: #0000cd;">kimim/cmd</span> ()
+  <span style="color: #dd1144;">"Open cmd.exe from emacs just as you type: Win-R, cmd, return."</span>
+  (interactive)
+  (w32-shell-execute 
+   <span style="color: #3a5fcd;">"open"</span> <span style="color: #3a5fcd;">"cmd"</span>))
+
+(<span style="color: #8b008b; font-weight: bold;">defun</span> <span style="color: #0000cd;">kimim/cyg</span> ()  
+  <span style="color: #dd1144;">"Open cygwin mintty from emacs."</span>  
+  (interactive)  
+  (w32-shell-execute 
+   <span style="color: #3a5fcd;">"open"</span> <span style="color: #3a5fcd;">"mintty"</span> <span style="color: #3a5fcd;">" -e bash"</span>))
+</pre>
+</div>
+
+<p>
+By the way, below is the doublecmd configuration screenshot:
+</p>
+
+<ul class="org-ul">
+<li>Shortcut configuration for cmd.exe:
+</li>
+</ul>
+<a href="https://www.flickr.com/photos/kimim-photo/13556055835/" title="Flickr 上 kimim-photo 的 cmd_doublecmd"><img src="https://farm3.staticflickr.com/2928/13556055835_a664b0028b_z.jpg" width="640" height="527" alt="cmd_doublecmd"></a>
+
+<ul class="org-ul">
+<li>Shortcut configuration for mintty:
+</li>
+</ul>
+<a href="https://www.flickr.com/photos/kimim-photo/13556171823/" title="Flickr 上 kimim-photo 的 mintty_doublecmd"><img src="https://farm4.staticflickr.com/3689/13556171823_77ffb7f4b9_z.jpg" width="640" height="527" alt="mintty_doublecmd"></a>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+<a href="http://chadaustin.me/2009/10/reasons-why-mintty-is-the-best-terminal-on-windows">9 Reasons Why MinTTY is the Best Terminal on Windows</a>
+</p></div>
+
+
+</div>
+</div>
+
+    </div>
+
+  
+    <ul class="tag_box inline">
+      <li><i class="icon-folder-open"></i></li>
+      
+      
+
+
+  
+     
+    	<li><a href="/categories.html#productivity-ref">
+    		productivity <span>21</span>
+    	</a></li>
+    
+  
+
+
+    </ul>
+    
+
+  
+    <ul class="tag_box inline">
+      <li><i class="icon-tags"></i></li>
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#emacs-ref">emacs <span>11</span></a></li>
+     
+    	<li><a href="/tags.html#cygwin-ref">cygwin <span>2</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2014-03-30-setting-up-new-pc" title="一個簡單主義者的裝機必備軟件">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2014-04-02-deutsch-fisch" title="單詞本：德語單詞 das Fisch">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"kimim"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+
+
+
+
+
+  </div>
+</div>
+
+
+      </div>
+      <hr>
+      <footer>
+        <p>&copy; 2018 Kimi MA,
+           All right reserved.
+        </p>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
+

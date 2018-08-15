@@ -1,0 +1,59 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：茄子
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+茄子一直是我的最爱。红烧茄子的味道非常棒。
+
+* eggplant
+
+我见识不广，只知道茄子是长条形状的，后来才知道，西洋的茄子长的鸡蛋形状。所以他们
+叫它 eggplant 鸡蛋植物。
+
+茄子这个东西在美国澳大利亚叫 eggplant，而在英国则称之为 aubergine，到了印度南非
+又叫brinjal。实在是令人费解。
+
+美国人澳大利亚人大概文化底蕴比较少，所以看着茄子外形长的像鸡蛋，就命名为eggplant
+了。
+
+* aubergine
+
+据说 aubergine 源自法语 l'aubergine^(fr)，德语也源自法语：die Aubergine^(de)。这
+么看来，英法德他们又一次在茄子的命名上面达成了很好的共识。欧洲到底还是比较相亲相
+爱的一家人啊。
+
+* brinjal
+
+而印度南非叫 brinjal 则是受了葡萄牙语的影响，葡语中茄子叫 berinjela^(pt)。
+
+* mad apple
+
+至于 mad apple 疯苹果这类称呼则是因为历史上有趣的意大利人一度怀疑吃了茄子会神经
+错乱：
+
+- In Italy, where eggplant was suspected of causing insanity, it was called mala
+  insana, "mad apple".
+
+* 小结
+
+综上所述，如果你想显得高雅贵族一点，那就管茄子叫 aubergine 吧，如果想平民化一点
+就叫它 eggplant，如果想非主流一些，那尽管叫它 brinjal 好了，没几个人听得懂的。
+
+另外因为茄子的颜色很有特色：深紫色，所以 aubergine/eggplant 有时候也表示这种颜色：
+- an aubergine dress， an eggplant dress  一件深紫色的衣服
+
+
+顺便提一下，其实，对于茄子的别名，汉语中的称呼我都感觉茫茫然：
+#+BEGIN_QUOTE
+茄子，别名落苏（孟诜）、昆仑瓜（《大业杂记》），草鳖甲（《养生主论》），酪酥
+（《五代贻子录》），矮瓜、吊菜子（《广州植物志》）。[fn:1]
+#+END_QUOTE
+
+
+* Footnotes
+
+[fn:1] http://old.zhongyibaike.com/wiki/%E5%90%8A%E8%8F%9C%E5%AD%90

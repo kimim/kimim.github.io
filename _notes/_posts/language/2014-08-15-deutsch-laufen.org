@@ -1,0 +1,22 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 單詞本：德語單詞 laufen
+categories: [language]
+tags: [Deutsch]
+---
+#+END_HTML
+
+* 單詞釋義
+
+* 尋根溯源
+* 衕根演變
+* 詞組習語
+* 例句賞析
+- Der Hund läuft hinter dem Auto her.
+- Das Wasser läuft den Boden entlang.
+- Der Computer läuft wieder!
+- Die Waschmaschine läuft gerade.
+- Ja, äh... Läuft!
+- Ich lasse dich laufen.
+* 文化解讀

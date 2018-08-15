@@ -1,0 +1,65 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 自我管理團隊(self-managing team, SMT)
+categories: [management]
+tags: [team]
+---
+#+END_HTML
+
+#+BEGIN_QUOTE
+In business, education, and psychology, self-management refers to methods, skills, and strategies by which individuals can effectively direct their own activities toward the achievement of objectives, and includes goal setting, decision making, focusing, planning, scheduling, time management, task tracking, self-evaluation, self-intervention, self-development, etc.
+
+-- http://en.wikipedia.org/wiki/Self-management
+#+END_QUOTE
+#+BEGIN_HTML
+<a href="http://www.flickr.com/photos/kimim-photo/12947610723/" title="Flickr 上 kimim-photo 的 Team"><img src="http://farm8.staticflickr.com/7442/12947610723_4821306db5_z.jpg" width="640" height="427" alt="Team"></a>
+<p />
+#+END_HTML
+* 自我管理團隊
+自我管理團隊，指的是一組人在沒有特定領導和經理控制和指導下，一起工作交付項目。
+
+這樣的自我管理團隊概念非常吸引人，但是卻構建困難，持續運作更是難上加難。
+
+研究表明，自我管理團隊能夠自己管理自己、自己做決定、分配資源、控制輸入，可以很大程度上提升生產率。
+然而自我管理團隊長期效益卻很難衡量，由於缺少對成果輸出的監控和測量，很難衡量團隊績效是否持續提升。
+
+* 如何管理自我管理團隊
+構建優秀自我管理團隊的四個要素：
+- 組織文化因素
+- 組長管理技能
+- 選擇正確的隊員
+- 項目因素
+
+** 組織文化
+精英管理制度（meritocracy[fn:1]）是保障自我管理團隊良性發展的要素。所謂的精英管理制度就是“任人唯賢，唯才是舉”的人才選拔制度，晋升策略和薪酬體系。在這種健康的組織文化氛圍下，員工之間杜絕惡性競爭，尋求互相協作。
+
+** 組長的管理技能 
+對於組長的要求就是給組員 *儘可能多的授權* ，讓他們自己決定如何達到目標。不過這一切的前提是基於項目計劃和公司的標準化流程。只有在這兩個前提下的授權才能促進團隊健康發展。
+
+此外，還需要 *避免微管理（micro-management）* 。應當相信員工在項目和組織標準下能夠最大化的發揮能動性。對於那些從技術專家提升上來的組長，往往很容易陷入微管理的泥潭。他們具有一定的技術積累，所以看到那些初級工程師總是會看不慣，對他們指指點點，甚至親自上馬寫代碼。需要牢記的是，雖然有些人在技術崗位很出色，但不意味著他管理崗位也很出色。
+
+當員工被微管理了之後，往往感覺不被信任，從而消極怠工，為避免受到批評指責，不敢獨自做事。這對員工和團隊的發展是非常不利的。
+
+另外 *設定清晰的績效考評目標* 。這樣他們就能夠實時監控自己的績效，努力去做他們認為正確的事情。
+
+以 3 到 6 個月的週期給員工績效提出相應的反饋。在給員工提出反饋的時候，要 *正向建設性反饋* 。一個比較好的時間是每個月和員工進行一次單獨的非正式的面對面溝通。
+
+*理解某些特殊時期暫時的業績下滑* 。針對不同員工，要考慮一些工作銜接階段時期輸出可能不太理想。比如有些員工可能剛接手某個領域的工作，我們不能期望他一開始就能有正確高效的輸出。
+
+*永遠不要期望他人和我們一樣優秀* 。
+
+** 選擇正確的員工
+為團隊選擇合適的人員是一件非常困難的事情。很不幸，一些缺少充分考察的面試只比投硬幣正反好那麼一點點。
+
+選擇優秀員工的兩個重要指標是智商和性格特徵。在選擇候選人的時候，要充分考慮該應聘者是否足夠聰明，是否能很好的自我管理。聰明的人能夠面對複雜的問題充分思考分析，做出決策。能自我管理的人懂得遵循一定的方法流程高效的做事。
+
+** 項目因素
+項目本身確定了開發團隊以什麼樣的方式組織在一起。在項目籌備階段，要充分徵集各個候選人的自身偏好，尊重他們的選擇，讓那些對這個新的項目感興趣的人加入到項目開發中。
+
+項目是項目組成員自我管理運轉的一個很重要的粘合劑。為項目組成員確定明確的項目範圍，資源和時間，從而讓團隊能正確的做出決定，達成項目目標。
+
+* Footnotes
+
+[fn:1] A meritocracy is a society or social system in which people get status or rewards because of what they achieve, rather than because of their wealth or social status. 
+

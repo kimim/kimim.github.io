@@ -1,0 +1,43 @@
+#+BEGIN_HTML
+---
+layout: post
+title: How to input special German and French characters in emacs
+categories: [productivity]
+tags: [emacs]
+---
+#+END_HTML
+
+I'm using =C-x 8= to input special characters from German and French. I will update this page when I find new easy way to input these characters.
+
+#+BEGIN_QUOTE
+C-x 8 RET (translated from C-x 8 <return>) runs the command
+insert-char, which is an interactive built-in function in `C source
+code'.
+#+END_QUOTE
+
+* German:
+- ä :: C-x 8 "a
+- ö :: C-x 8 "o
+- ü :: C-x 8 "u
+- ß :: C-x 8 "s
+
+* French：
+- à :: C-x 8 `a
+- â :: C-x 8 ^a
+- ä :: C-x 8 "a
+- æ :: C-x 8 RET LATIN SMALL LETTER A E
+- é :: C-x 8 'e
+- è :: C-x 8 `e
+- ê :: C-x 8 ^e
+- ë :: C-x 8 "e
+- î :: C-x 8 ^i
+- ï :: C-x 8 "i
+- ô :: C-x 8 ^o
+- œ :: C-x 8 RET 153 RET
+- ù :: C-x 8 `u
+- û :: C-x 8 ^u
+- ü :: C-x 8 "u
+- ç :: C-x 8 ,c
+
+* Others
+- € :: C-x 8 RET EURO SIGH

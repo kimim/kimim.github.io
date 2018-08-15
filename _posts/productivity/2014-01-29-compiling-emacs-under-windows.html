@@ -1,0 +1,76 @@
+---
+layout: post
+title: Windows 下通過 MinGW 編譯安裝 emacs
+categories: [productivity]
+tags: [emacs]
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 準備編譯環境 MinGW 和 MSYS<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup></h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>從 <a href="http://sourceforge.net/projects/mingw/files/">http://sourceforge.net/projects/mingw/files/</a> 下載安裝 mingw-get-setup.exe
+</li>
+<li>在 mingw-get 包管理工具中安裝 gcc, make 和 bash.
+</li>
+<li>在 PATH 中添加 MinGW 路徑：
+</li>
+</ul>
+<pre class="example">
+D:\&gt;set PATH=%PATH%;C:\MinGW\bin\;C:\MinGW\msys\1.0\bin\
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 下載最新版 emacs 并解壓</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<a href="http://ftp.gnu.org/gnu/emacs/">http://ftp.gnu.org/gnu/emacs/</a>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 編譯</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> configure</h3>
+<div class="outline-text-3" id="text-3-1">
+<pre class="example">
+D:\emacs-24.3\nt&gt;configure.bat
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> make</h3>
+<div class="outline-text-3" id="text-3-2">
+<pre class="example">
+D:\emacs-24.3\nt&gt;mingw32-make SHELL=cmd.exe
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> install</h3>
+<div class="outline-text-3" id="text-3-3">
+<pre class="example">
+D:\emacs-24.3\nt&gt;mingw32-make SHELL=cmd.exe install INSTALL_DIR=C:/emacs
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Enjoy, and Happy Emacsing!</h2>
+<div class="outline-text-2" id="text-4">
+<a href="http://www.flickr.com/photos/kimim-photo/12200140965/" title="Flickr 上 kimim-photo 的 emacs"><img src="http://farm3.staticflickr.com/2857/12200140965_e372ceacd0_z.jpg" width="636" height="478" alt="emacs"></a>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+<a href="http://mingw.org/">http://mingw.org/</a>
+</p></div>
+
+
+</div>
+</div>

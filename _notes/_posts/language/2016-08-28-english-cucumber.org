@@ -1,0 +1,94 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之黄瓜
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* cucumber
+
+黄瓜属不属于蔬菜还是值得商榷的，很多人把黄瓜当水果吃的。
+
+水果必须是有水分而且有甜味的吗？好像也没有这么明确的定义。所以我们常常在意识中自
+己给自己设下了壁垒，随着年龄增长，慢慢变得成见在心，师心自用，顽固不化，分别我执。
+究其原因可能是思维的惰性吧。因为当我们在头脑中固化某些思维范式之后，就可以免得思
+考，直接使用了。好的方面是可以快速思考节省脑力，而坏的方面就会限制我们思考的创造
+性。
+
+除了打破水果必须是甜的这个成见，另外我们可以打破另外一个成见：“蔬菜和水果的标签
+只能选其一”。那就是有些植物既是蔬菜也是水果。
+
+所以，窃以为黄瓜既是蔬菜也是水果:-)
+
+言归正传，黄瓜在英语里叫 cucumber 据说是来自法语 le concombre^(fr)。德语就不太一
+样了，叫 die Gurke^(de)，读起来好像“果壳”。果壳，Gurke 关联起来记忆还是挺容易的。
+
+* gherkin
+
+德语叫 Gurke^(de) 可能和英语里另外一个单词 gherkin 同源吧。读音还是挺像的。
+gherkin 指的是嫩嫩的小黄瓜，通常整个腌制了吃的。le cornichon^(fr)，die
+Salzgurke^(de)。
+
+* the Gherkin
+
+据说伦敦的 Swiss Re Tower，又叫 the Gherkin：
+
+#+BEGIN_QUOTE
+The Gherkin is London’s most instantly recognisable tower. Totalling 500,000 sq
+ft, The Gherkin is an iconic structure housing a flourishing community.[fn:1]
+#+END_QUOTE
+
+* cucumber.io
+
+顺便提一下有一个开源的行为驱动开发框架叫 Cucumber（https://cucumber.io/ ），而编
+写 Cucumber 框架下的测试用例使用的编程语言就叫 Gherkin。
+
+#+BEGIN_QUOTE
+Gherkin is the language that Cucumber understands. It is a Business Readable,
+Domain Specific Language that lets you describe software’s behaviour without
+detailing how that behaviour is implemented.[fn:2]
+#+END_QUOTE
+
+* pickled cucumber
+
+腌黄瓜，酸黄瓜。
+
+* sea cucumber
+
+海黄瓜？不是的，其实是指海参。也许是因为作为棘皮动物（echinoderms）的海参长在海
+底皮肤像黄瓜。
+
+法语也叫海黄瓜：le concombre de mer^(fr)。
+
+海参也叫 trepang，teripang：
+
+- The island all around is rich in marine products and so on /trepang/, sea
+  scallop, abalone, shrimp, oyster, long standing reputation. 海岛周围海产丰富。
+  比如海参、扇贝、鲍鱼、对虾、牡蛎等海产，久负盛名。
+
+* cucumiform
+
+黄瓜状的，黄瓜形的。
+
+* 淡定的黄瓜
+
+英语里有句成语 to be as cool as a cucumber 像黄瓜一样淡定：
+
+- he leaps up the six flights of stairs and arrives at the top as cool as a
+  cucumber. 他窜上 6 层楼梯，爬到楼顶的时候像一根黄瓜一样气定神闲。
+- she looked as efficient as a hospital matron, as cool as a cucumber. 她看起来
+  像医院护士长一样高效率，像黄瓜一样冷静。
+
+* Summary
+
+今天的主题是黄瓜，黄瓜又分大黄瓜（cucumber）和小黄瓜（gherkin）。不过德语不分大
+小黄瓜都叫 die Gurke^(fr)。此外，淡定、冷静、气定神闲、从容不迫可以用黄瓜来形容：
+to be as cool as a cucumber。
+
+* Footnotes
+
+[fn:1] http://www.thegherkinlondon.com/
+
+[fn:2] https://github.com/cucumber/cucumber/wiki/Gherkin

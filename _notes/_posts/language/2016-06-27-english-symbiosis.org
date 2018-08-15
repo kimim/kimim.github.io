@@ -1,0 +1,78 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 單詞本：英語單詞 symbiosis
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+最近協同機器人（Collabrative Robot，CR）很火熱，比較出名的協同機器人有 ABB 的
+YuMi[fn:1]，Kuka 的 iiwa[fn:2]。這些機器人不像傳統機器人需要和人類隔離工作，而是
+能和人類互相協作工作，無需任何護欄。
+
+#+BEGIN_HTML
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/27937552295/in/dateposted-public/" title="DSCF1294"><img src="https://c8.staticflickr.com/8/7652/27937552295_dc9af64bdd_z.jpg" width="640" height="427" alt="DSCF1294"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_HTML
+
+有篇介紹協同機器人的論文中提及： CR shares proximity and working in /symbiosis/
+with human operators. 意思是說 CR 機器人還可以和人類操作員合作共生。
+
+這句話中出現了一個單詞 /symbiosis/.
+
+* symbiosis
+
+#+BEGIN_QUOTE
+symbiosis ‎[.sɪmbaɪ'əʊsɪs] (plural symbioses)
+1. A relationship of mutual benefit. 互利互惠關係。
+2. (biology) A close, prolonged association between two or more organisms of
+   different species, regardless of benefit to the members. 共生關係。
+#+END_QUOTE
+
+* Etymology / 源
+
+這個單詞來自古希臘文之共同生活：
+
+#+BEGIN_QUOTE
+From Ancient Greek συμβίωσις ‎(sumbíōsis, “living together”).
+#+END_QUOTE
+
+拆開來就是 sum ＋ bíōsis，前者一起，後者生存。
+
+* Derivation / 衍
+
+從 symbiosis 的來源可以推測，前綴 sym- 表示”共同的意思“。於是就有這些單詞：
+
+- symphony :: 交響曲，一起響的聲音。有個單詞 telephone，其中的 phone 就是通話的
+     意思吧，也可以直接作為電話用。所以就推出 symphony 交響曲。
+- sympathy :: 同情。sym- 共同的，-pathy 感情，合起來就是”同情“。pathetic 招人同
+     情的，the pathetic sight of starving children.
+
+* Example / 例
+
+- The combination of drives and PLC from one supplier and the networking of
+  these units makes a perfect /symbiosis/ of the components, so that the
+  customer gets excellent value for money.
+- In 1960, J.C.R. Licklider wrote about the possibilities of human–robot
+  symbiosis in his classic paper, “Man–Computer /Symbiosis/.”[fn:3]
+- Robotics Inside Amazon’s Warehouse, Human-Robot Symbiosis. Amazon’s newest
+  warehouse is testing the limits of automation and human-machine collaboration.[fn:4]
+
+* MultiLanguage / 異
+
+法語和德語共生這個詞根源一樣，所以只是簡單的有一些拼寫差異：
+
+- La symbiose^fr est une association indissoluble et durable entre deux espèces
+  dont chacune tire bénéfice.
+- Symbiose^de bezeichnet das Zusammenleben von Organismen verschiedener Arten,
+  das vielfach für einen oder mehrere Partner Vorteile bietet.
+
+* Footnotes
+
+[fn:1] http://new.abb.com/products/robotics/de/yumi
+
+[fn:2] http://www.kuka-lbr-iiwa.com/
+
+[fn:3] https://www.prospus.com/human-robot-symbiosis/
+
+[fn:4] https://www.technologyreview.com/s/538601/inside-amazons-warehouse-human-robot-symbiosis/

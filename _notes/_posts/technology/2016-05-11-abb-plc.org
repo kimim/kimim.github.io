@@ -1,0 +1,89 @@
+#+BEGIN_HTML
+---
+layout: post
+title: ABB PLC  產品學習
+categories: [technology]
+tags: [industry]
+---
+#+END_HTML
+
+今天早上 5 點半起床，6 點出去狂奔了一個小時 10 公里，跑步的時候腦子裡出現了強迫
+性思維，一直在想著 PLC，不是拌麵，餛飩和小籠包，而是 PLC，PLC 啊。
+
+所以晚上趁著家人睡覺時間來學習學習 ABB 公司的 PLC 系列產品。
+
+* 什麼是 PLC
+
+要學習 PLC 產品，首先得知道 PLC 是個什麼東西。按照誤導了魏則西找錯醫院的搜索公司
+百度公司的百科應用《百度百科》的介紹，PLC 的全稱是 Programmable Logic Controller，
+中文名叫可編程邏輯控制器：
+
+#+BEGIN_QUOTE
+PLC 是一類採用可編程存儲器的存儲器，用於其內部存儲程序，執行邏輯運算、順序控制、
+定時、計數和算術操作等面向用戶的指令，并通過數字或模擬式輸入/輸出控制各種類型的
+機械或生產過程。
+#+END_QUOTE
+
+是不是覺得相當費解？我也這麼覺得。
+
+我的思考方式一向來喜歡先解構后歸納。所以一起先把 PLC 解構一下。
+
+剛才知道了，P 代表 Programmable，也就是說 PLC 這款產品具有可編程的特性。所謂的可
+編程就是可以反復不斷的進行程序的修改變動，是一種很靈活的特性。其對立面就是不可編
+程（unprogrammable, not able to be programmed）。拿美術來打比方，unprogrammable
+的設備就好像是版畫，一次刻版就不能再改了，以後就可以不斷的印版。而 programmable
+就好像是黑板報，出完一期，拿黑板擦擦乾淨又可以繼續畫畫圖圖了。
+
+logic 邏輯，是 program 的對象，這個設備上可以設置的是 logic 運算，狹義的 logic
+運算包括求與求或求反。廣義的 logic 表示計算機能出來的各種運算。顯然這裡用廣義的
+概念。
+
+controller 控制器，這個是 PLC 的主體，一種可以通過數字（0 或者 1）以及模擬（0 ~
+100%）輸入輸出信號來操作被控對象，并根據反饋信號進行調整的裝置。
+
+綜上所訴，簡單的說：PLC 是一款可以通過編程配置邏輯運算的控制器。
+
+順便提一下，德語稱之為 SPS（Speicherprogramierbare Steuerung）, 存儲可編程迴路控
+制器：
+#+BEGIN_QUOTE
+Eine speicherprogrammierbare Steuerung (SPS, englisch: Programmable Logic
+Controller, PLC) ist ein Gerät, das zur Steuerung oder Regelung einer Maschine
+oder Anlage eingesetzt und auf digitaler Basis programmiert wird.
+#+END_QUOTE
+
+法語叫 API（Automate programmable industriel），自動化可編程工業：
+#+BEGIN_QUOTE
+Un automate programmable industriel, ou API, est un dispositif électronique
+programmable destiné à la commande de processus industriels par un traitement
+séquentiel.
+#+END_QUOTE
+
+看起來英語和德語完勝法語名稱。
+
+* ABB PLC 控制器
+
+前面章節本來想簡單了解一下 PLC 的概念的，一不小心就跑題了。接下來調研一下 ABB 的
+PLC 控制器。
+
+ABB 目前市面上有四款 PLC 產品，分別是 AC500, AC500-eCo, AC500-S 和 AC500-XC。這
+幾款 PLC 產品覆蓋了小中大各種應用場景。
+
+其中 AC500 是 ABB PLC 旗艦產品，提供了高效的性能，豐富的通訊接口和輸入輸出能力。
+適合複雜高速的機械控制應用。
+
+AC500﹣eCo 是一款緊湊型號的 PLC 產品，特色是靈活便捷、價廉物美。適合于小型控制應
+用。
+
+AC500-S 符合 SIL3 安全認證，適合複雜的安全相關應用。
+
+AC500-XC(Extreme Condition)，從字面來看這款 PLC 產品能在極限工作環境下工作，比如
+超高超低溫度( -40 到 +70 °C )、濕度、震動、有毒易燃環境等。
+
+* ABB PLC 配套系統
+
+AC500 系列是 PLC 的核心控制器組建，提供了邏輯控制功能，另外還需要有周邊配套設備
+才能構成完整的 PLC 控制系統：
+- 輸入輸出設備 S500 I/O，包括 digital input，digital output，analog input 以及 analog
+  output 等
+- 此外還有通信接口卡用於擴展工廠已有的系統，比如 PROFIBUS DP，PROFINET，Ethernet，
+  Modbus TCP，CANopen 等。

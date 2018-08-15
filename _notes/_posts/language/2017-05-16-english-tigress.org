@@ -1,0 +1,42 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：母老虎
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+最近对一个表示女性的词缀 -ess 有了一些新的认识。所以，写下来做个记录吧。
+
+* 表示女性的名词
+
+通常，-ess 添加在一类名词后面表示女性的意思。这类名词通常由 -er 或者 -or 结尾，比如：
+
+- waiter 男服务员，waitress 女服务员。
+- actor 男演员，actress 女演员
+- host 主人，hostess 女主人
+- poet 诗人，poetess 女诗人
+- steward 管家，stewardess 女管家，空中小姐
+- emperor 皇帝，empress 女皇
+- prince 王子，princess 公主
+- god 神，goddess 女神
+
+* 表示雌性的名词
+
+但是呢，我看英语语法名词的性部分，发现某一些凶猛动物也用 -ess 结尾来表示雌性，比
+如：
+
+- lion 狮子，lioness 母狮子
+- leopard 猎豹，leopardess 母豹
+- tiger 老虎，tigress 母老虎
+
+然而像牛，羊，马之类的，就不用 -ess 来表示雌性的动物。比如：
+
+- bull 公牛，cow 母牛
+- ram 公羊，ewe 母羊
+- stallion 公马，mare 母马
+- pig 公猪，sow 母猪
+
+于是，我心中就有了一个疑问了，英语世界的人们，你们是因为老虎狮子豹比较凶猛，你们害怕
+它们，就给它们比较高的构词待遇，而对于比较温顺的动物就敷衍了事了？

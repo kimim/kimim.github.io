@@ -1,0 +1,124 @@
+#+BEGIN_HTML
+---
+layout: post
+title: SVN switch and merge
+categories: [productivity]
+tags: [subversion]
+---
+#+END_HTML
+* Introduction
+  - In this article, I'll introduce following svn command:
+    - svn switch
+    - svn log
+    - svn merge
+  - and finally combines these command into one svn workflow.
+
+* Usage of svn command
+** svn log
+   - list svn logs
+#+BEGIN_SRC sh
+kimim@kimi.im codedojo$svn log -l 5 -g
+------------------------------------------------------------------------
+r595 | kimim | 2014-04-29 11:11:22 +0800 (Tue, 29 Apr 2014) | 6 lines
+
+merge from my branch
+
+------------------------------------------------------------------------
+r594 | kimim | 2014-04-29 10:50:27 +0800 (Tue, 29 Apr 2014) | 2 lines
+Merged via: r595
+
+add handles
+#+END_SRC
+   - more info: svn help log
+** svn switch
+   - switch current folder to a branch
+#+BEGIN_SRC sh
+kimim@kimi.im codedojo$svn sw ^/branches/codedojo
+U    Makefile
+U    jekyll.el
+ U   .
+Updated to revision 595.
+#+END_SRC
+   - more info: "svn help switch"
+** svn merge
+   - merge from one branch to another
+#+BEGIN_SRC sh
+kimim@kimi.im codedojo$svn merge ^/trunk/codedojo
+--- Merging differences between repository URLs into '.':
+U    jekyll.el
+U    ox-reveal.el
+--- Recording mergeinfo for merge between repository URLs into '.':
+ U   .
+#+END_SRC
+   - more info: "svn help merge"
+* SVN graph of merge operation
+#+BEGIN_SRC text
+    branches/codedojo  +-----------------------------+-------+----------->
+                      /                             /         \
+                     /                             (merge)    (merge)
+                    /       r598                  /             \
+trunk ------+------+----------o------------------+---------------+------->
+             \                 \                /
+              \                 \_(merge)___   (merge)
+               \                            \ /
+branches/code2  +----------------------------+--------------------------->
+#+END_SRC
+* SVN workflow
+** Create a branch of sub-folder
+#+BEGIN_SRC sh
+kimim@kimi.im codedojo$svn copy ^/trunk/codedojo ^/branches/codedojo
+
+Committed revision 598.
+#+END_SRC
+** Switch the sub-folder to the branch
+   - switch to branch
+#+BEGIN_SRC sh
+kimim@kimi.im codedojo$svn switch ^/branches/codedojo
+U    Makefile
+U    jekyll.el
+ U   .
+#+END_SRC
+   - branch info: =^/branches/codedojo=
+#+BEGIN_SRC sh
+kimim@kimi.im codedojo$svn info
+Path: .
+Working Copy Root Path: /home/kimim/codedojo
+URL: http://kimi.im/svn/lily/branches/codedojo
+Relative URL: ^/branches/codedojo
+Repository Root: http://kimi.im/svn/lily
+Repository UUID: 740ae2fa-c468-104b-b514-ad5a56475b1e
+Revision: 598
+Node Kind: directory
+Schedule: normal
+Last Changed Author: kimim
+Last Changed Rev: 598
+Last Changed Date: 2014-04-29 16:00:35 +0800 (Tue, 29 Apr 2014)
+#+END_SRC
+** Commit the daily modification to the branch
+   - commit code as soon as you need
+#+BEGIN_SRC sh
+kimim@kimi.im codedojo$svn ci
+#+END_SRC
+** Merge trunk changes to branch, compile and test
+#+BEGIN_SRC sh
+kimim@kimi.im codedojo$svn merge ^/trunk/codedojo
+--- Recording mergeinfo for merge of r598 into '.':
+ U   .
+#+END_SRC
+   - after you merged *trunk* to your branch, you'd better to compile and test with the branch
+   - if any error, fix and commit, remember to commit the fix to the branch
+   - when all the test passed, you will need to merge the code back to trunk
+** Merge back the branch to trunk, compile and test
+   - switch to trunk
+#+BEGIN_SRC sh
+kimim@kimi.im codedojo$svn switch ^/trunk/codedojo
+At revision 598.
+#+END_SRC
+   - merge branch to trunk
+#+BEGIN_SRC sh
+kimim@kimi.im codedojo$svn merge ^/branches/codedojo
+--- Recording mergeinfo for merge of r598 into '.':
+ G   .
+#+END_SRC
+   - finally, you need to test the merged trunk and commit the changes merged from branch to trunk
+   - be reminded that the branch already contains the code merged from trunk

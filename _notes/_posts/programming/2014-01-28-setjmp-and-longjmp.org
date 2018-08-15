@@ -1,0 +1,356 @@
+#+BEGIN_HTML
+---
+layout: post
+title: setjmp 和 longjmp
+categories: [programming]
+tags:
+  - c prog
+---
+#+END_HTML
+
+在 Unix/Linux 環境下 C 語言標準函數庫 =setjmp.h= 提供了兩個函數 =setjmp()= 和 =longjmp()= 用以實現非本地跳轉（non-local jump）。這兩個函數可以用來構建複雜的流程控制，比如異常處理，多任務調度等。
+
+想要理解 =setjmp()= 和 =longjmp()= 的工作原理，必須透過現象看本質，理解計算機的底層工作機制。在計算機系統中，一個程序的狀態是完全由它的內存和寄存器值決定的。
+
+內存信息包括：
+- 代碼（ code ）
+- 全局變量（ global variable, Variable globale^(fr),globale Variable^(de) ）
+- 堆（ heap, le tas^(fr), der Haufen^(de) ）
+- 棧（ stack, la pile d'exécution^(fr), Aufrufstapel^(de) ）
+
+寄存器信息有：
+- 棧指針（ stack pointer, sp ）
+- 幀指針（ frame pointer, fp ）
+- 程序計數器（ program counter - pc ）/指令指针（ instruction pointer - ip ）
+
+=setjmp()= 的任務只不過就是將寄存器的信息保存起來，然後 =longjmp()= 可以之後將這些值恢復回來。這樣 =longjmp()= 就能幫助程序返回到調用了 =setjmp()= 的那個時刻的寄存器和內存狀態。
+
+* setjmp() 和 longjmp() 的定義和實現
+** setjmp() 的定義：
+
+#+BEGIN_SRC C
+#include < setjmp.h >
+int setjmp(jmp_buf env);
+#+END_SRC
+
+這個函數將當前程序寄存器的狀態保存到 =env= 中。在 =setjmp.h= 中定義了 =jmp_buf= 如下：
+
+#+BEGIN_SRC C
+typedef struct {
+  unsigned long eax;
+  unsigned long ebx;
+  unsigned long ecx;
+  unsigned long edx;
+  unsigned long esi;
+  unsigned long edi;
+  unsigned long ebp;
+  unsigned long esp;
+  unsigned long eip;
+} jmp_buf[1];
+#+END_SRC
+
+這個詭異的類型聲明是定義了一個叫 =jmp_buf= 的類型，它是一個長度為 9 的 =unsigned long= 32 位整型數組類型[fn:1]。這 9 個整型數值對應了 9 個處理器寄存器：
+- 通用寄存器 =eax, ebx, ecx, edx= 
+- 索引指針寄存器 =esi, edi, ebp, esp= 
+- 以及程序計數器（program counter）又叫指令指針（instruction pointer） =eip=
+
+這些寄存器完全決定了一個程序的運行行為。
+
+當你調用 =setjmp()= ，時，傳遞一個指向 =env= 的指針，讓程序把當前寄存器的值保存到 =env= 中，并返回 0。
+
+** longjmp() 的定義
+#+BEGIN_SRC C
+longjmp(jmp_buf env, int val);
+#+END_SRC
+
+=longjmp()= 函數把 =env= 中的值恢復到 CPU 的寄存器中。
+
+注意， =longjmp()= 函數調用是不會再返回了的。因為它讓程序恢復到上一次調用 =setjmp()= 時候的狀態，就好像那之後啥也沒發生過一樣。很有一種浮生若夢的感覺吧？
+
+一旦調用了 =longjmp()= ， =eip= 的值也恢復原樣了。唯一不同的是， =setjmp()= 的返回值被 =longjmp()= 修改成傳遞給 =longjmp()= 的參數 =val= 了。
+
+不同的返回值可以用來判斷 =setjmp()= 是第一次被調用還是調用了 =longjmp()= 之後返回。
+即非零的返回值意味著程序是從 =longjmp()= 返回。因此，需要注意，传递给 =long_jmp()= 的参数不可以是 0。當然好的庫實現在調用最後會判斷 =val= 是否為 0，如果是 0 會強制被設成 1[fn:2]。
+
+* setjmp() 和 longjmp() 應用舉例
+我们来看看最简单的使用场景：
+
+#+BEGIN_SRC C
+/* setjmp_01.c */
+#include <stdio.h>
+#include <stdlib.h>
+#include <setjmp.h>
+
+void main()
+{
+  jmp_buf env;
+  int i;
+
+  i = setjmp(env);
+  printf("i = %d\n", i);
+
+  if (i != 0) exit(0);
+
+  longjmp(env, 2);
+  printf("Printed or not?\n");
+}
+#+END_SRC
+
+上面這段函數的運行結果如下：
+
+#+BEGIN_SRC 
+kimim@Mars ~/code$ ./setjmp_01
+i = 0
+i = 2
+#+END_SRC
+
+第一次調用 =sejmp()= 的時候，這個函數返回 0 ，當我們調用了 =longjmp()= 之後， =setjmp()= 的返回值被改成了 2。緊接著判斷發現 ~if (i != 0)~ 成立，於是程序退出。最後一句話也不會被打印出來了。
+
+* 寄存器內存分析
+現在，我們知道 =setjmp()= 會把所有寄存器的值保存到 =env= 中，包括 =sp= 和 =fp= 。那麼當某個函數調用了 =setjmp()= 之後返回了，就意味著，保存在 =env= 中的寄存器的值都不再有效了。
+
+因為 =env= 中保存了調用 =setjmp()= 的函數的 =sp= 和 =fp= ，如果這個函數返回退出了，程序棧的狀態和之前調用 =setjmp()= 時候是不一致的，這時候又從 =env= 中把 =sp= 和 =fp= 恢復回來，程序就會運行出錯，比如 =setjmp_02.c= 程序：
+
+#+BEGIN_SRC C
+/* setjmp_02.c */
+#include <stdio.h>
+#include <stdlib.h>
+#include <setjmp.h>
+
+void func_a(jmp_buf env)
+{
+    int i = 0;
+    char *s = "Kimim";
+    printf("Entering func_a\n");
+    i = setjmp(env);
+    printf("Return from setjmp = %d\n", i);
+    printf("s = %s\n", s);
+    printf("Leaving func_a\n");
+    return;
+}
+
+int func_b(jmp_buf env)
+{
+    int i = 1;
+    int k = 2;
+    printf("Entering func_b\n");
+    longjmp(env, i);
+    printf("Leaving func_b\n");
+}
+
+void main()
+{
+    jmp_buf env;
+    func_a(env);
+    func_b(env);
+}
+#+END_SRC
+
+运行上面程序，输出结果如下：
+
+#+BEGIN_SRC 
+kimim@Mars ~/code$ ./setjmp_02
+Entering func_a
+Return from setjmp = 0
+s = Kimim
+Leaving func_a
+Entering func_b
+Return from setjmp = 1
+Segmentation fault (core dumped)
+#+END_SRC
+
+當我們調用了 =longjmp()= 之後，又一次進入了 =func_a= ，打印了 "Return from setjmp = 1" 之後，程序就出錯了（段錯誤 - segmentation fault）。
+
+分析一下程序運行時候棧的狀態看看發生了什麽情況。當我們第一次調用 =main= 函數的時候，棧內存分佈如下：
+
+#+BEGIN_SRC ditaa
+                               |----------------|
+                               |                |
+                               |                | 
+                               |                |
+                               |                |
+                               |                |
+                               |                | <--------- sp
+                               | env[0]         |
+                               | env[1]         |
+                               | env[2]         |               pc = main
+                               | env[3]         |
+                               | ....           |
+                               | env[8]         |
+                               | ....           |
+                               | 棧基址         | <--------- fp
+                               |--------------- |
+#+END_SRC
+
+然後， =main= 調用了 =func_a= 。CPU 首先把傳給 =func_a= 的參數壓入程序棧，然後調用 =jsr= ，把返回的 =pc= 值， =main= 的 =fp= 壓入棧。然後 =fp= ，=sp= 一起更改為 =func_a()= 留出一個空的棧：
+
+#+BEGIN_SRC ditaa
+                                            
+                               |----------------|
+                               |                |
+                               |                | <--------- sp, fp
+                /------------- | main 里舊的 fp |
+                |              | main 里舊的 pc |
+                |         /--- | env 的指針     | 
+                |         \--> | env[0]         |
+                |              | env[1]         |
+                |              | env[2]         |               pc = func_a
+                |              | env[3]         |
+                |              | ....           |
+                |              | env[8]         |
+                |              | ....           |
+                \------------> | 棧基址         | 
+                               |--------------- |
+#+END_SRC
+
+=func_a= 首先給局部變量 =i= 和 =s= 分配空間：
+
+#+BEGIN_SRC ditaa
+                               |----------------|
+                               |                | <--------- sp
+                  "Kimim"<---- |  s = "Kimim"   | 
+                               |  i             | <--------- fp
+                /------------- | main 里舊的 fp |
+                |              | main 里舊的 pc |
+                |         /--- | env 的指針     | 
+                |         \--> | env[0]         |
+                |              | env[1]         |
+                |              | env[2]         |               pc = a
+                |              | env[3]         |
+                |              | ....           |
+                |              | env[8]         |
+                |              | ....           |
+                \------------> | 棧基址         | 
+                               |--------------- |
+#+END_SRC
+
+然後 =func_a= 打印出： 
+#+BEGIN_SRC 
+Entering func_a
+#+END_SRC
+
+緊接著調用 =setjmp()= 把當前寄存器的狀態保存到 =env= 數組中。這些寄存器包括 =sp= ， =fp= ， =pc= 。接著打印出：
+#+BEGIN_SRC 
+Return from setjmp = 0
+s = Kimim
+Leaving func_a
+#+END_SRC 
+
+然後函數返回到 =main()= 。這時候的程序棧恢復成之前的樣子，除了 =env= 中保存了調用 =func_a= 時候的機器狀態：
+#+BEGIN_SRC ditaa
+                               |----------------|
+                               |                |
+                               |                | 
+                               |                |
+                               |                |
+                               |                |
+                               |                | <----------- sp
+                               | env[0]         |
+                               | env[1]         |
+                               | env[2]         |               pc = main
+                               | env[3]         |
+                               | ....           |
+                               | env[8]         |
+                               | ....           |
+                               | 棧基址         | <--------- fp
+                               |--------------- |
+#+END_SRC
+
+然後調用 =func_b()= ，這時候棧狀態如下：
+
+#+BEGIN_SRC ditaa
+                               |----------------|
+                               |                |
+                               |                | <--------- sp, fp
+                /------------- | main 里舊的 fp |
+                |              | main 里舊的 pc |
+                |         /--- | env 指針       | 
+                |         \--> | env[0]         |
+                |              | env[1]         |
+                |              | env[2]         |               pc = func_b
+                |              | env[3]         |
+                |              | ....           |
+                |              | env[8]         |
+                |              | ....           |
+                \------------> | 棧基址         | 
+                               |--------------- |
+#+END_SRC
+
+=func_b()= 首先給兩個局部變量分配空間，然後打印
+#+BEGIN_SRC 
+Entering func_b
+#+END_SRC
+
+這時候程序棧狀態如下：
+#+BEGIN_SRC ditaa
+                               |----------------|
+                               |                | <--------- sp
+                               | k = 2          |
+                               | i = 1          | <--------- fp
+                /------------- | main 里舊的 fp |
+                |              | main 里舊的 pc |
+                |         /--- | env 指針       | 
+                |         \--> | env[0]         |
+                |              | env[1]         |
+                |              | env[2]         |               pc = func_b
+                |              | env[3]         |
+                |              | ....           |
+                |              | env[8]         |
+                |              | ....           |
+                \------------> | 棧基址         | 
+                               |--------------- |
+#+END_SRC
+
+接著調用 =longjmp()= 。寄存器的值恢復到在 =func_a= 中調用 =setjmp()= 時候的值， =pc= 的值也恢復到 =func_a= 。可是這個時候程序棧還是調用 =func_a= 時候的狀態：
+
+#+BEGIN_SRC ditaa
+                               |----------------|
+                               |                | <--------- sp
+                               |  k = 2         | 
+                               |  i = 1         | <--------- fp
+                /------------- | main 里舊的 fp |
+                |              | main 里舊的 pc |
+                |         /--- | env 的指針     | 
+                |         \--> | env[0]         |
+                |              | env[1]         |
+                |              | env[2]         |               pc = a
+                |              | env[3]         |
+                |              | ....           |
+                |              | env[8]         |
+                |              | ....           |
+                \------------> | 棧基址         | 
+                               |--------------- |
+#+END_SRC
+
+此時， =setjmp()= 的返回值是 1，所以第一句打印出來為：
+#+BEGIN_SRC 
+Return from setjmp = 1
+#+END_SRC
+
+接著 =func_a= 中的打印語句試圖在 k 的值 2 所指向的內存地址尋找一個字符串來打印：
+#+BEGIN_SRC C
+printf("s = %s\n", s);
+#+END_SRC
+
+這就導致了段錯誤（segmentation fault），因為這個進程是不允許訪問該內存地址的。[fn:3]
+
+以上是使用 =setjmp()= 和 =longjmp()= 的時候最常遇到的 bug。所以切記： *千萬不要從調用 =setjmp()= 的函數中返回* 。
+
+
+本文主要翻譯自田納西大學 James S. Plank 的講稿 “CS360 Lecture notes -- Setjmp”[fn:4]，并做了不少擴展和修改。
+
+* Footnotes
+
+[fn:1] 舉一個更簡單的例子比如：
+
+#+BEGIN_SRC C
+typedef int int_buf[10];
+#+END_SRC
+
+這個類型聲明定義了一個叫 =int_buf= 的類型，它是一個長度為 10 的數組類型。
+
+[fn:2] 如果给 =longjmp()= 第二个参数传了 0，那么 =setjmp()= 的返回值默认为 1。
+
+[fn:3] http://en.wikipedia.org/wiki/Segmentation_fault Different operating systems have different signal names to indicate that a segmentation fault has occurred. On Unix-like operating systems, a signal called SIGSEGV (abbreviated from segmentation violation) is sent to the offending process. On Microsoft Windows, the offending process receives a STATUS_ACCESS_VIOLATION exception.
+
+[fn:4] http://web.eecs.utk.edu/~huangj/cs360/360/notes/Setjmp/lecture.html

@@ -1,0 +1,184 @@
+---
+layout: post
+title: How to setup ac-clang-complete-async
+categories: [programming]
+tags: [emacs, cprog, productivity]
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<code>ac-clang-complete-async</code> is an emacs extension to complete C and C++
+code, it uses libclang to parse the source code on the fly and
+provides completion candidates to auto-complete
+(<a href="http://cx4a.org/software/auto-complete">http://cx4a.org/software/auto-complete</a>).<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
+</p>
+
+<p>
+This extension is deployed in two parts: server application
+<code>clang-complete</code> and client application written in elisp
+<code>auto-complete-clang-async.el</code>.
+</p>
+
+<p>
+If it is enabled, whenever you open a C/C++ file, emacs will fork a
+<code>clang-complete</code> server for that file. Then it will send whole buffer
+to the server for automatic completion candidates.
+</p>
+
+<a href="https://www.flickr.com/photos/kimim-photo/21608944085/in/dateposted-public/" title="ac-clang"><img src="https://farm6.staticflickr.com/5770/21608944085_2f1b934f63_z.jpg" width="640" height="554" alt="ac-clang"></a>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Installation</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> lazy man's way</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Install <code>clang-complete</code> server with <code>brew</code>:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">kimi.im$ brew install emacs-clang-complete-async
+</pre>
+</div>
+
+<p>
+It will help you fetch the code and compile. <code>clang-complete</code> is
+installed in <code>/usr/local/bin</code>.
+</p>
+
+<p>
+Install <code>ac-clang-complete-async.el</code> with emacs package system:
+</p>
+<pre class="example">
+M-x package-install&lt;RET&gt;
+Install package: auto-complete-clang-async
+</pre>
+
+<a href="https://www.flickr.com/photos/kimim-photo/21421951989/in/dateposted-public/" title="auto-complete-clang-async"><img src="https://farm6.staticflickr.com/5699/21421951989_0b0361693a_z.jpg" width="640" height="203" alt="auto-complete-clang-async"></a>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> manual installation</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Clone from <a href="https://github.com/Golevka/emacs-clang-complete-async">https://github.com/Golevka/emacs-clang-complete-async</a>, and
+compile <code>clang-complete</code> by yourself:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">kimi.im$ git clone https://github.com/Golevka/emacs-clang-complete-async.git
+Cloning into <span style="color: #3a5fcd;">'emacs-clang-complete-async'</span>...
+remote: Counting objects: 310, done.
+remote: Total 310 (delta 0), reused 0 (delta 0), pack-reused 310
+Receiving objects: 100% (310/310), 4.15 MiB | 925.00 KiB/s, done.
+Resolving deltas: 100% (157/157), done.
+Checking connectivity... done.
+
+kimi.im$ cd emacs-clang-complete-async
+
+kimi.im$ make
+make: llvm-config: Command not found
+make: llvm-config: Command not found
+./src/parse_results.c:1:10: fatal error: <span style="color: #3a5fcd;">'clang-c/Index.h'</span> file not found
+<span style="color: #228b22; font-style: italic;">#</span><span style="color: #228b22; font-style: italic;">include &lt;clang-c/Index.h&gt;</span>
+         ^
+1 error generated.
+</pre>
+</div>
+
+<p>
+The fatal error indicates that <code>llvm-config</code> is not in your <code>PATH</code>,
+add <code>llvm-config</code> to your <code>PATH</code> or just remove <code>$(shell
+$(LLVM_CONFIG)</code> from <code>Makefile</code>, and run <code>make</code> again.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Configuration</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+My configuration is to define a hook function and add it to
+<code>c-common-hook</code>:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-elisp">(<span style="color: #8b008b; font-weight: bold;">require</span> '<span style="color: #5f9ea0;">auto-complete-clang-async</span>)
+
+(<span style="color: #8b008b; font-weight: bold;">defun</span> <span style="color: #0000cd;">kimim/c-mode-ac-complete</span>()
+  (global-auto-complete-mode t)
+  (setq ac-clang-complete-executable <span style="color: #3a5fcd;">"clang-complete"</span>)
+  (add-to-list 'ac-sources 'ac-source-clang-async)
+  (<span style="color: #8b008b; font-weight: bold;">if</span> ac-clang-cflags
+      (setq ac-clang-cflags (cons ac-clang-cflags '(<span style="color: #3a5fcd;">"-I../inc"</span> <span style="color: #3a5fcd;">"-I../include"</span>)))
+    (setq ac-clang-cflags '(<span style="color: #3a5fcd;">"-I../inc"</span> <span style="color: #3a5fcd;">"-I../include"</span>)))
+  (ac-clang-launch-completion-process)
+  (ac-clang-update-cmdlineargs))
+
+(add-hook 'c-mode-common-hook
+          (<span style="color: #8b008b; font-weight: bold;">lambda</span> ()
+            (kimim/c-mode-ac-complete)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Some Tips</h2>
+<div class="outline-text-2" id="text-4">
+<ol class="org-ol">
+<li><code>clang-complete</code> should be in <code>PATH</code>
+</li>
+<li>By default, buffer variable <code>ac-clang-cflags</code> is <code>nil</code>, set some
+common used <code>inlcude</code> folder.
+</li>
+<li><code>ac-clang-update-cmdlineargs</code> is used to tell <code>clang-complete</code> to
+update <code>cflags</code>.
+</li>
+</ol>
+
+<p>
+If <code>clang-complete</code> doesn't work, you can try:
+</p>
+<ul class="org-ul">
+<li><code>M-x ac-clang-set-cflags</code> to set include folder such as <code>-I../inc"
+  "-I../include</code>, and then tell it to update <code>M-x
+  ac-clang-update-cmdlineargs</code>.
+</li>
+<li>you can also set <code>clfags</code> with dir local file, for example:
+<div class="org-src-container">
+
+<pre class="src src-elisp">((nil . ((indent-tabs-mode . t)
+       (tab-width . 8)
+       (fill-column . 80)))
+(c-mode . ((c-file-style . <span style="color: #3a5fcd;">"BSD"</span>)
+          (ac-clang-cflags .
+                           (<span style="color: #3a5fcd;">"-I/Users/kimim/Workspace/kimix/include"</span>
+                            <span style="color: #3a5fcd;">"-I/Users/kimim/Workspace/kimix/sys/include"</span>
+                            <span style="color: #3a5fcd;">"-I/Users/kimim/Workspace/kimix/usr/include"</span>
+                            <span style="color: #3a5fcd;">"-I../include"</span>))
+          )))
+</pre>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+<a href="https://github.com/Golevka/emacs-clang-complete-async">https://github.com/Golevka/emacs-clang-complete-async</a>
+</p></div>
+
+
+</div>
+</div>

@@ -1,0 +1,756 @@
+---
+layout: post
+title: Introduction to some useful *nix tools
+categories: [productivity]
+tags: [cygwin]
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In this article, I will explain some useful UNIX or GNU/Linux tools,
+such as file &amp; folder operations, finding files, archiving files,
+and short introduction to editors.
+</p>
+</div>
+
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Unix</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+What is Unix?
+</p>
+<ul class="org-ul">
+<li>Unix is a multitasking, multi-user computer operating system that
+exists in many variants.
+</li>
+<li>The original Unix was developed at AT&amp;T's Bell Labs research
+center by Ken Thompson, Dennis Ritchie, and others.
+</li>
+</ul>
+
+<div align="center">
+<img src="http://upload.wikimedia.org/wikipedia/commons/8/8f/Ken_Thompson_%28sitting%29_and_Dennis_Ritchie_at_PDP-11_%282876612463%29.jpg" width="700">
+</div>
+
+
+<div align="center">
+<img src="http://upload.wikimedia.org/wikipedia/commons/7/77/Unix_history-simple.svg" width="700">
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> GNU</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+What is GNU?
+</p>
+<ul class="org-ul">
+<li>GNU is a Unix-like computer operating system developed by the GNU
+Project. It is composed wholly of free software. It is based on
+the GNU Hurd kernel and is intended to be a "complete
+Unix-compatible software system".
+</li>
+<li>GNU is a recursive acronym for "GNU's Not Unix!",chosen because
+GNU's design is Unix-like, but differs from Unix by being free
+software and containing no Unix code.
+</li>
+</ul>
+
+<div align="center">
+<img src="http://upload.wikimedia.org/wikipedia/en/thumb/2/22/Heckert_GNU_white.svg/535px-Heckert_GNU_white.svg.png" width="300">
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Linux</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+What is Linux?
+</p>
+<ul class="org-ul">
+<li>Linux is a Unix-like computer operating system assembled under
+the model of free and open source software development and
+distribution.
+</li>
+<li>The defining component of Linux is the Linux kernel, an operating
+system kernel first released on 5 October 1991 by Linus Torvalds.
+</li>
+<li>The Free Software Foundation uses the name GNU/Linux, which has
+led to some controversy.
+</li>
+</ul>
+
+<div align="center">
+<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/512px-Tux.svg.png"
+width="300">
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Installation</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Cygwin</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+On Windows, you can use Cygwin to install most of the GNU/Linux
+tools. The purpose of Cygwin is "Get that Linux feeling - on
+Windows".<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
+</p>
+<ul class="org-ul">
+<li>a large collection of GNU and Open Source tools which provide
+functionality similar to a Linux distribution on Windows.
+</li>
+<li>a DLL (<code>cygwin1.dll</code>) which provides substantial POSIX API
+functionality.
+</li>
+</ul>
+
+<p>
+You can download Cygwin setup here:
+<a href="https://cygwin.com/install.html">https://cygwin.com/install.html</a>. With <code>setup.exe</code>, you can choose
+most of the Linux tools you may be interesting in.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Mintty</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Mintty is a terminal emulator for Cygwin.
+</p>
+
+<div align="center">
+<img src="https://farm3.staticflickr.com/2903/14235647424_f914e72e40_o.png"
+width="835" height="496" alt="mintty">
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> UnxUtils</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+UnxUtils ports common GNU utilities to native Win32.
+</p>
+
+<p>
+Native means
+</p>
+<ul class="org-ul">
+<li>the executables do only depend on the Microsoft C-runtime (msvcrt.dll)
+</li>
+<li>and not an emulation layer like that provided by Cygwin tools.
+</li>
+</ul>
+
+<p>
+<a href="http://unxutils.sourceforge.net/">http://unxutils.sourceforge.net/</a>
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Online help</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+There are two kind of online help you may frequently use when
+playing with *nix.
+</p>
+</div>
+
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> man - online manual pages</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+man formats and displays the on-line manual pages. man is normally
+the name of the manual page, which is typically the name of a
+command, function, or file.
+</p>
+
+<div align="center">
+<img src="https://farm3.staticflickr.com/2934/14253922623_0e68e6574f_o.png"
+width="835" height="496" alt="man">
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> info - info pages</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+The GNU Project distributes most of its on-line manuals in the
+"Info format", which you read using an "Info reader".
+</p>
+
+<ol class="org-ol">
+<li>Info contains a lot more information than Man
+</li>
+<li>Man is older and is slowly being replaced by Info
+</li>
+<li>Man is displayed when there is no Info documentation found
+</li>
+<li>Man is typically a single page while Info is spread across
+multiple pages
+</li>
+<li>Info allows navigation while Man does not<sup><a id="fnr.2" name="fnr.2" class="footref" href="#fn.2">2</a></sup>
+</li>
+</ol>
+
+<div align="center">
+<img src="https://farm3.staticflickr.com/2927/14210601276_e5db7dd8d4_o.png"
+width="835" height="496" alt="info">
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Directory/File basic operation</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li>`ls': List directory contents
+</li>
+<li>`cp': Copy files and directories
+</li>
+<li>`mv': Move (rename) files
+</li>
+<li>`rm': Remove files or directories
+</li>
+<li>`shred': Remove files more securely
+</li>
+<li>`mkdir': Make directories
+</li>
+<li>`rmdir': Remove empty directories
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Output files</h2>
+<div class="outline-text-2" id="text-5">
+</div><div id="outline-container-sec-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> `cat': Concatenate and write files</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+`cat' copies each FILE to standard output.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ cat -n crc32.c
+     1  <span style="color: #228b22; font-style: italic;">#</span><span style="color: #228b22; font-style: italic;">define CHKSUM_BLOCK_SIZE       1</span>
+     2  <span style="color: #228b22; font-style: italic;">#</span><span style="color: #228b22; font-style: italic;">define CHKSUM_DIGEST_SIZE      4</span>
+     3
+     4  static u32 __crc32_le(u32 crc, unsigned char const *p, size_t len)
+     5  {
+     6          return crc32_le(crc, p, len);
+     7  }
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> `nl': Number lines and write files</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+`nl' writes each FILE to standard output, with line numbers added
+to some or all of the lines.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ nl crc32.c
+     1  <span style="color: #228b22; font-style: italic;">#</span><span style="color: #228b22; font-style: italic;">define CHKSUM_BLOCK_SIZE       1</span>
+     2  <span style="color: #228b22; font-style: italic;">#</span><span style="color: #228b22; font-style: italic;">define CHKSUM_DIGEST_SIZE      4</span>
+     3
+     4  static u32 __crc32_le(u32 crc, unsigned char const *p, size_t len)
+     5  {
+     6          return crc32_le(crc, p, len);
+     7  }
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-5-3" class="outline-3">
+<h3 id="sec-5-3"><span class="section-number-3">5.3</span> `head': Output the first part of files</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+`head' prints the first part (10 lines by default) of each FILE
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ head crc32.c
+<span style="color: #228b22; font-style: italic;">#</span><span style="color: #228b22; font-style: italic;">define CHKSUM_BLOCK_SIZE       1</span>
+<span style="color: #228b22; font-style: italic;">#</span><span style="color: #228b22; font-style: italic;">define CHKSUM_DIGEST_SIZE      4</span>
+
+static u32 __crc32_le(u32 crc, unsigned char const *p, size_t len)
+{
+        <span style="color: #8b008b; font-weight: bold;">return</span> crc32_le(crc, p, len);
+}
+
+/** No default init with ~0 */
+static int crc32_cra_init(struct crypto_tfm *tfm)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-5-4" class="outline-3">
+<h3 id="sec-5-4"><span class="section-number-3">5.4</span> `tail': Output the last part of files</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+`tail' prints the last part (10 lines by default) of each FILE
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ tail -f crc32.c
+{
+        crypto_unregister_shash(&amp;alg);
+}
+
+<span style="color: #0000cd;">module_init</span>(crc32_mod_init);
+<span style="color: #0000cd;">module_exit</span>(crc32_mod_fini);
+
+<span style="color: #0000cd;">MODULE_AUTHOR</span>(<span style="color: #3a5fcd;">"Alexander Boyko <a href="mailto:alexander_boyko%40xyratex.com">&lt;alexander_boyko@xyratex.com&gt;</a>"</span>);
+<span style="color: #0000cd;">MODULE_DESCRIPTION</span>(<span style="color: #3a5fcd;">"CRC32 calculations wrapper for lib/crc32"</span>);
+<span style="color: #0000cd;">MODULE_LICENSE</span>(<span style="color: #3a5fcd;">"GPL"</span>);
+
+  &lt;--- waiting for update
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> Summarizing files</h2>
+<div class="outline-text-2" id="text-6">
+</div><div id="outline-container-sec-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> `wc': Print newline, word, and byte counts</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+`wc' counts the number of bytes, characters, whitespace-separated
+words, and newlines in each given FILE,
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ wc -l -w -c Makefile
+ 1486  6132 50289 Makefile
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-6-2" class="outline-3">
+<h3 id="sec-6-2"><span class="section-number-3">6.2</span> `cksum': Print CRC checksum and byte counts</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+`cksum' computes a cyclic redundancy check (CRC) checksum for each
+given FILE.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ cksum Makefile
+182967537 50289 Makefile
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-6-3" class="outline-3">
+<h3 id="sec-6-3"><span class="section-number-3">6.3</span> `md5sum': Print or check MD5 digests</h3>
+<div class="outline-text-3" id="text-6-3">
+<p>
+`md5sum' computes a 128-bit checksum (or "fingerprint" or
+"message-digest") for each specified FILE.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ md5sum Makefile
+aedd785aa73b799394c58511162f96db *Makefile
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> Archiving tools</h2>
+<div class="outline-text-2" id="text-7">
+</div><div id="outline-container-sec-7-1" class="outline-3">
+<h3 id="sec-7-1"><span class="section-number-3">7.1</span> `tar' and `gzip'</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+The tar program is used to create, modify, and access files
+archived in the tar format.
+</p>
+
+<p>
+"tar" stands for Tape ARchive. It is an archiving file format.
+</p>
+
+<p>
+tar was originally developed in the early days of Unix for the
+purpose of backing up files to tape-based storage devices.
+</p>
+
+<p>
+Gzip reduces the size of the named files using Lempel-Ziv coding
+(LZ77).
+</p>
+</div>
+</div>
+<div id="outline-container-sec-7-2" class="outline-3">
+<h3 id="sec-7-2"><span class="section-number-3">7.2</span> compress files</h3>
+<div class="outline-text-3" id="text-7-2">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ ls
+ffs-test.c  hcd-tests.sh  Makefile  testusb.c
+
+$ tar -czvf usb.tgz *
+ffs-test.c
+hcd-tests.sh
+Makefile
+testusb.c
+
+$ file usb.tgz
+usb.tgz: gzip compressed data, last modified: Wed May 21 16:19:37 2014, from Unix
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-7-3" class="outline-3">
+<h3 id="sec-7-3"><span class="section-number-3">7.3</span> uncompress files</h3>
+<div class="outline-text-3" id="text-7-3">
+<ul class="org-ul">
+<li>.tgz and .tar.gz are very common in *nix world.
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ mv usb.tgz usb.tar.gz
+
+$ tar -xzvf usb.tar.gz
+ffs-test.c
+hcd-tests.sh
+Makefile
+testusb.c
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>another compress format is bz2
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ tar -jxvf u-boot-2014.04-rc3.tar.bz2
+u-boot-2014.04-rc3/
+u-boot-2014.04-rc3/.checkpatch.conf
+u-boot-2014.04-rc3/.gitignore
+u-boot-2014.04-rc3/CREDITS
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> Finding utils</h2>
+<div class="outline-text-2" id="text-8">
+</div><div id="outline-container-sec-8-1" class="outline-3">
+<h3 id="sec-8-1"><span class="section-number-3">8.1</span> `find'</h3>
+<div class="outline-text-3" id="text-8-1">
+<p>
+`find' searches the directory tree rooted at each file name FILE by
+evaluating the EXPRESSION on each file it finds in the tree.
+</p>
+
+<ul class="org-ul">
+<li>you can find file with wildcard:
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-sh">$ find . -iname mm.*
+./arch/arm/mach-gemini/mm.c
+./arch/arm/mm/mm.h
+./arch/arm/xen/mm.c
+./arch/arm64/mm/mm.h
+./arch/powerpc/platforms/ps3/mm.c
+./arch/unicore32/mm/mm.h
+./drivers/gpu/drm/nouveau/core/core/mm.c
+./drivers/gpu/drm/nouveau/core/include/core/mm.h
+./include/linux/decompress/mm.h
+./include/linux/mm.h
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>and add more filter:
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ find . -iname mm.* -and -not -iname *.h
+./arch/arm/mach-gemini/mm.c
+./arch/arm/xen/mm.c
+./arch/powerpc/platforms/ps3/mm.c
+./Documentation/x86/x86_64/mm.txt
+./drivers/gpu/drm/nouveau/core/core/mm.c
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>or use regular expression:
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-sh">$ find . -iname mm.[ch]
+./arch/arm/mach-gemini/mm.c
+./arch/arm/mm/mm.h
+./arch/arm/xen/mm.c
+./arch/arm64/mm/mm.h
+./arch/powerpc/platforms/ps3/mm.c
+./arch/unicore32/mm/mm.h
+./drivers/gpu/drm/nouveau/core/core/mm.c
+./drivers/gpu/drm/nouveau/core/include/core/mm.h
+./include/linux/decompress/mm.h
+./include/linux/mm.h
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>or find file with specific modification time:
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ touch ./arm/mm/mm.h
+
+$ find . -name mm.*  -mtime -7
+./arm/mm/mm.h
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>find file with specific size
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-sh">$ find . -name <span style="color: #3a5fcd;">'*.c'</span> -size +100k | xargs ls -alh
+-rw-r--r-- 1 CNKIMA Domain Users 195K Mar 10 10:41 ./memcontrol.c
+-rw-r--r-- 1 CNKIMA Domain Users 116K Mar 10 10:41 ./memory.c
+-rw-r--r-- 1 CNKIMA Domain Users 182K Mar 10 10:41 ./page_alloc.c
+-rw-r--r-- 1 CNKIMA Domain Users 110K Mar 10 10:41 ./slab.c
+-rw-r--r-- 1 CNKIMA Domain Users 128K Mar 10 10:41 ./slub.c
+-rw-r--r-- 1 CNKIMA Domain Users 108K Mar 10 10:41 ./vmscan.c
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-8-2" class="outline-3">
+<h3 id="sec-8-2"><span class="section-number-3">8.2</span> `grep'</h3>
+<div class="outline-text-3" id="text-8-2">
+<p>
+`grep' searches input files for lines containing a match to a given
+pattern list.
+</p>
+
+<ul class="org-ul">
+<li>grep any line contains "quicc"
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ grep quicc * -r
+arch/m68k/include/asm/commproc.h:/* mleslie: The uCquicc board is using no extra microcode<span style="color: #8b008b; font-weight: bold;"> in</span> DPRAM */
+arch/m68k/include/asm/commproc.h:extern QUICC *pquicc;
+arch/m68k/include/asm/commproc.h:#if 0 /* use QUICC_BD declared<span style="color: #8b008b; font-weight: bold;"> in</span> include/asm/m68360_quicc.h  */
+arch/m68k/include/asm/commproc.h:/* uCquicc has the following signals connected to Ethernet:
+arch/m68k/include/asm/commproc.h:#endif /* config_ucquicc */
+arch/m68k/include/asm/m68360.h:#include &lt;asm/m68360_quicc.h&gt;
+arch/m68k/include/asm/m68360_enet.h:#include &lt;asm/quicc_simple.h&gt;
+arch/m68k/include/asm/m68360_pram.h:struct quicc32_pram {
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>more complacated example with regular expression:
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ grep mm idmap.c
+                pmd = pmd_alloc_one(&amp;init_mm, addr);
+                pud_populate(&amp;init_mm, pud, pmd);
+        idmap_pgd = pgd_alloc(&amp;init_mm);
+ * results when turning off the mmu.
+void setup_mm_for_reboot(void)
+        cpu_switch_mm(idmap_pgd, &amp;init_mm);
+
+$ grep mm[^,_u] idmap.c
+        idmap_pgd = pgd_alloc(&amp;init_mm);
+        cpu_switch_mm(idmap_pgd, &amp;init_mm);
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> Combine them together</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+GNU utils provide <code>xargs</code> and <code>-exec</code> for passing result from last
+command to next command.
+</p>
+
+<ul class="org-ul">
+<li>three ways to delete found files:
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">find . -name mm.* | xargs rm -f
+find . -name mm.* -exec rm -f <span style="color: #3a5fcd;">'{}'</span> <span style="color: #3a5fcd;">\;</span>
+find . -name mm.* -delete
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>compress found files
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ find . -name mm.* -exec tar -czvf mm.tar.gz <span style="color: #3a5fcd;">'{}'</span> <span style="color: #3a5fcd;">\;</span>
+./arm/mach-gemini/mm.c
+./arm/mm/mm.h
+./arm/xen/mm.c
+./arm64/mm/mm.h
+./powerpc/platforms/ps3/mm.c
+./unicore32/mm/mm.h
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>grep in found files
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">$ find . -name mm.* -exec grep mm_info <span style="color: #3a5fcd;">'{}'</span> <span style="color: #3a5fcd;">\;</span>
+        result = ps3_repository_read_mm_info(&amp;map.rm.base, &amp;map.rm.size,
+                panic(<span style="color: #3a5fcd;">"ps3_repository_read_mm_info() failed"</span>);
+
+$ find . -name mm.* -exec grep ps[_3a-z]*_info <span style="color: #3a5fcd;">'{}'</span> <span style="color: #3a5fcd;">\;</span>
+        result = ps3_repository_read_highmem_info(0, &amp;r-&gt;base, &amp;r-&gt;size);
+        result = ps3_repository_read_mm_info(&amp;map.rm.base, &amp;map.rm.size,
+                panic(<span style="color: #3a5fcd;">"ps3_repository_read_mm_info() failed"</span>);
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> Editors</h2>
+<div class="outline-text-2" id="text-10">
+</div><div id="outline-container-sec-10-1" class="outline-3">
+<h3 id="sec-10-1"><span class="section-number-3">10.1</span> vi/vim</h3>
+<div class="outline-text-3" id="text-10-1">
+<p>
+Vim stands for Vi IMproved. Vim is a text editor which includes
+almost all the commands from the Unix program "Vi" and a lot of new
+ones.
+</p>
+
+<ul class="org-ul">
+<li>Modal editing with sophisticated keyboard shortcuts
+</li>
+<li>Macros
+</li>
+<li>Extremely rich extensibility
+</li>
+<li>Simple for use
+</li>
+<li>Availability. Preinstalled in almost all the *nix operating system.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-10-2" class="outline-3">
+<h3 id="sec-10-2"><span class="section-number-3">10.2</span> emacs</h3>
+<div class="outline-text-3" id="text-10-2">
+<p>
+GNU Emacs is an extensible, customizable text editor. At its core
+is an interpreter for Emacs Lisp to support text editing. With
+<code>elisp</code>, emacs can go beyond an editor, emacs can be:
+</p>
+
+<ul class="org-ul">
+<li>a mail, newsgroup client with <code>gnus</code>
+</li>
+<li>file manager with <code>dired</code>
+</li>
+<li>calendar
+</li>
+<li>manage todo list and agenda
+</li>
+<li>calculator
+</li>
+<li>play game
+</li>
+<li>psychotherapist
+</li>
+</ul>
+
+<ul class="org-ul">
+<li>emacs learning curve:
+</li>
+</ul>
+
+<div align="center">
+<img src="http://ergoemacs.org/emacs/i/emacs_learning_curves.png"
+width="700" alt="mintty">
+</div>
+
+<ul class="org-ul">
+<li>emacs user at work:
+</li>
+</ul>
+
+<div align="center">
+<img src="http://ergoemacs.org/emacs/i/emacs_user_at_work_by_earlcolour.jpg"
+width="700"
+alt="mintty">
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+<a href="http://cygwin.com">cygwin.com</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.2" name="fn.2" class="footnum" href="#fnr.2">2</a></sup> <p class="footpara">
+<a href="http://www.differencebetween.net/technology/software-technology/difference-between-man-and-info/">Difference Between Man and Info</a>
+</p></div>
+
+
+</div>
+</div>

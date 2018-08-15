@@ -1,0 +1,76 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之红辣椒
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* chilli
+
+好像 pepper 和 chilli 都是辣椒。不过还是有一些区别。chilli 指的是那种尖尖的红辣
+椒，而 pepper 则是指不怎么辣的辣椒还有胡椒。
+
+说起 chilli 的来源，我们又不得不提一提伟大的纳瓦特人，chilli 和 tomato[fn:1] 一
+样都是来自纳瓦特语（Nahuatl）。好像也和 pepper 连用叫 chilli pepper。
+
+Chilli peppers were domesticated in Americas. As early as 6000 years ago and
+spread all over the world.
+
+咱们中国出名的红辣椒有：益都辣椒 Yidu chilli，金塔辣椒 Jinta chilli，朝天辣椒
+Chaotian chilli 等。
+
+* Scoville Heat Unit
+
+顺便介绍一些冷知识，辣椒的辣度单位叫 SHU（Scoville Heat Unit）[fn:2]是国际辣椒的
+辣度单位。
+
+通常河北的朝天椒辣度在 35,000-45,000 SHU 之间，吉林的益度红辣度在 20,000-30,000
+SHU 之间，金塔辣椒比益度红的辣度要少，在 15,000-25,000 SHU 之间，美国红的辣度也
+在这个范围。[fn:3]
+
+据说世界上最辣的几种辣椒是：
+- Carolina Reaper[fn:4] 卡罗莱纳死神辣椒，辣度 1,570,000 SHU
+- Komodo Dragon Chilli Pepper 科莫多龙辣椒
+- Naga Viper Pepper 娜迦毒蛇辣椒，辣度 1,382,118 SHU
+- Trinidad moruga scorpion[fn:5] 特立尼达岛莫鲁加蝎辣椒，辣度 1,200,000 SHU
+- Infinity chilli[fn:6] 无限辣辣椒，辣度 1,067,286 SHU
+
+以上这些辣椒听名字就很恐怖了。咱们天朝的朝天椒的辣度比起 Carolina Reaper 简直小
+巫见大巫了。
+
+* chili
+
+chilli 在美式英语，德语和法语里都写成 chili，少了一个 l。der Chili^(de)，le
+chili^(fr)。
+
+* paprika
+
+paprika 则指的是红辣椒的干粉末。
+
+paprika color 指的是红辣椒粉末的那种略微有些橘色的红色，RGB 值为 #E25822 [fn:7]
+
+* Summary
+
+今天主要学习了红辣椒 chilli，又一个来自纳瓦特语的单词，依然感觉拼写有点怪怪的。
+顺便学了点冷知识国际辣度单位 SHU。另外也发现了美式，德法的拼写比英式的少了个 l。
+此外，还学了红辣椒粉的单词 paprika。
+
+下次去餐厅记得来一碗卡罗莱纳死神辣椒哦，再撒一些 paprika，一定很辣爽！
+
+* Footnotes
+
+[fn:1] [[http://kimi.im/2016-08-25-english-tomato][August 25, 2016 » 单词本：蔬菜之番茄]]
+
+[fn:2] https://en.wikipedia.org/wiki/Scoville_scale
+
+[fn:3] http://zhidao.baidu.com/link?url=Y01otMugxM92Dz_NPY9Es_oScAKSaa9Dtx24oEAjBgfy5b9HPoa5yjzrUfsJSbaKqFw4ojBjf0x4p2OBMQM4n_
+
+[fn:4] https://en.wikipedia.org/wiki/Carolina_Reaper
+
+[fn:5] https://en.wikipedia.org/wiki/Trinidad_moruga_scorpion
+
+[fn:6] https://en.wikipedia.org/wiki/Infinity_chili
+
+[fn:7] http://colors.findthedata.com/l/728/Flame

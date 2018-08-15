@@ -1,0 +1,85 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 總是低頭不太好
+categories: [education]
+tags: [phubbing, phone]
+---
+#+END_HTML
+
+週五有一次培訓，我發現一個同事一坐下來就掏出手機開始看手機，如果不是我
+提醒他把手機放入口袋，他估計會一直看到培訓結束。
+
+隨著智能手機的普及，越來越多的人已經離不開手機了。在家看微博，微信朋友
+圈打發時間；外出用地圖，點評，滴滴，喵街。
+
+雖然智能設備給我們帶來了不少方便，可是有沒有覺得，好像我們的生活被它們
+綁架了？
+
+回到本文開頭，我的那個同事本可以利用這次培訓學習的時間好好補充自己的知
+識，系統化的學習專業知識。那次培訓其實很難得也很精彩，本來應該有很大的
+收穫。可是我後來問他有哪些收穫。他卻告訴我培訓只是泛泛的講些理論知識，
+很不切實際，感覺沒啥作用。我其實想反問，你到底聽進多少才覺得這些沒用？
+但是我沒有。很無奈，也只能無奈。
+
+也許有的人覺得多和朋友聊幾句微信，多看一些小道消息會覺得生活更充實吧。
+
+總是低頭，現在有個新單詞叫 Phubbing， 由 snubbing ＋ phone 組成。其名
+詞 Phubber 自然就是低頭族的意思。phubbing 的對生活的影響涉及方方面面，
+我們來一一細數。
+
+* 身體健康
+
+首先，低頭族總是低頭，直接影響的就是我們的頸椎。據我夫人的小姐妹說，她
+是一名微商，需要時刻和微信上的好友展示商品信息。長此以往就造成了頸椎問
+題。需要進行推拿治療。
+
+然後是視力問題，時刻緊盯著細小的發光屏幕，會對視力造成一定影響。我的小
+外甥吃飯時候喜歡看手機，iPad 上的動畫片。現在幼兒園檢測視力發現只有
+1.5 總分的 0.6 分。我想以後應該多讓他出去外面玩了。對於成年人可能不會
+引起很大的視力下降，但是可能會引起眼球眼壓升高，乾眼症等問題。
+
+還有，我們吃飯的時候低頭玩手機引起消化不良；經常用拇指在小屏幕上輸入信
+息引起拇指肌肉勞損；走路時候低頭看手機造成交通事故或者跌倒碰撞。這些都
+會對我們的健康生活造成損害。
+
+#+BEGIN_HTML
+<a data-flickr-embed="true" data-footer="true"  href="https://www.flickr.com/photos/kimim-photo/21379016670/in/dateposted-public/" title="Phubbing"><img src="https://farm6.staticflickr.com/5646/21379016670_3a201c565a_z.jpg" width="640" height="427" alt="Phubbing"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_HTML
+
+* 心裡健康
+
+第一，社交軟件會不斷檢測更新，發現更新就會出現消息提醒和紅色的消息數量
+標記。有些人就有不把消息看完，不把紅點清除就難受的強迫症。我的一位同事
+就曾告訴我說，微信訂閱號的所有更新消息他都要一一點開看掉。不然半夜也睡
+不安穩。
+
+第二，攀比炫富。當然這不是因為低頭引起，但這和低頭有很大的關係。現在的
+微博，微信朋友圈裡面經常會有人曬幸福，炫富。於是低頭一族看到別人曬的美
+食，奢品還有風景，就產生羨慕心裡，於是要想方設法也去擁有。然後把自己的
+“幸福”曬到朋友圈裡去。朋友圈的“朋友”們看到了紛紛點讚，然後複製“幸福“。
+如此循環不休，落入人間煉獄，無法超脫。
+
+第三，總是低頭會引起情緒煩躁易怒。前面說的兩種狀態會給人帶來各種壓力，
+煩惱，困惑，糾結，沮喪。於是人們的情緒就變得煩躁易怒，沒有耐心，蠻不講
+理。進一步就造成和周圍人關係的惡化。
+
+* 人際關係
+
+最後是人際關係的影響。一起吃飯的親朋好友等菜一上來，就開始低頭撥弄手機，
+和世界分享美食。公園椅子上並肩坐著的情侶，各自低頭看手機。那是一種多麼
+糟糕的感覺。
+
+與其關心你的整個朋友圈，不如關心一下你身邊的人，用語言和表情和他們一起
+分享你的快樂，你的憂傷；也體會他們的快樂和憂傷。
+
+#+BEGIN_HTML
+<a data-flickr-embed="true" data-footer="true"  href="https://www.flickr.com/photos/kimim-photo/21575915281/in/dateposted-public/" title="Une jeune femme phubbant son ami, frise sous la sculpture The Meeting Place de Paul Day à la Gare de Saint-Pancras1."><img src="https://farm1.staticflickr.com/710/21575915281_201e7bc217_z.jpg" width="640" height="480" alt="Une jeune femme phubbant son ami, frise sous la sculpture The Meeting Place de Paul Day à la Gare de Saint-Pancras1."></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_HTML
+
+寫這些的目的當然不是去勸說他人做一些改變了，大家都一把年紀了，能接受他
+人建議也是有限了。只是能自己有所改變，有所收穫就夠了：
+- 每天減少低頭看手機的次數和時間。我已經刪除了很多需要查看的新聞客戶端，
+  取而代之的是 podcast 新聞和有聲圖書訂閱。
+- 回到家裡就把手機放好，不再拿出來使用。一般有緊急的事情，別人會打電話
+  給我的。其他都是非緊急的事情。

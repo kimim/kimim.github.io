@@ -1,0 +1,92 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：水果之苹果
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* apple
+
+苹果是最最常见的水果了。
+
+这里有 50 种苹果的吃法 [fn:1]
+- Apple Pie Coconut Ice Cream
+- Apple Pie Dessert Pizza
+- Apple Spice Dump Cake
+- Apple Bundt Cake with Praline Frosting
+- ...
+
+德语 der Apfel^{(de)}，法语 la pomme^{(fr)}。
+
+* Apple Inc.
+
+由于 iPhone 的流行，苹果作为手机的知名度，已经超越作为水果的品种了。
+
+苹果公司最早的 logo 是 1976 年 4 月 1 日设计的，当时用的主题是牛顿坐在苹果树下，
+等待着一个苹果掉落。
+
+- Apple's first logo, designed by Ron Wayne, depicts Sir Isaac Newton sitting
+  under an apple tree.
+
+但是很快，就更改了设计，选定了咬了一口的彩虹苹果，直到 1998 年换成黑色 logo。然
+而咬了一口的苹果很容易让人想到计算机史上一位伟大的科学家图灵自杀的方式，他在苹果
+上涂上氰化物，咬了一口自杀。不过苹果公司澄清了这个猜想是不对的。
+
+- On 8 June 1954, Turing's housekeeper found him dead. He had died the previous
+  day. A post-mortem examination established that the cause of death was cyanide
+  poisoning. When his body was discovered, an apple lay half-eaten beside his
+  bed, and although the /apple/ was not tested for cyanide, it was speculated
+  that this was the means by which a fatal dose was consumed.[fn:2] But both
+  Janoff and Apple deny any homage to Turing in the design of the logo.
+
+* forbiden fruit
+
+苹果的另一个比较有名的典故是伊甸园里发生的事情，夏娃受了蛇的诱惑吃了知识树上的红
+苹果。
+
+- Woman ate the apple, and discovered sex, and lost all shame, and lift up her
+  fig—leaf, and she must suffer the pains of hell. Monthly.
+
+* white on the inside and red on the outside
+
+不少人可能知道香蕉人指的是海外华人移民的第二代、第三代子女。他们虽然也是黑发黄皮，
+但不识中文，说一口地道的美国英语。他们自小就受美国文化、美国教育的熏陶，其思维方
+式、价值观也是完全美国化的。他们“黄皮其外、白瓤其内”，所以叫香蕉人。
+
+而苹果人可能就不太熟悉了，苹果人指的是那些皮肤红色，但是自小受美国文化教育的人：
+
+- The presenter, close to tears, told the audience that she's really an apple —
+  white on the inside and red on the outside—Native American.
+
+* Apfel^{(de)}
+
+- Das ist ein fauler Apfel.^{(de)} 此乃烂苹果也。
+- Der Apfel fällt nicht weit vom Stamm.^{(de)} 苹果必落于果树不远处。有其父必有
+  其子，老鼠的儿子会打洞。
+- Etwas für einen Apfel und ein Ei kaufen.^{(de)} When Germans say they bought
+  something for an apple and an egg, they tell you that they got something for
+  little money or that they made a bargain.[fn:3] 买某样东西花了一个苹果和一个鸡蛋，表
+  示这个东西很便宜，或者很划算。大概在德国苹果鸡蛋是比较不值钱的东西。不过我们天
+  朝的苹果现在都要几十块一个了。不知他们的如何。
+- Der Laden lief unter Wolfgang auch deshalb finanziell ganz gut, weil er die
+  Künstler dazu brachte, in Bayreuth für 'n Appel und 'n Ei zu arbeiten.[fn:4]
+
+另外，德语中 Apfel 的复数形式 Äpfel 在诗歌中还用来形容 weblichen Brüste^{(de)}，
+非礼勿视哦。
+
+* Pomme^{(fr)}
+
+不得不提一下，法语里土豆叫 la pomme de terre^{(fr)} 泥土中的苹果。大概因为有些土
+豆是圆圆的，形状像苹果。
+
+* Footnotes
+
+[fn:1] http://thetiptoefairy.com/2016/09/50-apple-recipes-more/
+
+[fn:2] https://en.wikipedia.org/wiki/Alan_Turing#Death
+
+[fn:3] http://deutschhappen.com/german-expressions-etwas-fur-einen-apfel-und-ein-ei-kaufen
+
+[fn:4] http://www.phraseo.de/phrase/fuer-einen-apfel-und-ein-ei/

@@ -1,0 +1,116 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：牛的
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+不久前不是刚过七夕节么，那天看到 China Daily 有介绍中国情人节牛郎织女的故事，其
+中有提到神牛的来历：
+
+#+BEGIN_QUOTE
+The cow, however, was a former god who had violated imperial rules and was sent
+to earth in /bovine/ form.[fn:1]
+#+END_QUOTE
+
+前世大神违反天条贬为牛形。
+
+在文中见到一个新单词 bovine。
+
+* Bovine
+
+#+BEGIN_QUOTE
+1. of, relating to, or resembling bovines and especially the ox or cow
+2. having qualities (as placidity or dullness) characteristic of oxen or cows
+#+END_QUOTE
+
+1） 和牛相关的；2）和牛一样蠢笨迟钝的。
+
+- California declared free of bovine tuberculosis. 加州宣称没有牛肺结核病。[fn:2]
+- But is there something vaguely bovine, dull, about the state of being
+  unstressed? Is there something slow, unfruitful, stagnant or dense about
+  calm?[fn:3] 摘自 ft.com 关于如何享受压力的一篇文章：“但是，是不是会在没有压力
+  的时候感觉依稀有些像牛一样笨拙，迟钝？是不是会在平静的时候觉得有些慢悠悠，没成
+  果，停顿不前，又愚钝呢？”很明显作者是个驱动（Driver）型的人。（关于社交风格类
+  型的讨论详见前几天的文章：[[http://kimi.im/2016-08-03-versatile-communication][August 3, 2016 » 管理技能：溝通中的迎合能力]]）
+- Mr Mad Eyebrows said: “What worries me is the impression given by the 40% who
+  say they won’t. At best it suggests closed minds, a certain bigotry. At worst
+  it conveys an image of bovine stupidity.” [fn:4]疯眉毛先生说：“让我担心的是
+  40% 说不会的人对我的印象。好的方面表示心灵闭塞，某种程度的顽固不化。坏的方面传
+  递了一个如牛一般蠢笨迟钝的形象。”
+
+* Derivation / 衍
+
+** bovid
+
+牛科动物
+
+- Bovidae is the biological family of cloven-hoofed, ruminant mammals that
+  includes bison, African buffalo, water buffalo, antelopes, gazelles, sheep,
+  goats, muskoxen, and domestic cattle. A member of this family is called a
+  bovid.[fn:5]
+- Neanderthals just wore cape-like clothing mainly from bovids and animals of
+  the deer family.[fn:6] 尼安得特尔人穿牛科动物或者鹿类皮毛做的斗篷。
+
+** beef
+
+牛肉，肉牛。
+
+看起来好像和 bovine 差别有些大，但是如果知道法语里牛肉是这么写的： bœuf，就感觉
+和 bovine 接近了一些了，如果进一步把 f 改成 v 就差不多了。
+
+beef 除了是牛肉的意思，还有“抱怨，大发牢骚”之意，这倒是有些出其不意：
+
+- Instead of beefing about what Mrs Martin has not done, her critics might take
+  a look at what she is trying to do. 批评者不要老是抱怨马丁太太没有做什么事情，
+  不妨看看她正要做什么事情。
+
+* Synonym / 同
+
+** cow
+
+母牛，奶牛
+
+** heifer
+
+小母牛，还没结婚生小牛的母牛。
+
+** bull
+
+公牛，力大如牛的人，股票牛市。
+
+** bullock
+
+阉小公牛。但是 Sandra Bullock 就不一样了:-) 她是个美女。
+
+** calf
+
+小牛。
+
+** ox
+
+公牛。
+
+** bison
+
+野牛。
+
+不过 GNU Bison 是 GCC 的语法分析生成器。[fn:7]
+
+* Footnotes
+
+[fn:1] [[http://www.chinadaily.com.cn/culture/2016-08/09/content_26391352.htm][Culture Insider: Qixi - the Chinese Valentine's Day]]
+
+[fn:2] [[http://www.bendbulletin.com/business/4564823-151/california-declared-free-of-bovine-tuberculosis?referrer=bullet1][California declared free of bovine tuberculosis]]
+
+[fn:3] [[http://www.ft.com/intl/cms/s/2/9b46859c-afcb-11e3-9cd1-00144feab7de.html#axzz4H1uxKvCv][The joy of stress]]
+
+[fn:4] [[http://www.liverpoolecho.co.uk/news/news-opinion/paddy-shennan-bovine-stupidity-bernard-6345600][Paddy Shennan: 'Bovine stupidity'? Bernard Ingham should take a look in the mirror]]
+
+[fn:5] [[https://en.wikipedia.org/wiki/Bovidae][Wikipedia: Bovidae]]
+
+[fn:6] [[http://www.livescience.com/55624-parkas-helped-early-humans-survive.html][Parkas Helped Early Humans Survive]]
+
+[fn:7] [[http://baike.baidu.com/link?url=28GEfXCTy3LTjp3wVXJb8B4EnsXof6YE4Shxu6z2CWWkvlGQmZjePsyYU50CpviPfrI1wU93IFDy1OZ4kcwvA_][GNU Bison]]

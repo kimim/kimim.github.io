@@ -1,0 +1,52 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Some ideas about my career plan
+categories: [management]
+tags: [management]
+---
+#+END_HTML
+
+Since July 1, I reached 8th year as a software engineer. I have worked
+in Nokia Siemens Networks(now Nokia Solutions and Network) for 2 and
+three quarters as platform system engineer and Scrum Master for the
+team. And later on April 11, 2011, I joined ABB as automation system
+software engineer and later promoted as team supervisor.
+
+After taking management tasks for three years, I found that I am not
+good in communication:
+- I cannot deliver positive messages to my boss. So I am always been
+  challenged even the bottle neck is not on me, and also I cannot win
+  more honor for my team.
+- I cannot persuade myself to take lots of private time to business
+  dinner and other activities. I want my work and life are balanced.
+- I prefer simple relationships not complex personal connections.
+- I like information transparency. I am not able to hide information
+  and take advantage of the information asymmetry. I feel upset if
+  others take advantage of the asymmetry.
+
+I will develop my management skills and at the same time, I will focus
+on improving my technical expertise by concentration.
+
+According to Robert Toru Kiyosaki's book "Rich Dad Poor Dad", the
+management skills are categorized in to three areas:
+- financial management
+- time management
+- people management
+
+For financial management, I will talk this in another article, because
+it has less relationship with my current problems.
+
+My problems are mainly in time management and people management,
+especially in people management.
+
+For people management skill improvement, I will:
+- create a book list for different kind of management skills,
+- subscript to podcast or video lessons for communication skill,
+- and practise the management and communication theory and improve it.
+
+For time management skill, I have established the GTD system with
+emacs and org-mode. I should try to make full use of GTD system and
+continuously improve the system. With the help of GTD system, I can
+make full use of my work time, and focus on accumulating technical
+expertise experience. Then I can say I am working in high efficiency.

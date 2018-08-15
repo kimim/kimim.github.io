@@ -1,0 +1,42 @@
+---
+layout: default
+title: kimi.im - Die Welt ist meine Vorstellung
+---
+
+<div class="page-header">
+	<h1><a href="{{ site.posts.first.url }}">{{ site.posts.first.title }}</a></h1>
+</div>
+	
+<div class="row-fluid post-full">
+  <div class="span12">
+	<div class="date">
+	  <span>{{ site.posts.first.date | date_to_long_string }}</span>
+	</div>
+	<div class="content">
+	  {{ site.posts.first.content }}
+	</div>
+	<hr></hr>
+    <div id="archivecont">
+	  <div id="archive">
+	    <h2>Previous posts</h2>
+	    <ul id="posts">
+		  {% for post in site.posts offset:1 limit:20 %}
+		  <li>
+			<time datetime="{{ post.date | xmlschema }}">{{ post.date | date: "%Y %b %d" }}</time> >
+			<a href="{{ post.url }}">{{ post.title }}</a>
+			{% assign post_words = 0 %}
+			{% assign lines = post.content|split:'pre>' %}
+			{% for line in lines %}
+			{% assign mod = forloop.index|modulo:2 %}
+			{% assign line_words = line|strip_html|number_of_words|times:mod %}
+			{% assign post_words = post_words|plus:line_words %}
+			{% endfor %}
+			<a class="bar" href="#" rel="tooltip" title="{{ post_words }} words"
+			   style="width:{{ post_words | divided_by:10 | plus: 10 }}px;">&nbsp;</a>
+		  </li>
+		  {% endfor %}
+	    </ul>
+	  </div>
+    </div>
+  </div>
+</div>

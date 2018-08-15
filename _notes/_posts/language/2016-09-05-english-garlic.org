@@ -1,0 +1,76 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之大蒜
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* garlic
+
+前面几篇文章学习了小葱 chives，大葱 leek，洋葱 onion，本文继续学习另一个在我看来
+差不多是同类的东西：大蒜 garlic。
+
+说起 garlic，其实我一直以来以为咖喱就是 garlic 的中文音译，也就是说，我一直以为
+咖喱就是大蒜粉做的乱七八糟的东西。至今，我才知道，咖喱是 curry，是由多种香料组成
+的调料，主料是姜黄:
+
+#+BEGIN_QUOTE
+咖喱是以姜黄为主料，另加多种香辛料（如芫荽籽、桂皮、辣椒、白胡椒、小茴香、八角、
+孜然等）配制而成的复合调味料。其味辛辣带甜，具有一种特别的香气。[fn:1]
+#+END_QUOTE
+
+以上澄清了我一直以来的困惑。不知诸位是否有这样的疑惑？也有可能这仅仅是我的孤陋寡
+闻了。
+
+回到大蒜主题，德语写作 der Knoblauch^(de)，而法语写作 l(e)'ail^(fr)。
+
+#+BEGIN_QUOTE
+Homère, 850 ans avant Jésus Christ, insistait sur les vertus médicinales de
+/l'ail/. Hippocrate, Aristophane et Aristote ont longuement vanté les mérites de
+/l'ail/, symbole de force physique.[fn:2]
+#+END_QUOTE
+
+以上法语引文说：公元前 850 年的荷马坚信大蒜油很高的药用价值。古希腊的希波克拉底，
+阿里斯托芬以及亚里士多德都曾赞美过大蒜的功效。
+
+#+BEGIN_HTML
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/28852070073/in/dateposted-public/" title="荷马"><img src="https://c2.staticflickr.com/8/7750/28852070073_ae3ca92008_b.jpg" width="470" height="690" alt="荷马"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_HTML
+/19世纪末的法国学院派画家威廉·阿道夫 ·布格罗（ William Adolphe Bouguereau）的作
+品《荷马和他的向导》/
+
+可见大蒜是多么古老的一种蔬菜啊！
+
+* garlicky
+
+大蒜似的，有大蒜气的。
+
+- nuts and chips are even seasoned with garlic powder in order to improve its
+  garlicky taste. 一些坚果和薯片甚至直接用蒜粉来增加其蒜的味道。
+
+* alliaceous
+
+葱蒜味的。如果知道大蒜的学名叫 Allium sativum 就比较容易弄明白为什么大蒜味可以写
+成这样了。allium --> alliaceous，同时也就知道了为什么法语里大蒜写作 ail 了。另外，
+法语里蒜味写作 alliacé^(fr)。
+
+另外，如果知道 garlic 源自古英语 gārlēac，也就知道了大蒜和大葱 leek（lēac）其实
+是有一些渊源的。
+
+所以说，事物内在都是有着千丝万缕的联系的。
+
+-  Onions, leeks, garlic, chives are alliaceous plants. 洋葱、大葱、大蒜、香葱都
+  是葱蒜味调料的植物。
+
+* Summary
+
+本文主要讨论了大蒜的单词 garlic，der Knoblauch^(de)，和 l'ail^(fr)；以及大蒜味
+garlicky 和 alliaceous，以及法语的 alliacé^(fr)。
+
+* Footnotes
+
+[fn:1] http://baike.baidu.com/subview/36704/10159996.htm
+
+[fn:2] http://plant-certifie-ail.org/pages/vertus.php

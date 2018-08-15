@@ -1,0 +1,79 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：精神焕发
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* 11 届 G20 峰会主题
+
+早上起来看新闻，中国日报新闻说习大大要参加主持在杭州举办的 11 届 G20 峰会。外交
+部发言人陆慷说：
+
+#+BEGIN_QUOTE
+The theme of the 11th G20 summit will be "Toward an Innovative, /Invigorated/,
+Interconnected and Inclusive World Economy".
+#+END_QUOTE
+
+本届 G20 峰会主题为：构建创新、/活力/、联动、包容的世界经济。
+
+因为第一次见到 invigorate 这个单词，所以本文重点对此展开学习学习。
+
+* invigorate
+
+to import vigor, strength, or vitality to, to give life or energy to 赋予精力、
+能量、活力、生命、能量。也写成 envigorate, invigourate。beleben^(de),
+kräftigen^(de), stärken^(de)；revigorer^(fr)。
+- Exercise is /invigorating/. 运动带来活力。
+- they were /invigorated/ by the chilly autumn air. 秋天的冷空气使他们神清气爽。
+- The cold water /invigorated/ him. 冰水给他能量。 L‘eau froide s'a revigoré。
+- China aims to /invigorate/ EU ties.[fn:1] 中国要激活与英国的联系。to
+  invigorate ties, Beziehung beleben^(de)
+- Ce cordial m’a /revigoré/.^(fr) 此甜酒赋予我活力。
+- Cette bonne nouvelle l’a tout /revigoré/.^(fr) 这本新小说赋予他活力。
+
+* vigor/vigour
+
+力量，健康，活力。die Vitalität^(de), die Kraft^(de). la vigueur^(fr).
+
+- Do you have a /vigor/? A /vigor/ for rigor?[fn:2]
+- Before long, you’ll be jumping out of bed with more /vigor/ than ever because
+  you know people are relying on you.[fn:3] 曾几何时，你从床上跃起，充满能量，因
+  为你知道有人需要你。
+
+* reinvigorate
+
+使再振作，使复兴。
+
+- How can Kenya /reinvigorate/ manufacturing?[fn:4] 肯尼亚如何振兴制造业？
+- The fresh figures are bad news Prime Minister Shinzo Abe, whose government has
+  been struggling to /reinvigorate/ the faltering domestic economy.[fn:5] 最近的
+  日本财政数字不佳，安倍晋三政府在努力振兴经济。
+- The modern, high-quality space that has been created is set to /reinvigorate/
+  the working environment for employees and provides a clean, modern
+  infrastructure complete with the latest technology.[fn:6]
+
+* 总结
+
+本文首先学习了 G20 峰会的主题词“Toward an Innovative, /Invigorated/,
+Interconnected and Inclusive World Economy”，然后学习了其中的单词 invigorate，并
+挖掘出它的词根 vigor，以及衍生词 reinvigorate。
+
+无知的好处是随时随地都有机会学习新东西，可以学习新东西是多么幸福的事情呀。这可以
+算是傻人有傻福的一种新解释吧。
+
+* Footnotes
+
+[fn:1] http://english.gov.cn/state_council/2015/03/16/content_281475072547652.htm
+
+[fn:2] http://ask.metafilter.com/299046/Do-you-have-a-vigor-A-vigor-for-rigor
+
+[fn:3] https://incomeclub.co/avoid-non-financial-problems-new-retiree/
+
+[fn:4] http://africanbusinessmagazine.com/sectors/infrastructure/can-kenya-reinvigorate-manufacturing/
+
+[fn:5] http://myhealthbowl.com/2016/08/18/japans-trade-shrinks-in-july-exports-sink-14-percent.html
+
+[fn:6] http://www.travelmole.com/news_feature.php?news_id=2023352

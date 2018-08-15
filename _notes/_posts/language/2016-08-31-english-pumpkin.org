@@ -1,0 +1,77 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之南瓜
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+昨天柯同学留言说最好可以在单词后面加注音标，这样就不需要额外再查词典了解单词读音。
+所以今后我会单词后面再附上音标。感谢柯同学的建议！
+
+* pumpkin
+
+南瓜，pumpkin [ˈpʌmpkɪn]，又叫 das Kürbis[ˈkʏɐ.bɪs]^(de) 和 la
+citrouille[si.tʁuj]^(fr)。
+
+- Starbucks' /pumpkin/ spice latte chat bot is the perfect Facebook friend. 据说
+  歪果仁喜欢和 Facebook Messenger 中的星巴克南瓜味拿铁[fn:1]聊天机器人闲聊。
+  [fn:2]
+- Il plante une /citrouille/ géante. 他种出了一个巨大的南瓜。
+- /Kürbisse/ zählen zu den größten Einzelfrüchten in der Botanik.^(de) 南瓜是植
+  物中果实最大的品种之一。
+
+此外，还用来指代头，Kopf eines Menschen：
+- avoir la tête comme une /citrouille/.^(fr) to feel as if one's head was going to
+  burst. 感觉头像个南瓜一样大。感觉头要炸掉了。想得太多，生病头痛，或者环境太闹。
+- mir dröhnt, schmerzt der /Kürbis/.^(de) 我的脑袋又涨又疼。
+- Kein Hut paßt auf seinen /Kürbis/.^(de) 他的头戴啥帽子都不合适。
+
+* jack-o'-lantern
+
+学习南瓜单词的时候知道了万圣节的南瓜灯叫 Jack-o'-lantern 或者叫 Jack of the
+Lantern。
+
+- À l’Halloween, les enfants ont placé une /citrouille/ devant la maison.^(fr)
+  万圣节的时候小朋友会做南瓜灯玩。jack-o'-lantern，也叫 der Halloweenkürbis^(de)，
+  Kürbislaterne^(de)。la citrouille halloween^(fr)。
+
+那么问题来了，为什么南瓜灯叫 Jack 灯笼呢？原来故事是这样的[fn:3]：
+
+很久以前有一个叫 Stingy Jacky[fn:4]，或者叫 Jack the Smith，他是一个铁匠。这个
+Jack 很懒，但脑子还算机灵。有一回他偷了村民的金币，一路被村民们追着逃跑。路上遇
+到了恶魔撒旦，撒旦说他的死期到了，要来收走他的灵魂。Jack 就想办法逃避死期。告诉
+撒旦说他有办法证明追他的看似虔诚的村民们是有罪的。这个办法是这样，先让撒旦变成金
+币藏进 Jack的钱包，等到村民们追上来之后，把撒旦成的金币还给村民，之后，再让撒旦
+变得金币消失，这样村民们就会互相怀疑谁偷走了金币，互相打起来。撒旦觉得这个办法不
+错，就答应了。等到撒旦变成金币跳进 Jack 的钱包之后发现钱包里还有一个十字架，十字
+架的威力限制了撒旦的法力，于是撒旦就被困在钱包里了。
+
+于是 Jack 就要求撒旦答应不拿走他的灵魂，才放撒旦出来。过不了多久，Jack 死了，但
+是因为他的灵魂充满罪恶，既不能去天堂，也没法跟着撒旦去地狱，所以就变成幽魂游荡在
+世界上。无处可去的 Jack 再一次去找撒旦说没有光，他不知道该去哪里。撒旦就抛给他一
+簇冥王哈迪斯的冥火，永远不会熄灭。Jack 就用自己最喜欢出的萝卜雕刻出了一盏灯，把
+冥火放进去，提着萝卜灯笼到处寻找休息的地方。后来大概因为南瓜比较容易雕刻，就演变
+为南瓜灯了。
+
+南瓜灯据说能防止幽灵闯入家中。还能让吸血鬼现出原型，现出原形的吸血鬼就不敢伤害他
+人了。
+
+以上就是 Jack-o'-lantern 的由来了。
+
+* Summary
+
+本文先学习了南瓜的单词 pumpkin^(en)，das Kürbis[ˈkʏɐ.bɪs]^(de) 和 la
+citrouille[si.tʁuj]^(fr)。知道了南瓜还常常被用来形容疼痛发胀的大头。之后还知道万
+圣节南瓜灯 Jack-o'-lantern 的由来。
+
+* Footnotes
+
+[fn:1] http://www.starbucks.com/menu/drinks/espresso/pumpkin-spice-latte
+
+[fn:2] http://www.theverge.com/2016/8/29/12693096/starbucks-pumpkin-spice-latte-chat-bot-facebook-messenger
+
+[fn:3] https://en.wikipedia.org/wiki/Jack-o%27-lantern#Folklore
+
+[fn:4] https://en.wikipedia.org/wiki/Stingy_Jack

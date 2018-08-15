@@ -1,0 +1,41 @@
+#+BEGIN_HTML
+---
+layout: post
+title: dired move line wrap up
+categories: [productivity]
+tags: [emacs]
+---
+#+END_HTML
+
+When the cursor is at the buffer end of =ibuffer=, it will wrap back
+to the beginning of the buffer list if I continue pressing =n= to next
+buffer. But in =dired=, this does not happen. The cursor will stay at
+the end of the file list, if I continue pressing =n= to navigate to
+next buffer.
+
+Here is the trick to wind the cursor up to the first item of the file
+list. I redefine the function =dired-next-line= and =dired-previous-line=:
+
+#+BEGIN_SRC elisp
+(defun dired-next-line (arg)
+  "Move down lines then position at filename.
+Optional prefix ARG says how many lines to move; default is one line."
+  (interactive "p")
+  (forward-line arg)
+  (if (eobp)
+      (progn
+        (goto-char (point-min))
+        (forward-line 2))) ;; skip two lines: file path and summary
+  (dired-move-to-filename))
+
+(defun dired-previous-line (arg)
+  "Move up lines then position at filename.
+Optional prefix ARG says how many lines to move; default is one line."
+  (interactive "p")
+  (if (= 3 (line-number-at-pos)) ;; line num of first item
+      (progn
+        (goto-char (point-max))
+        (forward-line -1)) ;; skip the last empty line
+    (forward-line (- arg)))
+  (dired-move-to-filename))
+#+END_SRC

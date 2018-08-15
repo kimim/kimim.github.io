@@ -1,0 +1,122 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：英语单词 arbitration
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+#+BEGIN_QUOTE
+The South China Sea Arbitration: Illegal, Illegitimate and Invalid[fn:1]
+#+END_QUOTE
+
+为什么我们可以说南海仲裁是非法的，违法的并且无效的？那得先从仲裁（arbitration）
+的定义说起。在学习这个单词之前，先引用一段庄子《齐物论》：
+
+#+BEGIN_QUOTE
+既使我与若辩矣，若胜我，我不若胜，若果是也，我果非也邪？我胜若，若不吾胜，我果是
+也，而果非也邪？其或是也，其或非也邪？其俱是也，其俱非也邪？我与若不能相知也，则
+人固受其黮闇，吾谁使正之？使同乎若者正之？既与若同矣，恶能正之！使同乎我者正之？
+既同乎我矣，恶能正之！使异乎我与若者正之？既异乎我与若矣，恶能正之！使同乎我与若
+者正之？既同乎我与若矣，恶能正之！然则我与若与人，俱不能相知也，而待彼也邪？化声
+之相待，若其不相待，和之以天倪，因之以曼衍，所以穷年也。
+#+END_QUOTE
+
+这段话的大致意思是两个人争论不分胜负，这时候去找一个第三方来仲裁，但是第三方可能
+和你观点一样，可能和我观点一样，也可能和你我观点都不一样或者都一样，这样你和我还
+有第三方那个人都没法下定论了。
+
+《齐物论》说的：人固受其黮闇，吾谁使正之，此正之者即仲裁者也。
+
+言归正传，先来学习学习 arbitration 这个单词。
+
+* arbitration
+
+#+BEGIN_QUOTE
+Settling of a dispute by a person or people chosen to do this by both sides in
+the dispute.
+#+END_QUOTE
+
+定义非常清晰：经争端双方要求选择中间人解决争端。
+
+* Etymology / 源
+
+arbitration 来自拉丁语 arbitratus, arbitrari^latin （作为见证者）的过去分词。
+
+* Derivation / 衍
+
+- abiter & arbitrator：仲裁人，裁决人。不过 arbiter 还有权威人士之意。比如 the
+  arbiters of the fashion. 在计算机里，内存、总线的仲裁用 abiter 这个词，比如
+  memory access arbiter, bus arbiter.
+  - Television and film, not Vogue and similar magazines, are the arbiters of
+    fashion.
+  - Tiffany markets itself as an arbiter of taste and style. [fn:2]蒂芙尼市场推广自己
+    是品味和风格的权威。
+  - A memory arbiter is a device used in a shared memory system to decide, for
+    each memory cycle, which CPU will be allowed to access that shared memory.
+  - A multiport access memory arbiter was designed to arbitrate the memory
+    access competition between MCU and several inner modules of FPGA.
+- arbitrary：任意、任性、主观的。霸道、专横、独断的。
+  - When the return value of a function is always an arbitrary value, you should
+    check whether there is any variable not initialized.
+  - DMA is a feature that permits certain hardware devices to access arbitrary
+    physical memory addresses in the host computer.
+  - The choice of our boss seems completely arbitrary.
+  - This already turns our Constitution into something dependent on his
+    arbitrary will.
+  - The way this Trump campaign feels is what arbitrary power feels like. This
+    is what a Trump presidency would feel like, too.
+  - One reason constitutional government is such an extremely valuable
+    possession is because it lessens the uncertainty of the social world. The
+    point of having a constitution is to get rid of arbitrary power.[fn:3]
+  - not representing any specific value in Maths: an arbitrary constant.
+- arbitrate：仲裁的动词，做出仲裁。
+  - Instead of ushering in external forces, why not let the facts arbitrate?[fn:4]
+
+* MultiLanguage / 异
+
+arbitrate: arbitrer^fr, schlichten^de
+- Dans la pratique, ces lois religieuses sont utilisées pour arbitrer les
+  conflits personnels.
+- Il a fallu arbitrer entre rapidité, parfois même précipitation, et qualité.
+- Ich will, dass Sie einen Streit schlichten.
+
+arbitrary: arbitraire^fr, willkürlich^de
+- Mann macht willkürlich fremden Frauen in Japan einen Antrag - ohne ein Wort
+  Japanisch sprechen zu können.[fn:5]
+- Sie kann willkürlich Tränen produzieren.
+- Ainsi, ils ne sont, par exemple, plus exposés aux risques de décision
+  arbitraire de la police.
+
+arbitration: l'arbitrage^fr, Schiedsspruch^de
+- Toute décision opportuniste, que ce soit de la part des Etats-Unis, des
+  Philippines ou de la Cour permanente d'arbitrage, s'avérera vaine en
+  définitive.[fn:6]
+- Ausländische Experten sehen Schiedsspruch zum Fall im Südchinesischen Meer als
+  politische Farce.[fn:7]
+
+最后套用上周去上海参加的《Presentation to management team》学到的概念：The
+competition in the world is mainly the competition of power of redefinition. 中
+国应对南海仲裁的办法就是重新定义海牙仲裁法庭的合法性问题，从根本上否决仲裁结果。
+
+With that in mind, people may still wonder, if China is so justified, why China
+does not accept or participate in the arbitration? The Torah teaches: “Distance
+yourself from that which is false.” The arbitration is totally a false
+issue.[fn:4]
+
+* Footnotes
+
+[fn:1] http://www.chinadaily.com.cn/world/////2016-07/12/content_26060747.htm
+
+[fn:2] http://www.fyvor.com/coupons/tiffany-co-/
+
+[fn:3] https://www.washingtonpost.com/opinions/donald-trumps-thirst-for-arbitrary-power/2016/03/07/505129bc-e3a3-11e5-a6f3-21ccdbc5f74e_story.html
+
+[fn:4] http://www.jpost.com/Opinion/Let-the-facts-arbitrate-454791
+
+[fn:5] http://www.focus.de/
+
+[fn:6] http://www.chinadaily.com.cn/chinawatch_fr/2016-07/12/content_26062016.htm
+
+[fn:7] http://german.people.com.cn/n3/2016/0715/c209052-9086782.html

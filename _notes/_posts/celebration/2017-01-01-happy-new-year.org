@@ -1,0 +1,161 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 2017 新年快乐
+categories: [celebration]
+tags: [yearly]
+---
+#+END_EXPORT
+
+2016 年转眼就过去了，15 年还恍如隔日，17 年就已经到来。是什么原因导致日子过得越
+来越匆匆呢？可能是我们生活的世界搭上了信息化的高速公路，运转越来越快；也可能是随
+着年纪增长，各种琐事增多，时间都被填满，没有了用来浪费的闲暇时光。然而，可悲的是，
+2016 年一整年过来，却没发现自己有多大的收获。
+
+* 电影
+
+2016 年已经难得去一趟电影院了，一次是趁着 G20 去看了《谍影重重 5》和《冰河时代 5：星
+际碰撞》，还有一次是公司工会活动，看了《血战钢锯岭》。《冰河 5》还是一次值得纪念
+的电影，因为我们第一次带了宝宝去看，熄灯那一刻，她还吓得大哭，整场电影是趴在妈妈
+身上看完的。
+
+* 旅游
+
+2 月去了苏州，住在吴宫泛太平洋酒店，游览了他们家的后花园盘门景区。
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31646700480/in/dateposted-public/" title="DSCF9463"><img src="https://c1.staticflickr.com/1/604/31646700480_0436bd827f_z.jpg" width="640" height="427" alt="DSCF9463"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+4 月跑去安吉的 HelloKitty 乐园。
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31180742314/in/dateposted-public/" title="HelloKitty 乐园"><img src="https://c3.staticflickr.com/1/772/31180742314_715f1054dd_z.jpg" width="640" height="427" alt="HelloKitty 乐园"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+5 月公司旅游去嵊泗海岛住了两天，游览了和尚套，六井潭，还在五龙乡的乡间公路夜跑了
+一圈。
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31982990746/in/dateposted-public/" title="嵊泗"><img src="https://c3.staticflickr.com/1/639/31982990746_7978658c8f_z.jpg" width="640" height="427" alt="嵊泗"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+接着出差去了趟武汉，工作的间隙逛了逛武汉大学校园，黄鹤楼和晴川阁，还在酒店附近的
+宝岛公园晨跑了 5 公里。
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31180799214/in/dateposted-public/" title="武汉大学"><img src="https://c7.staticflickr.com/1/601/31180799214_1462a73bcc_z.jpg" width="640" height="427" alt="武汉大学"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31180824584/in/dateposted-public/" title="黄鹤楼上"><img src="https://c1.staticflickr.com/6/5586/31180824584_b96b4d8d2c_z.jpg" width="640" height="427" alt="黄鹤楼上"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31983080046/in/dateposted-public/" title="黄鹤楼"><img src="https://c7.staticflickr.com/6/5796/31983080046_96ec6385c1_z.jpg" width="427" height="640" alt="黄鹤楼"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31180852224/in/dateposted-public/" title="武汉宝岛公园"><img src="https://c1.staticflickr.com/1/314/31180852224_ab08f22e2b_z.jpg" width="480" height="640" alt="武汉宝岛公园"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+5 月底 6 月初一家人去了趟日本。路线由杭州到东京，再到箱根，接着去京都，转大阪，
+再回到杭州。在东京体验了热情洋溢的日本迪斯尼乐园；在箱根体验了日式酒店，坐了登山
+小火车，游览了小王子公园，泡了温泉；在京都访问了清水寺，梅小路公园；在大阪参观了
+大阪博物馆，大阪企业家博物馆。
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31211744983/in/dateposted-public/" title="日本迪斯尼"><img src="https://c8.staticflickr.com/1/387/31211744983_85d601894b_z.jpg" width="427" height="640" alt="日本迪斯尼"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31211760743/in/dateposted-public/" title="箱根登山电车"><img src="https://c8.staticflickr.com/1/721/31211760743_20b965c2c4_z.jpg" width="640" height="427" alt="箱根登山电车"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31211773093/in/dateposted-public/" title="小王子公园"><img src="https://c6.staticflickr.com/1/558/31211773093_774afa7dd3_z.jpg" width="640" height="427" alt="小王子公园"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31873359922/in/dateposted-public/" title="小王子公园"><img src="https://c3.staticflickr.com/1/466/31873359922_bbbb005fc1_z.jpg" width="640" height="427" alt="小王子公园"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31873382132/in/dateposted-public/" title="清水寺"><img src="https://c5.staticflickr.com/6/5764/31873382132_91b1abb755_z.jpg" width="640" height="427" alt="清水寺"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31873389922/in/dateposted-public/" title="大阪企业家博物馆"><img src="https://c3.staticflickr.com/1/740/31873389922_9aabe6eab6_z.jpg" width="640" height="427" alt="大阪企业家博物馆"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31646896340/in/dateposted-public/" title="DSCF1839"><img src="https://c5.staticflickr.com/1/705/31646896340_73b3c7c9d7_z.jpg" width="640" height="427" alt="DSCF1839"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+
+12 月避开了杭州的寒潮，躲到普吉岛的巴东和麦考海滩切换回夏天，吃遍了泰国餐，学了
+基础泰拳和泰语，还在酒店见到了巨大的蜥蜴。
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31983200986/in/dateposted-public/" title="巴东日落"><img src="https://c3.staticflickr.com/1/585/31983200986_3b2aff5da8_z.jpg" width="640" height="427" alt="巴东日落"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31983218076/in/dateposted-public/" title="麦考万豪"><img src="https://c5.staticflickr.com/6/5672/31983218076_d2bd1f5031_z.jpg" width="640" height="427" alt="麦考万豪"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31216117993/in/dateposted-public/" title="蜥蜴"><img src="https://c2.staticflickr.com/1/738/31216117993_704abcf576_z.jpg" width="640" height="423" alt="蜥蜴"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+* 读书
+
+这一年读过最多的还是绘本故事吧。三岁的宝宝爱上了读书，亲子陪读其实也挺涨见识的。
+回顾一下[[https://book.douban.com/people/kimim/collect?start=0&sort=time&rating=all&tag=%E7%B9%AA%E6%9C%AC&mode=list&filter=all][豆瓣读书绘本故事书列表]] [fn:1]，居然已经看了 91 本绘本故事书，其中有几本
+甚至读过超过 20 遍！
+
+除了绘本，其他书只读了 9 本[：
+- A+时间管理法 2016-11-27
+- 慢的力量 2016-11-26
+- 管理你的每一天 2016-11-13
+- 断舍离：心灵减负篇    2016-10-05
+- 断舍离·瑜伽篇 2016-10-03
+- 禅说庄子：庚桑楚 至乐 2016-11-13
+- “逍遥游”释论 2016-10-03
+- 庄子陪你走红尘 2016-09-27
+- Intel Edison 智能硬件开发指南 2016-10-05
+
+其中三本庄子相关，五本时间整理方法，一本智能硬件开发。
+
+豆瓣真是个不错的网站，可以记录电影、音乐、读书，还能浏览别人的书评、影评。正如
+APP 起始页中说的：我们的精神家园。欢迎在豆瓣上联系我：
+https://www.douban.com/people/kimim/
+
+
+* 学习
+
+2016 年 5 月开始在微信公众号《馬上得天下》中发布英语和工作上相关的学习文章，总计
+67 篇，积累订阅用户 303 位。阅读量最高的一篇获得了 264 次阅读：《单词本：洪荒之
+力》。
+
+另外，9 月份《人人词典》APP 收录了我的单词学习相关的文章，并推荐到 APP 主页。因
+此也带来了不少订阅用户和浏览量。
+
+* 运动
+
+2016 年找到了手机 APP Keep 来记录运动。这一年总共训练 24 次 23 小时，跑步 21 次
+128 公里。实在是很差的一个成绩了。从考勤表分布来看，四五月份是运动做多的月份。
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31651096820/in/dateposted-public/" title="Keep 2016"><img src="https://c5.staticflickr.com/1/292/31651096820_d91794550b_z.jpg" width="640" height="569" alt="Keep 2016"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+2016 年是一个很好的开始，2017 年，继续努力，好好学习，多多分享，多多认识更多共同
+爱好的人。
+
+最后，祝愿正在读这篇文章的朋友们，2017 年幸福安康，学习进步，工作顺利，收获满满！
+
+
+* Footnotes
+
+[fn:1] https://book.douban.com/people/kimim/collect

@@ -1,0 +1,60 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之芦笋
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* asparagus
+
+之前在学习韭菜的时候见到过芦笋的法语单词 l'asperge^(fr)[fn:1]，当时是作为大葱的
+名字出现在l'asperge du pauvre^(fr)，穷人的芦笋。
+
+很明显这是一个拉丁语单词，源自 asparagos^(latin)，其法语写法为 l'asperge^(fr)，
+其德语写法为 der Gemüsespargel^(de)，蔬菜天门冬，那是因为芦笋属于天门冬属（der
+Spargel^(de) ）。
+
+从德语 Spargel 中略微还是能看出 sparagus 的影子的，果不出所料，sparagus 是
+asparagus的一个曾用名：sparagus ‎is an obsolete form of asparagus.[fn:2]
+
+不得不提一提日本韩国，他们管芦笋叫 アスパラガス ‎(asuparagasu)，아스파라거스
+‎(aseuparageoseu)。他们用自己的拼音文字直接拼写 asparagus！我很怀疑日本人韩国人英
+语口语比较重是因为他们有很多外来词是拿这种近似的读音来读的。
+
+* asparagus color
+
+芦笋，RGB 颜色编号为#87A96B：
+#+BEGIN_HTML
+<h3 style="background-color: #87A96B; width: 80px;">&nbsp;</h3>
+#+END_HTML
+
+* 石刁柏
+
+原来芦笋还有看起来这么 cool 的名字：
+
+#+BEGIN_QUOTE
+石刁柏通常被称为芦笋，是世界著名蔬菜之一，在国际市场上享有“蔬菜之王”的美称，芦笋
+富含多种氨基酸、蛋白质和维生素，其含量均高于一般水果和蔬菜，特别是芦笋中的天冬酰
+胺和微量元素硒、钼、铬、锰等，具有调节机体代谢，提高身体免疫力的功效，在对高血压、
+心脏病、白血病、血癌、水肿、膀胱炎等的预防和治疗中，具有很强的抑制作用和药理效应。
+[fn:3]
+#+END_QUOTE
+
+* Summary
+
+本文介绍了芦笋的英法德名字：
+- asparagus
+- l'asperge^(fr)
+- der Gemüsespargel^(de)
+
+同时介绍了芦笋的另外一个中文名石刁柏。
+
+* Footnotes
+
+[fn:1] [[http://kimi.im/2016-09-05-english-chives][September 5, 2016 » 单词本：蔬菜之韭菜]]
+
+[fn:2] https://en.wiktionary.org/wiki/sparagus#English
+
+[fn:3] http://baike.baidu.com/view/41941.htm

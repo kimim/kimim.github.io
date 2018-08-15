@@ -1,0 +1,130 @@
+---
+layout: post
+title: 在 Swift 中增加对 Dropbox 访问的支持
+categories: [technology]
+tags: [iOS Swift]
+---
+
+<p>
+最近想开发一款支持 Dropbox 文件同步的基于 orgmode 的任务管理 App，但是 iOS 程序开发基础基本为零。所以一切都是全新的。
+</p>
+
+<div id="outline-container-org3397b78" class="outline-2">
+<h2 id="org3397b78"><span class="section-number-2">1</span> 第一步</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+先试着使用 Dropbox API。首先你得注册一个 Dropbox 开发者账户， 然后注册你的 App，在此链接中填写相关信息：<a href="https://www.dropbox.com/developers/apps%EF%BC%8C%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E6%98%AF">https://www.dropbox.com/developers/apps，需要注意的是</a>，在第二个选项“Choose the type of access you need”中，如果选 App folder 的话，就只能访问与你的 App 同名的文件夹，为了灵活，最好还是选择 Full dropbox，全盘访问。注册好之后，可以得到一个 App key。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgee2c6ec" class="outline-2">
+<h2 id="orgee2c6ec"><span class="section-number-2">2</span> 安装 SDK</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+访问 SwiftyDropbox，一步一步照着做就好了。用 CocoaPods 比较方便，全部自动完成了：
+<a href="https://github.com/dropbox/SwiftyDropbox#cocoapods">https://github.com/dropbox/SwiftyDropbox#cocoapods</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org92da3e4" class="outline-2">
+<h2 id="org92da3e4"><span class="section-number-2">3</span> 配置项目的 .plist 文件</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<a href="https://github.com/dropbox/SwiftyDropbox#configure-your-project">https://github.com/dropbox/SwiftyDropbox#configure-your-project</a>
+</p>
+
+<p>
+添加两个 Key：
+</p>
+
+<div class="org-src-container">
+<pre><code class="src src-xml">&lt;<span style="color: #0000cd;">key</span>&gt;LSApplicationQueriesSchemes&lt;/<span style="color: #0000cd;">key</span>&gt;
+    &lt;<span style="color: #0000cd;">array</span>&gt;
+        &lt;<span style="color: #0000cd;">string</span>&gt;dbapi-8-emm&lt;/<span style="color: #0000cd;">string</span>&gt;
+        &lt;<span style="color: #0000cd;">string</span>&gt;dbapi-2&lt;/<span style="color: #0000cd;">string</span>&gt;
+    &lt;/<span style="color: #0000cd;">array</span>&gt;
+
+&lt;<span style="color: #0000cd;">key</span>&gt;CFBundleURLTypes&lt;/<span style="color: #0000cd;">key</span>&gt;
+    &lt;<span style="color: #0000cd;">array</span>&gt;
+        &lt;<span style="color: #0000cd;">dict</span>&gt;
+            &lt;<span style="color: #0000cd;">key</span>&gt;CFBundleURLSchemes&lt;/<span style="color: #0000cd;">key</span>&gt;
+            &lt;<span style="color: #0000cd;">array</span>&gt;
+                &lt;<span style="color: #0000cd;">string</span>&gt;db-&lt;<span style="color: #0000cd;">APP_KEY</span>&gt;&lt;/<span style="color: #0000cd;">string</span>&gt;
+            &lt;/<span style="color: #0000cd;">array</span>&gt;
+            &lt;<span style="color: #0000cd;">key</span>&gt;CFBundleURLName&lt;/<span style="color: #0000cd;">key</span>&gt;
+            &lt;<span style="color: #0000cd;">string</span>&gt;&lt;/<span style="color: #0000cd;">string</span>&gt;
+        &lt;/<span style="color: #0000cd;">dict</span>&gt;
+    &lt;/<span style="color: #0000cd;">array</span>&gt;
+
+</code></pre>
+</div>
+
+<p>
+其中 APP KEY 就是在 Dropbox 注册的那一串字符。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0484578" class="outline-2">
+<h2 id="org0484578"><span class="section-number-2">4</span> 增加代码支持</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orgba35b78" class="outline-3">
+<h3 id="orgba35b78"><span class="section-number-3">4.1</span> 创建 Dropbox 客户端</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+<pre><code class="src src-swift"><span style="color: #8b008b; font-weight: bold;">import</span> SwiftyDropbox
+
+<span style="color: #8b008b; font-weight: bold;">func</span> <span style="color: #0000cd;">application</span>(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -&gt; Bool {
+    DropboxClientsManager.setupWithAppKey(<span style="color: #3a5fcd;">"&lt;APP_KEY&gt;"</span>)
+    <span style="color: #8b008b; font-weight: bold;">return</span> <span style="color: #5f9ea0;">true</span>
+}
+</code></pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeb83714" class="outline-3">
+<h3 id="orgeb83714"><span class="section-number-3">4.2</span> 添加访问事件</h3>
+<div class="outline-text-3" id="text-4-2">
+<div class="org-src-container">
+<pre><code class="src src-swift"><span style="color: #8b008b; font-weight: bold;">import</span> SwiftyDropbox
+
+<span style="color: #8b008b; font-weight: bold;">func</span> <span style="color: #0000cd;">myButtonInControllerPressed</span>() {
+    DropboxClientsManager.authorizeFromController(UIApplication.shared,
+                                                  controller: <span style="color: #8b008b; font-weight: bold;">self</span>,
+                                                  openURL: { (url: URL) -&gt; Void <span style="color: #8b008b; font-weight: bold;">in</span>
+                                                    UIApplication.shared.openURL(url)
+                                                  })
+}
+</code></pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9aefaa5" class="outline-3">
+<h3 id="org9aefaa5"><span class="section-number-3">4.3</span> 返回 App</h3>
+<div class="outline-text-3" id="text-4-3">
+<div class="org-src-container">
+<pre><code class="src src-swift"><span style="color: #8b008b; font-weight: bold;">import</span> SwiftyDropbox
+
+<span style="color: #8b008b; font-weight: bold;">func</span> <span style="color: #0000cd;">application</span>(_ app: UIApplication, <span style="color: #8b008b; font-weight: bold;">open</span> url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -&gt; Bool {
+    <span style="color: #8b008b; font-weight: bold;">if</span> <span style="color: #8b008b; font-weight: bold;">let</span> authResult = DropboxClientsManager.handleRedirectURL(url) {
+        <span style="color: #8b008b; font-weight: bold;">switch</span> authResult {
+        <span style="color: #8b008b; font-weight: bold;">case</span> .success:
+            <span style="color: #000000;">print</span>(<span style="color: #3a5fcd;">"Success! User is logged into Dropbox."</span>)
+        <span style="color: #8b008b; font-weight: bold;">case</span> .cancel:
+            <span style="color: #000000;">print</span>(<span style="color: #3a5fcd;">"Authorization flow was manually canceled by user!"</span>)
+        <span style="color: #8b008b; font-weight: bold;">case</span> .error(_, <span style="color: #8b008b; font-weight: bold;">let</span> description):
+            <span style="color: #000000;">print</span>(<span style="color: #3a5fcd;">"Error: \(</span>description<span style="color: #3a5fcd;">)"</span>)
+        }
+    }
+    <span style="color: #8b008b; font-weight: bold;">return</span> <span style="color: #5f9ea0;">true</span>
+}
+</code></pre>
+</div>
+</div>
+</div>
+</div>

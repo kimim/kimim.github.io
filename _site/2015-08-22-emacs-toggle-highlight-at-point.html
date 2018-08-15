@@ -1,0 +1,264 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>elisp function to toggle symbol highlight at the point</title>
+    
+    <meta name="author" content="Kimi MA">
+
+    <!-- Enable responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
+    <link href="assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link rel="shortcut icon" type="image/ico" href="/assets/favicon.ico">
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+
+    <!-- atom & rss feed -->
+    <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
+    <link href="/rss.xml" type="application/rss+xml" rel="alternate" title="Sitewide RSS Feed">
+
+  </head>
+
+  <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-narrow">
+          <a class="brand" href="/">Die Welt ist meine Vorstellung</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories">Topics</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-narrow">
+
+      <div class="content">
+        
+
+<div class="page-header">
+  <h1>elisp function to toggle symbol highlight at the point </h1>
+</div>
+
+<div class="row-fluid post-full">
+  <div class="span12">
+    <div class="date">
+      <span>22 August 2015</span>
+    </div>
+    <div class="content">
+      <p>
+There is the built-in function in emacs to highlight/unhighlight
+phrases:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(highlight-phrase REGEXP <span style="color: #551a8b;">&amp;optional</span> FACE)
+(unhighlight-regexp REGEXP)
+</pre>
+</div>
+
+<p>
+They are bounded to key <code>M-s h p</code> and <code>M-s h u</code> respectively. But they
+are not so convenient that they need the user to input the phrase
+interactively.
+</p>
+
+<p>
+So I write a small function to toggle highlight of the symbol at the point:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(setq kimim-color-list '(hi-yellow hi-green hi-blue hi-pink))
+(setq kimim-color-index 0)
+(setq kimim-color-list-length (length kimim-color-list))
+
+(<span style="color: #8b008b; font-weight: bold;">defun</span> <span style="color: #0000cd;">kimim/toggle-highlight-tap</span> ()
+  <span style="color: #3a5fcd;">"Toggle highlight pattern at the point"</span>
+  (interactive)
+  (<span style="color: #8b008b; font-weight: bold;">if</span> (and (listp (get-text-property (point) 'face))
+           (memq (car (get-text-property (point) 'face)) kimim-color-list))
+      (unhighlight-regexp (thing-at-point 'symbol))
+    (<span style="color: #8b008b; font-weight: bold;">progn</span>
+      (highlight-regexp (thing-at-point 'symbol) (nth kimim-color-index kimim-color-list))
+      (setq kimim-color-index (+ kimim-color-index 1))
+      (<span style="color: #8b008b; font-weight: bold;">if</span> (&gt;= kimim-color-index kimim-color-list-length)
+          (setq kimim-color-index 0))
+      )))
+
+(global-set-key [f7] 'kimim/toggle-highlight-tap)
+</pre>
+</div>
+
+<p>
+Firstly, a list of highlight color is defined for cycling different
+color for different symbols. Then the function
+<code>kimim/toggle-highlight-tap</code> is used to toggle the symbol to highlight
+or to unhighlight if it is highlighted. And finally, I bind this
+function to key <code>F7</code> for quick access.
+</p>
+
+    </div>
+
+  
+    <ul class="tag_box inline">
+      <li><i class="icon-folder-open"></i></li>
+      
+      
+
+
+  
+     
+    	<li><a href="/categories.html#productivity-ref">
+    		productivity <span>21</span>
+    	</a></li>
+    
+  
+
+
+    </ul>
+    
+
+  
+    <ul class="tag_box inline">
+      <li><i class="icon-tags"></i></li>
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#emacs-ref">emacs <span>11</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2015-08-21-thinking-about-career-plan" title="Some ideas about my career plan">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2015-09-15-emacs-key-conflict-yodao-dict-drag-select-word-enabled" title="有道詞典劃詞功能開啓導致 emacs mouse-set-region 按鍵衝突">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    
+
+
+  <!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"kimim"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+
+
+
+
+
+  </div>
+</div>
+
+
+      </div>
+      <hr>
+      <footer>
+        <p>&copy; 2018 Kimi MA,
+           All right reserved.
+        </p>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
+

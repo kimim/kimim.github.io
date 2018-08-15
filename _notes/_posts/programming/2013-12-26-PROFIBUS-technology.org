@@ -1,0 +1,61 @@
+#+BEGIN_HTML
+---
+layout: post
+title: PROFIBUS 總線簡介
+categories: [programming]
+tags: [Field Bus]
+---
+#+END_HTML
+
+* 什麽是 PROFIBUS
+
+PROFIBUS 是一種國際化的，開放的，廠商中立的現場總線標準。其廣泛適用於工業生產和過程自動化領域。到 2012 年為止，全世界總共有 4380 萬 PROFIBUS 設備節點，其中 750 萬應用於過程自動化領域。
+#+CAPTION: PROFIBUS 安裝節點增長趨勢
+[[http://www.profibus.com/typo3temp/pics/9cf78c0750.jpg]]
+
+* PROFIBUS 標準
+PROFIBUS 最早在 1991/1993 年的 德國標準 DIN 19245[fn:0] 標準中被定義。之後在 1996 年加入了 EN 50170[fn:1] 和 EN 50254[fn:2] 兩項歐洲國際標準，再後來在 1999 年加入國際標準 IEC 61158[fn:3] 和 IEC 61784[fn:4]。開放和中立的國際標準保障了 PROFIBUS 的廠商中立性和開放性。
+
+* PROFIBUS 功能特點
+PROFIBUS 總線通過一根線纜連接控制器控制系統和若干分佈式現場設備，包括傳感器（senser^en ,le capteur^fr ,der Sensor^de ）和執行器（actuator^en ,l'actioneur^fr , der Aktor^de ）等。
+
+* 統一的通訊協議
+PROFIBUS 為工廠和過程自動化應用提供統一的通訊協議 - PROFIBUS DP（Decentralized Periphery）。PROFIBUS DP 確保了整個生產線控制中的入廠物流，生產工藝，出廠物流的各個環節統一控制管理。
+
+* 模塊化的系統
+PROFIBUS 根據不同應用功能劃分成不同模塊：
+- 傳輸層模塊
+RS485，RS485-IS，MBP，MBP-IS，Glass，PCF，Plastic Optical，Wireless
+- 通訊層模塊
+PROFIBUS DP（DP-V0，DP-V1，DP-V2）
+- 通用應用層模塊
+PROFIsafe，I&M，iPar-Server，Time Stamp，Redundancy
+- 特定應用層模塊
+PROFIdrive，PA Devices，Ident Systems，Encoder，Weighing & Dosage，LabAutomation，HART on PROFIBUS
+- 工程組態模塊
+GSD，EDD，FDT/DTM，TCI
+
+一個典型的 PROFIBUS 應用可以由不同模塊組合而成。PROFIBUS 的核心應用包括：
+- 工廠自動化
+- 過程自動化
+- 傳動技術
+- 安全應用
+
+* PROFIBUS 的優勢
+PROFIBUS 可以為工廠的整個生命週期大幅減少實施成本，提升業務輸出。
+- PROFIBUS 簡化工廠設計，避免了過多的佈線，減少了硬件資源，提供了快速的試運行（commissioning^en , la mise en service^fr , die Inbetriebnahme^de ）和可控的成本。
+- PROFIBUS 提供了強大的診斷功能，保障了試運行的快速實施。
+- PROFIBUS 提供了快速及時的數據和管理操作，保障了高效的生產效率。
+- PROFIBUS 提供了先進的固定資產管理策略，保障了工廠和設備的高效管理和維護。
+
+* Footnotes
+
+[fn:0] Deutsches Institut für Normung(http://www.din.de), /DIN 19245-3 (1994-10) Process Measurement And Control; Profibus; Process Field Bus; Decentralized Periphery (dp)/, http://infostore.saiglobal.com/store/details.aspx?ProductID=690846
+
+[fn:1] GEN. /EN 50170. Volume 2/3 (Profibus) : General Purpose Field Communicacition System/, http://books.google.com.hk/books?id=uGbmcQAACAAJ, CEN, 1996
+
+[fn:2] European Committee for Standards - Electrical. /EN 50254:1998 High Efficiency Communication Subsystem For Small Data Packages/, http://infostore.saiglobal.com/store/Details.aspx?productID=364368, European Committee for Standards - Electrical, 01 Jul 2004
+
+[fn:3] /IEC 61158. Digital data communication for measurement and control – Fieldbus for use in industrial control systems/. IEC 61158 deals with the technologies. The individual fieldbuses are differentiated by the definition of "fieldbus protocol types". 
+
+[fn:4] /IEC 61158. Profile sets for continuous and discrete manufacturing relative to fieldbus use in industrial control systems/. IEC 61784 specifies in "Communication Profile Families" which subsets of services and protocols of IEC 61158 (and other standards) are used by a given fieldbus system.

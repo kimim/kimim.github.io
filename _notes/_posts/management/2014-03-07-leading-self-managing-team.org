@@ -1,0 +1,20 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 帶領自我管理團隊
+categories: [management]
+tags: [team]
+---
+#+END_HTML
+
+#+BEGIN_HTML
+<a href="http://www.flickr.com/photos/kimim-photo/12405152285/" title="Flickr 上 kimim-photo 的 西湖文化廣場銀泰"><img src="http://farm8.staticflickr.com/7387/12405152285_df90de9391_z.jpg" width="640" height="427" alt="西湖文化廣場銀泰"></a>
+<p />
+#+END_HTML
+
+自我管理團隊外部組長的角色相比傳統管理者來說更複雜更難把控。當好自我管理團隊領導要清楚明白哪些事情要管，哪些要放手讓團隊去做。自我管理團隊應該做到獨立收集分析信息，做重要決定，還有對既定項目目標負責。而作為團隊領導則需要很好的履行 4 項基本職責：
+1. 建立良好的內部外部關係
+2. 偵測團隊存在的潛在問題
+3. 說服上級和下屬
+4. 積極有效的授權
+

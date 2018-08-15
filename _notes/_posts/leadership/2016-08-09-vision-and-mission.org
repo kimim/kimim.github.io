@@ -1,0 +1,173 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 管理技能：先要了解企业愿景与使命
+categories: [leadership]
+tags: [management]
+---
+#+END_HTML
+
+企业的发展方向是一个企业的灵魂所在。如果我们呆在一个公司里面，却不知道公司的发展
+方向是什么，那是一件很可怕的事情。更可怕的情况是，我们的价值观、个人选择是和企业
+的发展方向相违背的。因此，选择一家企业工作的一个至关重要的问题是企业的发展方向是
+否和自己的价值观相匹配。只有匹配上，我们才能激发出自己的创造力去和企业共同成长。
+
+所谓的企业发展方向就是企业愿景。
+
+* 企业愿景
+
+企业愿景是指企业战略家对企业前景和发展方向一个高度概括的描述。由企业核心理念和对
+未来 10~20 年的展望构成。企业愿景的本质就是将企业的存在价值提升到极限。
+
+加里·胡佛的《愿景》一书中明确了愿景的四大要素：清晰、持久、独特和服务精神。
+[fn:2]
+
+* 企业愿景的产生背景
+
+吉姆·柯林斯（Jim Collins）和杰里·波拉斯（Jerry I．Porras）在《Built to last:
+successful habits of visionary companies》一书中将企业划分为两种类型[fn:1]：
+
+- 第一种类型是明确企业愿景，并将它扎根于员工之中的企业。这些企业大多是排位世界首
+  位的企业。
+- 第二种类型是认为只要提高销售额即万事大吉，而没有明确的企业愿景。这些企业绝不可
+  能居世界首位。
+
+企业愿景往往会附有一份描述当前企业的使命陈述。
+
+* 企业使命
+
+所谓企业使命是指企业在社会经济发展中所应担当的角色和责任，是指企业的根本性质和存
+在的理由，说明企业的经营领域、经营思想，为企业目标的确立与战略的制定提供依据。
+[fn:3]
+
+* 企业愿景与使命的区别
+
+- 企业愿景是指企业长期的发展方向、目标、自我设定的社会责任和义务，明确界定公司的
+  在未来社会范围里是什么样子。
+- 企业使命是在界定了企业愿景的基础上，具体表述企业在社会中的经济身份或角色，在社
+  会领域里，该企业是分工做什么的，在哪些经济领域里为社会做贡献。企业使命主要考虑
+  的是对目标领域、特定客户或社会人在某确定方面的供需关系的经济行为及行为效果。
+- 从企业愿景和企业使命的关系来讲，企业使命是企业愿景的一个方面，换句话说企业愿景
+  包括企业使命，企业使命是企业愿景中具体说明企业经济活动和行为的理念，如果要分开
+  来表述企业愿景和企业使命，企业愿景里就应不再表达企业经济行为的领域和目标，以免
+  重复或矛盾。
+
+* 企业愿景与使命举例
+
+在明确了企业愿景和使命的定义之后，那就找几个案例来看看吧。
+
+
+** 西门子的企业愿景与使命
+
+西门子公司的企业愿景实在很难找，找了好久才在他们最新的 2020 愿景计划书中找到。
+
+西门子的企业愿景：
+
+#+BEGIN_QUOTE
+We make real what matters.[fn:9] 我们实现真正有意义的东西。
+#+END_QUOTE
+
+西门子的企业使命:
+
+#+BEGIN_QUOTE
+We make real what matters by setting the benchmark in the way we electrify,
+automate and digitalize the world around us. Ingenuity drives us and what we
+create is yours. Together we deliver. 我们实现真正有意义的东西。我们的指标是电气
+化、自动化和数字化我们周围的世界。精心设计驱动我们，我们创造的就是你的。我们一起
+来完成。
+#+END_QUOTE
+
+** ABB 的企业愿景与使命
+
+ABB 的企业愿景：
+
+#+BEGIN_QUOTE
+Power and productivity for a better world.[fn:4] (能源与效率创造更好的世界。
+^(zh)[fn:5] Energie und Produktivität für eine bessere Welt.^(de)[fn:6] Énergie
+et productivité pour un monde meilleur.^(fr)[fn:7])
+#+END_QUOTE
+
+顺便提一下，我觉得中文版的愿景陈述不够朗朗上口。建议改成：
+
+“节能又高效，世界更美妙！”
+
+又押韵，又对仗，还很容易记。
+
+
+ABB 的愿景是这么解读的：
+
+#+BEGIN_QUOTE
+As one of the world’s leading engineering companies, we help our customers to
+use electrical power efficiently, to increase industrial productivity and to
+lower environmental impact in a sustainable way.
+#+END_QUOTE
+
+
+包含三层意思，
+- 第一，帮助客户提高电力使用效率
+- 第二，帮助客户提高工业生产效率：保障生产运行时间，速度，产出和效率。
+- 第三，通过可持续发展方式降低对环境的影响：减少每单位 GDP 的能耗，减少每单位能
+  耗的环境污染。
+
+
+ABB 的企业是使命：[fn:8]
+
+- Improve performance: ABB helps customers improve their operating performance,
+  grid reliability and productivity whilst saving energy and lowering
+  environmental impact. 提高绩效：帮助客户提高运营绩效、电网可靠性和生产效率，同
+  事节省能源并降低对环境的影响。
+- Drive innovation: Innovation and quality are key characteristics of our
+  product, systems and service offering. 推动创新：创新和质量是我们产品、系统和
+  服务的关键特性。
+- Attract talent: ABB is committed to attracting and retaining dedicated and
+  skilled people and offering employees an attractive, global work
+  environment. 吸引人才：ABB 致力于吸引并留住富有奉献精神人才，为员工提供具有吸
+  引力的国际化的工作环境。
+- Act responsibly: Sustainability, lowering environmental impact and business
+  ethics are at the core of our market offering and our own operations. 行事负责：
+  可持续发展、降低对环境的影响和遵守商业道德是我们市场营销和运营的核心。
+
+
+使命和愿景是精密联系的。
+
+“提高绩效”是实现“节能又高效”的最直接明确的使命。
+
+“推动创新”则是不断提升“提高绩效”能力的前提。ABB 历史上的一次次科技突破，为世界效
+能的提升带来了新的飞跃。比如 1901 年 ABB 的前生 BBC 建成了欧洲首台蒸汽涡轮机。
+1978 年 ABB 的前生 ASEA 发明并推出全球第一批工业机器人。  1984 在位于南美洲伊泰
+普的世界上最大的水力发电站安装了首台（共九台）BBC 发电机。
+
+”吸引人才“是”推动创新“的原动力。唯有引进全球具有奉献精神的人才，才可以保障持续不
+断的创新。
+
+“行事负责”则保障了企业这条大船经历风浪持续前进的前提。
+
+** 对比
+
+要么是我通过网络搜索找到的西门子的企业愿景和使命是不对的，不然 “We make
+real what matters” 这个表述实在是有点费解。使命的表达也有点摸不着头脑的感觉。
+
+相对来讲，ABB 的 “Power and productivity for a better world” 就包含了愿景的四要
+素。它清晰的表明企业的发展方向，这个方向是可以持久发展的，涵盖了企业独特的业务领
+域，并且造福全世界人民具有服务精神。
+
+另外 ABB 的 logo 总是和文字一同出现，更是不断的对这个愿景进行强化。所以非常有助
+于将它根植于员工内心，这也是公司能够持续排名世界 500 强的原因之一吧。
+
+* Footnotes
+
+[fn:1] http://wiki.mbalib.com/wiki/%E4%BC%81%E4%B8%9A%E6%84%BF%E6%99%AF
+
+[fn:2] http://www.people.com.cn/GB/paper68/10372/946051.html
+
+[fn:4] https://library.e.abb.com/public/b8c652a6ec80435eb55d3c5fae67883c/ABB%20CZ.pdf
+
+[fn:5] http://new.abb.com/sustainability/creating-value
+
+[fn:6] https://library.e.abb.com/public/8e3c5d227d730c47c125746a002ce5aa/ABB%20Technik%202_2008_72dpi.pdf
+
+[fn:7] http://new.abb.com/docs/librariesprovider9/ABOUT-US-FR---Corporate/profile-du-groupe-abb.pdf?sfvrsn=4
+
+[fn:8] http://www02.abb.com/global/abbzh/abbzh251.nsf!OpenDatabase&db=/global/abbzh/abbzh252.nsf&v=7182A&e=us&m=6D4A&c=5F47D0088B5396DEC125702A004C96B0
+
+[fn:9] http://www.siemens.com/about/pool/strategy/siemens-strategy-overview.pdf

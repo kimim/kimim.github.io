@@ -1,0 +1,77 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Leica M-E, FUJIFILM X100S, Canon 40D 三款相机参数对比
+categories: [photography]
+tags: [camera]
+---
+#+END_HTML
+
+* Comparison of the three cameras: Leica M-E, FUJIFILM X100s, Canon 40D
+
+#+ATTR_HTML: :border 2 :rules all :frame border
+|                    | Leica M-E                   | FUJIFILM X100S                                                          | Canon 40D                                      |
+|--------------------+-----------------------------+-------------------------------------------------------------------------+------------------------------------------------|
+| Release date       | September 30, 2012          | January, 2013                                                           | September 10, 2007                             |
+| Capture            | KAF -18500 18 MP CCD Sensor | 23.6mm x 15.8mm (APS-C) X-Trans CMOS II 連三原色濾鏡                    | 10.1MP CMOS                                    |
+| Size WHD           | 138 x 80 x 37mm             | 126.5 (W) x 74.4 (H) x 53.9 (D) mm                                      | 145.5 x 107.8 x 73.5mm                         |
+| Lens               | 50mm f/2.0 SUMMICRON-M Lens | f=23mm, 35mm, F2, 6 組 8 片鏡片                                         | Sigma 17-70mm f/2.8-4 DC MACRO OS HSM （C）    |
+| Weight             | 593g                        | 約445 g / 15.7 oz. (包括電池及記憶卡)                                   | 740g                                           |
+| Lens Weight        | 240g                        | N/A                                                                     | 465g                                           |
+| Total weight       | 833g                        | 445g                                                                    | 1205g                                          |
+| Finder             | 0.68x                       | 混合觀景器 0.5x                                                         | 0.95x                                          |
+| Shutter            | Metal electronic            | mechanical shutter                                                      | ??                                             |
+| Shutter 快門速度   | 1/4,000 - 32s               | (P 模式) 1/4 秒 至 1/4000* 秒, (所有其它模式) 30 至 1/4000* 秒          | 1/8,000 - 30s                                  |
+| Flash Sync         | 1/180                       |                                                                         | 1/250                                          |
+| Price              | $5500 + $2200 lens = $7700  | $1300                                                                   | $1300 +  $500 lens = $1800                     |
+| Resolution         | 18 MP 1800 萬像素           | 16 MP 1630 萬像素                                                       | 10 MP 1000 萬像素                              |
+| Frame Rate         | 2 FPS                       |                                                                         | 6.5FPS                                         |
+| LCD                | 2.5" 230k                   | 2.8 吋, 約 460,000 點                                                   | 3" LCD 230k                                    |
+| ISO 感光度         | 160 - 2500                  | ISO 200 - 6400                                                          | 100 - 1600                                     |
+| File Formats       | DNG, JPEG                   | JPEG (Exif Ver 2.3)*2,RAW (RAF 格式), RAW+JPEG                          | JPG, raw, s-raw (only 2.5MP) and JPG + raw     |
+| Image Sizes        | 5212 x 3472 (18 MP)         | L : (3:2) 4896 x 3264 / (16:9) 4896 x 2760 / (1:1) 3264 x 3264          | 3,888 x 2,592 native                           |
+| Buffer Depth       | 7                           | 8/9                                                                     | 75 JPG or 17 raw??                             |
+| Shutter Life[fn:1] | 150,000 cycles              | N/A                                                                     | 100,000 cycles                                 |
+| Built-in Flash     | No                          | 自動閃光 (超級智能閃光燈)                                               | Yes, covers 17mm lens, GN 13m/43' at ISO 100   |
+| Metering           | ?                           | TTL 256 區測光/點/多重/平均                                             | 35 zone evaluative, center weighted, and spot. |
+| Power              | 400 - 600 shots             | 300 shots                                                               | 1,100 shots no flash and 800 with flash        |
+| Focusing mechanism | Rangefinder                 | Reverse Galilean viewfinder with electronic bright frame display        | DSLR                                           |
+| 儲存媒體           | SD / SDHC Memory Cards      | SD 記憶卡 / SDHC 記憶卡/ SDXC (UHS-I) 記憶卡                            | CF卡I or II                                    |
+| 光圏值             | F2 - F16                    | F2 - F16 1/3EV 級                                                       | F2.8-F4 ~ F22                                  |
+| 對焦範圍           | 0.7m - 無限遠               | 一般 約 50cm / 1.6 ft. - 無限遠, 微距 約 10cm - 2.0m / 3.9 in.- 6.6 ft. | 0.22m - 無限遠                                 |
+| 曝光控制           |                             | TTL 256 區測光/點/多重/平均                                             | 35区TTL全开光圈测光                            |
+| 曝光補償           | -3 EV to +3 EV, 1/3 f-stops | -2.0EV - +2.0EV 1/3EV 級                                                | -2.0EV - +2.0EV 1/3EV or 1/2EV 級              |
+| 視頻拍攝           | No                          | 1920 x 1080 像素 (60 fps / 30 fps) 立體聲                               | No                                             |
+
+* Review
+
+** Leica M-E
+- pros
+  - World best lens from Leica
+  - Good quality
+  - Rangefinder
+  - Excellent manual focus operation
+  - After all, it's Leica
+- cons
+  - Very expensive
+  - Outdated LCD, only 230k
+  - No AF
+  - No video
+
+** FIJIFILM X100S
+- pros
+  - Light for travel and daily photography, only half of weight of a leica with lens, and third of weight of a Canon 40D with lens.
+  - Fast AF system
+  - Good LCD resolution
+  - Wonderful Optical Electronic mix viewfinder
+  - With Video recording
+  - Good quality
+  - Good price, only 17% of a leica + 50mm F/2 lens
+- cons
+  - Unchangeable lens
+  - Made in Japan
+
+* Footnotes
+
+[fn:1] http://www.olegkikin.com/shutterlife/
+

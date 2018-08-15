@@ -1,0 +1,50 @@
+#+BEGIN_HTML
+---
+layout: post
+title: elisp function to toggle symbol highlight at the point
+categories: [productivity]
+tags: [emacs]
+---
+#+END_HTML
+
+There is the built-in function in emacs to highlight/unhighlight
+phrases:
+
+#+BEGIN_SRC elisp
+(highlight-phrase REGEXP &optional FACE)
+(unhighlight-regexp REGEXP)
+
+#+END_SRC
+
+They are bounded to key =M-s h p= and =M-s h u= respectively. But they
+are not so convenient that they need the user to input the phrase
+interactively.
+
+So I write a small function to toggle highlight of the symbol at the point:
+
+#+BEGIN_SRC elisp
+(setq kimim-color-list '(hi-yellow hi-green hi-blue hi-pink))
+(setq kimim-color-index 0)
+(setq kimim-color-list-length (length kimim-color-list))
+
+(defun kimim/toggle-highlight-tap ()
+  "Toggle highlight pattern at the point"
+  (interactive)
+  (if (and (listp (get-text-property (point) 'face))
+           (memq (car (get-text-property (point) 'face)) kimim-color-list))
+      (unhighlight-regexp (thing-at-point 'symbol))
+    (progn
+      (highlight-regexp (thing-at-point 'symbol) (nth kimim-color-index kimim-color-list))
+      (setq kimim-color-index (+ kimim-color-index 1))
+      (if (>= kimim-color-index kimim-color-list-length)
+          (setq kimim-color-index 0))
+      )))
+
+(global-set-key [f7] 'kimim/toggle-highlight-tap)
+#+END_SRC
+
+Firstly, a list of highlight color is defined for cycling different
+color for different symbols. Then the function
+=kimim/toggle-highlight-tap= is used to toggle the symbol to highlight
+or to unhighlight if it is highlighted. And finally, I bind this
+function to key =F7= for quick access.

@@ -1,0 +1,120 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：速度和芹菜无关
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* celerity
+
+上次学到芹菜 celery 的时候偶遇了单词 celerity。看起来像是芹菜的某些名词属性，后
+来一查才知道跟芹菜没什么关系，是速度快的意思。
+
+人需要某种联系来帮助增强记忆。
+
+这也是为什么前段时间王宝强的新闻这么受人们关注。我觉得人们潜意识中有一种想把生活
+过的每一天都好好记住保存的愿望，倘若把一个普通的日子与公众人物私人生活的重大变更
+联结在一起，参与到讨论中去，这个普通的日子 2016 年 8 月14 日就变得很有意义了，也
+就很好的在记忆中保存了这一天。尽管王宝强离婚事件和普通人没有一毛钱关系。
+
+从人的生物属性去分析，可能因为我们的头脑中的神经元是空间网状结构互相联系着的，所
+以用联想的方式去记忆更符合人脑的生物特性。
+
+所以在学会了芹菜 celery 之后再顺便学一学快速celerity，就把芹菜和速度联系在一起了。
+这两个概念在头脑中形成关联，就很难忘记了。
+
+While it looks a lot like celery, celerity means something that vegetables are
+not — fast moving. Gossip often travels with celerity, as do children trying to
+get to a big plate of cookies.[fn:1]
+
+- He moved with a celerity that amazed me, when I remembered how exasperatingly
+  slow he could be, fooling with kites.
+- Celerity is the soul of warfare. 兵贵神速。
+- I am by no means convinced that you would be gone with such celerity. 我怎么也
+  不信你做事情居然这么当机立断。
+- Celerity Management 灵捷管理[fn:2]，敏捷管理（Agile Management）的另一种说法。
+
+* celeron
+
+Intel Corporation's trade name for its family of Pentium II microprocessors
+meant for use in low-end computers. [fn:3]
+
+英特尔赛扬处理器。据说是命名是从芯片 cell 演变来的。但我觉得不如说是从 celerity，
+更能表现处理器的高速运转性能。
+
+* accelerate
+
+既然 celerity 是速度，那么 accelerate 自然就是加速之意。
+
+- accelerate economic growth，加速经济发展
+- Didn't you see him accelerate to an impossible speed in an impossible time?
+
+** overaccelerate
+
+过度加速。
+
+- But at the same time, we need to have tactical patience. And I think we need
+  to be careful not to overaccelerate this and actually rush to failure.[fn:4]
+
+* decelerate
+
+减速；制动。
+
+- Sociologists are trying to adopt an approach to decelerate the growth of
+  population. 社会学家正试图采取某种方式减缓人口的增长速度。
+- Crude oil demand is anemic, gasoline demand has decelerated globally, and
+  China crude oil imports are likely to decelerate.[fn:5] 原油需求匮乏（anemic
+  贫血症），全球汽油需求减速，中国原油进口也可能减速。
+
+** deceleration
+
+减速的名词。
+
+- The harder the brake pedal is pressed, the greater the car's deceleration. 刹
+  车踩得越用力，车子减速越猛。
+
+* unaccelerate
+
+非加速。
+
+- Newton's first two laws hold only when observed in unaccelerated reference
+  frames. 牛顿第一、第二定律只有在非加速的参照系中作观察时才是成立的。
+
+* reaccelerate
+
+accelerated again，重新加速。
+
+- Wells Fargo believes 'iPhone 7' will reaccelerate Apple growth, sell 80M+ this
+  holiday.[fn:6] Wells Fargo 相信 iPhone 7 将重新加速苹果的增长，今年假期将创造
+  8000 万销售量。
+- As a result, he states that a new MacBook Pro could be what is needed to
+  reaccelerate Apple’s share gains in the market.[fn:7] 新的 MacBook Pro 也将有
+  助于重新加速苹果市场份额。
+
+* 小结
+
+本文是学习芹菜 celery 的一篇跑题文章，因为 celerity 和 celery 有很高的相似度，所
+以顺带学习一下。celerity 快速，accelerate 加速，有加速就有过加速 overaccelerate，
+在加速 reaccelerate 和不加速 unaccelerate。以及减速 decelerate。
+
+跑题文章的再跑题就是英特尔赛扬处理器型号 Celeron，看似和 celerity 没什么关系。但
+是联想到光子叫 photon，那快速子不就可以叫 celeron 么。这是我瞎掰的，我姑妄言之，
+汝亦妄听之。
+
+* Footnotes
+
+[fn:1] https://www.vocabulary.com/dictionary/celerity
+
+[fn:2] http://wiki.mbalib.com/wiki/%E7%81%B5%E6%8D%B7%E7%AE%A1%E7%90%86
+
+[fn:3] http://www.dictionary.com/browse/celeron
+
+[fn:4] http://www.mprnews.org/story/npr/6952481
+
+[fn:5] http://www.metro.us/news/oil-posts-strong-weekly-gains-analysts-say-rally-unjustified/wrlphs---ZDA0SQppX_qj2If0uuEUJg/
+
+[fn:6] http://appleinsider.com/articles/16/04/26/wells-fargo-believes-iphone-7-will-reaccelerate-apple-growth-sell-80m-this-holiday
+
+[fn:7] http://zenexp.com/new-macbook-pro-with-touchscreen-to-release-after-iphone-7-event-analyst-8290269

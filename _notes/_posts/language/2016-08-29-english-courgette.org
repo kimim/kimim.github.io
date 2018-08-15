@@ -1,0 +1,40 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之西葫芦
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* courgette
+
+说起西葫芦，说实话，从外观来看，本人不太能把它和丝瓜区分开来的。但是两者的口味还
+是有一些差异的。西葫芦更脆一些，略微有些苦味；而丝瓜则嫩一些，有些甜味。从口感和
+口味来看，我更推荐丝瓜。
+
+西葫芦英式英语名字叫 courgette，美式英语叫 zucchini。德语叫 die Zucchini^(de)，
+法语叫 le zucchini^(fr) ou le courgette^(fr)。
+
+总之 courgette 和 zucchini 都可以。看起来好像 zucchini 更全球通用一些。
+
+- Even just one /courgette/ plant will keep you well supplied for much of the
+  summer, and it's one of the easiest veg plants to grow. 一株西葫芦就可提供一整
+  个夏天的果实。这让我想起一个宁波同事，他家院子种了老多的丝瓜黄瓜西葫芦，夏天的
+  时候每天带来冰镇的黄瓜解暑。他说这些都是自家院子里产的，纯天然无污染。真是令人
+  羡慕。
+- Chocolate Zucchini Banana Muffins are the perfect breakfast muffins! They are
+  a great way to use up those garden veggies! 巧克力西葫芦香蕉松饼蛋糕。我实在很
+  难想象会是什么样的口味。如果想尝试下，可以点击附录链接找到食谱做几个尝尝看。[fn:1]
+- Zucchini Bread 还有西葫芦面包[fn:2]
+
+* Summary
+
+西葫芦这样冷门的蔬菜，除了认识怎么拼写，还真不知道能写些什么了。这次的推送内容不
+够丰盛，请多担待了。下次一定会有更有趣的。
+
+* Footnotes
+
+[fn:1] http://www.thebittersideofsweet.com/2016/08/28/chocolate-zucchini-banana-muffins/
+
+[fn:2] http://www.the36thavenue.com/zucchini-chocolate-bread-recipe/

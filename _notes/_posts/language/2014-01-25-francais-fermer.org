@@ -1,0 +1,138 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 單詞本：法語單詞 fermer
+categories: [language]
+tags:
+  - Français
+---
+#+END_HTML
+
+#+BEGIN_VERSE
+On contemplait la mer, on écoutait le vent,
+on se sentait gagner par l'assoupissement de l'extase.
+Quand les yeux sont remplis d'un excès de beauté et de lumière,
+c'est une volupté de les fermer.
+Tout à coup on se réveillait. Il était trop tard.
+La marée avait grossi peu à peu. L'eau enveloppait le rocher.
+
+-- Les Travailleurs de la mer,
+dans Œuvres complètes de Victor Hugo, vol. roman III,
+Victor Hugo
+#+END_VERSE
+
+#+BEGIN_HTML
+<a href="http://www.flickr.com/photos/kimim-photo/12133309465/" title="Flickr 上 kimim-photo 的 fermer"><img src="http://farm8.staticflickr.com/7424/12133309465_ab5972f551_z.jpg" width="640" height="426" alt="fermer"></a>
+#+END_HTML
+
+* fermer
+fermer[fn:1] 在法語中是關閉的意思。比如
+- Fermer une chambre 關上房間
+- Fermer un théatre 關閉劇院（暫時的，或者永久的關閉）
+
+* 詞源
+fermer 來自拉丁語 firmare^(latin) ，這個單詞有加固 affermir^(fr) 固化 solidifier^(fr) 和強化 fortifier^(fr) 的意思。在中世紀拉丁語（Medieval Latin）中，有 archa firmata（封閉的盒子 coffre fermé）。
+
+法語中另外一個單詞 ferme （農場，農莊）看似和關閉無關。但考慮到農莊往往都是有圍墻環繞（ceindre une villa de murailles），就不難理解 ferme 也源自 fermare^(latin) 了。
+
+法語中另一個單詞 clore 也有關閉的意思，來源於拉丁語 claudere^(latin) ("to bar, block, close, enclose, bring an end to, confine")。也是英語 close 的詞源。
+
+* fermer 釋義
+1. Clore ce qui était ouvert, par une porte, un couvercle, une trappe, etc. 關閉原來開著的物品，比如門，蓋子，孔等。
+   - Elle vit plusieurs fois s'ouvrir et se fermer la porte, et à chaque fois, par l'entrebaillement, elle aperçut Catherine rajeunie par l’action.
+   - Fermer une chambre
+   - Fermer une cour
+2. Clore un édifice, un établissement, un lieu de réunion, etc., en vue d'interrompre ce qui s'y faisait, momentanément ou définitivement. 關閉建築，機構，聚所等。暫時或永久的關閉。
+   - Fermer un théatre.
+   - Fermer un bureau.
+   - Les maisons de commerce ferment les dimanches et les jours de fête.
+3. Interdire, mettre en interdiction. 禁止，取締
+   - Faire fermer une école pour cause d'épidémie. 因傳染病流行而關閉一所學校。
+   - Cette maison de jeu, cette salle de bal a été fermée par ordre supérieur. 此娛樂會所和舞廳被上級命令取締。
+4. Cesser un commerce, une occupation. 中止經營、職務
+   - Fermer boutique, cesser son commerce
+5. Boucher une ouverture, une entrée, un passage et se dit en parlant des objets qui servent à la clôture. 封閉洞口，入口，通道。
+   - Fermer la porte.
+   - Fermer un judas[fn:2].
+   - Fermer une écluse.
+   - Fermer la porte à clef, au verrou.
+6. Interrompre un passage, le rendre impossible ou très difficile. 中斷通道使難以通行。
+   - Fermer un chemin, une allée, une issue.
+   - Faire fermer des fenêtres avec des grilles 通過百葉窗遮擋窗口
+7. Empêcher, par une résistance, par une défense quelconque, l'accès, l'entrée ou la sortie. 用障礙物，防禦物封鎖出入口。
+   - Ce corps d'armée ferme le passage à l'ennemi.
+   - Fermer les ports, les mers, les chemins.
+   - Fermer à quelqu'un le chemin des honneurs. 阻攔某人通向榮譽之路。
+8. Enclore. 環繞
+   - Fermer une ville, un parc, un jardin, enclore de murailles, de haies, de fossés. 用圍墻，籬笆，溝渠環繞城市，公園，花園。
+   - La grande muraille qui ferme la Chine au nord. 長城封鎖了中國北部。
+9. Rapprocher l'une contre l'autre des parties dont l'écartement formait une ouverture. 閉合
+   - Fermer un sac, une bourse. 合上袋子，皮夾
+   - Fermer la main.
+   - Fermer un livre.
+10. Clore, arrêter, terminer. 終止，停止，結束。
+    - Fermer un compte.
+    - Fermer une discussion.
+    - Fermer les débats.
+    - Fermer une liste, une souscription.
+    - Son nom ferme la liste.
+
+* fermer 的擴展學習
+** 同義詞
+clore 是 fermer 的書面語。Une enceinte hermétiquement close. 一個封閉的外殼。Clore un jardin. 關閉花園。Clore les passages. 關閉通道。Clore les yeux. 合上眼睛。Cela clôt le débat. 結束爭論。Clore une discussion.結束討論。Cette porte, cette fenêtre ne clôt pas bien. 門窗關閉的不好。
+
+Ce verbe n'est guère usité, outre l'infinitif, qu'aux trois personnes du singulier du présent de l'indicatif, je clos, tu clos, il clôt, à la seconde personne du singulier de l'impératif, clos et au participe passé, clos, close.
+
+** 反義詞
+- ouvrir :: öffnen^(de), open^(en)
+
+** 生成詞
+- enfermer :: 1) Mettre quelqu'un ou quelque chose dans un lieu fermé de tous côtés. Enfermer un homme dans une prison. Enfermer des chevaux dans une écurie[fn:3]. 2) Mettre quelqu'un dans un asile[fn:4] psychiatrique, dans une prison. C'est un homme à enfermer. 3) Serrer, mettre une chose dans un lieu, dans un meuble[fn:5], que l'on ferme, pour la mieux conserver, pour la soustraire aux regards, pour la garder plus sûrement. Enfermer des habits dans une armoire. Enfermer des papiers dans un secrétaire. 4) Environner de toutes parts. Enfermer un parc de murailles. 5) Contenir, comprendre. Ce passage enferme beaucoup de vérités.
+- enfermé :: adj. 閉合的。
+- enfermement :: n.m. 關閉，監禁，妥藏，閉門不出。
+- réenfermer, ré-enfermer ::
+- renfermer :: vt 1) 把…關住；把…重新關住，重新監禁：renfermer un prisonnier évadé 把逃犯重新關起來； 2) 把…鎖起來妥藏：renfermer des objets dans un tiroir 把一些物品鎖在抽屜裡； 3) [轉]隱藏（思想，感情）：renfermer ses chagrins dans son cœur 把悲痛藏在心裡； 4) 限制，局限於：renfermer sa matière en deux points 把問題限制在兩個方向； 5) 藏有；[轉]包含，含有：une maxime qui renferme un sens profond 一句含有深刻意義的格言。
+- se renfermer :: v. pr. 1) 閉門不出：se renfermer dans sa chambre 把自己關在房間裡 se renfermer sur soi-même 自我封閉； 2) [轉]使自己局限於：se renfermer dans le silence 保持緘默， se renfermer en soi-même 不暴露感情；集中註意力。
+- fermeture :: f. 關閉，封閉，鎖閉；鎖閉裝置，關閉裝置；關門，歇業，停業；結束 n.f. 關閉,鎖閉;關門,歇業,停業,結束;關閉裝置,閉鎖機構 la fermeture du bureau de poste, l'heure de fermeture de la banque. fermeture éclair v. 拉鏈/拉鍊 fermeture à glissière^(fr), fermeture à crémaillère^(fr), zip^(fr). der Reißverschluss^(de). zipper^(en), zip fastener^(en).
+- fermeté :: n.f. 1) état de ce qui est ferme, difficile à ébranler, de ce qui ne chancelle point. Ne marchez pas sur la glace, elle n'a pas encore assez de fermeté. 2) Qualité d’un corps solide, compact. La fermeté des chairs. 3) Vigueur, force. Fermeté de la main, Sûreté, assurance de la main pour exécuter quelque chose. Ce chirurgien n'a pas assez de fermeté dans la main. 4) Fermeté d'esprit, de jugement, se dit de la rectitude et de la solidité de l'esprit. 5) (Dessin et musique) Exécution vigoureuse et hardie. Fermeté de pinceau, de crayon. Le jeu de ce musicien a beaucoup de fermeté. 6) Assurance, en parlant de la Manière d’agir ou de parler. Parler, répondre avec fermeté. La fermeté de son regard. 7) Constance, énergie, force morale qui fait braver les obstacles, les périls, qui rend capable de supporter, sans se plaindre, les souffrances, les revers, etc. Une politique sans fermeté.
+- fermé :: adj. 1) Qui n'est pas ouvert. Théorème de Jordan -- Toute courbe fermée simple du plan sépare ce dernier en deux composantes. 在拓撲學中，若爾當曲線定理說明每一個平面上的非自交環路（又稱為若爾當曲線），都把平面分成一個「內部」區域和一個「外部」區域，且任何從一個區域到另一個區域的道路都必然在某處與環路相交。它由奧斯瓦爾德·維布倫在1905年證明。[fn:6]
+- autofermer, auto-fermer :: Se fermer de soi-même.
+- fermail :: n.m. (Vieilli) Agrafe. 【旧】搭扣，拉链（pl. ～aux）
+- fermant :: 1) Qui se ferme. adj. 可关闭的； 2) (En particulier) Qui se ferme à clef. Meuble fermant.
+- fermoir :: n.m. Sorte de fermeture, serrure ou ressort s'appliquant à certains objets, tels que livres, colliers, bracelets, médaillons, coffrets, etc. (扣住書、項鍊等的)搭扣，鎖扣，扣鉤，扣環，鑿子。Des fermoirs d‘or. Des fermoirs d’argent. clasp^(en), hook^(en), agraf^(en), hooks and eyes^(en); Agraffe^(de), Spange^(de), Häkchen^(de), Klammer^(de), Heftel^(de), Drahthaken^(de), Falz^(de).
+- affermer :: 租貸，出租，佃，租佃。Donner à ferme ou prendre à ferme 租出或租入農田。
+- fermage :: n.m. 1) (Agriculture) Statut réglant les rapports entre les propriétaires ruraux et les fermiers (qui exploitent les terres).（土地的）租種，租佃；佃出； 2) (Agriculture) Prix convenu pour le bail d'une ferme. <引>（土地的）租金，地租。Payer les fermages. Il me doit beaucoup de fermages.
+- fermier ::
+- fermière :: 1) n.m. 有承租權者；佃農，佃戶；農莊主，農場主；農夫，農民； 2) adj. Relatif à la ferme, au fermage, au fermier. Une compagnie, une société fermière.
+** 英法德翻譯
+- close^(en) :: fermer.
+- schließen :: 1) 關、關閉、關上； 2) 結束、完成； 3) 下結論； 4) 包含、包括； 5) 推論
+  - Tür bitte schließen!
+  - Der Reißverschluss schließt nicht mehr.
+  - Wir müssen jetzt schlie?en, bitte kommen Sie morgen wieder.
+  - Ich schließe daraus, dass ich einen anderen Weg gehen muss.
+  - [(aus + datif) Déduire^(fr)] Ich schließe aus diesem Brief, dass er nicht froh ist.
+  - [(aus + datif) Conclure^(fr)] Daraus kann man schließen, dass das Unternehmen Geld verdient.
+- verschließen :: 1) vt. 關閉，給……上鎖，2) vr. 不理會，拒絕
+  - Verschließen Sie die Tür.
+  - Sie verschloss den Schmuck in ihrem Tresor.
+- zuschließen :: to lock
+  - Die alte Tür ließ sich mit Mühe und Not und knarrend zuschließen.
+- zumachen :: to close
+  - Er machte das Fenster zu.
+  - Mach zu, wir müssen weiter!
+  - Er schloss die Schublade mit den wichtigen Daten zu.
+
+* Footnotes
+
+[fn:1] http://fr.wiktionary.org/wiki/fermer
+
+[fn:2] le judas：叛徒，窺視孔。Judas：猶太。
+
+[fn:3] n.f. 厩，马厩，马房，牲口棚；同一主人的赛马用的马匹；为同一品牌的汽车或是自行车参赛的运动员；受同一出版商支持的作家
+
+[fn:4] n.m. 避难所，庇护所，隐蔽处；收容所，救济处；幽静处；庇护，保护
+
+[fn:5] n.m. 家具；[法]动产
+
+[fn:6] http://en.wikipedia.org/wiki/Jordan_curve_theorem

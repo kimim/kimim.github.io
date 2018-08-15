@@ -1,0 +1,103 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：蔬菜之芹菜
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* celery
+
+上一篇蔬菜系列学习了花菜（cauliflower）和西兰花（broccoli）。今天来看一看芹菜
+celery。这个单词在之前系列文章的例句中也出现过。现在来整理整理吧。
+
+不过 celery 不是我们国人常吃的那种细细的芹菜，而是很粗的西芹。细细的芹菜称之为
+Chinese celery。但是还有个单词 parsley 也是西芹欧芹。这样我就分不清 celery 和
+parsley 到底有什么区别了。
+
+还好有百度知道：
+#+BEGIN_QUOTE
+celery 一般指平时所说的西芹，和我们在菜场看到的普通芹菜还不太一样，很粗大，可以
+直接作为蔬菜食用的，比如在西餐中作为烤鸡翅的配菜沾奶酪调味汁吃。
+
+parsley 并不是西芹，中文译名为欧芹或是法香，作为西餐中非常常用的一种香料，中餐馆
+里也用它作装饰，有扁叶和卷曲叶两种，两种植物并不是同一属，相差比较多。[fn:1]
+#+END_QUOTE
+
+- Chinese celery is used in cooking more for its flavor than for its texture,
+  and is rarely served by itself as a vegetable. It has a crunchy, watery
+  flavor.[fn:2] 这里说芹菜主要用来调味，因为口感脆脆的淡淡的。但是我好像经常吃肉
+  丝炒芹菜啊，口感脆脆的很好吃。
+
+据说西芹榨汁喝还能排除毒素[fn:3]：
+#+BEGIN_QUOTE
+Celery is chock-full of dietary fiber that keeps your bowels healthy and
+clean. It also contains antioxidants like quercetin and phenolic acids that
+fight inflammation and oxidative stress. The healthy veggie is used to treat
+treating joint pain, lower blood pressure, fight cancer and soothe the nervous
+system. Plus, it’s very low in calories.
+#+END_QUOTE
+
+西芹 celery 法语 le céleri^(fr)，德语 der Sellerie^(de)。都是阳性，发音也都一样。
+最喜欢这样的单词了，很通用。
+
+- a stick of celery 一根芹菜，une côte de céleri^(fr)
+- a head of celery 一棵芹菜，un pied de céleri^(fr)
+
+欧芹 parsley 法语 le persil^(fr)，德语 die Petersilie^(de)。
+
+* Celery project
+
+另外 Celery 还是 Python 的一个消息分发系统。
+
+#+BEGIN_QUOTE
+Celery: Distributed Task QueueCelery is an asynchronous task queue/job queue
+based on distributed message passing.[fn:4]
+#+END_QUOTE
+
+用起来还挺方便的，比如以下例子创建一个任务执行器，然后用 @app.task 指定 hello()
+函数分发给该任务执行。
+
+#+BEGIN_SRC python
+from celery import Celery
+
+app = Celery('hello', broker='amqp://guest@localhost//')
+
+@app.task
+def hello():
+    return 'hello world'
+#+END_SRC
+
+* Parsley JavaScript project
+
+既然西芹被用作开源项目名字，欧芹也不能输。有个 JavaScript 项目叫 ParsleyJS[fn:5]
+主要用来验证 HTML 页面表格输入是否合法。比如输入一个邮箱地址要有字符串中间要有 @，
+@ 后面要是合法的域名。
+
+* celeriac
+
+这是另外一种芹菜，主要食用它的块根。le céleri-rave^(fr) 我是没有见过也没有吃过的。
+据说可以放汤吃。
+
+* 总结
+
+今天学习了这几个蔬菜：
+- 西芹： celery， le céleri^(fr)，der Sellerie^(de)
+- 欧芹：parsley，le persil^(fr)，die Petersilie^(de)
+- 根芹：celeriac，le céleri-rave^(fr)
+
+以及两个开源项目 celeryproject.org 和 parsleyjs.org。下回要发起 C 语言的开源项目
+可以考虑用 celeriac，这个单词结尾就是 C 呀。
+
+* Footnotes
+
+[fn:1] http://zhidao.baidu.com/link?url=rui0t8MccCfQnxATrFcu07h1c2DHRBDR79uDs6X2Nb9EkgkJJs52Iq1wdrA8zuwt-S7BBegmIvsFZqh8Nzldj_
+
+[fn:2] https://en.wikipedia.org/wiki/Chinese_celery
+
+[fn:3] http://health-flash.com/3-ingredient-celery-juice-to-quickly-detox-your-kidneys-heart-and-joints/
+
+[fn:4] http://www.celeryproject.org
+
+[fn:5] http://parsleyjs.org

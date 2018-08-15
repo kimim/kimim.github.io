@@ -1,0 +1,69 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Remove GREP_OPTIONS is deprecated warning
+categories: [productivity]
+tags: [emacs]
+---
+#+END_HTML
+
+#+BEGIN_SRC
+$ grep --version
+grep (GNU grep) 2.21
+Copyright (C) 2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Mike Haertel and others, see <http://git.sv.gnu.org/cgit/grep.git/tree/AUTHORS>.
+#+END_SRC
+
+The new version of grep(version 2.21) seems deprecated the usage of
+=GREP_OPTIONS=. When I execute grep command in =emacs=, the warning:
+'=grep: warning: GREP_OPTIONS is deprecated; please use an alias or
+script=' will always show as below:
+
+#+BEGIN_SRC
+-*- mode: grep; default-directory: "c:/emacs/" -*-
+Grep started at Mon Feb 16 09:53:48
+
+find . -type f -print0 | xargs -0 -e grep -n -e GREP_OPTIONS
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+./share/emacs/24.4/lisp/progmodes/grep.el:80:markers for highlighting and GREP_OPTIONS to add the --color
+./share/emacs/24.4/lisp/progmodes/grep.el:470:    (setenv "GREP_OPTIONS"
+./share/emacs/24.4/lisp/progmodes/grep.el:471:	    (concat (getenv "GREP_OPTIONS")
+Binary file ./share/emacs/24.4/lisp/progmodes/grep.elc matches
+grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+
+Grep exited abnormally with code 123 at Mon Feb 16 09:53:50
+#+END_SRC
+
+When I dug into the =elisp= code
+=c:/emacs/share/emacs/24.4/lisp/progmodes/grep.el::470=, I find
+=GREP_OPTIONS= are used:
+
+#+BEGIN_SRC lisp
+    (setenv "GREP_OPTIONS"
+	    (concat (getenv "GREP_OPTIONS")
+		    " --color=" (if (eq grep-highlight-matches 'always)
+				    "always" "auto")))
+#+END_SRC
+
+You can just comment above lines of code, the world will be quiet
+again. Remember to byte compile =grep.el= again.
+
+#+BEGIN_SRC
+-*- mode: grep; default-directory: "c:/emacs/" -*-
+Grep started at Mon Feb 16 09:53:48
+
+find . -type f -print0 | xargs -0 -e grep -n -e GREP_OPTIONS
+./share/emacs/24.4/lisp/progmodes/grep.el:80:markers for highlighting and GREP_OPTIONS to add the --color
+./share/emacs/24.4/lisp/progmodes/grep.el:470:;;    (setenv "GREP_OPTIONS"
+./share/emacs/24.4/lisp/progmodes/grep.el:471:;;	    (concat (getenv "GREP_OPTIONS")
+Binary file ./share/emacs/24.4/lisp/progmodes/grep.elc matches
+#+END_SRC

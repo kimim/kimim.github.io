@@ -1,0 +1,45 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 一個簡單主義者的裝機必備軟件
+categories: [productivity]
+tags: [tools]
+---
+#+END_HTML
+
+用了三年的電腦重裝係統了，從頭安裝配置一些必備軟件，做一個記錄，下次可以參考，也分享給別人。
+
+- Dropbox[fn:2] :: 用來同步我的文件和工具。
+- Box Sync[fn:3] :: 用來同步一些 PDF 電子書。因爲 Box 提供 50G 的免費空閒。Dropbox 只有 7G。但是 Dropbox 可以同步速度，還支持 .emacs.el 這樣以 . 開頭的文件。Box 不支持。
+- Emacs[fn:4] :: 編輯器，閲讀代碼，個人 GTD 任務管理，記筆記，gnus 查看郵件。在環境變量裏設置 HOME 路徑到 Dropbox 中的 Home 文件夾。這樣 emacs 的配置文件就可以在多台電腦上同步。
+- Doublecmd[fn:1] :: 類 Total Commander 的開源文件管理器。Doublecmd 的配置文件也都在 Dropbox 裏同步。
+- cygwin[fn:5] :: 在 Windows 7 下使用 GNU 軟件： gcc, make, global, mintty terminal, grep, git, svn...
+- Inkscape[fn:6] :: 開源的矢量繪圖軟件。
+- Paint.net[fn:7] :: 比 Windows 自帶的畫圖軟件好用。
+- Mozilla firefox[fn:8] :: 網絡瀏覽器，可以通過 firefox sync 同步插件和收藏夾。
+- WinMerge[fn:9] :: 文件，文件夾比對軟件。
+
+以上軟件有綠色版的就用綠色版，放在 Dropbox 的 Tools 文件夾裏同步到雲端，比如 Doublecmd，Inkscape，WinMerge。不能同步的和體積龐大的，就把配置文件同步到 Dropbox 裏，比如：Emacs, Paint.net, Firefox。
+
+* Footnotes
+
+[fn:1] http://doublecmd.sourceforge.net/
+
+[fn:2] https://www.dropbox.com/downloading
+
+[fn:3] https://sites.box.com/sync4
+
+[fn:4] http://www.gnu.org/software/emacs/
+
+[fn:5] http://www.cygwin.com/
+
+[fn:6] http://inkscape.org/en/download/
+
+[fn:7] http://www.getpaint.net/download.html
+
+[fn:8] http://www.mozilla.org/en-US/firefox/new/
+
+[fn:9] http://winmerge.org/
+
+
+

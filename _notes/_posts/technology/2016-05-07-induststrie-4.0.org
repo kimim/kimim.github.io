@@ -1,0 +1,69 @@
+#+BEGIN_HTML
+---
+layout: post
+title:  工業 4.0 的基本概念
+categories: [technology]
+tags: [industry]
+---
+#+END_HTML
+
+最近幾年來“工業 4.0” 這個概念變得很火。政府在提倡，企業在跟進，大家在熱議。作為工
+業自動化行業的小白，好好做功課學習是義不容辭的事情了。
+
+* 名詞解析
+
+“工業 4.0” 從字面看，包含兩部分，首先是“工業”，其次是“4.0”。
+
+首先，工業（industry）是指採集原料，並把它們加工成產品的工作和過程。是第二產業的
+重要組成部分，分為輕工業和重工業。2014 年中國工業總產值達到 4 萬億美元，號稱超過
+了美國，成為世界頭號工業生產國[fn:1]。2015 年的工業總產值達到了 4.18 萬億美元。
+（27.17645  萬億人民幣）[fn:2]
+
+其次，4.0 這種數字在軟件領域常用來表示第四個大版本。在這裡用來表示工業的第四代階
+段。那麼相應的前幾代分別是工業 1.0，工業 2.0 和工業 3.0。
+- 工業 1.0 的主要代表是機械化（mechanization）， 水力（water power），蒸汽機
+  （steam power）。
+- 工業 2.0 以大規模生產（mass production），生產線（assembly line），電力為代表。
+- 工業 3.0 以電子設備，信息技術，計算機輔助和自動化為代表的現代化生產。
+
+工業 4.0 以智能集成傳感系統（Cyber-Physical Systems，CPS）為核心，引入物聯網
+（Internet of Things，IoT），雲計算（Cloud Computing），大數據分析（Big Data），
+智能工廠（Smart Factory）等概念第四代工業革命。其目的是講所有工業相關技術統合在
+一起，創建具有適應性，資源高效率用，優化整合價值鏈，萬物互聯的具有感知意識的新型
+智能工業世界。
+
+* 工業 4.0 的誕生
+
+”工業 4.0“ 這個概念最早是在 2011 年的漢諾威工業展上提出的：
+
+#+BEGIN_QUOTE
+Zur Hannover Messe tritt die Initiative "Industrie 4.0" an die
+Öffentlichkeit. Henning Kagermann, Wolf-Dieter Lukas, Wolfgang Wahlster, drei
+Vertreter aus Wirtschaft, Politik und Wissenschaft, zeigen im nachfolgenden
+Beitrag, wie der Paradigmenwechsel in der Industrie ablaufen wird. In der
+nächsten Dekade werden auf der Basis Cyber-Physischer Systeme neue
+Geschäftsmodelle möglich. Deutschland könnte hierbei "die erste Geige" spielen.
+#+END_QUOTE
+
+2011 年的 4 月 4 日，Henning Kagermann 等人向德國政府倡議發展基於
+Cyber-Physischer Systeme 技術的“工業 4.0”規劃。此後，在 2013 年 4 月 8 日的
+Hannover Messe 上，Siegfried Dais 和 Henning Kagermann 展示了 Industrie 4.0 工作
+小組報告戰略計劃。德國政府計劃為此投入 2 萬億歐元。從此，工業 4.0 成為德國的一個
+重要標籤，全球範圍內引發了新一輪的轉型競賽。
+
+去年，中國政府實施了製造強國戰略第一個十年行動綱領《中國製造 2025》規劃，可以認
+為是中國版的工業 4.0 計劃：
+
+#+BEGIN_QUOTE
+Laut Medienberichten soll dem chinesischen Staatsrat ein Plan „Made in China
+2025“ – die chinesische Version von „Industrie 4.0“ – vorgelegt werden.[fn:3]
+#+END_QUOTE
+
+* Footnotes
+
+[fn:1] http://finance.people.com.cn/n/2013/0904/c1004-22803247.html 中国工业产值
+超美国26% 取代其成头号制造国
+
+[fn:2] http://data.stats.gov.cn/easyquery.htm?cn=C01
+
+[fn:3] http://german.people.com.cn/n/2015/0323/c209052-8867323.html

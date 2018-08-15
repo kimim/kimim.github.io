@@ -1,0 +1,81 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 單詞本：德語單詞 der Sauerstoff
+categories: [language]
+tags:
+  - Deutsch
+---
+#+END_HTML
+
+#+BEGIN_HTML
+<a href="https://www.flickr.com/photos/kimim-photo/13230986374/" title="Flickr 上 kimim-photo 的 大華飯店的綠色草地"><img src="https://farm4.staticflickr.com/3820/13230986374_c4a236430d_z.jpg" width="640" height="427" alt="大華飯店的綠色草地"></a>
+</p>
+#+END_HTML
+
+一個星期下來堆積了很多單詞等著學習。周末的樂趣在於，它是完全屬于自己的時間。自由，隨意，無拘無束。可以享受純粹的學習的快樂。
+
+無意閒看到這個德語單詞 Der Sauerstoff，氧氣^zh 。直譯成英語就是 sour stuff，再直譯成中文就是酸（餿）素。日語就直譯了這個單詞：酸素（さんそ）は原子番号8の非金属元素[fn:1]。一開始我以爲這是由於很早的時候，人們把食物放置在空氣中，食物就餿掉[fn:2]，所以就稱呼氧氣為餿素。
+
+但是事實上 wikipedia 是這樣的介紹的：“氧氣（Oxygen）希臘文的意思是「酸素」，該名稱是由法國化學家拉瓦錫所起，原因是拉瓦錫錯誤地認為，所有的酸都含有這種新氣體。現在日文裡氧氣的名稱仍然是「酸素」。而台語受到台灣日治時期的影響，也以「酸素」之日語發音稱呼氧氣。[fn:3]”
+
+* 詞源
+
+德語的 Sauerstoff überträgt von französisch oxygène. 而法語裏得氧氣是 L'oxygène 則是法國人拉瓦錫最早提出來的。
+
+這個詞來自古希臘文 oksus （酸； aigre, acide^fr ）和 gennan （產、生、源; qui engendre^fr ），即“酸之源”的意思。空氣中的另一部分氮氣稱爲 azote，來自希臘文 a（沒有）和 zoe（生命），是“不能維持生命”的意思[fn:4]。
+
+* 詞組，例句與格言
+- Sauerstoff ist ein chemisches Element mit dem Elementsymbol O und der Ordnungszahl 8[fn:8].
+- Der Mensch braucht Sauerstoff zum atmen. 人們需要氧氣呼吸。
+- La molécule d'eau est composée d'un atome d'oxygène.^fr Das Wasser-Molekül besteht aus einem Sauerstoff-Atom und zwei Wasserstoff-Atomen in einer gewinkelten Anordnung.^de [fn:5] 這裡又出現個有趣的單詞 der Wasserstoff 水素。
+- Die Luft besteht zu fast einem Fünftel (Volumen) aus Sauerstoff. Im Normzustand ist Sauerstoff ein farbloses, geruchloses und geschmackloses Gas[fn:7].
+- Gaz constitué d'oxygène moléculaire (dioxygène O_2 ), à conditions normales de pression et de température. Il est invisible et inodore et représente 21% de l'air ambiant en volume[fn:6].
+
+* 詞彙拓展
+** 氧氣相關衍生詞彙
+- 氧化 Oxidation^de 例如： Wenn Natrium und Chlor miteinander reagieren, dann findet eine Oxidation des Natriums statt. 不過這裡 Oxidation 應該是鈉和氯化合。Die Oxidation (oder Oxydation) ist eine chemische Reaktion, bei der ein zu oxidierender Stoff (Elektronendonator) Elektronen abgibt. 反義詞： reduction, die Reduktion^de, la réduction^fr
+- 缺氧 hypoxia^en, la hypoxie^fr, die Hypoxie^de : Sauerstoffmangel im Körpergewebe. asphyxia 窒息； anoxia an- + ox(ygen) + -ia 缺氧症；
+  - Hypoxie (Sauerstoffmangel) und Unreife sind für mehr als 50 Prozent der Frühsterblichkeit und für eine Vielzahl von Hirnschädigungen verantwortlich.[fn:9]
+  - Fische leiden unter Sauerstoffmangel. Fish suffer from lack of oxygen
+- 氧原子 der Sauerstoff-Atom^de
+
+
+** 常見幾種氣體之英法德單詞
+- 氫氣，hydrogen, le hydrogène, der Wasserstoff
+- 氦氣，helium, le hélium, das Helium
+- 氟氣，fluorine, le fluor, das Fluor
+- 氖氣，neon, le néon, das Neon
+- 氮氣，azote, l'azote, der Stickstoff
+- 氯氣，chlorine, le chlore, das Chlor
+- 氨氣， ammoniac,  l'ammoniac, das Ammoniak
+
+** 常見幾種氧化物(die Sauerstoffverbindungen)之英法德單詞
+- 氧化物 Oxygen compound^en, le composé de l'oxygène^fr, die Sauerstoffverbindungen^de
+- 二氧化碳 Carbon dioxide^en, le dioxyde de carbone^fr, das Kohlendioxid^de
+- 一氧化碳 Carbon monoxide^en, le monoxyde de carbone^fr, das Kohlenmonoxid^de
+- 雙氧水 Hydrogen peroxide^en, Wasserstoffperoxid^de, l'eau oxygénée^fr. Je me suis décoloré les cheveux avec de l'eau oxygénée.
+- 二氧化硫 Sulfur dioxide^en, le dioxyde de soufre^fr, das Schwefeldioxid^de. Schwefeldioxid (SO2) ist ein farbloses, stechend riechendes, wasserlösliches Gas.
+- 二氧化硅 Silica^en, la silice^fr, Kieselerde^de. Kieselsäure (oder Kieselerde) kommt in der Natur hauptsächlich als Salz (Silikat) vor. Es hat seinen natürlichen Ursprung als Mineral im Sandstein.
+
+今天已經搜索了夠多的氧氣相關單詞了。外面剛下了雨，空氣很清新。該出門呼吸呼吸新鮮空氣了。Gehen Sie für frischen Sauerstoff et sortez de l'oxygène frais.
+
+* Footnotes
+
+[fn:1] [[http://ja.wikipedia.org/wiki/%25E9%2585%25B8%25E7%25B4%25A0][http://ja.wikipedia.org/wiki/酸素]]
+
+[fn:2] sour: adj. 有酸味的； 敵對的； 壞脾氣的； 彆扭的. vi. 變酸，變餿； 發酵； 厭煩； 敗壞. vt. 變壞，惡化； 使變酸；
+
+[fn:3] [[http://zh.wikipedia.org/wiki/%25E6%25B0%25A7#.E5.90.8D.E7.A8.B1.E7.94.B1.E4.BE.86][http://zh.wikipedia.org/wiki/氧]]
+
+[fn:4] http://fr.wiktionary.org/wiki/oxyg%C3%A8ne#.C3.89tymologie
+
+[fn:5] [[http://www.chemgapedia.de/vsengine/vlu/vsc/de/ch/8/bc/vlu/chem_grundlagen/wasser.vlu/Page/vsc/de/ch/8/bc/chemische_grundlagen/wasser1.vscml.html][Bau des Wasser-Moleküls]]
+
+[fn:6] http://fr.wiktionary.org/wiki/oxyg%C3%A8ne
+
+[fn:7] http://www.lenntech.de/pse/elemente/o.htm
+
+[fn:8] http://de.wikipedia.org/wiki/Sauerstoff
+
+[fn:9] http://de.wikipedia.org/wiki/Hypoxie

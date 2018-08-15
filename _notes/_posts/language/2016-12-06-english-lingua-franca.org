@@ -1,0 +1,125 @@
+#+BEGIN_HTML
+---
+layout: post
+title: 单词本：通用语言
+categories: [language]
+tags: [English]
+---
+#+END_HTML
+
+* 琐碎的前言
+
+今天又收到同学们的留言，督促我赶紧发布更新。谢谢来自新加坡的 Mr. Z 同学提醒，离上
+次更新转眼又过去了 2 周了。
+
+前几天跟我的同事聊起来，都说年纪越来越大，一年过得越来越快。一周感觉就像过了一天，
+一年就像一两个月。深深的觉得“日月忽其不淹兮，春与秋其代序，汨余若将不及兮，恐年
+岁之不吾与”。
+
+不过，看到这两周公众号的订阅用户增长了 8 位，还是觉得挺开心的。
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/31089026390/in/dateposted-public/" title="公众号用户数"><img src="https://c7.staticflickr.com/6/5601/31089026390_0f5f635319_z.jpg" width="640" height="422" alt="公众号用户数"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+不如就设定一个小目标：每增长 5 位订阅用户，就不论有多忙，披星戴月也要写一篇新文
+章。
+
+之前学习了不少蔬菜水果的单词，感觉有点腻烦了，今天换些不一样的。前几天看书，遇到
+这句话：
+
+#+BEGIN_QUOTE
+C is the lingua franca of programming, and you should be competent in making
+heads and tails of it.
+#+END_QUOTE
+
+意思是说，C 编程语言是编程语言中的通用语言，你必须对它非常了解。
+
+* Lingua franca
+
+wikipedia 是这么解释的[fn:1]：
+
+#+BEGIN_QUOTE
+A lingua franca /ˌlɪŋɡwə ˈfræŋkə/ also known as a bridge language, common
+language, trade language or vehicular language, is a language or dialect
+systematically used to make communication possible between people who do not
+share a native language or dialect, particularly when it is a third language
+that is distinct from both native languages.
+#+END_QUOTE
+
+lingua franca 又叫桥语言，共同语言，贸易语言，传输语言。总之是一种在不同母语人群
+之间可以沟通的语言。
+
+之所以说 C 语言是计算机编程语言的 lingua franca 是因为它是使用最广泛、最简洁的语
+言，同时很多其他语言，比如 Java，C++，C#，Python 都或多或少继承借用了 C 语言的一
+些语法。而且这些语言也是非常流行的。
+
+当今世界，最主要的 lingua franca 应该非英语莫属了。但是在人类历史上，欧洲和东亚
+的 lingua franca 分别是法语和文言文[fn:2]：
+
+#+BEGIN_QUOTE
+The popularity of languages changes over time, and there are many lingua francas
+that are of historical importance. These include French, which was the language
+of European diplomacy from the 17th until the mid-20th century, and Classical
+Chinese, which served as both the written lingua franca and the diplomatic
+language in Far East Asia until the early 20th century. French and Chinese are
+still significant lingua francas today.
+#+END_QUOTE
+
+20 世纪前，蒙古，高丽，日本，琉球，越南国都曾以文言文作为通用书面语和外交语言。
+可惜慢慢的他们也不再学讲中国话了，大概一方面中国国力日渐衰弱，另外一方面中国开始
+了白话文改革了，周边国家也懒得学白话文了。总之，几百年前，蒙古、日本国王贵族都曾
+以会写汉字为荣的：
+
+#+BEGIN_EXPORT html
+<img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/LetterFromKhubilaiToJapan1266.jpg"
+width="640" height="422" alt="蒙古日本国王写的汉字">
+#+END_EXPORT
+
+** Lingua
+
+Lingua 其实在拉丁语里是舌头（tongue）的意思，引申过来就是语言的意思了。所以就有
+这些英语单词：
+- language：语言
+- languageless：无语
+- linguist：通晓数国语言的人；语言学家
+- linguistics：语言学
+- linguister：语言学家
+- bilingualism：双语教学
+- bilinguality：能说两种语言的。He is bilingual in an Asian language and
+  English.
+
+** TODO: franca?
+
+我猜应该是通用的意思，一时还没找到，下次找到了补上吧。
+
+* make heads and tails of it
+
+在本文最开始的例句里面，另外一个有趣的词组：make heads and tails of it:
+
+#+BEGIN_QUOTE
+C is the lingua franca of programming, and you should be competent in making
+heads and tails of it.
+#+END_QUOTE
+
+TheFreeDictionary 的解释是这样的[fn:3]：to understand someone or something that someone
+has said. (Usually with the negative.) 理解某人或者某人说的话，但是经常用在否定
+形式上，比如：
+- I can't make heads or tails of Fred. 我不理解 Fred 同学。
+- I couldn't make heads or tails of the document. 我看不懂这份文件。
+
+注意，如果是否定用法，and 要写成 or 哦。
+
+* Summary
+
+花一个小时，好好理解一句话，学会两个词组，其实也是一件挺愉快的事情的。下次遇到
+lingua franca 就不用猜测是什么意思了。遇到不懂的人，不懂的文章，就可以说：Sorry,
+I can't make heads or tails of it.
+
+* Footnotes
+
+[fn:1] https://en.wikipedia.org/wiki/Lingua_franca
+
+[fn:2] https://en.wikipedia.org/wiki/List_of_lingua_francas
+
+[fn:3] http://idioms.thefreedictionary.com/make+heads+or+tails+of

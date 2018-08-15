@@ -1,0 +1,317 @@
+#+BEGIN_HTML
+---
+layout: post
+title: Drawing UML with plantuml
+categories: [productivity]
+tags: [org-mode, uml, plantuml]
+---
+#+END_HTML
+
+In this article, I will demo how to use plantuml and org-mode to draw
+UML diagram and embedded the graphic inside the exported html file.
+
+PlantUML is used to draw UML diagram, using a simple and human
+readable text description.[fn:1]
+
+* Installation and emacs setup
+  In order to make use of plantuml you should install =graphviz= and
+  download =plantuml.jar=. =plantuml.jar= uses =graphviz= as the
+  backend to convert images.
+
+  You can download =graphviz= here:
+  http://www.graphviz.org/Download.php. Or you can install graphviz
+  from cygwin setup, actually, I'm using cygwin port of graphviz. My
+  philosophy is that if some software is available as cygwin port, I
+  will not install it as Windows software.
+
+  In this link you can find all the guide on how to add cygwin mirror
+  for =graphviz=: http://sourceware.org/cygwinports/.
+
+  Then you can find =plantuml.jar= from here:
+  http://www.plantuml.com/download.html. The F.A.Q. says that:
+  PlantUML is developped with continuous integration in mind. That
+  means that there are new releases quite often. So you'd better to
+  check update with following command:
+
+#+BEGIN_SRC
+java -jar plantuml.jar -checkversion
+#+END_SRC
+
+  Now lets assume that your =graphviz= dot.exe is located at
+  =C:\cygwin\bin\dot.exe= and =plantuml.jar= can be found at
+  =C:\plantuml\plantuml.jar=.
+
+  You should add following elisp to your =.emacs= to make use of
+  plantuml from emacs org-mode:
+
+#+BEGIN_SRC elisp
+(require 'ob-plantuml)
+(setenv "GRAPHVIZ_DOT" "C:\\cygwin\\bin\\dot.exe")
+(setq org-plantuml-jar-path "C:\\plantuml\\plantuml.jar")
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((plantuml . t)
+   ))
+#+END_SRC
+
+  As normal, org-babel will evaluate plantuml source and generate an
+  image file, and then attach the image file inside html file. But as
+  I know svg type of image is just standard xml text, so it is
+  possible to merge the svg xml with html file. You can add following
+  redefined function to your .emacs to make this happen:
+
+#+BEGIN_SRC elisp
+(defun org-babel-result-to-file (result &optional description)
+  "If result file is svg type, convert RESULT into html file and
+plugin the html text in the exported file."
+  (when (stringp result)
+    (if (string= "svg" (file-name-extension result))
+        (progn
+          (with-temp-buffer
+            (if (file-exists-p (concat result ".html"))
+                (delete-file (concat result ".html")))
+            (rename-file result (concat result ".html"))
+            (insert-file-contents (concat result ".html"))
+            (message (concat result ".html"))
+            (format "#+BEGIN_HTML
+<div style=\"text-align: center;\">
+%s
+</div>
+,#+END_HTML"
+                    (buffer-string)
+                    )))
+      (progn
+        (format "[[file:%s]%s]"
+                (if (and default-directory
+                         buffer-file-name
+                         (not (string= (expand-file-name default-directory)
+                                       (expand-file-name
+                                        (file-name-directory buffer-file-name)))))
+                    (expand-file-name result default-directory)
+                  result)
+                (if description (concat "[" description "]") ""))))))
+#+END_SRC
+
+* First try with plantuml
+
+  Now let try to draw some uml diagrams. In order to generate svg
+  images, you should add following property to the plantuml source:
+
+#+BEGIN_SRC
+#+BEGIN_SRC plantuml :file filename.svg
+#+END_SRC
+
+** Sequence Diagram
+   "UML sequence diagrams model the flow of logic within your system in
+   a visual manner, enabling you both to document and validate your
+   logic, and are commonly used for both analysis and design
+   purposes. Sequence diagrams are the most popular UML artifact for
+   dynamic modeling, which focuses on identifying the behavior within
+   your system.[fn:2]"
+
+#+BEGIN_SRC plantuml :file seq1.svg :exports both
+@startuml
+hide footbox
+actor Kimi
+actor Ivy
+Kimi -> Ivy: Can I buy a pot of rosemary?
+loop 10 times
+    Ivy -> Notebook: Check how many pots of rosemary we have
+    activate Notebook
+    Notebook --> Ivy: Count of rosemary
+    deactivate Notebook
+end
+Ivy --> Kimi: No, we have many pots.
+Kimi -> Ivy: Can I buy a novel book?
+Ivy --> Bookshelf: Check how many new books
+activate Bookshelf
+Bookshelf --> Ivy: Count of new books
+deactivate Bookshelf
+Ivy --> Kimi: No, you have lots of new books not finished.
+@enduml
+#+END_SRC
+
+** Use Case Diagram
+
+   "UML 2 use case diagrams overview the usage requirements for a
+   system.[fn:3]"
+
+#+BEGIN_SRC plantuml :file uc1.svg :exports both
+@startuml
+left to right direction
+actor Kimi << Robot >>
+actor Ivy << Human >>
+(Use the computer) as (Computer) << Main >>
+(Use the iPad) as (iPad) << Secondary >>
+Kimi --> (Computer):emacs
+Ivy --> (Computer):taobao, movie
+Kimi --> (iPad):news, learning languages
+Ivy --> (iPad):taobao, movie
+@enduml
+#+END_SRC
+
+** Class Diagram
+    "UML 2 class diagrams show the classes of the system, their
+    interrelationships (including inheritance, aggregation, and
+    association), and the operations and attributes of the
+    classes. Class diagrams are used for a wide variety of purposes,
+    including both conceptual/domain modeling and detailed design
+    modeling.[fn:4]"
+
+#+BEGIN_SRC plantuml :file class1.svg :exports both
+@startuml
+
+abstract AbstractFather
+
+abstract AbstractMother
+abstract AbstractCash
+
+abstract AbstractDaughter
+abstract AbstractToy
+
+interface Father
+
+interface Mother
+interface Cash
+
+interface Daughter
+interface Toy
+
+Father <|-- AbstractFather
+Mother <|-- AbstractMother
+Cash <|-- AbstractCash
+
+Daughter <|-- AbstractDaughter
+Toy <|-- AbstractToy
+
+Father <|-- Daughter
+Mother <|-- Daughter
+
+AbstractMother *- AbstractCash
+AbstractDaughter *- AbstractToy
+
+AbstractCash <|-- RMB
+
+AbstractToy <|-- ManhattanBall
+AbstractToy <|-- FisherPrice
+
+AbstractMother <|-- Ivy
+Ivy  *- RMB
+
+AbstractDaughter <|-- Vivi
+Vivi *- ManhattanBall
+
+Vivi *- FisherPrice
+
+AbstractFather <|-- Kimi
+
+interface Father {
+  work()
+}
+
+interface Mother {
+  cook()
+  pay_by_cash()
+}
+
+interface Daughter {
+  play_toy()
+  sing()
+  laugh()
+  cry()
+}
+
+class Kimi {
+  cook()
+  read()
+  write()
+}
+
+class Ivy {
+  taobao()
+  watch_movie()
+}
+
+class Vivi {
+  sleep()
+  drink_milk()
+}
+@enduml
+#+END_SRC
+
+** Activity Diagram
+   UML 2 activity diagrams are typically used for business process
+   modeling, for modeling the logic captured by a single use case or
+   usage scenario, or for modeling the detailed logic of a business
+   rule.[fn:5]
+
+#+BEGIN_SRC plantuml :file act1.svg :exports both
+@startuml
+title Kimi's daily life
+(*)--> get up/have breakfast
+--> read Deutsch/Francais news
+if "work day" then
+  -left->[yes] "wait shuttle bus"
+  --> "hard working"
+  --> "back to home"
+else
+  -right->[no] "write article"
+  if "Vivi and Ivy wake up" then
+    --> [yes] "play with Vivi"
+    --> "go out with Vivi and Ivy"
+    -left-> "back to home"
+  endif
+endif
+"back to home" --> "give a bath to Vivi"
+--> "sleep"
+-->(*)
+@enduml
+#+END_SRC
+
+** State Diagram
+   "UML state machine diagrams depict the various states that an
+   object may be in and the transitions between those states. In fact,
+   in other modeling languages, it is common for this type of a
+   diagram to be called a state-transition diagram or even simply a
+   state diagram.[fn:6]"
+
+#+BEGIN_SRC plantuml :file state1.svg :exports both
+@startuml
+[*] -> Wakeup
+Wakeup --> Thinking : earlier than 9:00
+Wakeup --> Playing : later than 9:00
+Thinking -> Playing : timeout
+Thinking -left-> Writing: have idea
+Writing -> Playing : timeout
+
+state Writing {
+  [*] --> Research : stopped
+  Research --> Typing : materials found
+  Typing --> Preview : succeeded
+  Preview --> Publish : succeeded
+  Preview --> Typing : failed
+  Typing --> Research : blocked
+}
+
+Writing --> [*] : Succeeded / Save Result
+Writing --> [*] : Aborted
+Playing --> [*] : Tired
+@enduml
+#+END_SRC
+** Other UML Diagrams
+   In UML 2 there are other diagrams such as Component Diagram and
+   Objects Diagram which are supported also by PlantUML.
+
+* Footnotes
+
+[fn:1] [[http://www.plantuml.com/faq.html][What's the goal of PlantUML ?]]
+
+[fn:2] [[http://www.agilemodeling.com/artifacts/sequenceDiagram.htm#sthash.uLZLZUmE.dpuf][UML 2 Sequence Diagrams: An Agile Introduction]]
+
+[fn:3] [[http://www.agilemodeling.com/artifacts/useCaseDiagram.htm#sthash.x1XX0qza.dpuf][UML 2 Use Case Diagrams: An Agile Introduction]]
+
+[fn:4] [[http://www.agilemodeling.com/artifacts/classDiagram.htm][UML 2 Class Diagrams: An Agile Introduction]]
+
+[fn:5] [[http://agilemodeling.com/artifacts/activityDiagram.htm][UML 2 Activity Diagrams: An Agile Introduction]]
+
+[fn:6] [[http://www.agilemodeling.com/artifacts/stateMachineDiagram.htm][UML 2 State Machine Diagrams: An Agile Introduction]]
