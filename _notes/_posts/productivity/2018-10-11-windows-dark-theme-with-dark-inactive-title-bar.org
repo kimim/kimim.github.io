@@ -22,9 +22,9 @@ Windows Registry Editor Version 5.00
 
 RGB222222 是以下这种深灰色：
 
-#+BEGIN_HTML
+#+BEGIN_EXPORT html
 <h3 style="background-color: #222222; width: 80px;">&nbsp;</h3>
-#+END_HTML
+#+END_EXPORT
 
 这样，几个标题栏颜色相近，就舒服多了。
 
