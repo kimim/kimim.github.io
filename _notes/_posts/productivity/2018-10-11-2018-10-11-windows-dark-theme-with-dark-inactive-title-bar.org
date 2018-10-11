@@ -1,0 +1,33 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Windows 深色主题深色标题栏
+categories: [productivity]
+tags: [Windows, Tooltip]
+---
+#+END_EXPORT
+
+有时候亮色的主题看久了，眼镜会觉得有些刺眼，所以偶尔换成深色主题缓解眼部压力。深
+色主题深色标题栏，深色内容，看起来还不错。但是没有设置项可以将非活动标题栏也弄成
+深色。这样多个窗口工作的时候，那些非活动标题栏灰白色会显得很刺眼。
+
+经过搜索，发现需要修改注册表，增加一个键值，内容如下，可保存成 =.reg= 直接导入注册表：
+
+#+BEGIN_SRC bat
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM]
+"AccentColorInactive"=dword:ff222222
+#+END_SRC
+
+RGB222222 是以下这种深灰色：
+
+#+BEGIN_HTML
+<h3 style="background-color: #222222; width: 80px;">&nbsp;</h3>
+#+END_HTML
+
+这样，几个标题栏颜色相近，就舒服多了。
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/45188225182/in/dateposted-public/" title="darktheme"><img src="https://farm2.staticflickr.com/1971/45188225182_187fb2f4b9_z.jpg" width="640" height="360" alt="darktheme"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
