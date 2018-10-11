@@ -1,0 +1,277 @@
+---
+layout: post
+title: EdgeX 简介
+categories: [technology]
+tags: [IIoT, industry]
+---
+
+<div id="outline-container-org8a8a47f" class="outline-2">
+<h2 id="org8a8a47f"><span class="section-number-2">1</span> 概述</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+EdgeX Foundry 旨在创建一个通用的、开源的、厂商中立的边缘计算软件平台。所谓边缘就是与物理世界的设备、传感器、执行器等物联网设备直接交互的网络端。
+</p>
+
+<blockquote>
+<p>
+《边缘计算参考架构 2.0》中对边缘计算的定义：
+</p>
+
+<p>
+边缘计算是在靠近物或数据源头的网络边缘侧，融合网络、计算、存储、应用核心能力的分布式开放平台，就近提供边缘智能服务，满足行业数字化在敏捷联接、实时业务、数据优化、应用智能、安全与隐私保护等方面的关键需求。它可以作为联接物理和数字世界的桥梁，使能智能资产、智能网关、智能系统和智能服务。
+</p>
+</blockquote>
+
+<p>
+EdgeX 平台帮助、鼓励快速发展的物联网解决方案提供商在一个可互操作的模块组件生态中互相合作，从而减少技术的不确定性（reduce uncertainty）、加快推向市场的速度（accelerate time to market）、促进行业规模的增长（facilitate scale）。
+</p>
+
+<p>
+通过解决可互操作性这一迫切的需求，EdgeX 能够快速将数据传输至北向的云，东西向的网关，以及南向的设备、传感器和执行器，因此 EdgeX 可以简化以下这些操作：
+</p>
+
+<ul class="org-ul">
+<li>监控物理世界的设备</li>
+<li>发送指令给这些设备</li>
+<li>从设备收集数据</li>
+<li>将数据发送到雾节点、云平台进行存储、聚集、分析，从而形成有用信息</li>
+<li>在设备上执行特定任务</li>
+</ul>
+
+
+<blockquote>
+<p>
+南向（South Side）和北向（North Side）的定义：
+</p>
+
+<p>
+一般北半球居民会将北方放在地图的上方，相应的，在架构、网络设计图中，北向指的是架构图的上方，南向指的是架构图的下方。
+</p>
+
+<p>
+南向（South Side）：指的是物理世界的所有物联网对象。网络边缘直接与这些设备、传感器和执行器等进行通信，获取数据。
+</p>
+
+<p>
+北向（North Side）：指的是云（或者叫企业信息系统），对数据进行收集、存储、聚集、分析，并转化为有用信息。
+</p>
+
+<p>
+在计算机网络和架构中，组件的北行接口 northbound interface 指的是将底层细节进行封装的接口。上层组件利用北行接口访问下层组件。北行接口在架构图中一般画在组件的顶部。而南行接口 southbound interface 则将技术细节进行细化，分配给南向的某个单一组件。南行接口在架构图中一般画在组件的底部。<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>
+</p>
+</blockquote>
+</div>
+</div>
+
+
+<div id="outline-container-org9dfe1bc" class="outline-2">
+<h2 id="org9dfe1bc"><span class="section-number-2">2</span> EdgeX Foundry 架构原则</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+EdgeX Foundry 基于以下核心原则构建整体架构：
+</p>
+
+<ol class="org-ol">
+<li>EdgeX Foundry 必须秉承平台不可知论者（platform agnostic）
+<ul class="org-ul">
+<li>不用关心平台的硬件是什么</li>
+<li>不用关心操作系统是什么（Linux、Windows 等都要能支持）</li>
+<li>允许将功能组件的微服务部署在边缘节点、网关、雾节点、以及云上</li>
+<li>协议和传感器不可知论者，即任何协议、传感器类型都能够通过扩展设备服务扩展支持</li>
+</ul></li>
+<li>EdgeX Foundry 必须非常灵活
+<ul class="org-ul">
+<li>平台的任何部分都能够独立地升级、替换、或者通过其他微服务和软件模块进行增强</li>
+<li>所有服务必须能根据设备性能和应用场景扩容缩容</li>
+<li>EdgeX Foundry 须提供一个参考实现，并鼓励集成其他更好的解决方案</li>
+</ul></li>
+<li>EdgeX Foundry 必须支持存储转发能力（即支持断线/远程边缘系统）</li>
+<li>EdgeX Foundry 必须支持将更多智能转移到边缘侧
+<ul class="org-ul">
+<li>执行系统的时延敏感性</li>
+<li>带宽和存储的资费顾虑</li>
+<li>远程操作？</li>
+</ul></li>
+<li>EdgeX Foundry 必须支持棕地绿地（即存量工业基地和新工业基地）的设备传感器部署</li>
+<li>EdgeX Foundry 必须足够安全可靠、容易管理</li>
+</ol>
+</div>
+</div>
+
+
+<div id="outline-container-orgd586c2f" class="outline-2">
+<h2 id="orgd586c2f"><span class="section-number-2">3</span> EdgeX Foundry 的多层服务架构</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+EdgeX Foundry 是一个开源微服务集合，由 4 个服务层和 2 个系统服务组成。自下而上分别为设备服务层、核心服务层、支持服务层和传输服务层。另外两个系统服务分别为安全服务和系统管理服务。
+</p>
+
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/30297561367/in/dateposted-public/" title="EdgeX_architecture"><img src="https://farm2.staticflickr.com/1978/30297561367_a74a6374ff_z.jpg" width="640" height="377" alt="EdgeX_architecture"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+</div>
+
+
+<div id="outline-container-org9aed0cb" class="outline-3">
+<h3 id="org9aed0cb"><span class="section-number-3">3.1</span> 核心服务层（Core Services Layer - CS）</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+核心服务层桥接了北向和南向服务层，包含以下组件：
+</p>
+
+<ul class="org-ul">
+<li>核心数据（Core Data）：南向设备数据的持久存储和管理服务。</li>
+<li>命令（Command）：北向到南向的执行控制请求服务。</li>
+<li>元数据（Metadata）：接入 EdgeX Foundry 的设备的元数据存储和管理。提供设定新设备和关联相应设备服务的能力。</li>
+<li>注册和配置（Registry and Configuration）：提供在 EdgeX Foundry 注册的微服务的查询信息和属性配置信息。</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org813bcb8" class="outline-3">
+<h3 id="org813bcb8"><span class="section-number-3">3.2</span> 支持服务层（Supporting Services Layer - SS）</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+支持服务层包含多个微服务：
+</p>
+
+<ul class="org-ul">
+<li>边缘分析和边缘智能</li>
+<li>提供给 EdgeX Foundry 本身的服务</li>
+<li>通用软件服务，如日志、调度、以及数据清理（Scrubbing）</li>
+<li>规则引擎</li>
+<li>告警和消息通知微服务</li>
+<li>本地分析能力（目前的实现也叫简单规则引擎）</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orgebe8cda" class="outline-3">
+<h3 id="orgebe8cda"><span class="section-number-3">3.3</span> 传输服务层（Export Services Layer - ES）</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+EdgeX Foundry 的一个设计原则是独立于其他系统运行，即原则 3：EdgeX Foundry 必须支持存储转发能力。因为部署在网关上的边缘计算服务经常会处于离线环境，需要能独立运作监控管理某些不需要外部监控的设备和传感器。因此，EdgeX Foundry 必须能够不接入北向系统独立运行相当长一段时间。传输服务层的任务就是将边缘侧采集的数据传输到云端。
+</p>
+
+<p>
+ES 层的微服务提供一下服务：
+</p>
+
+<ul class="org-ul">
+<li>提供注册服务接口给网关外部客户端，注册接受从南向对象采集的数据。</li>
+<li>提供数据将在何时发向何处的信息</li>
+<li>为其传输的数据提供数据的格式</li>
+</ul>
+
+<p>
+ES 服务层目前提供以下微服务：
+</p>
+
+<ul class="org-ul">
+<li>客户端注册</li>
+<li>分发</li>
+<li>AWS IoT Core</li>
+<li>Azure IoT Core</li>
+<li>Google IoT Core</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orgc09ef73" class="outline-3">
+<h3 id="orgc09ef73"><span class="section-number-3">3.4</span> 设备服务层（Device Services Layer - DS）</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+设备服务层是边缘的连接器直接和设备通信。这些物联网设备包括但不限于：
+</p>
+
+<ul class="org-ul">
+<li>报警系统</li>
+<li>办公家居的冷热空调系统</li>
+<li>照明灯具</li>
+<li>工业机器</li>
+<li>灌溉系统</li>
+<li>无人机</li>
+<li>轨道交通系统</li>
+<li>自动化工厂</li>
+<li>智能家居</li>
+</ul>
+
+<p>
+未来还可能支持：
+</p>
+
+<ul class="org-ul">
+<li>无人汽车，无人卡车</li>
+<li>交通信号系统</li>
+<li>全自动快餐系统</li>
+<li>无人商店</li>
+<li>医疗监控系统</li>
+</ul>
+
+<p>
+设备服务不仅可以连接一个设备，也可以连接多个设备。DS 所管理的设备可以是简单设备，也可以是设备网关，设备管理器，设备聚合器等。
+</p>
+
+<p>
+DS 层通过设备原生的通信协议与设备进行通信，然后将数据转成 EdgeX Foundry 内部通信的标准数据结构，再发送给核心服务层和其他服务层。
+</p>
+
+<p>
+EdgeX Foundry 提供一个设备服务软件开发工具（SDK），通过命令行的方式生成设备服务的基本框架。
+</p>
+
+<p>
+目前，EdgeX Foundry 的设备服务层包含以下微服务：
+</p>
+
+<ul class="org-ul">
+<li>虚拟设备服务</li>
+<li>BACnet 设备服务</li>
+<li>Modbus 设备服务</li>
+<li>SNMP 设备服务</li>
+<li>低功耗蓝牙（BLE）设备服务</li>
+<li>串口设备服务</li>
+</ul>
+
+<p>
+具体例子，比如：
+</p>
+
+<ul class="org-ul">
+<li>BACnet DS 将 BACnet 温湿度传感器设备的温度、湿度信息转换成 EdgeX Foundry 通用数据结构</li>
+<li>接收翻译来自其他 EdgeX Foundry 服务和企业系统的命令，传输给南向设备进行执行。</li>
+<li>接收关机请求，命令 Modbus PLC 关闭其控制的电机。DS 服务将通用的“shutoff”请求转换成 Modbus 串口命令，让 PLC 控制的电机执行操作。</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org0448f2f" class="outline-3">
+<h3 id="org0448f2f"><span class="section-number-3">3.5</span> 系统服务层（System Services Layer - SS）</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+主要是安全基础设施和系统管理服务。
+</p>
+
+<p>
+EdgeX Foundry 内部外部的安全组件保护 EdgeX Foundry 管理的设备、传感器和其他物联网对象的数据和命令安全。
+</p>
+
+<p>
+系统管理设施提供了系统安装、升级、启动、停止，以及对 EdgeX Foundry 微服务、BIOS 固件、操作系统和网关相关软件的监控服务。另外通过外部接口，支持企业系统和外部系统调用这些功能。
+</p>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://en.wikipedia.org/wiki/Northbound_interface">https://en.wikipedia.org/wiki/Northbound_interface</a>
+</p></div></div>
+
+
+</div>
+</div>
