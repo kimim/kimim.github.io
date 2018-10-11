@@ -1,0 +1,55 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 修改 Firefox 阅读模式的工具栏颜色
+categories: [productivity]
+tags: [Firefox]
+---
+#+END_EXPORT
+
+进入秋天，昼短夜长，倘若再遇到白天阴雨天，办公室比较昏暗。昏暗的光线下亮色主题会
+显得比较刺眼，所以尝试着将 Emacs 的主题换成了 color-theme-jekyll，同时 Firefox 里也选
+择了暗色主题。但是 Firefox 的阅读模式下，左侧的工具栏还是亮灰色，这样在整屏暗色的
+桌面上，工具栏就会显得很刺眼。于是找到了办法修改 Firefox 阅读模式的 css 文件。
+
+具体方法如下：
+
+1. 在 Firefox 浏览器输入 =about:profiles= 找到配置文件路径，例如 =gscurz1i.default= 。
+2. 在配置文件路径下创建 =chrome= 文件夹。
+3. 添加 =userContent.css= 文件，文件内容：
+
+   #+BEGIN_SRC css
+   @-moz-document url-prefix("about:reader") {
+       .toolbar {
+
+           background-color: #333333 !important;
+           border-right: 1px solid #555 !important;
+
+       }
+
+       .button {
+
+           color: #444444 !important;
+           background-color: #333333 !important;
+
+       }
+
+       .toolbar .button {
+
+           border-right: 1px solid #555 !important;
+           border-bottom: 1px solid #555 !important;
+
+       }
+   }
+   #+END_SRC
+
+4. 重启 Firefox
+
+
+效果图：
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/45242037531/in/dateposted-public/" title="dark_reader_view"><img src="https://farm2.staticflickr.com/1951/45242037531_61bf545869_z.jpg" width="640" height="558" alt="dark_reader_view"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+可惜还不知道怎么把滚动条的颜色也调整一下。。。
