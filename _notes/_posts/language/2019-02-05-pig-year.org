@@ -1,0 +1,67 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：猪
+categories: [language]
+tags:[Français, Deutsch, English]
+---
+#+END_EXPORT
+
+2019 年是中国农历的猪年。
+
+最近大街上的广告也在蹭热点，比如农夫山泉的广告：
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/46266528624/in/dateposted-public/" title="家"><img src="https://farm5.staticflickr.com/4830/46266528624_6d63f09f94_z.jpg" width="640" height="393" alt="家"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+远古时期，人们用“豕”(shi3)表示猪，猪代表着富足，所以房子底下有“豕”就是家了。
+
+猪的繁体字其实写作“豬”，在简化的过程中，直接用“犭”字代替了“豕”。这样的简化，其实
+损失了不少信息。
+
+《尔雅·释兽》记载有：“彘，猪也。其子曰豚。一岁曰豵。”其实“彘”（zhì）应当是野猪，
+底下的矢表示弓箭，人们用弓箭射击野猪。“豚”（tún）在“豕”字左边加了“月”，月就是肉。
+所以豚就是用来吃的猪，也就是家里养的猪。日本人猪还用豚表示，日料店有豚骨拉面。河
+豚、江豚、海豚就是指长得像猪的鱼。“豵”（zōng）,是刚出生一岁的小猪，《诗经·召南·
+驺虞》中有“壹发五豝，壹发五豵。”形容猎人射箭技术高超。“豝”（bā）则是母猪之意。
+
+在中国古代，猪圈往往就在厕所边上，所以“圂”（hùn）这个字是猪圈的意思，也是厕所的
+意思。也就是厕所和猪圈是不分开的。通常的建筑设计是厕所在高处，人类的屎尿导入猪圈，
+和猪的排泄物混在一起，用作肥料。猪其实是挺爱干净的动物的。但是人类的这种设计，导
+致猪带上了肮脏、懒惰、色情的色彩。很多和猪相关的词语都是带有羞辱性质的，如猪头三、
+猪猡等。再加上后来的西游记中猪八戒的形象，更是让猪的名声万劫不复了。
+
+伊斯兰教认为猪是不净之物。也许是因为伊斯兰教国家的人放牧的居多，一般都吃牛羊肉。
+然后看到农耕国家的人把猪养在脏臭的地方，就定下了教义，禁止信徒吃猪肉了。
+
+在之前的一篇文章中[fn:1]，我们了解到，动物的雄性和雌性会有一些不同的写法。至于猪，
+英语中猪的统称是 pig，公猪是 boar，母猪的则是 sow。
+
+英语中 pig 基本上也带有负面色彩。比如 You greedy pig, you ate all the candy! 你这只
+馋猫，把糖果都吃光了！They live like pigs in that house over the road. 他们住在
+马路那头猪圈似的房子里。
+
+英语里还有个词 swine，也是猪。通常指讨厌的人，讨厌的事。He's an arrogant little
+swine!  他是个傲慢的小讨厌鬼！The car can be a swine to start. 这辆车有时很难发
+动。
+
+法语公猪是 le cochon，母猪则是 la cochonne，小猪 le cochonnet。而 la truie 则专
+指生小猪的母猪：la truie reproductrice。例如：La truie donne naissance à cinq
+cochonnets.母猪生了 5 只小猪。法语世界里，对猪也不太友好。例如：histoire
+cochonne（关于母猪的故事）黄色故事。Quel cochon de temps ! on ne peut pas
+sortir. （猪一样的天气）该死的天气，出不了门。c'est un vieux cochon（这是只老猪）
+这是个下流坯。écrire comme un cochon（字写得像只猪）字写得很差很乱。C'est une
+tête de cochon. 这是个固执的人。c’est une belle cochonne. 她很放荡。
+
+法语中有类似海豚的说法：cochon de mer 就是 le dauphin。
+
+德语中猪叫 des Schwein。也有不好的意思，如 ein armes/faules Schwein 一个穷/懒鬼。
+但也有运气的意思：Schwein haben 运气好，Schwein gehabt! that’s a stroke of
+luck. 意外的好运。
+
+好了，祝大家猪年快乐。猪年有好运 Schwein haben！
+
+* Footnotes
+
+[fn:1] http://kimi.im/2017-05-16-english-tigress
