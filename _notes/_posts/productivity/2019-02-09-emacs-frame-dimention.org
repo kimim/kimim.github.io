@@ -1,0 +1,123 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 设置 Emacs 窗口大小
+categories: [productivity]
+tags: [emacs]
+---
+#+END_EXPORT
+
+* 需求分析
+
+我希望不论在哪一台电脑上打开 Emacs，都能按比例设定窗口在桌面的尺寸，比如说上下左右各占 10%，窗口长宽各占显示器的 80%。
+
+* 实现方案
+
+基于以上需求，很自然想到的就是读出显示器的长宽，然后按比例计算各参数的值。
+
+在 Emacs 中， =default-frame-alist= 就是用来做设置显示参数的。其中 =top=, =left=,
+=height=, =width= 分别用来这是 Emacs 窗口与显示器上边缘像素距离，左边缘像素距离，
+窗口高度字符数，宽度字符数。请注意这里的区别： =top= 和 =left= 分别是用像素值表
+示，而 =height= 和 =width= 是用字符数表示的。
+
+要设置前面提到的四个参数，首先是获取显示器的长宽像素值，在 elisp 中，函数
+=x-display-pixel-height= 和 =x-display-pixel-width= 可以用来获取显示器长宽的像素
+值，函数文档如下：
+
+#+BEGIN_QUOTE
+(x-display-pixel-height &optional FRAME)
+
+Return the height in pixels of DISPLAY.
+The optional argument DISPLAY specifies which display to ask about.
+DISPLAY should be either a frame or a display name (a string).
+If omitted or nil, that stands for the selected frame’s display.
+
+On "multi-monitor" setups this refers to the pixel height for all
+physical monitors associated with DISPLAY.  To get information for
+each physical monitor, use ‘display-monitor-attributes-list’.
+
+(x-display-pixel-width &optional FRAME)
+
+Return the width in pixels of DISPLAY.
+The optional argument DISPLAY specifies which display to ask about.
+DISPLAY should be either a frame or a display name (a string).
+If omitted or nil, that stands for the selected frame’s display.
+
+On "multi-monitor" setups this refers to the pixel width for all
+physical monitors associated with DISPLAY.  To get information for
+each physical monitor, use ‘display-monitor-attributes-list’.
+#+END_QUOTE
+
+有了这两个函数，就可以计算 =top= 和 =left= 了，按照我的需求，分别除以 10，得到 10%
+的数值：
+
+#+BEGIN_SRC emacs-lisp
+        (add-to-list 'default-frame-alist
+                     (cons 'top  (/ (x-display-pixel-height) 10)))
+        (add-to-list 'default-frame-alist
+                     (cons 'left (/ (x-display-pixel-width) 10)))
+#+END_SRC
+
+在计算 =height= 和 =width= 的时候，需要另外两个数值，分别是一个字符的高和宽，对
+应的函数是 =frame-char-height= 和 =frame-char-width= ：
+
+#+BEGIN_QUOTE
+(frame-char-height &optional FRAME)
+
+Height in pixels of a line in the font in frame FRAME.
+If FRAME is omitted or nil, the selected frame is used.
+For a terminal frame, the value is always 1.
+
+(frame-char-width &optional FRAME)
+
+Width in pixels of characters in the font in frame FRAME.
+If FRAME is omitted or nil, the selected frame is used.
+On a graphical screen, the width is the standard width of the default font.
+For a terminal screen, the value is always 1.
+#+END_QUOTE
+
+这样， =height= 和 =width= 也就方便的计算出来了：
+
+#+BEGIN_SRC emacs-lisp
+        (add-to-list 'default-frame-alist
+                     (cons 'height (/ (* 4 (x-display-pixel-height))
+                                      (* 5 (frame-char-height)))))
+        (add-to-list 'default-frame-alist
+                     (cons 'width (/ (* 4 (x-display-pixel-width))
+                                     (* 5 (frame-char-width)))))
+#+END_SRC
+
+注意，这里除法放在最后一步做，目的是为了保证计算过程中的数值都是整数，结果也是整
+数。因为 =default-frame-alist= 的参数要求是整数。
+
+还有一个约束条件是， =x-display-pixel-height= 和 =x-display-pixel-width= 这两个
+函数正如其前缀所示，只有在窗口环境才存在，所以不能在非窗口环境下设置这些参数，完
+整的配置如下：
+
+#+BEGIN_SRC emacs-lisp
+  (set-default-font "Inconsolata-14")
+
+  (if (not (eq window-system nil))
+      (progn
+        ;; top, left ... must be integer
+        (add-to-list 'default-frame-alist
+                     (cons 'top  (/ (x-display-pixel-height) 10)))
+        (add-to-list 'default-frame-alist
+                     (cons 'left (/ (x-display-pixel-width) 10)))
+        (add-to-list 'default-frame-alist
+                     (cons 'height (/ (* 4 (x-display-pixel-height))
+                                      (* 5 (frame-char-height)))))
+        (add-to-list 'default-frame-alist
+                     (cons 'width (/ (* 4 (x-display-pixel-width))
+                                     (* 5 (frame-char-width)))))))
+#+END_SRC
+
+另外，我在设置 =default-frame-alist= 之前，设置了默认字体的原因是，
+=frame-char-height= 和 =frame-char-width= 是会根据字体大小变动的，如果没有设置字
+体，就会用默认字体的尺寸，这样计算出来的字符数值 =height= 和 =width= 会因为后续
+字体设置而变动，窗口就不是我期望的比例了。
+
+* 总结
+
+有了以上这段配置设置，无论在小尺寸笔记本，还是台式电脑；无论在 Windows，还是 iMac，
+Emacs 的起始窗口比例都是长宽 80% 居中了。希望对大家有所帮助。
