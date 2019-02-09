@@ -1,0 +1,61 @@
+---
+layout: post
+title: 修改 Firefox 阅读模式的工具栏颜色
+categories: [productivity]
+tags: [Firefox]
+---
+
+<p>
+进入秋天，昼短夜长，倘若再遇到白天阴雨天，办公室比较昏暗。昏暗的光线下亮色主题会显得比较刺眼，所以尝试着将 Emacs 的主题换成了 color-theme-jekyll，同时 Firefox 里也选择了暗色主题。但是 Firefox 的阅读模式下，左侧的工具栏还是亮灰色，这样在整屏暗色的桌面上，工具栏就会显得很刺眼。于是找到了办法修改 Firefox 阅读模式的 css 文件。
+</p>
+
+<p>
+具体方法如下：
+</p>
+
+<ol class="org-ol">
+<li>在 Firefox 浏览器输入 <code>about:profiles</code> 找到配置文件路径，例如 <code>gscurz1i.default</code> 。</li>
+<li>在配置文件路径下创建 <code>chrome</code> 文件夹。</li>
+<li><p>
+添加 <code>userContent.css</code> 文件，文件内容：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-css"><span style="color: #000000;">@-moz-document</span> url-prefix(<span style="color: #3a5fcd;">"about:reader"</span>) {
+    <span style="color: #0000cd;">.toolbar </span>{
+
+        <span style="color: #8b008b; font-weight: bold;">background-color</span>: <span style="color: #ffffff; background-color: #333333;">#333333</span> <span style="color: #000000;">!important</span>;
+        <span style="color: #8b008b; font-weight: bold;">border-right</span>: 1px solid <span style="color: #ffffff; background-color: #555;">#555</span> <span style="color: #000000;">!important</span>;
+
+    }
+
+    <span style="color: #0000cd;">.button </span>{
+
+        <span style="color: #8b008b; font-weight: bold;">color</span>: <span style="color: #ffffff; background-color: #444444;">#444444</span> <span style="color: #000000;">!important</span>;
+        <span style="color: #8b008b; font-weight: bold;">background-color</span>: <span style="color: #ffffff; background-color: #333333;">#333333</span> <span style="color: #000000;">!important</span>;
+
+    }
+
+    <span style="color: #0000cd;">.toolbar .button </span>{
+
+        <span style="color: #8b008b; font-weight: bold;">border-right</span>: 1px solid <span style="color: #ffffff; background-color: #555;">#555</span> <span style="color: #000000;">!important</span>;
+        <span style="color: #8b008b; font-weight: bold;">border-bottom</span>: 1px solid <span style="color: #ffffff; background-color: #555;">#555</span> <span style="color: #000000;">!important</span>;
+
+    }
+}
+</pre>
+</div></li>
+
+<li>重启 Firefox</li>
+</ol>
+
+
+<p>
+效果图：
+</p>
+
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/45242037531/in/dateposted-public/" title="dark_reader_view"><img src="https://farm2.staticflickr.com/1951/45242037531_61bf545869_z.jpg" width="640" height="558" alt="dark_reader_view"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+
+<p>
+可惜还不知道怎么把滚动条的颜色也调整一下。。。
+</p>
