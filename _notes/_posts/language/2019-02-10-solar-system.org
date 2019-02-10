@@ -1,0 +1,99 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：太阳系
+categories: [language]
+tags: [English, Français, Deutsch]
+---
+#+END_EXPORT
+
+* Introduction
+
+看了最近很火的电影《流浪地球》，感觉挺震撼的。地球飞船为了能够飞离太阳系，要借助
+木星的引力来一次大转弯，差一点就撞上了木星。真是惊险刺激。
+
+太阳系总共有那么几个恒星和行星，他们分别是：太阳、水星、金星、地球、火星、木星、
+土星、天王星、海王星、冥王星，还有地球的卫星月亮。
+
+英语：Sun、Mercury、Venus、Earth、Mars、Jupiter、Saturn、Uranus、Neptune、Pluto、Moon。
+
+法语：le Soleil、Mercure、Vénus、la Terre、Mars、Jupiter、Saturne、Uranus、Neptune、Pluton、la Lune。
+
+德语：die Sonne、der Merkur、die Venus、die Erde、der Mars、der Jupiter、der Saturn、der Uranus、der Neptun、der Pluto、der Mond。
+
+几个有趣的现象：
+1. 法语里太阳是阳性的，也就是太阳公公，而德语里则是阴性的太阳婆婆。
+2. 法语里月亮是阳性的月亮婆婆，而德语里则是月亮公公。
+3. 法语一般太阳、月亮、地球会加冠词，而其他行星则不用。
+
+* 水星（Mercury、Mercure、der Merkur）
+
+水星在英法德语中又是水银、汞，都来源于罗马神话墨丘利（Mercŭrĭus^{(latin)})。他行
+走敏捷，精力充沛，多才多艺，在奥林匹斯山上担任诸神的使者和传译，作为沟通之神的他
+拥有过人的智慧和交流能力，所以也被称为商业之神。由于水星在天上运行的速度很快，所
+以用了他的名字而命名。他在希腊神话中有另外一个名字，叫做赫尔墨斯，也就是那个很贵
+很贵很贵的箱包品牌爱马仕 Hermès（Ἑρμῆς^{(greek)}）。
+
+Mercure, première planète du système solaire, la plus proche du Soleil. Merkur
+ist innerster Planet des Sonnensystems, nach dem römischen Gott benannt.
+
+* 金星（Venus、Vénus、die Venus）
+
+维纳斯是古罗马神话中的美神、爱神，相对应于希腊神话的阿佛洛狄德 Aphrodite。
+
+Les quatre planètes telluriques du Système solaire sont Mercure, Vénus, la Terre
+et Mars. 太阳系中的四个类地行星是水星，金星，地球和火星。Les hommes viennent de
+Mars et les femmes de Vénus. 男人来自火星，女人来自金星。Venus ist zweiter
+Planet unseres Sonnensystems. 金星是太阳系八大行星中的第二颗。
+
+La Vénus de Milo est l'un des fleurons du Musée du Louvre. 维纳斯雕像是卢浮宫的
+镇馆之宝之一。Venus ist die Liebesgöttin in römischen Mythen. 维纳斯是罗马神话中
+爱之女神。
+
+* 火星（Mars、Mars、der Mars）
+
+马尔斯是罗马神话中的战神。
+
+Est-ce qu'il y a des habitants sur la planète Mars? 火星上有居民们吗？
+
+另外，法语里三月是 Mars，德语是 März，英语则是 March。因为按照传统习惯，3 月是每
+年出征远战的季节,人们便把战神马尔斯的名字作为 3 月的月名。
+
+* 木星（Jupiter、Jupiter、der Jupiter）
+
+朱庇特是罗马神话中统领神域和凡间的众神之王，古老的天空神及光明、法律之神，对应希
+腊神话中的宙斯。
+
+* 土星（Saturn、Saturne、der Saturn）
+
+古罗马神话中，农业之神萨敦是朱庇特的父亲。
+
+Saturne parcourt sa sphère en trente années. 土星 30 年公转一圈。
+
+* 天王星（Uranus、Uranus、der Uranus）
+
+乌拉诺斯是古希腊神话中的天空之神，从母亲盖娅的指端诞生，最初作为统治者的众神之王、
+即天空的神格化。
+
+另外，第 92 号元素，铀是以 Uranus 命名的：Uranium。
+
+* 海王星（Neptune、Neptune、der Neptun）
+
+尼普顿，又译涅普顿，是罗马神话中的海神，也作为马匹之神被崇拜，管理赛马活动。对应
+希腊神话中的波塞冬（Poseidon）。
+
+按照科学家的传统，第 93 号元素镎就是用 Neptune 命名的：Neptunium。
+
+* 冥王星（Pluto、Pluton、der Pluto）
+
+普鲁托是罗马神话中的冥王，阴间的主宰，地府之王，人们死后灵魂世界的主宰者。对应希
+腊神话中的哈迪斯（Hades）。
+
+不过，2006 年 8 月 24 日下午，在第 26 届国际天文联合会通过决议，将冥王星划为矮行星，自
+行星之列中除名。
+
+相应的，94 号元素钚是以冥王星命名的：Plutonium。
+
+* 总结
+
+以上简单学习了太阳系各个行星的名字，及其来源。
