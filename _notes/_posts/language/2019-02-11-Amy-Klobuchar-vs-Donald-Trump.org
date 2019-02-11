@@ -1,0 +1,72 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 看新聞學外語：艾米·克罗布切
+categories: [language]
+tags: [Deutsch]
+---
+#+END_EXPORT
+
+* Introduction
+
+話說最近美國遭遇極端天氣，芝加哥迎來 25 年以來最低氣溫零下 30 多度，（幸虧在 1 月初去
+的芝加哥，那時候晚上也就零下 6 度）。現在美國的暴雪天氣還在繼續，就在這樣一個冰天
+雪地的日子，58 歲的艾米大媽，站在街頭開演講，宣佈參選美國總統。
+
+* 氣候變化協定
+
+針對氣候變化，她表示，會第一時間重新加入氣候變化協定。德國《Spiegel》（明鏡報）
+報道：
+
+#+BEGIN_QUOTE
+"Es ist an der Zeit, dass wir uns unsere Demokratie zurückholen", sagte Amy Klobuchar am
+Sonntag in dichtem Schneetreiben und bei fast minus zehn Grad Celsius vor
+jubelnden Anhängern. Die 58-Jährige kündigte unter anderem an, im Falle ihres
+Wahlsieges einen Schwerpunkt auf den Klimaschutz zu legen. "Am ersten Tag werden
+wir dem internationalen Klimaschutzabkommen wieder beitreten."
+#+END_QUOTE
+
+- zurück|holen :: 重新取回。holen，取回，拿回。zurück-, back, 返回。比如
+                 zurück|bekommen, to get back, 收回，找回。Ich habe das Buch
+                 endlich zurückbekommen. 我最終收回了這本書。zurück|blicken, to
+                 look back, 回头看，回顧，回憶。Er blickte noch einmal auf die
+                 Stadt zurück. 他回頭再次看了下這個城市。zurück|bringen, to
+                 bring back, 送還，交還。zurück|fahren, to go back, 乘車返回。
+                 Wir werden euch heute abend nach Hause zurückfahren. 我們今晚將
+                 驅車送你們回家。
+- dicht :: 密集的，濃密的。Der Schnee fällt in dichten Flocken. 雪花大片大片下。
+- der Anhänger :: 拖車、行李標籤、支持者、追隨者、門徒、信徒。Anhänger einer
+                  Bewegung oder Anhänger einer Lehre. Es ist eine Rede für ihre
+                  Anhänger. 這是為她的追隨者做的一次演講。
+- im Falle :: 如果發生，這種情況下。Im Falle daß er krank ist,werde ich die
+              Arbeit übernehmen. 如果他生病了，我將承擔這項任務。
+- der Wahlsieg :: 選舉勝利。
+- der Klimaschutz :: 氣候保護。Klimaschutzabkommen，氣候變化協定。
+- beitreten :: 參與，加入。
+
+* 特朗普的反擊
+
+隨後，推特總統 Trump 就發微博反擊[fn:1]，諷刺 Amy 站在大雪中 fighting 全球變暖，像個
+雪人。
+
+#+BEGIN_EXPORT html
+<a data-flickr-embed="true"  href="https://www.flickr.com/photos/kimim-photo/47060265031/in/dateposted-public/" title="Donald vs Amy"><img src="https://farm8.staticflickr.com/7903/47060265031_bc63e49ee4_z.jpg" width="640" height="466" alt="Donald vs Amy"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+#+END_EXPORT
+
+#+BEGIN_QUOTE
+Well, it happened again. Amy Klobuchar announced that she is running for
+President, talking proudly of fighting global warming while standing in a
+virtual blizzard of snow, ice and freezing temperatures. Bad timing. By the end
+of her speech she looked like a Snowman(woman)!
+#+END_QUOTE
+
+網友們直呼，總統先生，請不要把氣候和天氣搞混淆了！
+
+* 總結
+
+這是假期的最後一次外語學習。明天要好好上班啦。在上一個年度里，獲得了集體和個人雙
+優獎，希望在新的一年里，能夠再創輝煌。
+
+* Footnotes
+
+[fn:1] https://twitter.com/realDonaldTrump/status/1094718856197799936
