@@ -1,0 +1,70 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：法语单词 debut
+categories: [language]
+tags: [Français, English]
+---
+#+END_EXPORT
+
+也许是巧合，也许是缘分，也许只是从前未曾留意你。
+
+没错，我说的是认识新单词这件事情。
+
+昨天早上查看邮件，看到一则 Twitter 的消息：
+
+#+BEGIN_QUOTE
+Apple may unveil its streaming service on March 25, reports say. According to
+several reporters and news outlets, the tech giant is expected to release more
+information on the debut.
+#+END_QUOTE
+
+这句话里，我昨天还不认识的单词 debut 初次亮相。一般以 on debut 或者 make a debut. on
+the debut 好像不太用。
+
+主要有两层意思：
+1. a first public appearance or presentation, as of a performer, artistic work,
+   or new product. 作为演员、艺术作品或者新产品的第一次公开亮相。
+2. a formal introduction of a young woman into society. 对一位初次进入社交圈的女
+   士的正式介绍。
+
+巧合的是，傍晚看新闻，又见到两次 debut。一次是我们公司的 Karma 汽车新闻：
+
+#+BEGIN_QUOTE
+Get ready for our all-electric Karma Vision concept set to debut at Auto
+Shanghai 2019 in April. We believe that beauty is more than just stunning
+design. What advanced technologies do you expect from the future of electric
+mobility?
+#+END_QUOTE
+
+万向的纯电动汽车 Karma Vision 在 2019 上海车展初次亮相。这里用的是 set to debut.
+
+另一则新闻是阿里巴巴关于女性创业者的新闻：
+
+#+BEGIN_QUOTE
+Jiu "9" Jin, Founder of particle fever: A former Harvard student and New York
+Attorney, Jiu "9" Jin created the sportsware lin Particle Fever and grew the
+brand on Tmall. Her collection debuted on the NYFW runway after just 3 years.
+#+END_QUOTE
+
+哈佛大学法学院毕业的九斤做了一个运动穿着品牌，名字来源于纪录片《Particle Fever》，
+九斤认为：不会根据用户的喜好或市场的潮流决定产品的设计；做品牌不在乎从哪里开始，
+什么时候都不嫌晚；喜欢我们人喜欢就行。
+
+Particle Fever 在纽约时装周初次亮相“debuted on the NYFW”。这里用了动词形式。
+
+看吧，稍稍留点心，我就在一天中，三次看到 debut 这个单词。但是我总觉得这个拼法不太
+英语。稍作调查，就知道，这其实是一个法语：début。
+
+le début
+1. 开始， 开端， 开头。le début du printemps 初春。le début du livre est
+   passionnant 书的开头很引人入胜。Ce n'est qu'un début. 这只是个开始。
+2. 首次登台演出； 首次社会活动； （作家的）第一部著作
+3. 发球，开球。
+
+它的动词形式：débuter：开始，开头；首次参加。débuter dans la vie 初次踏进社会。
+
+它的衍生形容词和名词：débutant, e：初出茅庐的；初学的；n. 新手；初学者。un
+pianiste débutant 一位初出茅庐的钢琴家。
+
+好了，8 点了，我要上班了，希望以上对大家有用。
