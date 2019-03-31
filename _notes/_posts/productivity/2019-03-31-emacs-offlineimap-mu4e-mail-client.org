@@ -1,7 +1,7 @@
 #+BEGIN_EXPORT html
 ---
 layout: post
-title: 在 Emacs 中用 mu4e 和 offlineimap 查看邮件
+title: 在 Emacs 中用 mu4e 和 offlineimap 查看 O365 Exchange 邮件
 categories: [productivity]
 tags: [emacs]
 ---
