@@ -1,0 +1,143 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 在 Emacs 中用 mu4e 和 offlineimap 查看邮件
+categories: [productivity]
+tags: [emacs]
+---
+#+END_EXPORT
+
+为了能在 Emacs 中收发邮件，来来回回折腾了不少时间。终于搞定了。现将配置过程梳理如下。
+
+* 检查系统环境
+** 软件版本
+
+1. macOS 10.14.3 (18D109)
+2. GNU Emacs 26.1 (build 1, x86_64-apple-darwin14.5.0, NS appkit-1348.17 Version 10.10.5 (Build 14F2511)) of 2018-05-31
+3. mu (mail indexer/searcher) version 1.0
+4. offlineimap v7.2.1, imaplib2 v2.57 (bundled), Python v2.7.10, LibreSSL 2.2.7
+
+** 邮件系统
+
+世纪互联运营的 Office 365
+- 服务器名称: partner.outlook.cn
+- 端口: 993
+- 加密方法: TLS
+
+* 安装 mu 和 offlineimap
+
+安装 mu：
+
+#+begin_src shell
+brew install mu
+#+end_src
+
+安装 offlineimap
+
+#+begin_src shell
+brew install offlineimap
+#+end_src
+
+* 配置 offlineimap
+
+在 HOME path 下创建 =.offlineimaprc=, 内容如下：
+
+#+begin_src shell
+[general]
+accounts = outlook
+maxsyncaccounts = 3
+pythonfile = ~/.offlineimap.py
+
+[Account outlook]
+localrepository = outlook-Local
+remoterepository = outlook-Remote
+utf8foldernames = True
+
+[Repository outlook-Local]
+type = Maildir
+localfolders = ~/.mail/outlook
+
+[Repository outlook-Remote]
+type = IMAP
+remotehost = imap.partner.outlook.cn
+remoteuser = <your mail address>
+remotepass = <your password>
+ssl = true
+sslcacertfile = /etc/ssl/cert.pem
+maxconnections = 4
+realdelete = yes
+#+end_src
+
+我看到网上不少文章说 offlineimap 不支持中文，但是查看 offlineimap 代码发现有
+=utf8foldernames= 选项，设置成 True 即可支持 utf-8 了。因此也不需要 decode
+imap4-utf-7 了。
+
+* 同步邮件
+
+执行以下命令：
+
+#+begin_src shell
+offlineimap
+#+end_src
+
+运行结果如下：
+
+#+begin_src shell
+kimi.im:~$ offlineimap
+OfflineIMAP 7.2.1
+  Licensed under the GNU GPL v2 or any later version (with an OpenSSL exception)
+imaplib2 v2.57 (bundled), Python v2.7.10, LibreSSL 2.2.7
+Account sync outlook:
+ *** Processing account outlook
+ Establishing connection to imap.partner.outlook.cn:993 (outlook-Remote)
+......
+Account sync outlook:
+ *** Finished account 'outlook' in 5:11
+#+end_src
+
+* 用 mu 索引邮件
+
+执行命令：
+
+#+begin_src shell
+mu index -m ~/.mail
+#+end_src
+
+运行结果如下：
+
+#+begin_src shell
+kimi.im:~$ mu index -m ~/.mail
+indexing messages under /Users/kimim/.mail [/Users/kimim/.mu/xapian]
+/ processing mail; processed: 15750; updated/new: 0, cleaned-up: 0
+cleaning up messages [/Users/kimim/.mu/xapian]
+| processing mail; processed: 15814; updated/new: 0, cleaned-up: 0
+elapsed: 0 second(s)
+/ processing mail; processed: 15814; updated/new: 0, cleaned-up: 0
+elapsed: 0 second(s)
+#+end_src
+
+* 配置 mu4e
+
+在 Emacs 中增加 elisp
+
+#+begin_src emacs-lisp
+(when (eq system-type 'darwin)
+  (add-to-list 'load-path "/usr/local/Cellar/mu/1.0_1/share/emacs/site-lisp/mu/mu4e"))
+
+(require 'mu4e)
+(setq mail-user-agent 'mu4e-user-agent)
+(setq mu4e-maildir "~/.mail")
+(setq mu4e-get-mail-command "offlineimap")
+(setq mu4e-update-interval 60)
+
+(setq mu4e-sent-folder   "/wxciv/Sent Messages")
+(setq mu4e-drafts-folder "/wxciv/Drafts")
+(setq mu4e-trash-folder  "/wxciv/Deleted Messages")
+(setq mu4e-refile-folder  "/wxciv/Archive")
+
+(setq mu4e-view-show-images t)
+#+end_src
+
+* 大功告成
+
+然后在 Emacs 中 =M-x mu4e= 即可查阅邮件了。
