@@ -1,0 +1,136 @@
+---
+layout: post
+title: 在 Windows 上用 Emacs+offlineimap+mu4e 查收邮件
+categories: [productivity]
+tags: [emacs]
+---
+
+<p>
+本文介绍如何在 Windows 上用 Emacs、mu4e 和 offlineimap 下载邮件，本地索引，快速查看。并且支持中文字符的邮箱文件夹。虽然步骤不复杂，但是在 Windows 上实现这些，应该是全网首创了。
+</p>
+
+<p>
+上个周末在家里的 macOS 配置好了 mu4e+offlineimap，用起来很快捷方便，周一一早在公司的 Windows PC 上试着设置下。没想到能调好，我还是挺惊喜的。
+</p>
+
+<p>
+以下设置主要参考了这篇文章：<a href="https://frosch03.de/blog/2016/05/mu4e-within-cygwin.html">https://frosch03.de/blog/2016/05/mu4e-within-cygwin.html</a>
+</p>
+
+<div id="outline-container-orge820dbe" class="outline-2">
+<h2 id="orge820dbe"><span class="section-number-2">1</span> 准备工作</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>下载安装 cygwin <a href="https://www.cygwin.com/setup-x86_64.exe">https://www.cygwin.com/setup-x86_64.exe</a></li>
+</ul>
+
+<p>
+在 cygwin 中安装：
+</p>
+
+<ul class="org-ul">
+<li>emacs-w32 (26.1.92)</li>
+<li>git (2.17.0)</li>
+<li>autoconf (13-1)</li>
+<li>automake (10.1)</li>
+<li>libtool (2.4.6-6)</li>
+<li>gcc-g++ (7.4.0-1)</li>
+<li>pkg-config (1.6.0-1)</li>
+<li>make (4.2.1-2)</li>
+<li>mingw64-x86_64-win-iconv (0.0.6-2)</li>
+<li>libglib2.0-devel (2.54.3-1)</li>
+<li>libgmime3.0-devel (3.0.5-1)</li>
+<li>libxapian-devel (1.4.5-1)</li>
+<li>python (2.7.16-1)</li>
+<li>python27-pip (19.0.3-1)</li>
+<li>offlineimap (6.5.5-1)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org8534d0e" class="outline-2">
+<h2 id="org8534d0e"><span class="section-number-2">2</span> 下载 mu 源码</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-shell">git clone https://github.com/djcb/mu.git
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb6c9f0d" class="outline-2">
+<h2 id="orgb6c9f0d"><span class="section-number-2">3</span> 修改 mu 源码</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+参考 Compiling mu 部分：<a href="https://frosch03.de/blog/2016/05/mu4e-within-cygwin.html">https://frosch03.de/blog/2016/05/mu4e-within-cygwin.html</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1c83493" class="outline-2">
+<h2 id="org1c83493"><span class="section-number-2">4</span> 准备 python lib</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-shell">pip2 install six portalocker
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbeca926" class="outline-2">
+<h2 id="orgbeca926"><span class="section-number-2">5</span> 修改 offlineimap</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+由于 cygwin 上 6.5.5-1 版本的 offlineimap 对邮件的中文文件夹支持不好，需要最新版的
+offlineimap，但是最新版又需要 fcntl 库，而 Windows 上支持的又不好，所以改用可移植版的文件锁 portalocker。
+</p>
+
+<p>
+简单做了一个 patch：<a href="https://github.com/kimim/offlineimap/commit/94ce99ac9c0b4c5653fe46339feb525571d734a5">https://github.com/kimim/offlineimap/commit/94ce99ac9c0b4c5653fe46339feb525571d734a5</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-diff"><span style="color: #333333;">try:</span>
+<span style="color: #333333;">    import fcntl</span>
+<span style="color: #333333;">    import portalocker</span>
+<span style="color: #333333;">except:</span>
+<span style="color: #333333;">    pass # Ok if this fails, we can do without.</span>
+
+<span style="background-color: #cccccc;">@@ -232,7 +232,7 @@</span><span style="background-color: #cccccc;"> def __lock(self):</span>
+
+<span style="color: #333333;">        self._lockfd = open(self._lockfilepath, 'w')</span>
+<span style="color: #333333;">        try:</span>
+<span style="color: #333333;">            fcntl.lockf(self._lockfd, fcntl.LOCK_EX|fcntl.LOCK_NB)</span>
+<span style="color: #333333;">            portalocker.lock(self._lockfd, portalocker.LOCK_EX)</span>
+<span style="color: #333333;">        except NameError:</span>
+<span style="color: #333333;">            #fcntl not available (Windows), disable file locking... :(</span>
+<span style="color: #333333;">            pass</span>
+<span style="background-color: #cccccc;">@@ -250,6 +250,7 @@</span><span style="background-color: #cccccc;"> def _unlock(self):</span>
+
+<span style="color: #333333;">        #If we own the lock file, delete it</span>
+<span style="color: #333333;">        if self._lockfd and not self._lockfd.closed:</span>
+            portalocker.unlock(self._lockfd)
+</pre>
+</div>
+
+<p>
+最简单的方法是 clone 我的修改，然后将 offlineimap 替换掉：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git clone https://github.com/kimim/offlineimap
+rm -rf /lib/python2.7/site-packages/offlineimap
+cp -r offlineimap/offlineimap /lib/python2.7/site-packages/offlineimap
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb4312f9" class="outline-2">
+<h2 id="orgb4312f9"><span class="section-number-2">6</span> 设置.offlinemaprc 和 mu4e</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+其他设置参考：<a href="http://kimi.im/2019-03-31-emacs-offlineimap-mu4e-mail-client">http://kimi.im/2019-03-31-emacs-offlineimap-mu4e-mail-client</a>
+</p>
+</div>
+</div>
