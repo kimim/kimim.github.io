@@ -130,10 +130,10 @@ elapsed: 0 second(s)
 (setq mu4e-get-mail-command "offlineimap -u quiet")
 (setq mu4e-update-interval 60)
 
-(setq mu4e-sent-folder   "/wxciv/Sent Messages")
-(setq mu4e-drafts-folder "/wxciv/Drafts")
-(setq mu4e-trash-folder  "/wxciv/Deleted Messages")
-(setq mu4e-refile-folder  "/wxciv/Archive")
+(setq mu4e-sent-folder   "/outlook/Sent Messages")
+(setq mu4e-drafts-folder "/outlook/Drafts")
+(setq mu4e-trash-folder  "/outlook/Deleted Messages")
+(setq mu4e-refile-folder  "/outlook/Archive")
 
 (setq mu4e-view-show-images t)
 #+end_src

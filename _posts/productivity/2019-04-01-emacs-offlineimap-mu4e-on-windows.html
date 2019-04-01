@@ -17,8 +17,8 @@ tags: [emacs]
 以下设置主要参考了这篇文章：<a href="https://frosch03.de/blog/2016/05/mu4e-within-cygwin.html">https://frosch03.de/blog/2016/05/mu4e-within-cygwin.html</a>
 </p>
 
-<div id="outline-container-orge820dbe" class="outline-2">
-<h2 id="orge820dbe"><span class="section-number-2">1</span> 准备工作</h2>
+<div id="outline-container-org937892f" class="outline-2">
+<h2 id="org937892f"><span class="section-number-2">1</span> 准备工作</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>下载安装 cygwin <a href="https://www.cygwin.com/setup-x86_64.exe">https://www.cygwin.com/setup-x86_64.exe</a></li>
@@ -48,8 +48,8 @@ tags: [emacs]
 </div>
 </div>
 
-<div id="outline-container-org8534d0e" class="outline-2">
-<h2 id="org8534d0e"><span class="section-number-2">2</span> 下载 mu 源码</h2>
+<div id="outline-container-org2a3be57" class="outline-2">
+<h2 id="org2a3be57"><span class="section-number-2">2</span> 下载 mu 源码</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-shell">git clone https://github.com/djcb/mu.git
@@ -58,17 +58,54 @@ tags: [emacs]
 </div>
 </div>
 
-<div id="outline-container-orgb6c9f0d" class="outline-2">
-<h2 id="orgb6c9f0d"><span class="section-number-2">3</span> 修改 mu 源码</h2>
+<div id="outline-container-orgb73a17c" class="outline-2">
+<h2 id="orgb73a17c"><span class="section-number-2">3</span> 编译 mu</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 参考 Compiling mu 部分：<a href="https://frosch03.de/blog/2016/05/mu4e-within-cygwin.html">https://frosch03.de/blog/2016/05/mu4e-within-cygwin.html</a>
 </p>
+
+<p>
+其中不少步骤可以省去，仅需执行以下命令：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">ln -s /usr/x86_64-w64-mingw32/sys-root/mingw/include/iconv.h /usr/include/iconv.h
+</pre>
+</div>
+
+<p>
+不然编译出错：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">In file included from /usr/include/gmime-3.0/gmime/gmime.h:29:0,
+                 from mu-msg-priv.h:29,
+                 from mu-msg-crypto.c:27:
+/usr/include/gmime-3.0/gmime/gmime-iconv.h:26:10: &#33268;&#21629;&#38169;&#35823;&#65306;iconv.h&#65306;No such file or directory
+ <span style="color: #228b22; font-style: italic;">#</span><span style="color: #228b22; font-style: italic;">include &lt;iconv.h&gt;</span>
+          ^~~~~~~~~
+&#32534;&#35793;&#20013;&#26029;&#12290;
+</pre>
+</div>
+
+<p>
+编译并安装 mu：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #000000;">cd</span> mu
+autoreconfig -i
+./configure
+make
+make install
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-org1c83493" class="outline-2">
-<h2 id="org1c83493"><span class="section-number-2">4</span> 准备 python lib</h2>
+<div id="outline-container-org362d2d3" class="outline-2">
+<h2 id="org362d2d3"><span class="section-number-2">4</span> 准备 python lib</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
 <pre class="src src-shell">pip2 install six portalocker
@@ -77,8 +114,8 @@ tags: [emacs]
 </div>
 </div>
 
-<div id="outline-container-orgbeca926" class="outline-2">
-<h2 id="orgbeca926"><span class="section-number-2">5</span> 修改 offlineimap</h2>
+<div id="outline-container-org8b268a9" class="outline-2">
+<h2 id="org8b268a9"><span class="section-number-2">5</span> 修改 offlineimap</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 由于 cygwin 上 6.5.5-1 版本的 offlineimap 对邮件的中文文件夹支持不好，需要最新版的
@@ -126,11 +163,51 @@ cp -r offlineimap/offlineimap /lib/python2.7/site-packages/offlineimap
 </div>
 </div>
 
-<div id="outline-container-orgb4312f9" class="outline-2">
-<h2 id="orgb4312f9"><span class="section-number-2">6</span> 设置.offlinemaprc 和 mu4e</h2>
+<div id="outline-container-org794ad1c" class="outline-2">
+<h2 id="org794ad1c"><span class="section-number-2">6</span> 设置.offlinemaprc 和 mu4e</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 其他设置参考：<a href="http://kimi.im/2019-03-31-emacs-offlineimap-mu4e-mail-client">http://kimi.im/2019-03-31-emacs-offlineimap-mu4e-mail-client</a>
+</p>
+
+<p>
+<code>~/.offlineimaprc</code> 如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">[general]
+accounts = outlook
+maxsyncaccounts = 3
+
+[Account outlook]
+localrepository = outlook-Local
+remoterepository = outlook-Remote
+utf8foldernames = True
+
+[Repository outlook-Local]
+<span style="color: #000000;">type</span> = Maildir
+localfolders = ~/.mail/outlook
+
+[Repository outlook-Remote]
+<span style="color: #000000;">type</span> = IMAP
+remotehost = imap.partner.outlook.cn
+remoteuser = &lt;your mail address&gt;
+remotepass = &lt;your password&gt;
+ssl = true
+sslcacertfile = /etc/ssl/certs/ca-bundle.crt
+maxconnections = 1
+realdelete = yes
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgad2654e" class="outline-2">
+<h2 id="orgad2654e"><span class="section-number-2">7</span> 大功告成</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+然后，就可以在 emacs-w32 下快乐的收发邮件了。macOS 上设置 emacs + mu4e + offlineimap
+请参考：<a href="http://kimi.im/2019-03-31-emacs-offlineimap-mu4e-mail-client">http://kimi.im/2019-03-31-emacs-offlineimap-mu4e-mail-client</a>
 </p>
 </div>
 </div>
