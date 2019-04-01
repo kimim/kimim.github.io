@@ -34,7 +34,7 @@ tags: [emacs]
 - libglib2.0-devel (2.54.3-1)
 - libgmime3.0-devel (3.0.5-1)
 - libxapian-devel (1.4.5-1)
-- python (2.7.16-1)
+- python2 (2.7.16-1)
 - python27-pip (19.0.3-1)
 - offlineimap (6.5.5-1)
 
