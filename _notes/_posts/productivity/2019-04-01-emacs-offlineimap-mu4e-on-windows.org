@@ -64,8 +64,8 @@ offlineimap，但是最新版又需要 fcntl 库，而 Windows 上支持的又�
 
 #+begin_src diff
 try:
-    import fcntl
-    import portalocker
+-    import fcntl
++    import portalocker
 except:
     pass # Ok if this fails, we can do without.
 
@@ -73,8 +73,8 @@ except:
 
         self._lockfd = open(self._lockfilepath, 'w')
         try:
-            fcntl.lockf(self._lockfd, fcntl.LOCK_EX|fcntl.LOCK_NB)
-            portalocker.lock(self._lockfd, portalocker.LOCK_EX)
+-            fcntl.lockf(self._lockfd, fcntl.LOCK_EX|fcntl.LOCK_NB)
++            portalocker.lock(self._lockfd, portalocker.LOCK_EX)
         except NameError:
             #fcntl not available (Windows), disable file locking... :(
             pass
@@ -82,7 +82,7 @@ except:
 
         #If we own the lock file, delete it
         if self._lockfd and not self._lockfd.closed:
-            portalocker.unlock(self._lockfd)
++            portalocker.unlock(self._lockfd)
 #+end_src
 
 最简单的方法是 clone 我的修改，然后将 offlineimap 替换掉：
