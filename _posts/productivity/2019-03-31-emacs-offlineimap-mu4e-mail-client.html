@@ -9,12 +9,12 @@ tags: [emacs]
 为了能在 Emacs 中收发邮件，来来回回折腾了不少时间。终于搞定了。现将配置过程梳理如下。
 </p>
 
-<div id="outline-container-org3040565" class="outline-2">
-<h2 id="org3040565"><span class="section-number-2">1</span> 检查系统环境</h2>
+<div id="outline-container-org7b411f9" class="outline-2">
+<h2 id="org7b411f9"><span class="section-number-2">1</span> 检查系统环境</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org1d0162e" class="outline-3">
-<h3 id="org1d0162e"><span class="section-number-3">1.1</span> 软件版本</h3>
+<div id="outline-container-org24dc830" class="outline-3">
+<h3 id="org24dc830"><span class="section-number-3">1.1</span> 软件版本</h3>
 <div class="outline-text-3" id="text-1-1">
 <ol class="org-ol">
 <li>macOS 10.14.3 (18D109)</li>
@@ -25,8 +25,8 @@ tags: [emacs]
 </div>
 </div>
 
-<div id="outline-container-orgc09e4fe" class="outline-3">
-<h3 id="orgc09e4fe"><span class="section-number-3">1.2</span> 邮件系统</h3>
+<div id="outline-container-org2812b31" class="outline-3">
+<h3 id="org2812b31"><span class="section-number-3">1.2</span> 邮件系统</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 世纪互联运营的 Office 365
@@ -40,8 +40,8 @@ tags: [emacs]
 </div>
 </div>
 
-<div id="outline-container-org510ed21" class="outline-2">
-<h2 id="org510ed21"><span class="section-number-2">2</span> 安装 mu 和 offlineimap</h2>
+<div id="outline-container-orgf4680ed" class="outline-2">
+<h2 id="orgf4680ed"><span class="section-number-2">2</span> 安装 mu 和 offlineimap</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 安装 mu：
@@ -63,8 +63,8 @@ tags: [emacs]
 </div>
 </div>
 
-<div id="outline-container-orgd057d17" class="outline-2">
-<h2 id="orgd057d17"><span class="section-number-2">3</span> 配置 offlineimap</h2>
+<div id="outline-container-org90bc35b" class="outline-2">
+<h2 id="org90bc35b"><span class="section-number-2">3</span> 配置 offlineimap</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 在 HOME path 下创建 <code>.offlineimaprc</code>, 内容如下：
@@ -105,8 +105,8 @@ imap4-utf-7 了。
 </div>
 </div>
 
-<div id="outline-container-orge0c462b" class="outline-2">
-<h2 id="orge0c462b"><span class="section-number-2">4</span> 同步邮件</h2>
+<div id="outline-container-org86327f6" class="outline-2">
+<h2 id="org86327f6"><span class="section-number-2">4</span> 同步邮件</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 执行以下命令：
@@ -137,8 +137,8 @@ Account sync outlook:
 </div>
 </div>
 
-<div id="outline-container-orgfadc2d7" class="outline-2">
-<h2 id="orgfadc2d7"><span class="section-number-2">5</span> 用 mu 索引邮件</h2>
+<div id="outline-container-org4aebda0" class="outline-2">
+<h2 id="org4aebda0"><span class="section-number-2">5</span> 用 mu 索引邮件</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 执行命令：
@@ -167,8 +167,8 @@ elapsed: 0 second(s)
 </div>
 </div>
 
-<div id="outline-container-orga21cceb" class="outline-2">
-<h2 id="orga21cceb"><span class="section-number-2">6</span> 配置 mu4e</h2>
+<div id="outline-container-org9faae17" class="outline-2">
+<h2 id="org9faae17"><span class="section-number-2">6</span> 配置 mu4e</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 在 Emacs 中增加 elisp
@@ -184,10 +184,10 @@ elapsed: 0 second(s)
 (<span style="color: #8b008b; font-weight: bold;">setq</span> mu4e-get-mail-command <span style="color: #3a5fcd;">"offlineimap -u quiet"</span>)
 (<span style="color: #8b008b; font-weight: bold;">setq</span> mu4e-update-interval 60)
 
-(<span style="color: #8b008b; font-weight: bold;">setq</span> mu4e-sent-folder   <span style="color: #3a5fcd;">"/wxciv/Sent Messages"</span>)
-(<span style="color: #8b008b; font-weight: bold;">setq</span> mu4e-drafts-folder <span style="color: #3a5fcd;">"/wxciv/Drafts"</span>)
-(<span style="color: #8b008b; font-weight: bold;">setq</span> mu4e-trash-folder  <span style="color: #3a5fcd;">"/wxciv/Deleted Messages"</span>)
-(<span style="color: #8b008b; font-weight: bold;">setq</span> mu4e-refile-folder  <span style="color: #3a5fcd;">"/wxciv/Archive"</span>)
+(<span style="color: #8b008b; font-weight: bold;">setq</span> mu4e-sent-folder   <span style="color: #3a5fcd;">"/outlook/Sent Messages"</span>)
+(<span style="color: #8b008b; font-weight: bold;">setq</span> mu4e-drafts-folder <span style="color: #3a5fcd;">"/outlook/Drafts"</span>)
+(<span style="color: #8b008b; font-weight: bold;">setq</span> mu4e-trash-folder  <span style="color: #3a5fcd;">"/outlook/Deleted Messages"</span>)
+(<span style="color: #8b008b; font-weight: bold;">setq</span> mu4e-refile-folder  <span style="color: #3a5fcd;">"/outlook/Archive"</span>)
 
 (<span style="color: #8b008b; font-weight: bold;">setq</span> mu4e-view-show-images t)
 </pre>
@@ -195,8 +195,8 @@ elapsed: 0 second(s)
 </div>
 </div>
 
-<div id="outline-container-orged1a817" class="outline-2">
-<h2 id="orged1a817"><span class="section-number-2">7</span> 大功告成</h2>
+<div id="outline-container-org591d744" class="outline-2">
+<h2 id="org591d744"><span class="section-number-2">7</span> 大功告成</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 然后在 Emacs 中 <code>M-x mu4e</code> 即可查阅邮件了。

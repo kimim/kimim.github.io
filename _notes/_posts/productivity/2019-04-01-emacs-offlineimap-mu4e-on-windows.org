@@ -34,7 +34,7 @@ tags: [emacs]
 - libglib2.0-devel (2.54.3-1)
 - libgmime3.0-devel (3.0.5-1)
 - libxapian-devel (1.4.5-1)
-- python (2.7.16-1)
+- python2 (2.7.16-1)
 - python27-pip (19.0.3-1)
 - offlineimap (6.5.5-1)
 
@@ -44,9 +44,37 @@ tags: [emacs]
 git clone https://github.com/djcb/mu.git
 #+end_src
 
-* 修改 mu 源码
+* 编译 mu
 
 参考 Compiling mu 部分：https://frosch03.de/blog/2016/05/mu4e-within-cygwin.html
+
+其中不少步骤可以省去，仅需执行以下命令：
+
+#+begin_src shell
+ln -s /usr/x86_64-w64-mingw32/sys-root/mingw/include/iconv.h /usr/include/iconv.h
+#+end_src
+
+不然编译出错：
+
+#+begin_src shell
+In file included from /usr/include/gmime-3.0/gmime/gmime.h:29:0,
+                 from mu-msg-priv.h:29,
+                 from mu-msg-crypto.c:27:
+/usr/include/gmime-3.0/gmime/gmime-iconv.h:26:10: 致命错误：iconv.h：No such file or directory
+ #include <iconv.h>
+          ^~~~~~~~~
+编译中断。
+#+end_src
+
+编译并安装 mu：
+
+#+begin_src shell
+cd mu
+autoreconfig -i
+./configure
+make
+make install
+#+end_src
 
 * 准备 python lib
 
@@ -96,3 +124,35 @@ cp -r offlineimap/offlineimap /lib/python2.7/site-packages/offlineimap
 * 设置.offlinemaprc 和 mu4e
 
 其他设置参考：http://kimi.im/2019-03-31-emacs-offlineimap-mu4e-mail-client
+
+=~/.offlineimaprc= 如下：
+
+#+begin_src shell
+[general]
+accounts = outlook
+maxsyncaccounts = 3
+
+[Account outlook]
+localrepository = outlook-Local
+remoterepository = outlook-Remote
+utf8foldernames = True
+
+[Repository outlook-Local]
+type = Maildir
+localfolders = ~/.mail/outlook
+
+[Repository outlook-Remote]
+type = IMAP
+remotehost = imap.partner.outlook.cn
+remoteuser = <your mail address>
+remotepass = <your password>
+ssl = true
+sslcacertfile = /etc/ssl/certs/ca-bundle.crt
+maxconnections = 1
+realdelete = yes
+#+end_src
+
+* 大功告成
+
+然后，就可以在 emacs-w32 下快乐的收发邮件了。macOS 上设置 emacs + mu4e + offlineimap
+请参考：http://kimi.im/2019-03-31-emacs-offlineimap-mu4e-mail-client
