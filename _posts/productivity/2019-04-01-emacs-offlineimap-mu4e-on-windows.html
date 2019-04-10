@@ -128,8 +128,8 @@ offlineimap，但是最新版又需要 fcntl 库，而 Windows 上支持的又�
 
 <div class="org-src-container">
 <pre class="src src-diff"><span style="color: #333333;">try:</span>
-<span style="color: #333333;">    import fcntl</span>
-<span style="color: #333333;">    import portalocker</span>
+<span style="background-color: #ffdddd;">-</span><span style="background-color: #ffdddd;">    import fcntl</span>
+<span style="background-color: #ddffdd;">+</span><span style="background-color: #ddffdd;">    import portalocker</span>
 <span style="color: #333333;">except:</span>
 <span style="color: #333333;">    pass # Ok if this fails, we can do without.</span>
 
@@ -137,8 +137,8 @@ offlineimap，但是最新版又需要 fcntl 库，而 Windows 上支持的又�
 
 <span style="color: #333333;">        self._lockfd = open(self._lockfilepath, 'w')</span>
 <span style="color: #333333;">        try:</span>
-<span style="color: #333333;">            fcntl.lockf(self._lockfd, fcntl.LOCK_EX|fcntl.LOCK_NB)</span>
-<span style="color: #333333;">            portalocker.lock(self._lockfd, portalocker.LOCK_EX)</span>
+<span style="background-color: #ffdddd;">-</span><span style="background-color: #ffdddd;">            fcntl.lockf(self._lockfd, fcntl.LOCK_EX|fcntl.LOCK_NB)</span>
+<span style="background-color: #ddffdd;">+</span><span style="background-color: #ddffdd;">            portalocker.lock(self._lockfd, portalocker.LOCK_EX)</span>
 <span style="color: #333333;">        except NameError:</span>
 <span style="color: #333333;">            #fcntl not available (Windows), disable file locking... :(</span>
 <span style="color: #333333;">            pass</span>
@@ -146,7 +146,7 @@ offlineimap，但是最新版又需要 fcntl 库，而 Windows 上支持的又�
 
 <span style="color: #333333;">        #If we own the lock file, delete it</span>
 <span style="color: #333333;">        if self._lockfd and not self._lockfd.closed:</span>
-            portalocker.unlock(self._lockfd)
++            portalocker.unlock(self._lockfd)
 </pre>
 </div>
 
