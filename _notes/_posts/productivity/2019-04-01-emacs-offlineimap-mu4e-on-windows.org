@@ -70,7 +70,7 @@ In file included from /usr/include/gmime-3.0/gmime/gmime.h:29:0,
 
 #+begin_src shell
 cd mu
-autoreconfig -i
+autoreconf -i
 ./configure
 make
 make install
