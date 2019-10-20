@@ -38,6 +38,17 @@ tags: [emacs]
 - python27-pip (19.0.3-1)
 - offlineimap (6.5.5-1)
 
+最快捷的方式是通过 =apt-cyg= 安装：
+
+#+begin_src shell
+apt-cyg install emacs-w32 git \
+        autoconf automake libtool \
+        gcc-g++ pkg-config make mingw64-x86_64-win-iconv \
+        libglib2.0-devel libgmime3.0-devel \
+        libxapian-devel python2 python27-pip offlineimap
+#+end_src
+
+
 * 下载 mu 源码
 
 #+begin_src shell
