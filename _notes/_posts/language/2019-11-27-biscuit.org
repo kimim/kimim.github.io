@@ -1,0 +1,8 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 法语单词：biscuit
+categories: [language]
+tags: [English, Français]
+---
+#+END_EXPORT
