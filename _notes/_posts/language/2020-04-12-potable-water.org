@@ -21,17 +21,17 @@ tags: [Italiano, Français, Deutsch]
 - eau potable
 - acqua potabile
 
-#+BEGIN_HTML
+#+BEGIN_EXPORT html
 <a data-flickr-embed="true" href="https://www.flickr.com/photos/kimim-photo/49764960012/in/dateposted-public/" title="_DSF7216"><img src="https://live.staticflickr.com/65535/49764960012_0ccbbe7389_z.jpg" width="640" height="427" alt="_DSF7216"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
 #+END_HTML
 
-#+BEGIN_HTML
+#+BEGIN_EXPORT html
 <a data-flickr-embed="true" href="https://www.flickr.com/photos/kimim-photo/49764959652/in/dateposted-public/" title="_DSF7217"><img src="https://live.staticflickr.com/65535/49764959652_7e35728507_z.jpg" width="640" height="427" alt="_DSF7217"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
 #+END_HTML
 
 那户人家门口除了饮水池外，其他是这样子的：
 
-#+BEGIN_HTML
+#+BEGIN_EXPORT html
 <a data-flickr-embed="true" href="https://www.flickr.com/photos/kimim-photo/49764636676/in/dateposted-public/" title="_DSF7215"><img src="https://live.staticflickr.com/65535/49764636676_a5528dda0b_z.jpg" width="640" height="427" alt="_DSF7215"></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
 #+END_HTML
 
