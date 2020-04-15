@@ -1,0 +1,88 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Connect to Oracle DB from Clojure
+categories: [technology]
+tags:]
+---
+#+END_EXPORT
+
+I need to analyze data from Oracle database in Clojure, and come across some
+error. Here is the solutions to the problems.
+
+* No suitable driver found
+
+The first problem is no oracle database driver:
+
+#+begin_example
+Syntax error (SQLException) compiling at (C:\cygwin64\tmp\form-init16410964815710271710.clj:1:88).
+No suitable driver found for jdbc:oracle:thin:@xxx.xxx.xxx.xxx:1521
+#+end_example
+
+The solution:
+
+** download Oracle jdbc driver
+
+Download "ojdbc8.jar" from:
+
+https://www.oracle.com/database/technologies/jdbc-ucp-122-downloads.html
+
+** add lein-localrepo plugin to leiningen profiles
+
+In ~/.lein/profiles.clj, add:
+
+#+begin_example
+{:user
+ {
+  :plugins [[lein-localrepo "0.5.4"]]
+  }
+ }
+#+end_example
+
+** install oracledriver
+
+#+begin_example
+$ lein localrepo install ~/downloads/ojdbc8.jar oracle.jdbc/oracledriver "12.1.0.1"
+#+end_example
+
+** add dependencies in project.clj
+
+#+begin_example
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 [org.clojure/java.jdbc "0.7.11"]
+                 [oracle.jdbc/oracledriver "12.1.0.1"]] <--
+#+end_example
+
+* No service found
+
+#+begin_example
+Syntax error (NetException) compiling at (C:\cygwin64\tmp\form-init628084108377043642.clj:1:86).
+Listener refused the connection with the following error:
+ORA-12504, TNS:listener was not given the SID in CONNECT_DATA
+#+end_example
+
+You need to find the SERVICE_NAME from tnsnames.ora:
+
+
+#+begin_example
+TEST =
+   (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)(HOST = *<validhost>*)(PORT = *<validport>*))
+    )
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = *<servicenamefromDB>*)
+    )
+)
+#+end_example
+
+defin the db-spec as:
+
+#+begin_example
+(def db-spec {:classname "oracle.jdbc.OracleDriver"
+              :subprotocol "oracle"
+              :subname "@*<validhost>*:*<validport>*/*<servicenamefromDB>*"
+              :user "username"
+              :password "password"})
+#+end_example
