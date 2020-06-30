@@ -3,7 +3,7 @@
 layout: post
 title: Connect to Oracle DB from Clojure
 categories: [technology]
-tags:[]
+tags:[clojure]
 ---
 #+END_EXPORT
 
