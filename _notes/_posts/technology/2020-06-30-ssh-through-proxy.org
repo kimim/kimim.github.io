@@ -45,7 +45,7 @@ Package cygwin is already installed, skipping
 Package nc installed
 #+end_src
 
-另外，我还在远程运行 = clojure= 的 =nrel= ，通过 =Emacs= =cider= 连
+另外，我还在远程运行 =clojure= 的 =nrel= ，通过 =Emacs= =cider= 连
 接，所以还要把代理加到 =cider= 的远程连接上：
 
 #+begin_src emacs-lisp
