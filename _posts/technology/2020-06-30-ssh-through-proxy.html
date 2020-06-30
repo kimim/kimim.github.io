@@ -24,6 +24,34 @@ tags: [productivity, Linux]
 </p>
 
 <p>
+不过，如果你没有装 <code>nc</code> 的话，敲了 <code>ubuntu</code> 命令时候，会提示说找不到
+<code>nc</code> ， <code>Cygwin</code> 环境用 <code>apg-cyg</code> 安装 <code>nc</code> ：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">$ apt-cyg install nc
+Installing nc
+--2020-06-30 20:47:40--  https://mirrors.tuna.tsinghua.edu.cn/cygwin//x86_64/release/nc/nc-1.107-4.tar.bz2
+Resolving mirrors.tuna.tsinghua.edu.cn (mirrors.tuna.tsinghua.edu.cn)... 101.6.8.193, 2402:f000:1:408:8100::1
+Connecting to mirrors.tuna.tsinghua.edu.cn (mirrors.tuna.tsinghua.edu.cn)|101.6.8.193|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 17895 (17K) [application/octet-stream]
+Saving to: &#8216;nc-1.107-4.tar.bz2&#8217;
+
+nc-1.107-4.tar.bz2  100%[===================&gt;]  17.48K  --.-KB/s   <span style="color: #7F0055; font-weight: bold;"> in</span> 0s
+
+2020-06-30 20:47:41 (36.0 MB/s) - &#8216;nc-1.107-4.tar.bz2&#8217; saved [17895/17895]
+
+nc-1.107-4.tar.bz2: OK
+Unpacking...
+Package nc requires the following packages, installing:
+cygwin
+Package cygwin is already installed, skipping
+Package nc installed
+</pre>
+</div>
+
+<p>
 另外，我还在远程运行 = clojure= 的 <code>nrel</code> ，通过 <code>Emacs</code> <code>cider</code> 连接，所以还要把代理加到 <code>cider</code> 的远程连接上：
 </p>
 
