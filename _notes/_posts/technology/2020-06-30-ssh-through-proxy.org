@@ -1,0 +1,42 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: ssh connection through proxy
+categories: [technology]
+tags: [productivity, Linux]
+---
+#+END_EXPORT
+
+最近经常在Azure Global上的Ubuntu下工作。无奈，在中国访问Azure国际云
+速度是相当的慢。好在有国际代理，那么问题来了，如何通过代理 =ssh= 远
+程登录Ubuntu呢？
+
+方法是这样的：
+
+#+begin_src shell
+alias ubuntu='ssh -i ~/.ssh/id_rsa km@kimi.im -o "ProxyCommand=nc -X connect -x 127.0.0.1:1080 %h %p"'
+#+end_src
+
+以上这个 =alias= 就可以通过本地1080端口的代理访问远程服务器
+=kimi.im=，用户名为 =km= 。
+
+另外，我还在远程运行 = clojure= 的 =nrel=，通过 =Emacs= =cider= 连接，
+所以还要把代理加到 =cider= 的远程连接上：
+
+#+begin_src emacs-lisp
+(defun nrepl--ssh-tunnel-command (ssh dir port)
+  "Command string to open SSH tunnel to the host associated with DIR's PORT."
+  (with-parsed-tramp-file-name dir v
+    ;; this abuses the -v option for ssh to get output when the port
+    ;; forwarding is set up, which is used to synchronise on, so that
+    ;; the port forwarding is up when we try to connect.
+    (format-spec
+     "%s -v -N -L %p:localhost:%p %u'%h' %x"
+     `((?s . ,ssh)
+       (?p . ,port)
+       (?h . ,v-host)
+       (?u . ,(if v-user (format "-l '%s' " v-user) ""))
+       (?x . "-o \"ProxyCommand=nc -X connect -x 127.0.0.1:1080 %h %p\"")))))
+#+end_src
+
+好了，这样 =ssh= 和 =cider= 都可以快速访问Azure了。
