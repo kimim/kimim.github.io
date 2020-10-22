@@ -1,0 +1,73 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: How to keep a github fork updated
+categories: [technology]
+tags: [development]
+---
+#+END_EXPORT
+
+Recently, I forked several projects and make some contribution to them by create
+pull request. But later, I find out that my forked repo is fall behind the
+original repo after several days.
+
+So I need to keep up to date with the original repo.
+
+* git command line
+
+Add remote repository:
+
+#+begin_src shell
+git clone https://github.com/kimim/djl
+cd djl
+git remote add awslabs https://github.com/awslabs/djl
+#+end_src
+
+List remote repositories:
+
+#+begin_src shell
+git remote
+#+end_src
+
+#+begin_example
+awslabs
+origin
+#+end_example
+
+Update all the remotes:
+
+#+begin_src shell
+git fetch --all
+#+end_src
+
+#+begin_example
+Fetching origin
+Fetching awslabs
+From https://github.com/awslabs/djl
+ * [new branch]        mac          -> awslabs/mac
+ * [new branch]        master       -> awslabs/master
+ * [new branch]        model-upload -> awslabs/model-upload
+#+end_example
+
+Rebase and push
+
+#+begin_src shell
+git rebase awslabs/master
+git push
+#+end_src
+
+Now the forked repo is up-to-date.
+
+
+* Magit
+
+| Key     | command          | Input               |
+|---------+------------------+---------------------|
+| C-x m g | magit-status     |                     |
+| M a     | magit-remote-add | remote name and url |
+| f a     | magit-fetch      |                     |
+| r u     | magit-rebase     | rebase upstream     |
+
+If upstream is not correct, use =r C-u u= to set upstream.
+
+maigt makes life simple ^_^

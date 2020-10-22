@@ -1,0 +1,136 @@
+---
+layout: post
+title: How to keep a github fork updated
+categories: [technology]
+tags: [development]
+---
+
+<p>
+Recently, I forked several projects and make some contribution to them by create
+pull request. But later, I find out that my forked repo is fall behind the
+original repo after several days.
+</p>
+
+<p>
+So I need to keep up to date with the original repo.
+</p>
+
+<div id="outline-container-org01b6a30" class="outline-2">
+<h2 id="org01b6a30"><span class="section-number-2">1</span> git command line</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Add remote repository:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git clone https://github.com/kimim/djl
+<span style="color: #ff55ff; font-weight: bold;">cd</span> djl
+git remote add awslabs https://github.com/awslabs/djl
+</pre>
+</div>
+
+<p>
+List remote repositories:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git remote
+</pre>
+</div>
+
+<pre class="example" id="org350181c">
+awslabs
+origin
+</pre>
+
+<p>
+Update all the remotes:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git fetch --all
+</pre>
+</div>
+
+<pre class="example" id="orgc8f692a">
+Fetching origin
+Fetching awslabs
+From https://github.com/awslabs/djl
+ * [new branch]        mac          -&gt; awslabs/mac
+ * [new branch]        master       -&gt; awslabs/master
+ * [new branch]        model-upload -&gt; awslabs/model-upload
+</pre>
+
+<p>
+Rebase and push
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git rebase awslabs/master
+git push
+</pre>
+</div>
+
+<p>
+Now the forked repo is up-to-date.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org87bc696" class="outline-2">
+<h2 id="org87bc696"><span class="section-number-2">2</span> Magit</h2>
+<div class="outline-text-2" id="text-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">command</th>
+<th scope="col" class="org-left">Input</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-x m g</td>
+<td class="org-left">magit-status</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">M a</td>
+<td class="org-left">magit-remote-add</td>
+<td class="org-left">remote name and url</td>
+</tr>
+
+<tr>
+<td class="org-left">f a</td>
+<td class="org-left">magit-fetch</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">r u</td>
+<td class="org-left">magit-rebase</td>
+<td class="org-left">rebase upstream</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+If upstream is not correct, use <code>r C-u u</code> to set upstream.
+</p>
+
+<p>
+maigt makes life simple ^_^
+</p>
+</div>
+</div>
