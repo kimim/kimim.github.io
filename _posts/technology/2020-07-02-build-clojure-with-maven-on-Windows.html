@@ -1,0 +1,49 @@
+---
+layout: post
+title: Build clojure with maven on Windows 10
+categories: [technology]
+tags: [Windows, clojure]
+---
+
+<p>
+There are several ways to install <code>clojure</code> on Linux and macOS, but
+no Windows option. Anyway, <code>clojure</code> official site provide one
+option to compile it with <code>maven</code>.
+</p>
+
+<ol class="org-ol">
+<li>download <code>maven</code> from <a href="http://maven.apache.org/download.cgi">http://maven.apache.org/download.cgi</a></li>
+<li>unpack <code>maven</code> to some folder, such as <code>C:\apache-maven-3.6.3\bin</code></li>
+<li><p>
+add to <code>maven</code> to <code>PATH</code>, by add one line in <code>~/.bash_profile</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #7F0055; font-weight: bold;">export</span> <span style="color: #000000;">PATH</span>=$<span style="color: #000000;">PATH</span>:/cygdrive/c/apache-maven-3.6.3/bin
+</pre>
+</div></li>
+
+<li><p>
+clone <code>clojure</code> src and compile with maven:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git clone https://github.com/clojure/clojure.git
+<span style="color: #7F0055; font-weight: bold;">cd</span> clojure
+mvn -Plocal -Dmaven.test.skip=true package
+</pre>
+</div></li>
+
+<li><p>
+Then start the REPL with the local jar:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">java -jar clojure.jar
+</pre>
+</div></li>
+</ol>
+
+<p>
+Now, you are a happy clojurian!
+</p>

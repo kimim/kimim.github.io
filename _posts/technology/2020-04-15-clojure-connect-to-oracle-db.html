@@ -2,7 +2,7 @@
 layout: post
 title: Connect to Oracle DB from Clojure
 categories: [technology]
-tags:]
+tags: [clojure]
 ---
 
 <p>
@@ -10,8 +10,8 @@ I need to analyze data from Oracle database in Clojure, and come across some
 error. Here is the solutions to the problems.
 </p>
 
-<div id="outline-container-org130f8ed" class="outline-2">
-<h2 id="org130f8ed"><span class="section-number-2">1</span> No suitable driver found</h2>
+<div id="outline-container-org330ba58" class="outline-2">
+<h2 id="org330ba58"><span class="section-number-2">1</span> No suitable driver found</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 The first problem is no oracle database driver:
@@ -27,8 +27,8 @@ The solution:
 </p>
 </div>
 
-<div id="outline-container-orge791850" class="outline-3">
-<h3 id="orge791850"><span class="section-number-3">1.1</span> download Oracle jdbc driver</h3>
+<div id="outline-container-org41e6496" class="outline-3">
+<h3 id="org41e6496"><span class="section-number-3">1.1</span> download Oracle jdbc driver</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Download "ojdbc8.jar" from:
@@ -40,8 +40,8 @@ Download "ojdbc8.jar" from:
 </div>
 </div>
 
-<div id="outline-container-orgac41066" class="outline-3">
-<h3 id="orgac41066"><span class="section-number-3">1.2</span> add lein-localrepo plugin to leiningen profiles</h3>
+<div id="outline-container-org71414f3" class="outline-3">
+<h3 id="org71414f3"><span class="section-number-3">1.2</span> add lein-localrepo plugin to leiningen profiles</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 In ~/.lein/profiles.clj, add:
@@ -57,8 +57,8 @@ In ~/.lein/profiles.clj, add:
 </div>
 </div>
 
-<div id="outline-container-org77f0bdd" class="outline-3">
-<h3 id="org77f0bdd"><span class="section-number-3">1.3</span> install oracledriver</h3>
+<div id="outline-container-orgabc049b" class="outline-3">
+<h3 id="orgabc049b"><span class="section-number-3">1.3</span> install oracledriver</h3>
 <div class="outline-text-3" id="text-1-3">
 <pre class="example">
 $ lein localrepo install ~/downloads/ojdbc8.jar oracle.jdbc/oracledriver "12.1.0.1"
@@ -66,8 +66,8 @@ $ lein localrepo install ~/downloads/ojdbc8.jar oracle.jdbc/oracledriver "12.1.0
 </div>
 </div>
 
-<div id="outline-container-orgd6cdd01" class="outline-3">
-<h3 id="orgd6cdd01"><span class="section-number-3">1.4</span> add dependencies in project.clj</h3>
+<div id="outline-container-org66ece1f" class="outline-3">
+<h3 id="org66ece1f"><span class="section-number-3">1.4</span> add dependencies in project.clj</h3>
 <div class="outline-text-3" id="text-1-4">
 <pre class="example">
 :dependencies [[org.clojure/clojure "1.10.1"]
@@ -78,8 +78,8 @@ $ lein localrepo install ~/downloads/ojdbc8.jar oracle.jdbc/oracledriver "12.1.0
 </div>
 </div>
 
-<div id="outline-container-org44f9a85" class="outline-2">
-<h2 id="org44f9a85"><span class="section-number-2">2</span> No service found</h2>
+<div id="outline-container-orgda825aa" class="outline-2">
+<h2 id="orgda825aa"><span class="section-number-2">2</span> No service found</h2>
 <div class="outline-text-2" id="text-2">
 <pre class="example">
 Syntax error (NetException) compiling at (C:\cygwin64\tmp\form-init628084108377043642.clj:1:86).

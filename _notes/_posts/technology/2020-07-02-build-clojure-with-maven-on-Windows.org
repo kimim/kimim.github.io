@@ -1,0 +1,36 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Build clojure with maven on Windows 10
+categories: [technology]
+tags: [Windows, clojure]
+---
+#+END_EXPORT
+
+There are several ways to install =clojure= on Linux and macOS, but
+no Windows option. Anyway, =clojure= official site provide one
+option to compile it with =maven=.
+
+1. download =maven= from http://maven.apache.org/download.cgi
+2. unpack =maven= to some folder, such as =C:\apache-maven-3.6.3\bin=
+3. add to =maven= to =PATH=, by add one line in =~/.bash_profile=:
+
+   #+begin_src shell
+   export PATH=$PATH:/cygdrive/c/apache-maven-3.6.3/bin
+   #+end_src
+
+4. clone =clojure= src and compile with maven:
+
+   #+begin_src shell
+   git clone https://github.com/clojure/clojure.git
+   cd clojure
+   mvn -Plocal -Dmaven.test.skip=true package
+   #+end_src
+
+5. Then start the REPL with the local jar:
+
+   #+begin_src shell
+   java -jar clojure.jar
+   #+end_src
+
+Now, you are a happy clojurian!
