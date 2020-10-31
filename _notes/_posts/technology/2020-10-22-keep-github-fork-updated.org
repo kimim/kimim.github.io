@@ -58,7 +58,6 @@ git push
 
 Now the forked repo is up-to-date.
 
-
 * Magit
 
 | Key     | command          | Input               |
@@ -71,3 +70,20 @@ Now the forked repo is up-to-date.
 If upstream is not correct, use =r C-u u= to set upstream.
 
 maigt makes life simple ^_^
+
+* Error
+
+If you follow the instruction above, but get the error:
+
+#+begin_example
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Integrate the remote changes (e.g.
+hint: 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+#+end_example
+
+You can fix this issue as below:
+
+#+begin_src shell
+git push --force-with-lease origin master
+#+end_src
