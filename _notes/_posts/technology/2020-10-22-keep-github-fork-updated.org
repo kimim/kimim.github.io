@@ -58,22 +58,7 @@ git push
 
 Now the forked repo is up-to-date.
 
-* Magit
-
-| Key     | command          | Input               |
-|---------+------------------+---------------------|
-| C-x m g | magit-status     |                     |
-| M a     | magit-remote-add | remote name and url |
-| f a     | magit-fetch      |                     |
-| r u     | magit-rebase     | rebase upstream     |
-
-If upstream is not correct, use =r C-u u= to set upstream.
-
-maigt makes life simple ^_^
-
-* Error
-
-If you follow the instruction above, but get the error:
+If you get the error:
 
 #+begin_example
 hint: Updates were rejected because the tip of your current branch is behind
@@ -87,3 +72,24 @@ You can fix this issue as below:
 #+begin_src shell
 git push --force-with-lease origin master
 #+end_src
+
+* Magit
+
+| Key     | command          | Input                       |
+|---------+------------------+-----------------------------|
+| C-x m g | magit-status     |                             |
+| M a     | magit-remote-add | remote name and url         |
+| f a     | magit-fetch      |                             |
+| r u     | magit-rebase     | rebase upstream             |
+| P p     | magit-push       |                             |
+
+If upstream is not correct, use =r C-u u= to set upstream.
+
+If you get above mentioned error, then fix with following command:
+
+| Key     | command          | Input                       |
+|---------+------------------+-----------------------------|
+| P -f p  | magit-push       | git push --force-with-lease |
+
+
+maigt makes life simple ^_^

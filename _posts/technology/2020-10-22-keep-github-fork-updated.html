@@ -15,8 +15,8 @@ original repo after several days.
 So I need to keep up to date with the original repo.
 </p>
 
-<div id="outline-container-org2b364c5" class="outline-2">
-<h2 id="org2b364c5"><span class="section-number-2">1</span> git command line</h2>
+<div id="outline-container-org01b6a30" class="outline-2">
+<h2 id="org01b6a30"><span class="section-number-2">1</span> git command line</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Add remote repository:
@@ -38,7 +38,7 @@ List remote repositories:
 </pre>
 </div>
 
-<pre class="example">
+<pre class="example" id="orga092691">
 awslabs
 origin
 </pre>
@@ -52,7 +52,7 @@ Update all the remotes:
 </pre>
 </div>
 
-<pre class="example">
+<pre class="example" id="orge257df0">
 Fetching origin
 Fetching awslabs
 From https://github.com/awslabs/djl
@@ -74,11 +74,31 @@ git push
 <p>
 Now the forked repo is up-to-date.
 </p>
+
+<p>
+If you get the error:
+</p>
+
+<pre class="example" id="org3d37f50">
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Integrate the remote changes (e.g.
+hint: 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+</pre>
+
+<p>
+You can fix this issue as below:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git push --force-with-lease origin master
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-orgd534d71" class="outline-2">
-<h2 id="orgd534d71"><span class="section-number-2">2</span> Magit</h2>
+<div id="outline-container-org87bc696" class="outline-2">
+<h2 id="org87bc696"><span class="section-number-2">2</span> Magit</h2>
 <div class="outline-text-2" id="text-2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -121,6 +141,12 @@ Now the forked repo is up-to-date.
 <td class="org-left">magit-rebase</td>
 <td class="org-left">rebase upstream</td>
 </tr>
+
+<tr>
+<td class="org-left">P p</td>
+<td class="org-left">magit-push</td>
+<td class="org-left">&#xa0;</td>
+</tr>
 </tbody>
 </table>
 
@@ -129,32 +155,38 @@ If upstream is not correct, use <code>r C-u u</code> to set upstream.
 </p>
 
 <p>
+If you get above mentioned error, then fix with following command:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">command</th>
+<th scope="col" class="org-left">Input</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">P -f p</td>
+<td class="org-left">magit-push</td>
+<td class="org-left">git push &#x2013;force-with-lease</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
 maigt makes life simple ^_^
 </p>
-</div>
-</div>
-
-<div id="outline-container-orge93889b" class="outline-2">
-<h2 id="orge93889b"><span class="section-number-2">3</span> Error</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-If you follow the instruction above, but get the error:
-</p>
-
-<pre class="example">
-hint: Updates were rejected because the tip of your current branch is behind
-hint: its remote counterpart. Integrate the remote changes (e.g.
-hint: 'git pull ...') before pushing again.
-hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-</pre>
-
-<p>
-You can fix this issue as below:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-shell">git push --force-with-lease origin master
-</pre>
-</div>
 </div>
 </div>
