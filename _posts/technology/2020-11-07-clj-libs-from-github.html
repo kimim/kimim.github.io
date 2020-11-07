@@ -1,0 +1,68 @@
+---
+layout: post
+title: Load clj libs directly from github
+categories: [technology]
+tags: [clojure]
+---
+
+<p>
+通过 <a href="https://jitpack.io/">https://jitpack.io/</a> 可以直接将 github 上的代码编译成 clojure 的 .jar 文件，并加载使用。这样就能很方便调试尚未发布到 clojars 的库了。
+</p>
+
+<p>
+第一，在 project.clj 中添加相关 dependencies，以 clj-djl 为例：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">  <span style="color: #00eeee;">:dependencies</span> [[<span style="color: #ffffff; font-style: italic; text-decoration: underline;">org.clojure</span>/clojure <span style="color: #32cd32;">"1.10.1"</span>]
+                 <span style="color: #3cb371;">;;</span><span style="color: #3cb371;">[clj-djl "0.1.2"]</span>
+                 [<span style="color: #ffffff; font-style: italic; text-decoration: underline;">com.github.kimim</span>/clj-djl <span style="color: #32cd32;">"master-SNAPSHOT"</span>]]
+</pre>
+</div>
+
+<p>
+以上 <code>[clj-djl "0.1.2"]</code> 是发布到 clojars 的库，而 <code>[com.github.kimim/clj-djl
+"master-SNAPSHOT"]</code> 则是通过 jitpack 从 github repo 上的代码编译的最新版本。
+</p>
+
+<p>
+第二，在 project.clj 中添加 repositories：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">  <span style="color: #00eeee;">:repositories</span> [[<span style="color: #32cd32;">"jitpack"</span> <span style="color: #32cd32;">"https://jitpack.io"</span>]]
+</pre>
+</div>
+
+<p>
+第三，刷新 deps：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">lein -U deps
+</pre>
+</div>
+
+<p>
+完整 project.clj 如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #ff55ff; font-weight: bold;">defproject</span> <span style="color: #00bfff; font-weight: bold;">clj-d2l</span> <span style="color: #32cd32;">"0.1.0-SNAPSHOT"</span>
+  <span style="color: #00eeee;">:description</span> <span style="color: #32cd32;">"FIXME: write description"</span>
+  <span style="color: #00eeee;">:url</span> <span style="color: #32cd32;">"http://example.com/FIXME"</span>
+  <span style="color: #00eeee;">:license</span> {<span style="color: #00eeee;">:name</span> <span style="color: #32cd32;">"EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"</span>
+            <span style="color: #00eeee;">:url</span> <span style="color: #32cd32;">"https://www.eclipse.org/legal/epl-2.0/"</span>}
+  <span style="color: #00eeee;">:dependencies</span> [[<span style="color: #ffffff; font-style: italic; text-decoration: underline;">org.clojure</span>/clojure <span style="color: #32cd32;">"1.10.1"</span>]
+                 <span style="color: #3cb371;">;;</span><span style="color: #3cb371;">[clj-djl "0.1.2"]</span>
+                 [<span style="color: #ffffff; font-style: italic; text-decoration: underline;">com.github.kimim</span>/clj-djl <span style="color: #32cd32;">"master-SNAPSHOT"</span>]
+                 [<span style="color: #ffffff; font-style: italic; text-decoration: underline;">dm3</span>/stopwatch <span style="color: #32cd32;">"0.1.1"</span>]
+                 [<span style="color: #ffffff; font-style: italic; text-decoration: underline;">tech.tablesaw</span>/tablesaw-core <span style="color: #32cd32;">"0.38.1"</span>]
+                 [<span style="color: #ffffff; font-style: italic; text-decoration: underline;">tech.tablesaw</span>/tablesaw-jsplot <span style="color: #32cd32;">"0.38.1"</span>]
+                 [<span style="color: #ffffff; font-style: italic; text-decoration: underline;">com.hypirion</span>/clj-xchart <span style="color: #32cd32;">"0.2.0"</span>]]
+  <span style="color: #00eeee;">:repositories</span> [[<span style="color: #32cd32;">"jitpack"</span> <span style="color: #32cd32;">"https://jitpack.io"</span>]]
+  <span style="color: #00eeee;">:main</span> ^<span style="color: #00eeee;">:skip-aot</span> clj-d2l.core
+  <span style="color: #00eeee;">:target-path</span> <span style="color: #32cd32;">"target/%s"</span>
+  <span style="color: #00eeee;">:profiles</span> {<span style="color: #00eeee;">:uberjar</span> {<span style="color: #00eeee;">:aot</span> <span style="color: #00eeee;">:all</span>}})
+</pre>
+</div>
