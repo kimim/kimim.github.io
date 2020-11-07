@@ -14,9 +14,9 @@ tags: [clojure]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-clojure">  <span style="color: #00eeee;">:dependencies</span> [[<span style="color: #ffffff; font-style: italic; text-decoration: underline;">org.clojure</span>/clojure <span style="color: #32cd32;">"1.10.1"</span>]
-                 <span style="color: #3cb371;">;;</span><span style="color: #3cb371;">[clj-djl "0.1.2"]</span>
-                 [<span style="color: #ffffff; font-style: italic; text-decoration: underline;">com.github.kimim</span>/clj-djl <span style="color: #32cd32;">"master-SNAPSHOT"</span>]]
+<pre class="src src-clojure">  <span style="color: #110099;">:dependencies</span> [[<span style="color: #000000; font-style: italic; text-decoration: underline;">org.clojure</span>/clojure <span style="color: #2A00FF;">"1.10.1"</span>]
+                 <span style="color: #3F7F5F;">;;</span><span style="color: #3F7F5F;">[clj-djl "0.1.2"]</span>
+                 [<span style="color: #000000; font-style: italic; text-decoration: underline;">com.github.kimim</span>/clj-djl <span style="color: #2A00FF;">"master-SNAPSHOT"</span>]]
 </pre>
 </div>
 
@@ -30,7 +30,7 @@ tags: [clojure]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-clojure">  <span style="color: #00eeee;">:repositories</span> [[<span style="color: #32cd32;">"jitpack"</span> <span style="color: #32cd32;">"https://jitpack.io"</span>]]
+<pre class="src src-clojure">  <span style="color: #110099;">:repositories</span> [[<span style="color: #2A00FF;">"jitpack"</span> <span style="color: #2A00FF;">"https://jitpack.io"</span>]]
 </pre>
 </div>
 
@@ -48,21 +48,21 @@ tags: [clojure]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-clojure">(<span style="color: #ff55ff; font-weight: bold;">defproject</span> <span style="color: #00bfff; font-weight: bold;">clj-d2l</span> <span style="color: #32cd32;">"0.1.0-SNAPSHOT"</span>
-  <span style="color: #00eeee;">:description</span> <span style="color: #32cd32;">"FIXME: write description"</span>
-  <span style="color: #00eeee;">:url</span> <span style="color: #32cd32;">"http://example.com/FIXME"</span>
-  <span style="color: #00eeee;">:license</span> {<span style="color: #00eeee;">:name</span> <span style="color: #32cd32;">"EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"</span>
-            <span style="color: #00eeee;">:url</span> <span style="color: #32cd32;">"https://www.eclipse.org/legal/epl-2.0/"</span>}
-  <span style="color: #00eeee;">:dependencies</span> [[<span style="color: #ffffff; font-style: italic; text-decoration: underline;">org.clojure</span>/clojure <span style="color: #32cd32;">"1.10.1"</span>]
-                 <span style="color: #3cb371;">;;</span><span style="color: #3cb371;">[clj-djl "0.1.2"]</span>
-                 [<span style="color: #ffffff; font-style: italic; text-decoration: underline;">com.github.kimim</span>/clj-djl <span style="color: #32cd32;">"master-SNAPSHOT"</span>]
-                 [<span style="color: #ffffff; font-style: italic; text-decoration: underline;">dm3</span>/stopwatch <span style="color: #32cd32;">"0.1.1"</span>]
-                 [<span style="color: #ffffff; font-style: italic; text-decoration: underline;">tech.tablesaw</span>/tablesaw-core <span style="color: #32cd32;">"0.38.1"</span>]
-                 [<span style="color: #ffffff; font-style: italic; text-decoration: underline;">tech.tablesaw</span>/tablesaw-jsplot <span style="color: #32cd32;">"0.38.1"</span>]
-                 [<span style="color: #ffffff; font-style: italic; text-decoration: underline;">com.hypirion</span>/clj-xchart <span style="color: #32cd32;">"0.2.0"</span>]]
-  <span style="color: #00eeee;">:repositories</span> [[<span style="color: #32cd32;">"jitpack"</span> <span style="color: #32cd32;">"https://jitpack.io"</span>]]
-  <span style="color: #00eeee;">:main</span> ^<span style="color: #00eeee;">:skip-aot</span> clj-d2l.core
-  <span style="color: #00eeee;">:target-path</span> <span style="color: #32cd32;">"target/%s"</span>
-  <span style="color: #00eeee;">:profiles</span> {<span style="color: #00eeee;">:uberjar</span> {<span style="color: #00eeee;">:aot</span> <span style="color: #00eeee;">:all</span>}})
+<pre class="src src-clojure">(<span style="color: #7F0055; font-weight: bold;">defproject</span> <span style="color: #0000ff; font-weight: bold;">clj-d2l</span> <span style="color: #2A00FF;">"0.1.0-SNAPSHOT"</span>
+  <span style="color: #110099;">:description</span> <span style="color: #2A00FF;">"FIXME: write description"</span>
+  <span style="color: #110099;">:url</span> <span style="color: #2A00FF;">"http://example.com/FIXME"</span>
+  <span style="color: #110099;">:license</span> {<span style="color: #110099;">:name</span> <span style="color: #2A00FF;">"EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"</span>
+            <span style="color: #110099;">:url</span> <span style="color: #2A00FF;">"https://www.eclipse.org/legal/epl-2.0/"</span>}
+  <span style="color: #110099;">:dependencies</span> [[<span style="color: #000000; font-style: italic; text-decoration: underline;">org.clojure</span>/clojure <span style="color: #2A00FF;">"1.10.1"</span>]
+                 <span style="color: #3F7F5F;">;;</span><span style="color: #3F7F5F;">[clj-djl "0.1.2"]</span>
+                 [<span style="color: #000000; font-style: italic; text-decoration: underline;">com.github.kimim</span>/clj-djl <span style="color: #2A00FF;">"master-SNAPSHOT"</span>]
+                 [<span style="color: #000000; font-style: italic; text-decoration: underline;">dm3</span>/stopwatch <span style="color: #2A00FF;">"0.1.1"</span>]
+                 [<span style="color: #000000; font-style: italic; text-decoration: underline;">tech.tablesaw</span>/tablesaw-core <span style="color: #2A00FF;">"0.38.1"</span>]
+                 [<span style="color: #000000; font-style: italic; text-decoration: underline;">tech.tablesaw</span>/tablesaw-jsplot <span style="color: #2A00FF;">"0.38.1"</span>]
+                 [<span style="color: #000000; font-style: italic; text-decoration: underline;">com.hypirion</span>/clj-xchart <span style="color: #2A00FF;">"0.2.0"</span>]]
+  <span style="color: #110099;">:repositories</span> [[<span style="color: #2A00FF;">"jitpack"</span> <span style="color: #2A00FF;">"https://jitpack.io"</span>]]
+  <span style="color: #110099;">:main</span> ^<span style="color: #110099;">:skip-aot</span> clj-d2l.core
+  <span style="color: #110099;">:target-path</span> <span style="color: #2A00FF;">"target/%s"</span>
+  <span style="color: #110099;">:profiles</span> {<span style="color: #110099;">:uberjar</span> {<span style="color: #110099;">:aot</span> <span style="color: #110099;">:all</span>}})
 </pre>
 </div>
