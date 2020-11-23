@@ -1,0 +1,50 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Clojure Database Access String
+categories: [technology]
+tags: [clojure]
+---
+#+END_EXPORT
+
+此处放一些常用的数据库连接URL。使用时，替换 =db_app=, =db_user=, =db_password=
+
+SQLite:
+
+#+begin_src clojure
+{:database-url "jdbc:sqlite:db_app.db"}
+#+end_src
+
+MySQL[fn:1]:
+
+#+begin_src clojure
+{:database-url "jdbc:mysql://mysql.kimi.im:3306/db_app?useSSL=false&requireSSL=false&characterEncoding=utf8&serverTimezone=UTC&user=db_user&password=db_password"}
+#+end_src
+
+PostreSQL[fn:2]:
+
+#+begin_src clojure
+{:database-url "jdbc:postgresql://postgresql.kimi.im/db_app?user=db_user&password=db_password"}
+#+end_src
+
+Oracle[fn:3]:
+
+#+begin_src clojure
+{:database-url "jdbc:oracle:thin:db_user/db_password@//oracle.kimi.im:1521/db_app"}
+#+end_src
+
+SQLServer[fn:4]:
+
+#+begin_src clojure
+{:database-url "jdbc:sqserver://sqlserver.kimi.im:1433;databaseName=db_app;user=db_user;password=db_password;"}
+#+end_src
+
+* Footnotes
+
+[fn:1] https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-usagenotes-connect-drivermanager.html#connector-j-examples-connection-drivermanager
+
+[fn:2] https://luminusweb.com/docs/database.html
+
+[fn:3] https://docs.oracle.com/cd/B28359_01/java.111/b31224/urls.htm
+
+[fn:4] https://docs.microsoft.com/en-us/sql/connect/jdbc/building-the-connection-url?view=sql-server-ver15
