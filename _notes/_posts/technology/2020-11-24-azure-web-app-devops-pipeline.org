@@ -1,0 +1,114 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Use Azure DevOps Pipeline to automatically deploy to Azure Web App
+categories: [technology]
+tags: [Docker, Azure, Clojure, DevOps]
+---
+#+END_EXPORT
+
+Azure DevOps中可以设置Pipeline流水线，根据代码提交，触发编译，测试和部署。但是
+DevOps需要Azure Global订阅，如果想部署到世纪互联的Azure Web App，就需要一些额外
+的设置。
+
+* Azure Container Registry（ACR）
+
+首先，在 portal.azure.cn 中创建容器库：
+https://portal.azure.cn/#create/Microsoft.ContainerRegistry
+
+例如： https://kimim.azurecr.cn
+
+* Push Docker Image To Azure Container Registry
+
+假设我们的docker image叫 =kimim/vorstellung=:
+
+编译并推送到ACR：
+
+#+begin_src shell
+lein uberjar
+sudo docker build -t kimim/vorstellung .
+sudo docker login kimim.azurecr.cn
+sudo docker tag kimim/vorstellung kimim.azurecr.cn/vorstellung
+sudo docker push wxiip.azurecr.cn/vorstellung
+#+end_src
+
+这样就能在ACR的Repositories中找到 =vorstellung= 。
+
+* Web App
+
+在 https://portal.azure.cn/#create/Microsoft.WebSite 创建Web App。
+
+- 在Instance Details中设置一个名字，比如 kimim.chinaclouodsites.cn
+- Publish选择 Docker Container
+- 设置Docker为ACR中的Image，tag选择latest。然后创建资源。
+- 打开kimim App Serivce资源，在Container settings中设置Continuous Deployment为On
+- Configuration中添加环境变量，如在Database String中添加 =DATABSE_URL= 为 =jdbc:sqlite:kimim.db=
+
+* Azure DevOps Pipeline
+
+** Service Connections
+
+在项目设置中，Piplines/Service Connections选项下，添加Service Connection：
+- Docker Registry
+- 选Others，因为Azure Container Registry只支持Global的订阅
+- 添加Docker Registry：https://kimim.azurerc.cn
+- Docker ID和Docker Password从ACR资源的Access Keys中，打开Admin user，找到Username和password
+- 添加一个service connection name，例如 =kimimRSC=
+
+** Pipelines
+
+以 =vorstellung= 项目为例[fn:1]，在Pipelines中 =New pipeline= ，文件名为
+=azure-pipelines.yml= ，内容如下：
+
+#+begin_src yaml
+trigger:
+- master
+
+variables:
+  projectName: 'vorstellung'
+  repositoryName: $(projectName)
+  dockerRSC: 'kimimRSC'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '11'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+- task: NodeTool@0
+  inputs:
+    versionSpec: '6.x'
+    checkLatest: true
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo 'Install Leiningen, NPM and compile'
+      wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+      chmod +x lein
+      npm install -g npm@latest
+      lein shadow npm-deps
+      ./lein uberjar
+- task: Docker@2
+  displayName: 'Build and Push docker'
+  inputs:
+    containerRegistry: $(dockerRSC)
+    repository: $(repositoryName)
+    Dockerfile: '**/Dockerfile'
+    command: 'buildAndPush'
+    tags: |
+      $(Build.BuildId)
+      latest
+#+end_src
+
+* Done
+
+然后，每次代码提交到master分支，就会触发编译和部署。打开
+https://kimim.chinaclouodsites.cn 就能看到变化了。
+
+* Footnotes
+
+[fn:1] https://github.com/kimim/vorstellung
