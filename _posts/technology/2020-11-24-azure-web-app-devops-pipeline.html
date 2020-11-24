@@ -96,47 +96,47 @@ sudo docker push wxiip.azurecr.cn/vorstellung
 </p>
 
 <div class="org-src-container">
-<pre class="src src-yaml"><span style="color: #ffffff;">trigger</span>:
+<pre class="src src-yaml"><span style="color: #000000;">trigger</span>:
 - master
 
-<span style="color: #ffffff;">variables</span>:
-  <span style="color: #ffffff;">projectName</span>: <span style="color: #32cd32;">'vorstellung'</span>
-  <span style="color: #ffffff;">repositoryName</span>: $(projectName)
-  <span style="color: #ffffff;">dockerRSC</span>: <span style="color: #32cd32;">'kimimRSC'</span>
+<span style="color: #000000;">variables</span>:
+  <span style="color: #000000;">projectName</span>: <span style="color: #2A00FF;">'vorstellung'</span>
+  <span style="color: #000000;">repositoryName</span>: $(projectName)
+  <span style="color: #000000;">dockerRSC</span>: <span style="color: #2A00FF;">'kimimRSC'</span>
 
-<span style="color: #ffffff;">pool</span>:
-  <span style="color: #ffffff;">vmImage</span>: <span style="color: #32cd32;">'ubuntu-latest'</span>
+<span style="color: #000000;">pool</span>:
+  <span style="color: #000000;">vmImage</span>: <span style="color: #2A00FF;">'ubuntu-latest'</span>
 
-<span style="color: #ffffff;">steps</span>:
-- <span style="color: #ffffff;">task</span>: JavaToolInstaller@0
-  <span style="color: #ffffff;">inputs</span>:
-    <span style="color: #ffffff;">versionSpec</span>: <span style="color: #32cd32;">'11'</span>
-    <span style="color: #ffffff;">jdkArchitectureOption</span>: <span style="color: #32cd32;">'x64'</span>
-    <span style="color: #ffffff;">jdkSourceOption</span>: <span style="color: #32cd32;">'PreInstalled'</span>
-- <span style="color: #ffffff;">task</span>: NodeTool@0
-  <span style="color: #ffffff;">inputs</span>:
-    <span style="color: #ffffff;">versionSpec</span>: <span style="color: #32cd32;">'6.x'</span>
-    <span style="color: #ffffff;">checkLatest</span>: <span style="color: #00eeee;">true</span>
-- <span style="color: #ffffff;">task</span>: Bash@3
-  <span style="color: #ffffff;">inputs</span>:
-    <span style="color: #ffffff;">targetType</span>: <span style="color: #32cd32;">'inline'</span>
-    <span style="color: #ffffff;">script</span>: |
-      echo <span style="color: #32cd32;">'Install Leiningen, NPM and compile'</span>
-<span style="color: #32cd32;">      wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein</span>
-<span style="color: #32cd32;">      chmod +x lein</span>
-<span style="color: #32cd32;">      npm install -g npm@latest</span>
-<span style="color: #32cd32;">      lein shadow npm-deps</span>
-<span style="color: #32cd32;">      ./lein uberjar</span>
-- <span style="color: #ffffff;">task</span>: Docker@2
-  <span style="color: #ffffff;">displayName</span>: <span style="color: #32cd32;">'Build and Push docker'</span>
-  <span style="color: #ffffff;">inputs</span>:
-    <span style="color: #ffffff;">containerRegistry</span>: $(dockerRSC)
-    <span style="color: #ffffff;">repository</span>: $(repositoryName)
-    <span style="color: #ffffff;">Dockerfile</span>: <span style="color: #32cd32;">'**/Dockerfile'</span>
-    <span style="color: #ffffff;">command</span>: <span style="color: #32cd32;">'buildAndPush'</span>
-    <span style="color: #ffffff;">tags</span>: |
-      <span style="color: #32cd32;">$(Build.BuildId)</span>
-<span style="color: #32cd32;">      latest</span>
+<span style="color: #000000;">steps</span>:
+- <span style="color: #000000;">task</span>: JavaToolInstaller@0
+  <span style="color: #000000;">inputs</span>:
+    <span style="color: #000000;">versionSpec</span>: <span style="color: #2A00FF;">'11'</span>
+    <span style="color: #000000;">jdkArchitectureOption</span>: <span style="color: #2A00FF;">'x64'</span>
+    <span style="color: #000000;">jdkSourceOption</span>: <span style="color: #2A00FF;">'PreInstalled'</span>
+- <span style="color: #000000;">task</span>: NodeTool@0
+  <span style="color: #000000;">inputs</span>:
+    <span style="color: #000000;">versionSpec</span>: <span style="color: #2A00FF;">'6.x'</span>
+    <span style="color: #000000;">checkLatest</span>: <span style="color: #110099;">true</span>
+- <span style="color: #000000;">task</span>: Bash@3
+  <span style="color: #000000;">inputs</span>:
+    <span style="color: #000000;">targetType</span>: <span style="color: #2A00FF;">'inline'</span>
+    <span style="color: #000000;">script</span>: |
+      echo <span style="color: #2A00FF;">'Install Leiningen, NPM and compile'</span>
+<span style="color: #2A00FF;">      wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein</span>
+<span style="color: #2A00FF;">      chmod +x lein</span>
+<span style="color: #2A00FF;">      npm install -g npm@latest</span>
+<span style="color: #2A00FF;">      lein shadow npm-deps</span>
+<span style="color: #2A00FF;">      ./lein uberjar</span>
+- <span style="color: #000000;">task</span>: Docker@2
+  <span style="color: #000000;">displayName</span>: <span style="color: #2A00FF;">'Build and Push docker'</span>
+  <span style="color: #000000;">inputs</span>:
+    <span style="color: #000000;">containerRegistry</span>: $(dockerRSC)
+    <span style="color: #000000;">repository</span>: $(repositoryName)
+    <span style="color: #000000;">Dockerfile</span>: <span style="color: #2A00FF;">'**/Dockerfile'</span>
+    <span style="color: #000000;">command</span>: <span style="color: #2A00FF;">'buildAndPush'</span>
+    <span style="color: #000000;">tags</span>: |
+      <span style="color: #2A00FF;">$(Build.BuildId)</span>
+<span style="color: #2A00FF;">      latest</span>
 </pre>
 </div>
 </div>
