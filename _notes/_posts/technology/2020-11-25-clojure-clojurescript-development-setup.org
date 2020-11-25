@@ -262,6 +262,7 @@ Ctrl-a Ctrl-k
 - Clojure: https://clojure.org/
 - ClojureScript: https://clojurescript.org
 - Clojuredocs: https://clojuredocs.org/
+- Clojure API: https://clojure.github.io/clojure/
 - ClojureScript API: https://cljs.github.io/api/
 - Style Guide: https://guide.clojure.style/
 - Clojurians Slack: https://clojurians.slack.com/
