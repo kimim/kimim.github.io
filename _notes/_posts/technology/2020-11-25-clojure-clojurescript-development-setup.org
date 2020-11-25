@@ -31,7 +31,8 @@ Clojure基于Java虚拟机，ClojureScript基于Javascript。而GraalVM[fn:1]囊
 export GRAALVM_VERSION=20.3.0
 export GRAALVM_PACKAGE=graalvm-ce-java11-windows-amd64-$GRAALVM_VERSION
 export GRAALVM_LIB=graalvm-ce-java11-$GRAALVM_VERSION
-wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAALVM_VERSION/$GRAALVM_PACKAGE.tar.gz
+export GRAALVM_GITHUB=https://github.com/graalvm/graalvm-ce-builds/releases/download
+wget $GRAALVM_GITHUB/vm-$GRAALVM_VERSION/$GRAALVM_PACKAGE.zip
 # 用7zip解压下载到的文件
 "/cygdrive/C/Program Files/7-Zip/7z.exe" x $GRAALVM_PACKAGE.zip
 mv $GRAALVM_LIB /usr/local/lib
@@ -85,10 +86,11 @@ sudo snap install emacs --channel=latest/edge --classic
 #+begin_src shell
 # https://www.graalvm.org/ with JDK and Node.js
 export GRAALVM_VERSION=20.3.0
-export GRAALVM_NAME=graalvm-ce-java11-linux-amd64-$GRAALVM_VERSION
+export GRAALVM_PACKAGE=graalvm-ce-java11-linux-amd64-$GRAALVM_VERSION
 export GRAALVM_LIB=graalvm-ce-java11-$GRAALVM_VERSION
-wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAALVM_VERSION/$GRAALVM_NAME.tar.gz
-tar -xvzf $GRAALVM_NAME.tar.gz
+export GRAALVM_GITHUB=https://github.com/graalvm/graalvm-ce-builds/releases/download
+wget $GRAALVM_GITHUB/vm-$GRAALVM_VERSION/$GRAALVM_PACKAGE.tar.gz
+tar -xvzf $GRAALVM_PACKAGE.tar.gz
 sudo mv $GRAALVM_LIB /usr/local/lib
 echo "export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH" >> .bashrc
 source .bashrc
@@ -137,10 +139,11 @@ brew cask install emacs
 #+begin_src shell
 # https://www.graalvm.org/ with JDK and Node.js
 export GRAALVM_VERSION=20.3.0
-export GRAALVM_NAME=graalvm-ce-java11-darwin-amd64-$GRAALVM_VERSION
+export GRAALVM_PACKAGE=graalvm-ce-java11-darwin-amd64-$GRAALVM_VERSION
 export GRAALVM_LIB=graalvm-ce-java11-$GRAALVM_VERSION
-wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAALVM_VERSION/$GRAALVM_NAME.tar.gz
-tar -xvzf $GRAALVM_NAME.tar.gz
+export GRAALVM_GITHUB=https://github.com/graalvm/graalvm-ce-builds/releases/download
+wget $GRAALVM_GITHUB/vm-$GRAALVM_VERSION/$GRAALVM_PACKAGE.tar.gz
+tar -xvzf $GRAALVM_PACKAGE.tar.gz
 sudo mv $GRAALVM_LIB /usr/local/lib
 echo "export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH" >> .bashrc
 source .bashrc
