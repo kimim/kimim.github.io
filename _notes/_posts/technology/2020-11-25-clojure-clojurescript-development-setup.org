@@ -142,11 +142,13 @@ export GRAALVM_VERSION=20.3.0
 export GRAALVM_PACKAGE=graalvm-ce-java11-darwin-amd64-$GRAALVM_VERSION
 export GRAALVM_LIB=graalvm-ce-java11-$GRAALVM_VERSION
 export GRAALVM_GITHUB=https://github.com/graalvm/graalvm-ce-builds/releases/download
-wget $GRAALVM_GITHUB/vm-$GRAALVM_VERSION/$GRAALVM_PACKAGE.tar.gz
+curl -L $GRAALVM_GITHUB/vm-$GRAALVM_VERSION/$GRAALVM_PACKAGE.tar.gz \
+     -o $GRAALVM_PACKAGE.tar.gz
 tar -xvzf $GRAALVM_PACKAGE.tar.gz
-sudo mv $GRAALVM_LIB /usr/local/lib
-echo "export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH" >> ~/.bashrc
-source ~/.bashrc
+sudo mv $GRAALVM_LIB /Library/Java/JavaVirtualMachines/
+echo "export PATH=/Library/Java/JavaVirtualMachines/$GRAALVM_LIB/Contents/Home/bin:$PATH" \
+     >> ~/.bash_profile
+source ~/.bash_profile
 npm config set registry https://registry.npm.taobao.org
 
 # https://leiningen.org/
@@ -160,19 +162,16 @@ lein
 
 #+begin_example
 $ java --version
-openjdk 11.0.9 2020-10-20
+openjdk version "11.0.9" 2020-10-20
 OpenJDK Runtime Environment GraalVM CE 20.3.0 (build 11.0.9+10-jvmci-20.3-b06)
 OpenJDK 64-Bit Server VM GraalVM CE 20.3.0 (build 11.0.9+10-jvmci-20.3-b06, mixed mode, sharing)
-
 $ npm
 Usage: npm <command>
 ...
-npm@6.14.6 /usr/local/lib/graalvm-ce-java11-20.3.0/languages/js/npm
-
+npm@6.14.6 /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.3.0/Contents/Home/languages/js/npm
 $ lein -v
 Leiningen 2.9.4 on Java 11.0.9 OpenJDK 64-Bit Server VM
 #+end_example
-
 
 
 * 开发IDE
