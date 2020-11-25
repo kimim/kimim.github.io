@@ -19,7 +19,7 @@ Clojure基于Java虚拟机，ClojureScript基于Javascript。而GraalVM[fn:1]囊
   =Search= 处查找以下包，并选择最新版本安装：
   - git
   - emacs-w32
-- 下载安装 [[https://www.7-zip.org/a/7z1900-x64.exe][7-zip]] [fn:4]到 =C：\Program Files\7-Zip=
+- 下载安装 [[https://www.7-zip.org/a/7z1900-x64.exe][7-zip]] [fn:4]到 =C:\Program Files\7-Zip=
 
 *** 安装
 
