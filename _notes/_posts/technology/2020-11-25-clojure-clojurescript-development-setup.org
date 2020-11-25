@@ -10,7 +10,7 @@ tags: [shadow-cljs, Leiningen, Emacs, Cider, ClojureScript, Clojure]
 * 工具安装
 
 Clojure基于Java虚拟机，ClojureScript基于Javascript。而GraalVM[fn:1]囊括了JVM和JS。
-因此安装GraalVM。leiningen[fn:2]用来管理项目代码。
+因此安装GraalVM。Leiningen[fn:2]用来管理项目代码。
 
 ** Windows
 
@@ -254,8 +254,8 @@ Ctrl-a Ctrl-k
 
 * Well done!
 
-至此，你已经能够运行一个基于Limunus框架[fn:5]、Material-UI[fn:6]的Web App，并在
-Emacs中编写Clojure和ClojureScript代码，并通过repl实时运行代码了。
+至此，你已经能够运行一个基于Luminus Web框架[fn:5]、Material-UI[fn:6]的Web App，
+并在Emacs中编写Clojure和ClojureScript代码，并通过repl实时运行代码了。
 
 * 更多了解
 
