@@ -92,8 +92,8 @@ export GRAALVM_GITHUB=https://github.com/graalvm/graalvm-ce-builds/releases/down
 wget $GRAALVM_GITHUB/vm-$GRAALVM_VERSION/$GRAALVM_PACKAGE.tar.gz
 tar -xvzf $GRAALVM_PACKAGE.tar.gz
 sudo mv $GRAALVM_LIB /usr/local/lib
-echo "export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH" >> .bashrc
-source .bashrc
+echo "export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH" >> ~/.bashrc
+source ~/.bashrc
 npm config set registry https://registry.npm.taobao.org
 
 # https://leiningen.org/
@@ -145,8 +145,8 @@ export GRAALVM_GITHUB=https://github.com/graalvm/graalvm-ce-builds/releases/down
 wget $GRAALVM_GITHUB/vm-$GRAALVM_VERSION/$GRAALVM_PACKAGE.tar.gz
 tar -xvzf $GRAALVM_PACKAGE.tar.gz
 sudo mv $GRAALVM_LIB /usr/local/lib
-echo "export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH" >> .bashrc
-source .bashrc
+echo "export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH" >> ~/.bashrc
+source ~/.bashrc
 npm config set registry https://registry.npm.taobao.org
 
 # https://leiningen.org/
