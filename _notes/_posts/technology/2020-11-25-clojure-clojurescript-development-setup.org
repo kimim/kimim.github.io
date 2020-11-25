@@ -1,0 +1,285 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Clojure/Script Development Setup
+categories: [technology]
+tags: [shadow-cljs, Leiningen, Emacs, Cider, ClojureScript, Clojure]
+---
+#+END_EXPORT
+
+* 工具安装
+
+Clojure基于Java虚拟机，ClojureScript基于Javascript。而GraalVM[fn:1]囊括了JVM和JS。
+因此安装GraalVM。leiningen[fn:2]用来管理项目代码。
+
+** Windows
+
+*** 准备
+- 下载 [[https://cygwin.com/setup-x86_64.exe][setup-x86_64.exe]] [fn:3] ，点击运行，一直下一步，到 =Select Packages= 在
+  =Search= 处查找以下包，并选择最新版本安装：
+  - git
+  - emacs-w32
+- 下载安装 [[https://www.7-zip.org/a/7z1900-x64.exe][7-zip]] [fn:4]到 =C：\Program Files\7-Zip=
+
+*** 安装
+
+- 打开 =mintty.exe= ，通常装好 cygwin 后，会自动添加到桌面
+- 以下安装脚本，可以复制后，以 =Shift-INS= 粘贴到 =mintty.exe=
+
+#+begin_src shell
+# https://www.graalvm.org/ with JDK and Node.js
+export GRAALVM_VERSION=20.3.0
+export GRAALVM_PACKAGE=graalvm-ce-java11-windows-amd64-$GRAALVM_VERSION
+export GRAALVM_LIB=graalvm-ce-java11-$GRAALVM_VERSION
+wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAALVM_VERSION/$GRAALVM_PACKAGE.tar.gz
+# 用7zip解压下载到的文件
+"/cygdrive/C/Program Files/7-Zip/7z.exe" x $GRAALVM_PACKAGE.zip
+mv $GRAALVM_LIB /usr/local/lib
+echo "export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH" >> ~/.bash_profile
+source ~/.bash_profile
+npm.cmd config set registry https://registry.npm.taobao.org
+
+# https://leiningen.org/
+wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+chmod +x lein
+mv lein /usr/local/bin
+lein
+#+end_src
+
+*** 测试
+
+#+begin_src example
+$ java -version
+openjdk version "11.0.9" 2020-10-20
+OpenJDK Runtime Environment GraalVM CE 20.3.0 (build 11.0.9+10-jvmci-20.3-b06)
+OpenJDK 64-Bit Server VM GraalVM CE 20.3.0 (build 11.0.9+10-jvmci-20.3-b06, mixed mode, sharing)
+
+$ npm.cmd
+
+Usage: npm <command>
+...
+npm@6.14.6 C:\cygwin64\usr\local\lib\graalvm-ce-java11-20.3.0\languages\js\npm
+
+$ lein -v
+OpenJDK 64-Bit Server VM warning: forcing TieredStopAtLevel to full optimization because JVMCI is enabled
+Leiningen 2.9.3 on Java 11.0.9 OpenJDK 64-Bit Server VM
+#+end_src
+
+*** 升级（非必需）
+
+#+begin_src shell
+npm.cmd install -g --force npm@latest
+#+end_src
+
+** Linux
+*** 准备
+
+For Ubuntu
+
+#+begin_src shell
+sudo snap install emacs --channel=latest/edge --classic
+#+end_src
+
+*** 安装
+
+#+begin_src shell
+# https://www.graalvm.org/ with JDK and Node.js
+export GRAALVM_VERSION=20.3.0
+export GRAALVM_NAME=graalvm-ce-java11-linux-amd64-$GRAALVM_VERSION
+export GRAALVM_LIB=graalvm-ce-java11-$GRAALVM_VERSION
+wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAALVM_VERSION/$GRAALVM_NAME.tar.gz
+tar -xvzf $GRAALVM_NAME.tar.gz
+sudo mv $GRAALVM_LIB /usr/local/lib
+echo "export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH" >> .bashrc
+source .bashrc
+npm config set registry https://registry.npm.taobao.org
+
+# https://leiningen.org/
+wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+chmod +x lein
+sudo mv lein /usr/local/bin
+lein
+#+end_src
+
+*** 测试
+
+#+begin_src example
+$ java --version
+openjdk 11.0.9 2020-10-20
+OpenJDK Runtime Environment GraalVM CE 20.3.0 (build 11.0.9+10-jvmci-20.3-b06)
+OpenJDK 64-Bit Server VM GraalVM CE 20.3.0 (build 11.0.9+10-jvmci-20.3-b06, mixed mode, sharing)
+
+$ npm
+Usage: npm <command>
+...
+npm@6.14.6 /usr/local/lib/graalvm-ce-java11-20.3.0/languages/js/npm
+
+$ lein -v
+Leiningen 2.9.4 on Java 11.0.9 OpenJDK 64-Bit Server VM
+#+end_src
+
+*** 升级（非必需）
+
+#+begin_src shell
+npm install -g --force npm@latest
+#+end_src
+
+** macOS
+
+*** 准备
+
+#+begin_src shell
+brew cask install emacs
+#+end_src
+
+*** 安装
+
+#+begin_src shell
+# https://www.graalvm.org/ with JDK and Node.js
+export GRAALVM_VERSION=20.3.0
+export GRAALVM_NAME=graalvm-ce-java11-darwin-amd64-$GRAALVM_VERSION
+export GRAALVM_LIB=graalvm-ce-java11-$GRAALVM_VERSION
+wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAALVM_VERSION/$GRAALVM_NAME.tar.gz
+tar -xvzf $GRAALVM_NAME.tar.gz
+sudo mv $GRAALVM_LIB /usr/local/lib
+echo "export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH" >> .bashrc
+source .bashrc
+npm config set registry https://registry.npm.taobao.org
+
+# https://leiningen.org/
+wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+chmod +x lein
+sudo mv lein /usr/local/bin
+lein
+#+end_src
+
+*** 测试
+
+#+begin_src example
+$ java --version
+openjdk 11.0.9 2020-10-20
+OpenJDK Runtime Environment GraalVM CE 20.3.0 (build 11.0.9+10-jvmci-20.3-b06)
+OpenJDK 64-Bit Server VM GraalVM CE 20.3.0 (build 11.0.9+10-jvmci-20.3-b06, mixed mode, sharing)
+
+$ npm
+Usage: npm <command>
+...
+npm@6.14.6 /usr/local/lib/graalvm-ce-java11-20.3.0/languages/js/npm
+
+$ lein -v
+Leiningen 2.9.4 on Java 11.0.9 OpenJDK 64-Bit Server VM
+#+end_src
+
+
+
+* 开发IDE
+
+下载并安装YaheiInconsolata：https://github.com/loseblue/yaheiInconsolata.ttf
+
+安装配置Emacs：
+#+begin_src shell
+cd ~ && \
+mv .emacs .emacs-backup && mv .emacs.d .emacs.d-backup && \
+git clone https://github.com/kimim/kimim-emacs && \
+cp kimim-emacs/.emacs ~
+emacs
+#+end_src
+
+* 示例
+
+打开 =mintty.exe=
+
+#+begin_src shell
+mkdir workspace && cd workspace
+git clone https://github.com/kimim/vorstellung
+cd vorstellung
+cp dev-config.edn.sample.edn dev-config.edn
+lein run
+#+end_src
+
+再打开一个 =mintty.exe=
+
+#+begin_src shell
+cd workspace/vorstellung
+lein shadow watch app
+#+end_src
+
+等看到以下信息：
+
+#+begin_src example
+[:app] Build completed. (6353 files, 0 compiled, 0 warnings, 39.88s)
+#+end_src
+
+网页打开：http://localhost:3000 可以看到程序运行起来了。
+
+切换到Emacs，测试clj repl：
+
+#+begin_src example
+按住Ctrl不放，再连续按x f
+输入 ~/workspace/vorstellung/src/clj/vorstellung/config.clj
+敲Enter
+ALT+SHIFT+>
+敲Enter 2次
+Ctrl+c Alt+c
+选择localhost，敲Enter
+输入7070，敲Enter
+跳出clj repl新窗口后，按F2切回到代码
+输入：
+(env :nrepl-port)
+Ctrl-c Ctrl-c
+能够看到7070，即REPL的端口
+Ctrl-a Ctrl-k
+#+end_src
+
+继续在Emacs中，测试cljs repl：
+
+#+begin_src example
+按住Ctrl不放，再连续按x f
+输入 ~/workspace/vorstellung/src/cljs/vorstellung/core.cljs
+敲Enter
+ALT+SHIFT+>
+敲Enter 2次
+Ctrl+c Alt+Shift+c
+跳出cljs repl新窗口，按F2切回到代码
+输入：
+(js/alert "cool")
+Ctrl-c Ctrl-c
+能够看到浏览器中跳出一个警报框
+Ctrl-a Ctrl-k
+#+end_src
+
+* Well done!
+
+至此，你已经能够运行一个基于Limunus框架[fn:5]、Material-UI[fn:6]的Web App，并在
+Emacs中编写Clojure和ClojureScript代码，并通过repl实时运行代码了。
+
+* 更多了解
+
+- Clojure：https://clojure.org/
+- ClojureScript：https://clojurescript.org
+- Clojuredocs：https://clojuredocs.org/
+- Clojurians Slack：https://clojurians.slack.com/
+- Leiningen：https://leiningen.org/
+- shadow-cljs：http://shadow-cljs.org/
+- Emacs：https://www.gnu.org/software/emacs/
+- Cider：https://docs.cider.mx/cider-nrepl/index.html
+- Luminus：https://luminusweb.com/
+- Material-UI：https://material-ui.com/
+- GraalVM：https://www.graalvm.org/
+- Node.js：https://nodejs.org
+- Clojars：https://clojars.org/
+- MVNRepository：https://mvnrepository.com/
+
+* Footnotes
+
+[fn:1] https://www.graalvm.org/
+
+[fn:2] https://leiningen.org/
+
+[fn:3] https://cygwin.com/
+
+[fn:4] https://www.7-zip.org/
+
+[fn:5] https://luminusweb.com/
+
+[fn:6] https://material-ui.com/
