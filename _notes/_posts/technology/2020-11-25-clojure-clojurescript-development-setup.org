@@ -259,20 +259,22 @@ Ctrl-a Ctrl-k
 
 * 更多了解
 
-- Clojure：https://clojure.org/
-- ClojureScript：https://clojurescript.org
-- Clojuredocs：https://clojuredocs.org/
-- Clojurians Slack：https://clojurians.slack.com/
-- Leiningen：https://leiningen.org/
-- shadow-cljs：http://shadow-cljs.org/
-- Emacs：https://www.gnu.org/software/emacs/
-- Cider：https://docs.cider.mx/cider-nrepl/index.html
-- Luminus：https://luminusweb.com/
-- Material-UI：https://material-ui.com/
-- GraalVM：https://www.graalvm.org/
-- Node.js：https://nodejs.org
-- Clojars：https://clojars.org/
-- MVNRepository：https://mvnrepository.com/
+- Clojure: https://clojure.org/
+- ClojureScript: https://clojurescript.org
+- Clojuredocs: https://clojuredocs.org/
+- ClojureScript API: https://cljs.github.io/api/
+- Style Guide: https://guide.clojure.style/
+- Clojurians Slack: https://clojurians.slack.com/
+- Leiningen: https://leiningen.org/
+- shadow-cljs: http://shadow-cljs.org/
+- Emacs: https://www.gnu.org/software/emacs/
+- Cider: https://docs.cider.mx/cider-nrepl/index.html
+- Luminus: https://luminusweb.com/
+- Material-UI: https://material-ui.com/
+- GraalVM: https://www.graalvm.org/
+- Node.js: https://nodejs.org
+- Clojars: https://clojars.org/
+- MVNRepository: https://mvnrepository.com/
 
 * Footnotes
 
