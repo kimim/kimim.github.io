@@ -17,8 +17,8 @@ Clojure基于Java虚拟机，ClojureScript基于Javascript。而GraalVM<sup><a i
 <h3 id="org2f18560"><span class="section-number-3">1.1</span> Windows</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org50c206d" class="outline-4">
-<h4 id="org50c206d"><span class="section-number-4">1.1.1</span> 准备</h4>
+<div id="outline-container-orgedb27a0" class="outline-4">
+<h4 id="orgedb27a0"><span class="section-number-4">1.1.1</span> 准备</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <ul class="org-ul">
 <li>下载 <a href="https://cygwin.com/setup-x86_64.exe">setup-x86_64.exe</a> <sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup> ，点击运行，一直下一步，到 <code>Select Packages</code> 在
@@ -32,8 +32,8 @@ Clojure基于Java虚拟机，ClojureScript基于Javascript。而GraalVM<sup><a i
 </div>
 </div>
 
-<div id="outline-container-org369f0fb" class="outline-4">
-<h4 id="org369f0fb"><span class="section-number-4">1.1.2</span> 安装</h4>
+<div id="outline-container-org3759d63" class="outline-4">
+<h4 id="org3759d63"><span class="section-number-4">1.1.2</span> 安装</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <ul class="org-ul">
 <li>打开 <code>mintty.exe</code> ，通常装好 cygwin 后，会自动添加到桌面</li>
@@ -51,6 +51,7 @@ wget $<span style="color: #000000;">GRAALVM_GITHUB</span>/vm-$<span style="color
 <span style="color: #2A00FF;">"/cygdrive/C/Program Files/7-Zip/7z.exe"</span> x $<span style="color: #000000;">GRAALVM_PACKAGE</span>.zip
 mv $<span style="color: #000000;">GRAALVM_LIB</span> /usr/local/lib
 <span style="color: #7F0055; font-weight: bold;">echo</span> <span style="color: #2A00FF;">"export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH"</span> &gt;&gt; ~/.bash_profile
+<span style="color: #7F0055; font-weight: bold;">echo</span> <span style="color: #2A00FF;">"export JAVA_HOME=/usr/local/lib/$GRAALVM_LIB"</span> &gt;&gt; ~/.bash_profile
 <span style="color: #7F0055; font-weight: bold;">source</span> ~/.bash_profile
 npm.cmd config set registry https://registry.npm.taobao.org
 
@@ -64,8 +65,8 @@ lein
 </div>
 </div>
 
-<div id="outline-container-org8da789a" class="outline-4">
-<h4 id="org8da789a"><span class="section-number-4">1.1.3</span> 测试</h4>
+<div id="outline-container-org233d160" class="outline-4">
+<h4 id="org233d160"><span class="section-number-4">1.1.3</span> 测试</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <pre class="example">
 $ java -version
@@ -80,14 +81,13 @@ Usage: npm &lt;command&gt;
 npm@6.14.6 C:\cygwin64\usr\local\lib\graalvm-ce-java11-20.3.0\languages\js\npm
 
 $ lein -v
-OpenJDK 64-Bit Server VM warning: forcing TieredStopAtLevel to full optimization because JVMCI is enabled
 Leiningen 2.9.3 on Java 11.0.9 OpenJDK 64-Bit Server VM
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org67d4d8b" class="outline-4">
-<h4 id="org67d4d8b"><span class="section-number-4">1.1.4</span> 升级（非必需）</h4>
+<div id="outline-container-orgfb6aafa" class="outline-4">
+<h4 id="orgfb6aafa"><span class="section-number-4">1.1.4</span> 升级（非必需）</h4>
 <div class="outline-text-4" id="text-1-1-4">
 <div class="org-src-container">
 <pre class="src src-shell">npm.cmd install -g --force npm@latest
@@ -101,8 +101,8 @@ Leiningen 2.9.3 on Java 11.0.9 OpenJDK 64-Bit Server VM
 <h3 id="org83d6599"><span class="section-number-3">1.2</span> Linux</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
-<div id="outline-container-orgb293abd" class="outline-4">
-<h4 id="orgb293abd"><span class="section-number-4">1.2.1</span> 准备</h4>
+<div id="outline-container-orgb1411e7" class="outline-4">
+<h4 id="orgb1411e7"><span class="section-number-4">1.2.1</span> 准备</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <p>
 For Ubuntu
@@ -115,8 +115,8 @@ For Ubuntu
 </div>
 </div>
 
-<div id="outline-container-orgc37e92f" class="outline-4">
-<h4 id="orgc37e92f"><span class="section-number-4">1.2.2</span> 安装</h4>
+<div id="outline-container-org630811e" class="outline-4">
+<h4 id="org630811e"><span class="section-number-4">1.2.2</span> 安装</h4>
 <div class="outline-text-4" id="text-1-2-2">
 <div class="org-src-container">
 <pre class="src src-shell"><span style="color: #3F7F5F;"># </span><span style="color: #3F7F5F;">https://www.graalvm.org/ with JDK and Node.js</span>
@@ -128,6 +128,7 @@ wget $<span style="color: #000000;">GRAALVM_GITHUB</span>/vm-$<span style="color
 tar -xvzf $<span style="color: #000000;">GRAALVM_PACKAGE</span>.tar.gz
 sudo mv $<span style="color: #000000;">GRAALVM_LIB</span> /usr/local/lib
 <span style="color: #7F0055; font-weight: bold;">echo</span> <span style="color: #2A00FF;">"export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH"</span> &gt;&gt; ~/.bashrc
+<span style="color: #7F0055; font-weight: bold;">echo</span> <span style="color: #2A00FF;">"export JAVA_HOME=/usr/local/lib/$GRAALVM_LIB"</span> &gt;&gt; ~/.bashrc
 <span style="color: #7F0055; font-weight: bold;">source</span> ~/.bashrc
 npm config set registry https://registry.npm.taobao.org
 
@@ -141,8 +142,8 @@ lein
 </div>
 </div>
 
-<div id="outline-container-orgdb75c51" class="outline-4">
-<h4 id="orgdb75c51"><span class="section-number-4">1.2.3</span> 测试</h4>
+<div id="outline-container-org99d7fc8" class="outline-4">
+<h4 id="org99d7fc8"><span class="section-number-4">1.2.3</span> 测试</h4>
 <div class="outline-text-4" id="text-1-2-3">
 <pre class="example">
 $ java --version
@@ -161,8 +162,8 @@ Leiningen 2.9.4 on Java 11.0.9 OpenJDK 64-Bit Server VM
 </div>
 </div>
 
-<div id="outline-container-orgfb6aafa" class="outline-4">
-<h4 id="orgfb6aafa"><span class="section-number-4">1.2.4</span> 升级（非必需）</h4>
+<div id="outline-container-orgc20a7dc" class="outline-4">
+<h4 id="orgc20a7dc"><span class="section-number-4">1.2.4</span> 升级（非必需）</h4>
 <div class="outline-text-4" id="text-1-2-4">
 <div class="org-src-container">
 <pre class="src src-shell">npm install -g --force npm@latest
@@ -176,8 +177,8 @@ Leiningen 2.9.4 on Java 11.0.9 OpenJDK 64-Bit Server VM
 <h3 id="org6ccc566"><span class="section-number-3">1.3</span> macOS</h3>
 <div class="outline-text-3" id="text-1-3">
 </div>
-<div id="outline-container-orgedb27a0" class="outline-4">
-<h4 id="orgedb27a0"><span class="section-number-4">1.3.1</span> 准备</h4>
+<div id="outline-container-org65f8ba2" class="outline-4">
+<h4 id="org65f8ba2"><span class="section-number-4">1.3.1</span> 准备</h4>
 <div class="outline-text-4" id="text-1-3-1">
 <div class="org-src-container">
 <pre class="src src-shell">brew cask install emacs
@@ -186,8 +187,8 @@ Leiningen 2.9.4 on Java 11.0.9 OpenJDK 64-Bit Server VM
 </div>
 </div>
 
-<div id="outline-container-org3759d63" class="outline-4">
-<h4 id="org3759d63"><span class="section-number-4">1.3.2</span> 安装</h4>
+<div id="outline-container-orgcbbd704" class="outline-4">
+<h4 id="orgcbbd704"><span class="section-number-4">1.3.2</span> 安装</h4>
 <div class="outline-text-4" id="text-1-3-2">
 <div class="org-src-container">
 <pre class="src src-shell"><span style="color: #3F7F5F;"># </span><span style="color: #3F7F5F;">https://www.graalvm.org/ with JDK and Node.js</span>
@@ -200,6 +201,8 @@ curl -L $<span style="color: #000000;">GRAALVM_GITHUB</span>/vm-$<span style="co
 tar -xvzf $<span style="color: #000000;">GRAALVM_PACKAGE</span>.tar.gz
 sudo mv $<span style="color: #000000;">GRAALVM_LIB</span> /Library/Java/JavaVirtualMachines/
 <span style="color: #7F0055; font-weight: bold;">echo</span> <span style="color: #2A00FF;">"export PATH=/Library/Java/JavaVirtualMachines/$GRAALVM_LIB/Contents/Home/bin:$PATH"</span> <span style="color: #2A00FF;">\</span>
+     &gt;&gt; ~/.bash_profile
+<span style="color: #7F0055; font-weight: bold;">echo</span> <span style="color: #2A00FF;">"export JAVA_HOME=/Library/Java/JavaVirtualMachines/$GRAALVM_LIB/Contents/Home"</span> <span style="color: #2A00FF;">\</span>
      &gt;&gt; ~/.bash_profile
 <span style="color: #7F0055; font-weight: bold;">source</span> ~/.bash_profile
 npm config set registry https://registry.npm.taobao.org
@@ -214,8 +217,8 @@ lein
 </div>
 </div>
 
-<div id="outline-container-org233d160" class="outline-4">
-<h4 id="org233d160"><span class="section-number-4">1.3.3</span> 测试</h4>
+<div id="outline-container-org3d84854" class="outline-4">
+<h4 id="org3d84854"><span class="section-number-4">1.3.3</span> 测试</h4>
 <div class="outline-text-4" id="text-1-3-3">
 <pre class="example">
 $ java --version
@@ -233,8 +236,6 @@ Leiningen 2.9.4 on Java 11.0.9 OpenJDK 64-Bit Server VM
 </div>
 </div>
 </div>
-
-
 <div id="outline-container-org72bdb3f" class="outline-2">
 <h2 id="org72bdb3f"><span class="section-number-2">2</span> 开发IDE</h2>
 <div class="outline-text-2" id="text-2">

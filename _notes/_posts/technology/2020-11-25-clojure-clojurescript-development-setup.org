@@ -37,6 +37,7 @@ wget $GRAALVM_GITHUB/vm-$GRAALVM_VERSION/$GRAALVM_PACKAGE.zip
 "/cygdrive/C/Program Files/7-Zip/7z.exe" x $GRAALVM_PACKAGE.zip
 mv $GRAALVM_LIB /usr/local/lib
 echo "export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH" >> ~/.bash_profile
+echo "export JAVA_HOME=/usr/local/lib/$GRAALVM_LIB" >> ~/.bash_profile
 source ~/.bash_profile
 npm.cmd config set registry https://registry.npm.taobao.org
 
@@ -62,7 +63,6 @@ Usage: npm <command>
 npm@6.14.6 C:\cygwin64\usr\local\lib\graalvm-ce-java11-20.3.0\languages\js\npm
 
 $ lein -v
-OpenJDK 64-Bit Server VM warning: forcing TieredStopAtLevel to full optimization because JVMCI is enabled
 Leiningen 2.9.3 on Java 11.0.9 OpenJDK 64-Bit Server VM
 #+end_example
 
@@ -93,6 +93,7 @@ wget $GRAALVM_GITHUB/vm-$GRAALVM_VERSION/$GRAALVM_PACKAGE.tar.gz
 tar -xvzf $GRAALVM_PACKAGE.tar.gz
 sudo mv $GRAALVM_LIB /usr/local/lib
 echo "export PATH=/usr/local/lib/$GRAALVM_LIB/bin:$PATH" >> ~/.bashrc
+echo "export JAVA_HOME=/usr/local/lib/$GRAALVM_LIB" >> ~/.bashrc
 source ~/.bashrc
 npm config set registry https://registry.npm.taobao.org
 
@@ -148,6 +149,8 @@ tar -xvzf $GRAALVM_PACKAGE.tar.gz
 sudo mv $GRAALVM_LIB /Library/Java/JavaVirtualMachines/
 echo "export PATH=/Library/Java/JavaVirtualMachines/$GRAALVM_LIB/Contents/Home/bin:$PATH" \
      >> ~/.bash_profile
+echo "export JAVA_HOME=/Library/Java/JavaVirtualMachines/$GRAALVM_LIB/Contents/Home" \
+     >> ~/.bash_profile
 source ~/.bash_profile
 npm config set registry https://registry.npm.taobao.org
 
@@ -172,8 +175,6 @@ npm@6.14.6 /Library/Java/JavaVirtualMachines/graalvm-ce-java11-20.3.0/Contents/H
 $ lein -v
 Leiningen 2.9.4 on Java 11.0.9 OpenJDK 64-Bit Server VM
 #+end_example
-
-
 * 开发IDE
 
 下载并安装YaheiInconsolata：https://github.com/loseblue/yaheiInconsolata.ttf
