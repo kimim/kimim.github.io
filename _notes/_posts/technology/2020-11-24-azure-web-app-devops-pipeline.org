@@ -29,7 +29,7 @@ lein uberjar
 sudo docker build -t kimim/vorstellung .
 sudo docker login kimim.azurecr.cn
 sudo docker tag kimim/vorstellung kimim.azurecr.cn/vorstellung
-sudo docker push wxiip.azurecr.cn/vorstellung
+sudo docker push kimim.azurecr.cn/vorstellung
 #+end_src
 
 这样就能在ACR的Repositories中找到 =vorstellung= 。
