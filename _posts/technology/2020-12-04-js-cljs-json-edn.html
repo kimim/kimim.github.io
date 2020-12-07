@@ -14,7 +14,7 @@ The first thing is <code>edn</code> data type:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-clojure">{<span style="color: #32cd32;">"Name"</span> <span style="color: #32cd32;">"Kimi"</span> <span style="color: #32cd32;">"Password"</span> <span style="color: #32cd32;">"PSW"</span>}
+<pre class="src src-clojure">{<span style="color: #2A00FF;">"Name"</span> <span style="color: #2A00FF;">"Kimi"</span> <span style="color: #2A00FF;">"Password"</span> <span style="color: #2A00FF;">"PSW"</span>}
 </pre>
 </div>
 
@@ -24,7 +24,7 @@ The second is <code>js</code> object, which can be converted from <code>edn</cod
 </p>
 
 <div class="org-src-container">
-<pre class="src src-clojure">(clj-&gt;js {<span style="color: #32cd32;">"Name"</span> <span style="color: #32cd32;">"Kimi"</span> <span style="color: #32cd32;">"Password"</span> <span style="color: #32cd32;">"PSW"</span>})
+<pre class="src src-clojure">(clj-&gt;js {<span style="color: #2A00FF;">"Name"</span> <span style="color: #2A00FF;">"Kimi"</span> <span style="color: #2A00FF;">"Password"</span> <span style="color: #2A00FF;">"PSW"</span>})
 </pre>
 </div>
 
@@ -34,7 +34,7 @@ Then you can get a json string from js object by <code>JSON.stringify</code> <su
 </p>
 
 <div class="org-src-container">
-<pre class="src src-clojure">(.stringify <span style="color: #ffffff; font-style: italic; text-decoration: underline;">js</span>/JSON (clj-&gt;js {<span style="color: #32cd32;">"Name"</span> <span style="color: #32cd32;">"Kimi"</span> <span style="color: #32cd32;">"Password"</span> <span style="color: #32cd32;">"PSW"</span>}))
+<pre class="src src-clojure">(.stringify <span style="color: #000000; font-style: italic; text-decoration: underline;">js</span>/JSON (clj-&gt;js {<span style="color: #2A00FF;">"Name"</span> <span style="color: #2A00FF;">"Kimi"</span> <span style="color: #2A00FF;">"Password"</span> <span style="color: #2A00FF;">"PSW"</span>}))
 </pre>
 </div>
 
@@ -44,7 +44,7 @@ In the reverse order, you can parse a <code>json</code> string to <code>js</code
 </p>
 
 <div class="org-src-container">
-<pre class="src src-clojure">(.parse <span style="color: #ffffff; font-style: italic; text-decoration: underline;">js</span>/JSON <span style="color: #32cd32;">"{</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">Name</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">:</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">Kimi</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">,</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">Password</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">:</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">PSW</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">}"</span>)
+<pre class="src src-clojure">(.parse <span style="color: #000000; font-style: italic; text-decoration: underline;">js</span>/JSON <span style="color: #2A00FF;">"{</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">Name</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">:</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">Kimi</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">,</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">Password</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">:</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">PSW</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">}"</span>)
 </pre>
 </div>
 
@@ -53,7 +53,7 @@ And you can also convert <code>js</code> object to <code>edn</code> by <code>js-
 </p>
 
 <div class="org-src-container">
-<pre class="src src-clojure">(js-&gt;clj (.parse <span style="color: #ffffff; font-style: italic; text-decoration: underline;">js</span>/JSON <span style="color: #32cd32;">"{</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">Name</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">:</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">Kimi</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">,</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">Password</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">:</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">PSW</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">}"</span>))
+<pre class="src src-clojure">(js-&gt;clj (.parse <span style="color: #000000; font-style: italic; text-decoration: underline;">js</span>/JSON <span style="color: #2A00FF;">"{</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">Name</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">:</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">Kimi</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">,</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">Password</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">:</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">PSW</span><span style="color: #2A00FF; font-weight: bold;">\"</span><span style="color: #2A00FF;">}"</span>))
 </pre>
 </div>
 <div id="footnotes">
