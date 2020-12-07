@@ -1,0 +1,73 @@
+---
+layout: post
+title: JSON and EDN for JS and CLJS
+categories: [technology]
+tags: [EDN, JSON, javascript, clojurescript, clojure]
+---
+
+<p>
+In the clojurescript world, there are three kind of things.
+</p>
+
+<p>
+The first thing is <code>edn</code> data type:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">{<span style="color: #32cd32;">"Name"</span> <span style="color: #32cd32;">"Kimi"</span> <span style="color: #32cd32;">"Password"</span> <span style="color: #32cd32;">"PSW"</span>}
+</pre>
+</div>
+
+<p>
+The second is <code>js</code> object, which can be converted from <code>edn</code> by applying
+<code>clj-&gt;js</code>, and the string representation has <code>#js</code> prefix:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(clj-&gt;js {<span style="color: #32cd32;">"Name"</span> <span style="color: #32cd32;">"Kimi"</span> <span style="color: #32cd32;">"Password"</span> <span style="color: #32cd32;">"PSW"</span>})
+</pre>
+</div>
+
+<p>
+Then you can get a json string from js object by <code>JSON.stringify</code> <sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>, in
+<code>cljs</code> way <code>(.stringify js/JSON js-obj)</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(.stringify <span style="color: #ffffff; font-style: italic; text-decoration: underline;">js</span>/JSON (clj-&gt;js {<span style="color: #32cd32;">"Name"</span> <span style="color: #32cd32;">"Kimi"</span> <span style="color: #32cd32;">"Password"</span> <span style="color: #32cd32;">"PSW"</span>}))
+</pre>
+</div>
+
+<p>
+In the reverse order, you can parse a <code>json</code> string to <code>js</code> object, by
+<code>JSON.parse</code><sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>, in <code>cljs</code> way <code>(.parse js/JSON json-str)</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(.parse <span style="color: #ffffff; font-style: italic; text-decoration: underline;">js</span>/JSON <span style="color: #32cd32;">"{</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">Name</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">:</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">Kimi</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">,</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">Password</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">:</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">PSW</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">}"</span>)
+</pre>
+</div>
+
+<p>
+And you can also convert <code>js</code> object to <code>edn</code> by <code>js-&gt;clj</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(js-&gt;clj (.parse <span style="color: #ffffff; font-style: italic; text-decoration: underline;">js</span>/JSON <span style="color: #32cd32;">"{</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">Name</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">:</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">Kimi</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">,</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">Password</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">:</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">PSW</span><span style="color: #32cd32; font-weight: bold;">\"</span><span style="color: #32cd32;">}"</span>))
+</pre>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse</a>
+</p></div></div>
+
+
+</div>
+</div>

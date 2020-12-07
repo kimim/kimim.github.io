@@ -1,0 +1,69 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: JSON and EDN for JS and CLJS
+categories: [technology]
+tags: [EDN, JSON, javascript, clojurescript, clojure]
+---
+#+END_EXPORT
+
+In the clojurescript world, there are three kind of things.
+
+The first thing is =edn= data type:
+
+#+begin_src clojure :results pp
+{"Name" "Kimi" "Password" "PSW"}
+#+end_src
+
+#+RESULTS:
+: {"Name" "Kimi", "Password" "PSW"}
+: => {"Name" "Kimi", "Password" "PSW"}
+
+The second is =js= object, which can be converted from =edn= by applying
+=clj->js=, and the string representation has =#js= prefix:
+
+#+begin_src clojure :results pp
+(clj->js {"Name" "Kimi" "Password" "PSW"})
+#+end_src
+
+#+RESULTS:
+: [object Object]
+: => #js {:Name "Kimi", :Password "PSW"}
+
+Then you can get a json string from js object by =JSON.stringify= [fn:1], in
+=cljs= way =(.stringify js/JSON js-obj)=:
+
+#+begin_src clojure :results pp
+(.stringify js/JSON (clj->js {"Name" "Kimi" "Password" "PSW"}))
+#+end_src
+
+#+RESULTS:
+: {"Name":"Kimi","Password":"PSW"}
+: => "{\"Name\":\"Kimi\",\"Password\":\"PSW\"}"
+
+In the reverse order, you can parse a =json= string to =js= object, by
+=JSON.parse=[fn:2], in =cljs= way =(.parse js/JSON json-str)=:
+
+#+begin_src clojure :results pp
+(.parse js/JSON "{\"Name\":\"Kimi\",\"Password\":\"PSW\"}")
+#+end_src
+
+#+RESULTS:
+: [object Object]
+: => #js {:Name "Kimi", :Password "PSW"}
+
+And you can also convert =js= object to =edn= by =js->clj=:
+
+#+begin_src clojure :results pp
+(js->clj (.parse js/JSON "{\"Name\":\"Kimi\",\"Password\":\"PSW\"}"))
+#+end_src
+
+#+RESULTS:
+: {"Name" "Kimi", "Password" "PSW"}
+: => {"Name" "Kimi", "Password" "PSW"}
+
+* Footnotes
+
+[fn:1] https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+
+[fn:2] https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse
