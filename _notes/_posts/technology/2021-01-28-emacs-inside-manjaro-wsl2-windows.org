@@ -1,0 +1,111 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 在 Windows WSL2 中安装 Manjaro 通过 XServer 使用 Emacs
+categories: [technology]
+tags: [manjaro, wsl2, emacs]
+---
+#+END_EXPORT
+
+一直在 Cygwin 中的 Emacs-w32 这个版本的 Emacs ，用的也都好好的。可是因为公司强制
+安装了360杀毒软件，这下麻烦大了，Emacs 中访问文件的速度变得出奇的慢，慢到无法忍
+受。本来就很慢，还稍微能忍受。于是安装 Ubuntu 双系统，规避杀毒软件。可是，Ubuntu
+在我这个 Dell 工作站上时不时显示卡住，重启才行。
+
+本来想着在 Ubuntu 下，安装个 Gentoo ，可能用起来会舒服些。然后给硬盘分区的时候，
+把系统分区搞坏了。只能回到 Windows 了。确实，有些办公软件，还是要用 Windows 的。
+这时候，发现了 WSL 这个好东西。即 Windows Subsystem Linux ，已经升级到 WSL2 了。
+
+以下记录下，Emacs 在 WSL2 中的 Manjaro 里配置的过程。
+
+* 安装 WSL Manjaro
+
+首先，去这个地址 https://github.com/sileshn/ManjaroWSL 找到 ManjaroWSL 的安装包。
+下载地址在这里：https://github.com/sileshn/ManjaroWSL/releases ，选最新的
+release 即可。
+
+然后，找个地方解压，解压后，就两个文件，一个是用来配置的主程序，还有个 Manjaro
+的根文件系统。
+
+#+begin_example
+  -rwxrwxrwx 1 209K Jan 27 17:13 Manjaro.exe
+  -rwxrwxrwx 1 364M Jan 27 17:13 rootfs.tar.gz
+#+end_example
+
+参考安装说明，进行安装。
+
+打开 cmd 执行：
+
+#+begin_src shell
+wsl --set-default-version 2 # 设置 wsl 版本
+cd <刚解压的 Manjaro.exe 所在的文件夹>
+Manjaro.exe                 # 运行 Manjaro.exe
+#+end_src
+
+完了之后，再执行 Manjaro.exe 就进入 Manjaro Linux 了。就是这么简单。
+
+接下来，在 Manjaro 的 shell 下执行（以 kimim 用户为例）：
+
+#+begin_src shell
+useradd -m -G wheel -s /bin/bash kimim
+passwd kimim
+exit # 退出
+#+end_src
+
+接着在 cmd 中，使用 WSL Manjaro 的默认用户名：
+
+#+begin_src shell
+Manjaro.exe config --default-user kimim
+#+end_src
+
+* 进入 WSL Manjaro Linux
+
+登录 Manjaro 后，通过可爱的 pacman 安装 Emacs:
+
+#+begin_src shell
+sudo pacman -S emacs
+#+end_src
+
+* 设置 XServer
+
+同时，可以下载 VCXSRV ：https://sourceforge.net/projects/vcxsrv/
+
+安装在 Windows 上。接着，找到桌面上的 XLaunch ，右键打开属性菜单，在“兼容性”这一个选项中，点击“更改高 DPI 设置”。然后，双击 LOGO 运行它。
+
+选择：
+1. Multiple Windows
+2. Display number -1
+3. Start no client
+4. Clipboard
+5. Primary Selection
+6. Native opengl
+7. Disable access control
+
+* 运行 Emacs
+
+等 Emacs 安装好之后，按照 https://github.com/kimim/kimim-emacs 的说明。
+
+下载字体：
+- https://fonts.google.com/specimen/Inconsolata
+- https://github.com/loseblue/yaheiInconsolata.ttf
+
+在 Manjaro shell 里将字体移到 =/usr/local/share/fonts/= 下。
+
+然后：
+
+#+begin_src shell
+git clone https://github.com/kimim/kimim-emacs && \
+cp kimim-emacs/.emacs ~
+emacs
+#+end_src
+
+* 安装 emacs-rime
+
+因为 Windows 的输入法没法给 X 应用用，所以需要自带输入法。参考：https://github.com/DogLooksGood/emacs-rime
+
+安装 emacs-rime 输入法。
+
+* 注意事项
+
+Rime 小狼毫和 X 程序有冲突，激活的时候，按上下左右，Del 等按键，会产生一连串数字。
+所以，使用 Emacs 的时候，要确保 Windows 切换到英文输入法状态。
