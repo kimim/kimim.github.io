@@ -1,0 +1,102 @@
+---
+layout: post
+title: Handle date time from Excel in clojure
+categories: [technology]
+tags: [Clojure]
+---
+
+<p>
+Date and time is stored in excel as integer of float64 value. When you read them
+in clojure, you need to convert it to date/date-time object.
+</p>
+
+<p>
+For example, "2020-11-17T08:09:10.000" is stored as 44152.33969907 in Excel low
+level.
+</p>
+
+<p>
+You can use <code>cljc.java-time</code> <sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup> to handle date and date time values.
+</p>
+
+<p>
+Firstly, add the deps.
+</p>
+
+<p>
+clj deps.edn:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">{<span style="color: #110099;">:deps</span>
+ {<span style="color: #000000; font-style: italic; text-decoration: underline;">cljc.java-time</span>/cljc.java-time               {<span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mvn</span><span style="color: #000000; background-color: #ffffff;">/</span><span style="color: #110099;">version</span> <span style="color: #2A00FF;">"0.1.15"</span>}}}
+</pre>
+</div>
+
+<p>
+or leiningen project.clj:
+</p>
+<div class="org-src-container">
+<pre class="src src-clojure">(<span style="color: #7F0055; font-weight: bold;">defproject</span> <span style="color: #0000ff; font-weight: bold;">excel-test</span> <span style="color: #2A00FF;">"0.0.1"</span>
+  <span style="color: #110099;">:dependencies</span> [[cljc.java-time <span style="color: #2A00FF;">"0.1.15"</span>]])
+</pre>
+</div>
+
+<p>
+Then let's calculate the 44152 or 44152.33969907 in local date or local date time.
+</p>
+
+<p>
+There are a couple of additional caveats to be aware of before we try to convert
+the dates:
+</p>
+
+<ul class="org-ul">
+<li>Excel counts 1900-01-01 as day 1 in it’s serial calculation, so you need to
+ensure you are counting this extra day in any date difference calculations.</li>
+<li>The Excel date serial is off by 1, as it behaves as if 1900-02-29
+existed. This is due to a compatibility issue with Lotus 123 back when Excel
+was released and is a known issue<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>.</li>
+</ul>
+
+<p>
+This means that the Excel date serial for a given day is off by 2 compared to
+the actual amount of days that have elapsed since 1900-01-01.<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup> Thus, you
+can calculate the date base on 1899-12-30.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(require '[cljc.java-time.local-date <span style="color: #110099;">:as</span> ld]
+         '[cljc.java-time.local-date-time <span style="color: #110099;">:as</span> ldt]
+         '[cljc.java-time.temporal.chrono-unit <span style="color: #110099;">:as</span> chrono-unit])
+
+(<span style="color: #7F0055; font-weight: bold;">-&gt;</span> (<span style="color: #000000; font-style: italic; text-decoration: underline;">ld</span>/parse <span style="color: #2A00FF;">"1899-12-30"</span>)
+    (<span style="color: #000000; font-style: italic; text-decoration: underline;">ld</span>/plus-days
+     44152))
+<span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">=&gt; #object[java.time.LocalDate 0x499f935c "2020-11-17"]</span>
+
+(<span style="color: #7F0055; font-weight: bold;">-&gt;</span> (<span style="color: #000000; font-style: italic; text-decoration: underline;">ldt</span>/parse <span style="color: #2A00FF;">"1899-12-30T00:00:00.000"</span>)
+    (<span style="color: #000000; font-style: italic; text-decoration: underline;">ldt</span>/plus-nanos
+     (* 1e9 60 60 24 44152.33969907))
+    (<span style="color: #000000; font-style: italic; text-decoration: underline;">ldt</span>/truncated-to <span style="color: #000000; font-style: italic; text-decoration: underline;">chrono-unit</span>/millis))
+<span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">=&gt; #object[java.time.LocalDateTime 0x7e8f1e44 "2020-11-17T08:09:09.999"]</span>
+</pre>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://github.com/henryw374/cljc.java-time">https://github.com/henryw374/cljc.java-time</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://docs.microsoft.com/en-us/office/troubleshoot/excel/wrongly-assumes-1900-is-leap-year">https://docs.microsoft.com/en-us/office/troubleshoot/excel/wrongly-assumes-1900-is-leap-year</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://ryanmaclean365.com/2020/07/28/converting-excel-date-time-serial-values-with-power-automate/">https://ryanmaclean365.com/2020/07/28/converting-excel-date-time-serial-values-with-power-automate/</a>
+</p></div></div>
+
+
+</div>
+</div>

@@ -1,0 +1,70 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Handle date time from Excel in clojure
+categories: [technology]
+tags: [Clojure]
+---
+#+END_EXPORT
+
+Date and time is stored in excel as integer of float64 value. When you read them
+in clojure, you need to convert it to date/date-time object.
+
+For example, "2020-11-17T08:09:10.000" is stored as 44152.33969907 in Excel low
+level.
+
+You can use =cljc.java-time= [fn:1] to handle date and date time values.
+
+Firstly, add the deps.
+
+clj deps.edn:
+#+begin_src clojure
+{:deps
+ {cljc.java-time/cljc.java-time               {:mvn/version "0.1.15"}}}
+#+end_src
+
+or leiningen project.clj:
+#+begin_src clojure
+(defproject excel-test "0.0.1"
+  :dependencies [[cljc.java-time "0.1.15"]])
+#+end_src
+
+Then let's calculate the 44152 or 44152.33969907 in local date or local date time.
+
+There are a couple of additional caveats to be aware of before we try to convert
+the dates:
+
+- Excel counts 1900-01-01 as day 1 in it’s serial calculation, so you need to
+  ensure you are counting this extra day in any date difference calculations.
+- The Excel date serial is off by 1, as it behaves as if 1900-02-29
+  existed. This is due to a compatibility issue with Lotus 123 back when Excel
+  was released and is a known issue[fn:2].
+
+This means that the Excel date serial for a given day is off by 2 compared to
+the actual amount of days that have elapsed since 1900-01-01.[fn:3] Thus, you
+can calculate the date base on 1899-12-30.
+
+#+begin_src clojure
+(require '[cljc.java-time.local-date :as ld]
+         '[cljc.java-time.local-date-time :as ldt]
+         '[cljc.java-time.temporal.chrono-unit :as chrono-unit])
+
+(-> (ld/parse "1899-12-30")
+    (ld/plus-days
+     44152))
+;; => #object[java.time.LocalDate 0x499f935c "2020-11-17"]
+
+(-> (ldt/parse "1899-12-30T00:00:00.000")
+    (ldt/plus-nanos
+     (* 1e9 60 60 24 44152.33969907))
+    (ldt/truncated-to chrono-unit/millis))
+;; => #object[java.time.LocalDateTime 0x7e8f1e44 "2020-11-17T08:09:09.999"]
+#+end_src
+
+* Footnotes
+
+[fn:1] https://github.com/henryw374/cljc.java-time
+
+[fn:2] https://docs.microsoft.com/en-us/office/troubleshoot/excel/wrongly-assumes-1900-is-leap-year
+
+[fn:3] https://ryanmaclean365.com/2020/07/28/converting-excel-date-time-serial-values-with-power-automate/
