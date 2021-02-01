@@ -6,28 +6,32 @@ tags: [manjaro, wsl2, emacs]
 ---
 
 <p>
-一直在 Cygwin 中的 Emacs-w32 这个版本的 Emacs ，用的也都好好的。可是因为公司强制安装了360杀毒软件，这下麻烦大了，Emacs 中访问文件的速度变得出奇的慢，慢到无法忍受。本来就很慢，还稍微能忍受。于是安装 Ubuntu 双系统，规避杀毒软件。可是，Ubuntu
-在我这个 Dell 工作站上时不时显示卡住，重启才行。
+一直在 Cygwin 中的 Emacs-w32 这个版本的 Emacs ，用的也都好好的。可是因为公司强制安装了360杀毒软件，这下麻烦大了，Emacs 中访问文件的速度变得出奇的慢，慢到无法忍受。
 </p>
 
 <p>
-本来想着在 Ubuntu 下，安装个 Gentoo ，可能用起来会舒服些。然后给硬盘分区的时候，把系统分区搞坏了。只能回到 Windows 了。确实，有些办公软件，还是要用 Windows 的。这时候，发现了 WSL 这个好东西。即 Windows Subsystem Linux ，已经升级到 WSL2 了。
+本来就已经很慢了，一直忍受着硬着头皮用着。现在实在是慢的没法用了。于是安装
+Ubuntu 双系统，规避杀毒软件。可是，Ubuntu在我这个 Dell 工作站上时不时显示卡住，重启才行。
+</p>
+
+<p>
+所以想着在 Ubuntu 下，安装个 Gentoo ，可能用起来会舒服些。然而给硬盘分区的时候，把系统分区搞坏了。只能回到 Windows 了。确实，有些办公软件，还是要用 Windows 的。这时候，发现了 WSL 这个好东西。即 Windows Subsystem Linux ，已经升级到 WSL2 了。
 </p>
 
 <p>
 以下记录下，Emacs 在 WSL2 中的 Manjaro 里配置的过程。
 </p>
 
-<div id="outline-container-orgb43fce4" class="outline-2">
-<h2 id="orgb43fce4"><span class="section-number-2">1</span> 安装 WSL Manjaro</h2>
+<div id="outline-container-org201a81d" class="outline-2">
+<h2 id="org201a81d"><span class="section-number-2">1</span> 安装 WSL Manjaro</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-首先，去这个地址 <a href="https://github.com/sileshn/ManjaroWSL">https://github.com/sileshn/ManjaroWSL</a> 找到 ManjaroWSL 的安装包。下载地址在这里：<a href="https://github.com/sileshn/ManjaroWSL/releases">https://github.com/sileshn/ManjaroWSL/releases</a> ，选最新的
-release 即可。
+首先，去这个地址 <a href="https://github.com/sileshn/ManjaroWSL/releases">https://github.com/sileshn/ManjaroWSL/releases</a> ，选最新的
+ManjaroWSL release 即可。
 </p>
 
 <p>
-然后，找个地方解压，解压后，就两个文件，一个是用来配置的主程序，还有个 Manjaro
+然后，找个地方解压。解压出来，就两个文件，一个是用来配置的主程序，还有个 Manjaro
 的根文件系统。
 </p>
 
@@ -61,13 +65,13 @@ Manjaro.exe                 <span style="color: #3F7F5F;"># </span><span style="
 
 <div class="org-src-container">
 <pre class="src src-shell">useradd -m -G wheel -s /bin/bash kimim
-passwd kimim
-<span style="color: #7F0055; font-weight: bold;">exit</span> <span style="color: #3F7F5F;"># </span><span style="color: #3F7F5F;">&#36864;&#20986;</span>
+passwd kimim    <span style="color: #3F7F5F;"># </span><span style="color: #3F7F5F;">&#36755;&#20837;&#20004;&#27425;&#23494;&#30721;&#65292;&#35774;&#32622; kimim &#29992;&#25143;&#23494;&#30721;</span>
+<span style="color: #7F0055; font-weight: bold;">exit</span>            <span style="color: #3F7F5F;"># </span><span style="color: #3F7F5F;">&#36864;&#20986;</span>
 </pre>
 </div>
 
 <p>
-接着在 cmd 中，使用 WSL Manjaro 的默认用户名：
+接着，在 cmd 中，设置使用 WSL Manjaro 的默认用户名：
 </p>
 
 <div class="org-src-container">
@@ -77,8 +81,8 @@ passwd kimim
 </div>
 </div>
 
-<div id="outline-container-org2e4aa30" class="outline-2">
-<h2 id="org2e4aa30"><span class="section-number-2">2</span> 进入 WSL Manjaro Linux</h2>
+<div id="outline-container-org890a725" class="outline-2">
+<h2 id="org890a725"><span class="section-number-2">2</span> 进入 WSL Manjaro Linux</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 登录 Manjaro 后，通过可爱的 pacman 安装 Emacs:
@@ -91,15 +95,19 @@ passwd kimim
 </div>
 </div>
 
-<div id="outline-container-orgebc693f" class="outline-2">
-<h2 id="orgebc693f"><span class="section-number-2">3</span> 设置 XServer</h2>
+<div id="outline-container-orgabdad3e" class="outline-2">
+<h2 id="orgabdad3e"><span class="section-number-2">3</span> 设置 XServer</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 同时，可以下载 VCXSRV ：<a href="https://sourceforge.net/projects/vcxsrv/">https://sourceforge.net/projects/vcxsrv/</a>
 </p>
 
 <p>
-安装在 Windows 上。接着，找到桌面上的 XLaunch ，右键打开属性菜单，在“兼容性”这一个选项中，点击“更改高 DPI 设置”。然后，双击 LOGO 运行它。
+安装在 Windows 上。接着，找到桌面上的 XLaunch ，右键打开属性菜单，在“兼容性”这一个选项中，点击“更改高 DPI 设置”。
+</p>
+
+<p>
+然后，双击 XLaunch LOGO 运行它。
 </p>
 
 <p>
@@ -117,8 +125,8 @@ passwd kimim
 </div>
 </div>
 
-<div id="outline-container-org3c49733" class="outline-2">
-<h2 id="org3c49733"><span class="section-number-2">4</span> 运行 Emacs</h2>
+<div id="outline-container-orgf43ff6a" class="outline-2">
+<h2 id="orgf43ff6a"><span class="section-number-2">4</span> 运行 Emacs</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 等 Emacs 安装好之后，按照 <a href="https://github.com/kimim/kimim-emacs">https://github.com/kimim/kimim-emacs</a> 的说明。
@@ -143,14 +151,27 @@ passwd kimim
 <div class="org-src-container">
 <pre class="src src-shell">git clone https://github.com/kimim/kimim-emacs &amp;&amp; <span style="color: #2A00FF;">\</span>
 cp kimim-emacs/.emacs ~
-emacs
 </pre>
 </div>
+
+<p>
+刚刚前面，通过 XLaunch 启动了一个 XServer，需要在 Manjaro shell 中设置下 DISPLAY
+环境变量。在 <code>~/.bash_profile</code> 最后面加上一行：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #7F0055; font-weight: bold;">export</span> <span style="color: #000000;">DISPLAY</span>=:0
+</pre>
+</div>
+
+<p>
+然后运行 emacs ，自动从 elpa 下载安装一些插件。
+</p>
 </div>
 </div>
 
-<div id="outline-container-org76f423b" class="outline-2">
-<h2 id="org76f423b"><span class="section-number-2">5</span> 安装 emacs-rime</h2>
+<div id="outline-container-orgeaf0c0d" class="outline-2">
+<h2 id="orgeaf0c0d"><span class="section-number-2">5</span> 安装 emacs-rime</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 因为 Windows 的输入法没法给 X 应用用，所以需要自带输入法。参考：<a href="https://github.com/DogLooksGood/emacs-rime">https://github.com/DogLooksGood/emacs-rime</a>
@@ -159,11 +180,39 @@ emacs
 <p>
 安装 emacs-rime 输入法。
 </p>
+
+<div class="org-src-container">
+<pre class="src src-shell">pacman -S librime
+<span style="color: #7F0055; font-weight: bold;">cd</span> ~/.emacs.d/elpa/rime*/
+make lib
+</pre>
+</div>
+
+<p>
+README.org 中的具体配置如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #7F0055; font-weight: bold;">use-package</span> <span style="color: #110099;">rime</span>
+  <span style="color: #7F0055; font-weight: bold;">:bind</span> (<span style="color: #2A00FF;">"C-;"</span> . toggle-input-method)
+  <span style="color: #7F0055; font-weight: bold;">:custom</span>
+  (default-input-method <span style="color: #2A00FF;">"rime"</span>)
+  (rime-disable-predicates
+   '(rime-predicate-after-alphabet-char-p))
+  (rime-show-candidate 'posframe)
+  (rime-posframe-properties
+   (list <span style="color: #7F0055; font-weight: bold;">:font</span> <span style="color: #2A00FF;">"YaheiInconsolata-16"</span>
+         <span style="color: #7F0055; font-weight: bold;">:internal-border-width</span> 14))
+<span style="color: #7F0055; font-weight: bold;">:config</span>
+(<span style="color: #7F0055; font-weight: bold;">when</span> (eq (window-system) 'mac)
+  (<span style="color: #7F0055; font-weight: bold;">setq</span> rime-librime-root <span style="color: #2A00FF;">"~/.emacs.d/librime/dist"</span>)))
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-org89eecb5" class="outline-2">
-<h2 id="org89eecb5"><span class="section-number-2">6</span> 注意事项</h2>
+<div id="outline-container-orgbfce52a" class="outline-2">
+<h2 id="orgbfce52a"><span class="section-number-2">6</span> 注意事项</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Rime 小狼毫和 X 程序有冲突，激活的时候，按上下左右，Del 等按键，会产生一连串数字。所以，使用 Emacs 的时候，要确保 Windows 切换到英文输入法状态。
