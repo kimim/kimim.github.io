@@ -29,6 +29,10 @@ or leiningen project.clj:
   :dependencies [[cljc.java-time "0.1.15"]])
 #+end_src
 
+You can use the latest version:
+
+[[https://clojars.org/cljc.java-time][https://clojars.org/cljc.java-time/latest-version.svg]]
+
 Then let's calculate the 44152 or 44152.33969907 in local date or local date time.
 
 There are a couple of additional caveats to be aware of before we try to convert
