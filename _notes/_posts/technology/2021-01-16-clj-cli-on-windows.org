@@ -1,0 +1,56 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Using clj cli on Windows
+categories: [technology]
+tags: [clojure]
+---
+#+END_EXPORT
+
+Deps and CLI[fn:1] is really simple and clean way to run clojure. But there is no
+official installation guide for Windows users. But theoretically, it should work
+on any platform, as the underneath is JVM!
+
+The official clojure site provides Linux installation method:
+https://clojure.org/guides/getting_started#_installation_on_linux
+
+And you can simulate Linux environment with =Cygwin=.
+
+Firstly, download =setup-x86_64.exe= [fn:2] and install =cygwin= on your Windows
+box.
+
+Then, Open =mintty.exe= follow the guideline on https://clojure.org/guides/getting_started#_installation_on_linux
+
+#+begin_src shell
+curl -O https://download.clojure.org/install/linux-install-1.10.1.763.sh
+chmod +x linux-install-1.10.1.763.sh
+sudo ./linux-install-1.10.1.763.sh
+#+end_src
+
+Finally, fix the path issue in two place:
+
+#+begin_src diff
+# Set dir containing the installed files
+- install_dir=/usr/local/lib/clojure
++ install_dir=C:/cygwin64/usr/local/lib/clojure
+tools_cp="$install_dir/libexec/clojure-tools-1.10.1.754.jar"
+
+# Determine user config directory
+if [[ -n "$CLJ_CONFIG" ]]; then
+  config_dir="$CLJ_CONFIG"
+elif [[ -n "$XDG_CONFIG_HOME" ]]; then
+  config_dir="$XDG_CONFIG_HOME/clojure"
+else
+-  config_dir="$HOME/.clojure"
++  config_dir="C:/Users/kimim/.clojure" # Where your .clojure located
+fi
+#+end_src
+
+Now, you can use =clojure -M:run= to run clojure =deps.edn= project in
+=mintty.exe=.
+
+* Footnotes
+
+[fn:1] https://clojure.org/guides/deps_and_cli
+
+[fn:2] https://cygwin.com/install.html

@@ -1,0 +1,79 @@
+---
+layout: post
+title: Using clj cli on Windows
+categories: [technology]
+tags: [clojure]
+---
+
+<p>
+Deps and CLI<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup> is really simple and clean way to run clojure. But there is no
+official installation guide for Windows users. But theoretically, it should work
+on any platform, as the underneath is JVM!
+</p>
+
+<p>
+The official clojure site provides Linux installation method:
+<a href="https://clojure.org/guides/getting_started#_installation_on_linux">https://clojure.org/guides/getting_started#_installation_on_linux</a>
+</p>
+
+<p>
+And you can simulate Linux environment with <code>Cygwin</code>.
+</p>
+
+<p>
+Firstly, download <code>setup-x86_64.exe</code> <sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup> and install <code>cygwin</code> on your Windows
+box.
+</p>
+
+<p>
+Then, Open <code>mintty.exe</code> follow the guideline on <a href="https://clojure.org/guides/getting_started#_installation_on_linux">https://clojure.org/guides/getting_started#_installation_on_linux</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">curl -O https://download.clojure.org/install/linux-install-1.10.1.763.sh
+chmod +x linux-install-1.10.1.763.sh
+sudo ./linux-install-1.10.1.763.sh
+</pre>
+</div>
+
+<p>
+Finally, fix the path issue in two place:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-diff"><span style="color: #3F7F5F;">#</span><span style="color: #3F7F5F;"> Set dir containing the installed files</span>
+<span style="color: #aa2222; background-color: #ffeeee;">-</span><span style="background-color: #ffeeee;"> install_dir=/usr/local/lib/clojure</span>
+<span style="color: #22aa22; background-color: #eeffee;">+</span><span style="background-color: #eeffee;"> install_dir=C:/cygwin64/usr/local/lib/clojure</span>
+tools_cp="$install_dir/libexec/clojure-tools-1.10.1.754.jar"
+
+<span style="color: #3F7F5F;">#</span><span style="color: #3F7F5F;"> Determine user config directory</span>
+if [[ -n "$CLJ_CONFIG" ]]; then
+  config_dir="$CLJ_CONFIG"
+elif [[ -n "$XDG_CONFIG_HOME" ]]; then
+  config_dir="$XDG_CONFIG_HOME/clojure"
+else
+<span style="color: #aa2222; background-color: #ffeeee;">-</span><span style="background-color: #ffeeee;">  config_dir="$HOME/.clojure"</span>
+<span style="color: #22aa22; background-color: #eeffee;">+</span><span style="background-color: #eeffee;">  config_dir="C:/Users/kimim/.clojure" # Where your .clojure located</span>
+fi
+</pre>
+</div>
+
+<p>
+Now, you can use <code>clojure -M:run</code> to run clojure <code>deps.edn</code> project in
+<code>mintty.exe</code>.
+</p>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://clojure.org/guides/deps_and_cli">https://clojure.org/guides/deps_and_cli</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://cygwin.com/install.html">https://cygwin.com/install.html</a>
+</p></div></div>
+
+
+</div>
+</div>

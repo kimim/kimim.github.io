@@ -1,0 +1,165 @@
+---
+layout: post
+title: Use Azure DevOps Pipeline to automatically deploy to Azure Web App
+categories: [technology]
+tags: [Docker, Azure, Clojure, DevOps]
+---
+
+<p>
+Azure DevOps中可以设置Pipeline流水线，根据代码提交，触发编译，测试和部署。但是
+DevOps需要Azure Global订阅，如果想部署到世纪互联的Azure Web App，就需要一些额外的设置。
+</p>
+
+<div id="outline-container-orgdfbc5fe" class="outline-2">
+<h2 id="orgdfbc5fe"><span class="section-number-2">1</span> Azure Container Registry（ACR）</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+首先，在 portal.azure.cn 中创建容器库：
+<a href="https://portal.azure.cn/#create/Microsoft.ContainerRegistry">https://portal.azure.cn/#create/Microsoft.ContainerRegistry</a>
+</p>
+
+<p>
+例如： <a href="https://kimim.azurecr.cn">https://kimim.azurecr.cn</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb02514a" class="outline-2">
+<h2 id="orgb02514a"><span class="section-number-2">2</span> Push Docker Image To Azure Container Registry</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+假设我们的docker image叫 <code>kimim/vorstellung</code>:
+</p>
+
+<p>
+编译并推送到ACR：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">lein uberjar
+sudo docker build -t kimim/vorstellung .
+sudo docker login kimim.azurecr.cn
+sudo docker tag kimim/vorstellung kimim.azurecr.cn/vorstellung
+sudo docker push wxiip.azurecr.cn/vorstellung
+</pre>
+</div>
+
+<p>
+这样就能在ACR的Repositories中找到 <code>vorstellung</code> 。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org73abd1a" class="outline-2">
+<h2 id="org73abd1a"><span class="section-number-2">3</span> Web App</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+在 <a href="https://portal.azure.cn/#create/Microsoft.WebSite">https://portal.azure.cn/#create/Microsoft.WebSite</a> 创建Web App。
+</p>
+
+<ul class="org-ul">
+<li>在Instance Details中设置一个名字，比如 kimim.chinaclouodsites.cn</li>
+<li>Publish选择 Docker Container</li>
+<li>设置Docker为ACR中的Image，tag选择latest。然后创建资源。</li>
+<li>打开kimim App Serivce资源，在Container settings中设置Continuous Deployment为On</li>
+<li>Configuration中添加环境变量，如在Database String中添加 <code>DATABSE_URL</code> 为 <code>jdbc:sqlite:kimim.db</code></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgb5567c4" class="outline-2">
+<h2 id="orgb5567c4"><span class="section-number-2">4</span> Azure DevOps Pipeline</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org55babce" class="outline-3">
+<h3 id="org55babce"><span class="section-number-3">4.1</span> Service Connections</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+在项目设置中，Piplines/Service Connections选项下，添加Service Connection：
+</p>
+<ul class="org-ul">
+<li>Docker Registry</li>
+<li>选Others，因为Azure Container Registry只支持Global的订阅</li>
+<li>添加Docker Registry：<a href="https://kimim.azurerc.cn">https://kimim.azurerc.cn</a></li>
+<li>Docker ID和Docker Password从ACR资源的Access Keys中，打开Admin user，找到Username和password</li>
+<li>添加一个service connection name，例如 <code>kimimRSC</code></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0f23e6f" class="outline-3">
+<h3 id="org0f23e6f"><span class="section-number-3">4.2</span> Pipelines</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+以 <code>vorstellung</code> 项目为例<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>，在Pipelines中 <code>New pipeline</code> ，文件名为
+<code>azure-pipelines.yml</code> ，内容如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-yaml"><span style="color: #000000;">trigger</span>:
+- master
+
+<span style="color: #000000;">variables</span>:
+  <span style="color: #000000;">projectName</span>: <span style="color: #2A00FF;">'vorstellung'</span>
+  <span style="color: #000000;">repositoryName</span>: $(projectName)
+  <span style="color: #000000;">dockerRSC</span>: <span style="color: #2A00FF;">'kimimRSC'</span>
+
+<span style="color: #000000;">pool</span>:
+  <span style="color: #000000;">vmImage</span>: <span style="color: #2A00FF;">'ubuntu-latest'</span>
+
+<span style="color: #000000;">steps</span>:
+- <span style="color: #000000;">task</span>: JavaToolInstaller@0
+  <span style="color: #000000;">inputs</span>:
+    <span style="color: #000000;">versionSpec</span>: <span style="color: #2A00FF;">'11'</span>
+    <span style="color: #000000;">jdkArchitectureOption</span>: <span style="color: #2A00FF;">'x64'</span>
+    <span style="color: #000000;">jdkSourceOption</span>: <span style="color: #2A00FF;">'PreInstalled'</span>
+- <span style="color: #000000;">task</span>: NodeTool@0
+  <span style="color: #000000;">inputs</span>:
+    <span style="color: #000000;">versionSpec</span>: <span style="color: #2A00FF;">'6.x'</span>
+    <span style="color: #000000;">checkLatest</span>: <span style="color: #110099;">true</span>
+- <span style="color: #000000;">task</span>: Bash@3
+  <span style="color: #000000;">inputs</span>:
+    <span style="color: #000000;">targetType</span>: <span style="color: #2A00FF;">'inline'</span>
+    <span style="color: #000000;">script</span>: |
+      echo <span style="color: #2A00FF;">'Install Leiningen, NPM and compile'</span>
+<span style="color: #2A00FF;">      wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein</span>
+<span style="color: #2A00FF;">      chmod +x lein</span>
+<span style="color: #2A00FF;">      npm install -g npm@latest</span>
+<span style="color: #2A00FF;">      lein shadow npm-deps</span>
+<span style="color: #2A00FF;">      ./lein uberjar</span>
+- <span style="color: #000000;">task</span>: Docker@2
+  <span style="color: #000000;">displayName</span>: <span style="color: #2A00FF;">'Build and Push docker'</span>
+  <span style="color: #000000;">inputs</span>:
+    <span style="color: #000000;">containerRegistry</span>: $(dockerRSC)
+    <span style="color: #000000;">repository</span>: $(repositoryName)
+    <span style="color: #000000;">Dockerfile</span>: <span style="color: #2A00FF;">'**/Dockerfile'</span>
+    <span style="color: #000000;">command</span>: <span style="color: #2A00FF;">'buildAndPush'</span>
+    <span style="color: #000000;">tags</span>: |
+      <span style="color: #2A00FF;">$(Build.BuildId)</span>
+<span style="color: #2A00FF;">      latest</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf4a905a" class="outline-2">
+<h2 id="orgf4a905a"><span class="section-number-2">5</span> Done</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+然后，每次代码提交到master分支，就会触发编译和部署。打开
+<a href="https://kimim.chinaclouodsites.cn">https://kimim.chinaclouodsites.cn</a> 就能看到变化了。
+</p>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://github.com/kimim/vorstellung">https://github.com/kimim/vorstellung</a>
+</p></div></div>
+
+
+</div>
+</div>

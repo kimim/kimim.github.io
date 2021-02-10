@@ -1,0 +1,78 @@
+---
+layout: post
+title: Clojure Database Access String
+categories: [technology]
+tags: [clojure]
+---
+
+<p>
+此处放一些常用的数据库连接URL。使用时，替换 <code>db_app</code>, <code>db_user</code>, <code>db_password</code>
+</p>
+
+<p>
+SQLite:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">{<span style="color: #110099;">:database-url</span> <span style="color: #2A00FF;">"jdbc:sqlite:db_app.db"</span>}
+</pre>
+</div>
+
+<p>
+MySQL<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">{<span style="color: #110099;">:database-url</span> <span style="color: #2A00FF;">"jdbc:mysql://mysql.kimi.im:3306/db_app?useSSL=false&amp;requireSSL=false&amp;characterEncoding=utf8&amp;serverTimezone=UTC&amp;user=db_user&amp;password=db_password"</span>}
+</pre>
+</div>
+
+<p>
+PostreSQL<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">{<span style="color: #110099;">:database-url</span> <span style="color: #2A00FF;">"jdbc:postgresql://postgresql.kimi.im/db_app?user=db_user&amp;password=db_password"</span>}
+</pre>
+</div>
+
+<p>
+Oracle<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">{<span style="color: #110099;">:database-url</span> <span style="color: #2A00FF;">"jdbc:oracle:thin:db_user/db_password@//oracle.kimi.im:1521/db_app"</span>}
+</pre>
+</div>
+
+<p>
+SQLServer<sup><a id="fnr.4" class="footref" href="#fn.4">4</a></sup>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">{<span style="color: #110099;">:database-url</span> <span style="color: #2A00FF;">"jdbc:sqserver://sqlserver.kimi.im:1433;databaseName=db_app;user=db_user;password=db_password;"</span>}
+</pre>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-usagenotes-connect-drivermanager.html#connector-j-examples-connection-drivermanager">https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-usagenotes-connect-drivermanager.html#connector-j-examples-connection-drivermanager</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://luminusweb.com/docs/database.html">https://luminusweb.com/docs/database.html</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://docs.oracle.com/cd/B28359_01/java.111/b31224/urls.htm">https://docs.oracle.com/cd/B28359_01/java.111/b31224/urls.htm</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.4" class="footnum" href="#fnr.4">4</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://docs.microsoft.com/en-us/sql/connect/jdbc/building-the-connection-url?view=sql-server-ver15">https://docs.microsoft.com/en-us/sql/connect/jdbc/building-the-connection-url?view=sql-server-ver15</a>
+</p></div></div>
+
+
+</div>
+</div>
