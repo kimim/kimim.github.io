@@ -1,0 +1,164 @@
+---
+layout: post
+title: 在 Windows 上安装 Rust
+categories: [technology]
+tags: [Rust]
+---
+
+<p>
+首先，要从 <a href="https://rustup.rs/">https://rustup.rs/</a> 下载 <code>rustup-init.exe</code> ，执行该程序，跳出以下字符界面，要求我们安装 Visual C++。如果有 Cygwin 下已经有了 g++，那就可以跳过 Visual
+C++ 的安装了。在 <code>Continues?</code> 处选择 Y，回车：
+</p>
+
+<pre class="example" id="org4ebe557">
+Rust Visual C++ prerequisites
+
+Rust requires the Microsoft C++ build tools for Visual Studio 2013 or
+later, but they don't seem to be installed.
+
+The easiest way to acquire the build tools is by installing Microsoft
+Visual C++ Build Tools 2019 which provides just the Visual C++ build
+tools:
+
+  https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
+Please ensure the Windows 10 SDK and the English language pack components
+are included when installing the Visual C++ Build Tools.
+
+Alternately, you can install Visual Studio 2019, Visual Studio 2017,
+Visual Studio 2015, or Visual Studio 2013 and during install select
+the "C++ tools":
+
+  https://visualstudio.microsoft.com/downloads/
+
+Install the C++ build tools before proceeding.
+
+If you will be targeting the GNU ABI or otherwise know what you are
+doing then it is fine to continue installation without the build
+tools, but otherwise, install the C++ build tools before proceeding.
+
+Continue? (Y/n) Y
+</pre>
+
+<p>
+在下一个提示界面，选择 Customize installation：
+</p>
+
+<pre class="example" id="orga3a7564">
+Welcome to Rust!
+
+This will download and install the official compiler for the Rust
+programming language, and its package manager, Cargo.
+
+Rustup metadata and toolchains will be installed into the Rustup
+home directory, located at:
+
+  C:\Users\kimim\.rustup
+
+This can be modified with the RUSTUP_HOME environment variable.
+
+The Cargo home directory located at:
+
+  C:\Users\kimim\.cargo
+
+This can be modified with the CARGO_HOME environment variable.
+
+The cargo, rustc, rustup and other commands will be added to
+Cargo's bin directory, located at:
+
+  C:\Users\kimim\.cargo\bin
+
+This path will then be added to your PATH environment variable by
+modifying the HKEY_CURRENT_USER/Environment/PATH registry key.
+
+You can uninstall at any time with rustup self uninstall and
+these changes will be reverted.
+
+Current installation options:
+
+
+   default host triple: x86_64-pc-windows-msvc
+     default toolchain: stable (default)
+               profile: default
+  modify PATH variable: yes
+
+1) Proceed with installation (default)
+2) Customize installation
+3) Cancel installation
+&gt;2
+</pre>
+
+<p>
+接下来，在 <code>Default host triple?</code> 处输入 <code>x86_64-pc-windows-gnu</code> 。其他选项都用默认 <code>default</code>
+</p>
+
+<pre class="example" id="orgd079bed">
+I'm going to ask you the value of each of these installation options.
+You may simply press the Enter key to leave unchanged.
+
+Default host triple?
+x86_64-pc-windows-gnu
+
+Default toolchain? (stable/beta/nightly/none)
+stable
+
+Profile (which tools and data to install)? (minimal/default/complete)
+default
+
+Modify PATH variable? (y/n)
+y
+</pre>
+
+<p>
+最后，回到安装选项界面，选择 1 进行安装：
+</p>
+
+<pre class="example" id="orgbd50c12">
+Current installation options:
+
+
+   default host triple: x86_64-pc-windows-gnu
+     default toolchain: stable
+               profile: default
+  modify PATH variable: yes
+
+1) Proceed with installation (default)
+2) Customize installation
+3) Cancel installation
+&gt;1
+</pre>
+
+<p>
+然后就会下载一堆程序和文档到 <code>C:\Users\kimim\.cargo</code>
+</p>
+
+<p>
+将以下PATH加入到 <code>~/.bash_profile</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #7F0055; font-weight: bold;">export</span> <span style="color: #000000;">PATH</span>=/cygdrive/c/Users/kimim/.cargo/bin/:$<span style="color: #000000;">PATH</span>
+</pre>
+</div>
+
+<p>
+测试 Hello World：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-example">$ cargo new helloworld
+     Created binary (application) `helloworld` package
+
+$ cd helloworld/
+$ cargo run
+   Compiling helloworld v0.1.0 (C:\Users\kimim\home\workspace\helloworld)
+    Finished dev [unoptimized + debuginfo] target(s) in 1.01s
+     Running `target\debug\helloworld.exe`
+Hello, world!
+</pre>
+</div>
+
+<p>
+不过，配合 cygwin Emacs 的 rust-analyzer LSP server 似乎有些问题。可能是 cygpath
+和 windows 文件路径不一致导致。暂时不知道怎么办。或许还是在 WSL 上用比较方便。
+</p>
