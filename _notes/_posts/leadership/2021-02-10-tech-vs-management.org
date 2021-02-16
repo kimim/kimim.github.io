@@ -1,0 +1,19 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 技术和管理方向
+categories: [leadership]
+tags: [leadership]
+---
+#+END_EXPORT
+
+技术和管理的发展方向，其实是贯通的。不可能没有技术，仅有管理。也不可
+能仅做技术，不用管理。随着工作的发展，两者必定要融合。
+
+技术方向，2021年，我想做这些事情：
+- 阅读理解clojure的代码实现
+- 继续完善clj-djl
+- 学习rust和c++，并开发一些应用
+
+管理方向：
+- 完善项目管理方法论和文档模板
