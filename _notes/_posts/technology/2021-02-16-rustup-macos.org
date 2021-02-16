@@ -1,0 +1,80 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 在 macOS 上安装 Rust
+categories: [technology]
+tags: [Rust]
+---
+#+END_EXPORT
+
+安装 rust 最快的方式是通过 rustup 管理工具链。首先下载安装脚本，安装 Rust：
+
+#+begin_src shell
+curl https://sh.rustup.rs -sSf | sh
+#+end_src
+
+脚本下载好后，会跳出以下界面，选择1默认安装。
+
+#+begin_example
+You can uninstall at any time with rustup self uninstall and
+these changes will be reverted.
+
+Current installation options:
+
+
+   default host triple: x86_64-apple-darwin
+     default toolchain: stable (default)
+               profile: default
+  modify PATH variable: yes
+
+1) Proceed with installation (default)
+2) Customize installation
+3) Cancel installation
+>1
+#+end_example
+
+会在 =/Users/kimim/.cargo/bin= 下添加执行文件。在以下配置文件中修改 =PATH= 环境
+变量：
+
+#+begin_example
+/Users/kimim/.profile
+/Users/kimim/.bash_profile
+/Users/kimim/.zshenv
+#+end_example
+
+然后，运行以下命令，在当前 shell 添加 rust 的路径：
+
+#+begin_src shell
+source $HOME/.cargo/env
+#+end_src
+
+这样， rustc 就已经可以用了：
+
+#+begin_src shell
+% rustc --version
+rustc 1.50.0 (cb75ad5db 2021-02-10)
+#+end_src
+
+用 cargo 创建一个 Hello World 项目：
+
+#+begin_src shell
+cargo new helloworld
+cd helloworld
+cargo run
+#+end_src
+
+执行结果如下：
+
+#+begin_example
+    Finished dev [unoptimized + debuginfo] target(s) in 0.00s
+     Running `target/debug/rust-hello`
+Hello, world!
+#+end_example
+
+在 Emacs 配置文件中添加：
+
+#+begin_src emacs-lisp
+(use-package rustic)
+#+end_src
+
+这样，就能在 Emacs 里写 Rust 代码了。
