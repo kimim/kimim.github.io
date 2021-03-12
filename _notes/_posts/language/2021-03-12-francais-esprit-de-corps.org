@@ -1,0 +1,60 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：Esprit de corps
+categories: [language]
+tags: [English, Français]
+---
+#+END_EXPORT
+
+继续昨天的话题，最近在学管理学基础知识。在管理学中，有一个流派，叫general
+administrative theory，即一般行政管理理论。
+
+这个理论的提出者是 Henri Fayol，翻译为亨利·法约尔。Fayol于1841年出生于一个法国家
+庭。最早是一个挖矿公司的工程师，1888年升为公司的总经理。结合自己的管理经验，在
+1916年发表了一本书叫《Industrial and General Management》（工业管理和一般管理）。
+
+法约尔的研究是从“办公桌前的总经理”的角度出发，以企业整体作为研究对象。他认为，管
+理理论是“指有关管理的、得到普遍承认的理论，是经过普遍经验检验并得到论证的一套有
+关原则、标准、方法、程序等内容的完整体系”。有关管理的理论和方法不仅适用于公私企
+业，也适用于军政机关和社会团体。这正是其一般管理理论的基石。
+
+其核心理论是14条管理原则（14 principles of management）：
+1. 劳动分工原则
+2. 权力与责任原则
+3. 纪律原则
+4. 统一指挥原则
+5. 统一领导原则
+6. 个人利益服从整体利益的原则
+7. 公平合理的人员的报酬原则
+8. 适合企业的权利集中原则
+9. 等级制度原则
+10. 秩序原则
+11. 公平原则
+12. 人员的稳定原则
+13. 鼓励自主首创精神
+14. 团队精神原则（esprit de corps）
+
+好了，写了这么多，本文的重点终于出现了，就是这个“esprit de corps”，法国家庭出生
+的法约尔用这个法语词组表示团队精神，团结一致。
+
+按照Merriam-Webster词典定义[fn:1]：
+
+#+begin_quote
+the common spirit existing in the members of a group and inspiring enthusiasm,
+devotion, and strong regard for the honor of the group
+#+end_quote
+
+l'esprit 是法语精神的意思，corps 是身体，团体的意思。合在一起就是团队精神。
+
+所以，平时咱们可以说 teamwork，或者 team spirit。如果写邮件，或书面表达的时候，
+偶尔用下 esprit de corps，会显得你的英语学得比较高雅哦。
+
+例句：Working and collaborating together builds a camaraderie and esprit de corps.
+
+不过，注意了，不要按照英语发音来读这个词组，要用法语发音 [ɛˈspriːdəˈkɔː] 爱斯普
+丽得靠。
+
+* Footnotes
+
+[fn:1] https://www.merriam-webster.com/dictionary/esprit%20de%20corps
