@@ -1,0 +1,27 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：la cryptomonnaie
+categories: [language]
+tags: [Français]
+---
+#+END_EXPORT
+
+最近的比特币突破了6万美元新高。RFI法国国际广播电台网站这样报道：
+
+#+begin_quote
+Le bitcoin est monté à 60 197 dollars et continuait ensuite
+d'osciller autour de ce seuil symbolique. Sachant que sur les trois
+derniers mois la cryptomonnaie a triplé sa valeur. Elle valait
+encore 20 000 dollars mi-décembre.
+#+end_quote
+
+la cryptomonnaie 加密货币，英语 cryptocurrency，德语 die
+Kryptowährung, auch Kryptogeld。跟中文类比着看，cryptomonnaie 和
+Kryptogeld 好像是说加密钞票，而 cryptocurrency 和 Kryptowährung 像是
+在说加密货币：
+- monnaie = Geld = 钞票，钱
+- currency = Währung = 货币
+
+去年12月中，比特币才2万美元啊。要是我没有放弃2013年的比特币挖矿事业，
+或许已经有几百万美金了……
