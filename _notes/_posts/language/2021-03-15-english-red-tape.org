@@ -1,0 +1,36 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：red tape
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+今天学了跨国管理相关的文章，其中提到作为跨国公司的管理者，必须熟悉世界各国的政策、
+制度、经济和文化等。其中有这样一句话：
+
+#+begin_quote
+Swedish retailer Ikea has halted further investment in Russia because of
+continual governmental red tape delays.
+#+end_quote
+
+大概意思是说：因为俄罗斯政府审批流程的 *繁文缛节* ，瑞典的宜家暂停在俄罗斯的投资。
+
+red tape 红色胶带是繁文缛节的意思？这可非常令人费解。
+
+于是我简单调研了一下，原来是这样子的：以前的英国官方文件惯例上是用红色布带系成一
+扎一扎的，所以，慢慢的，人们就用 red tape 来形容官方规定的繁琐复杂了。即：
+
+#+begin_quote
+Strict adherence to rules and regulations so that a procedure seems to take
+longer than necessary.
+#+end_quote
+
+比如：
+- You can't believe how much red tape there is in getting a visa. 你不能相信有多
+  少阻碍去获得签证。
+- This was no time for red tape and circumlocution, although these have their
+  place in a well-ordered, placid system. 官僚习气和推三拖四的作风，在按部就班、
+  平平稳稳的秩序里还可以，但现在却不合时宜。（circumlocution：迂回曲折的说法。
+  placid：温和的；平和的；文静的；平静的）
