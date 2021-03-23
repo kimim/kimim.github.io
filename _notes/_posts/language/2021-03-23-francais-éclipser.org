@@ -1,0 +1,65 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：éclipser
+categories: [language]
+tags: [Français]
+---
+#+END_EXPORT
+
+最近几天青黄不接，在家待业。跑跑步，赏赏花，喝喝咖啡，看看新闻，写写
+代码。日子过得真舒服啊。植物的嫩芽真好看，感觉看多了，视力眼神都变好
+了。保持自律，在家安排好工作，利用通勤的时间健身，这样在家办公岂不美
+哉？
+
+窃以为，远程办公在不久的将来会是普遍的趋势了。就拿我来说，给我网络和
+电脑，我就能随时随地开始工作了。这样可以省下每天通勤的个把小时、几个
+平方的办公位，以及水电费。于公于私，都是便捷、经济和高效啊。
+
+偶尔，需要与同事开会，可以找个安静的地方进行视频会议。但是，遇到一些
+低效率的常规例会，想脱身怎么办呢？针对这种情况，有个叫 Sam Lavigne
+的UI设计副教授[fn:1]，一定也是一个摸鱼高手，写了个 chrome 插件，可以
+模拟狗狗叫，婴儿哭，让你找借口离开Zoom会议。
+
+法国费加罗报报道[fn:2]：
+
+#+begin_quote
+Zoom Escaper permet de simuler un bruit de chien, de bébé qui
+pleure, ou une autre raison suffisante pour permettre de
+*s'éclipser* d'une visioconférence.
+#+end_quote
+
+这里用到一个单词：éclipser，看起来和英语的日食很像：eclipse，确实，
+法语中日食的食就是 une éclipse。其动词形式为 éclipser。s'éclipser 有
+消失溜走之意。德语中 éclipse 是： die Finsternis. Mondfinsternis 月
+食； Sonnenfinsternis 日食。
+
+再来看看一些例句：
+
+- La Nouvelle Lune éclipse le soleil le jour de l'équinoxe.[fn:3] 新月在春分日遮住太阳。
+- Quand la Lune traverse complètement l'ombre de la Terre, cela
+  produit une *éclipse* lunaire totale.[fn:4] 当月亮完全进入地球的阴
+  影，形成月全食。
+- Une *éclipse* solaire se produit lorsque la Lune se place entre le
+  Soleil et la Terre.[fn:5] 当月亮进入太阳和地球之间，产生日食。
+- Zoom Escaper permet de simuler un bruit de chien, de bébé qui
+  pleure, ou une autre raison suffisante pour permettre de
+  *s'éclipser* d'une visioconférence. Zoom Escaper 可以模拟狗叫，婴
+  儿哭等声音，让你找借口从视频会议中溜走。
+- s'éclipser avant la fin du spectacle 在散戏前悄悄走掉
+
+最后，附上 Zoom Escaper 链接：https://zoomescaper.com/
+
+以上，码于2021年3月23日下午1点56分，杭州大厦三楼星巴克。
+
+* Footnotes
+
+[fn:1] https://lav.io/about/
+
+[fn:2] https://www.lefigaro.fr/secteur/high-tech/un-logiciel-pour-mettre-fin-aux-zoom-interminables-grace-a-des-bruits-parasites-20210322
+
+[fn:3] https://dilka.fr/galerie/la-nouvelle-lune-eclipse-le-soleil-le-jour-de-lequinoxe-5952/
+
+[fn:4] https://www.caabm.org/Documentation/Lune/Eclipses
+
+[fn:5] https://www.lumni.fr/jeu/les-eclipses-solaires-et-lunaires
