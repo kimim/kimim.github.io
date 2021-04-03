@@ -1,0 +1,32 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：tsunami
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+冰岛沉睡的火山爆发，日本地震引起海啸：
+
+#+begin_quote
+A strong earthquake struck Saturday off northern Japan, shaking
+buildings even in Tokyo and triggering a *tsunami* advisory for a
+part of the northern coast.
+#+end_quote
+
+这个海啸 tsunami 来自日本语津（tsu）波（nami），即港口的波浪。这个津
+的甲骨文看起来不就是一个人在划船么。所以，天津简称“津”，意为天子经过
+的渡口。
+
+法语、德语中都用 Tsunami 表示海啸。可以说，日本是海啸的发源地了。
+- Le terme tsunami nous vient du japonais tsu nami qui signifie
+  littéralement « vague du port ».[fn:1]
+- Der Begriff „Tsunami“ stammt aus dem japanischen und bedeutet
+  Hafen-Welle oder Welle im Hafen.[fn:2]
+
+* Footnotes
+
+[fn:1] https://www.futura-sciences.com/planete/definitions/geographie-tsunami-418/
+
+[fn:2] https://www.geo.uzh.ch/dam/jcr:21a3148a-fb1d-4ffb-bf06-71967efcf412/Tsunami_Unterrichtsmaterialien.pdf

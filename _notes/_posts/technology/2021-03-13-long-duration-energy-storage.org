@@ -1,0 +1,55 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 长期储能技术研究
+categories: [technology]
+tags: [energy]
+---
+#+END_EXPORT
+
+最近美国和英国分别发布了长期储能技术研究计划。
+
+3月10日，美国能源部公布一项研究计划，预计在2025年之前，投入7500万美
+元，用于支持称为 Grid Storage Launchpad (GSL，电网储能启动板？)[fn:1]
+的长期、低成本的电网储能电池技术研究。该项目位于华盛顿里奇兰
+（Richland, Washington）的Pacific Northwest National Laboratory
+(PNNL) 实验室。
+
+GSL项目包含三个主要目标：
+- 协作共赢：集聚美国能源部、跨学科研究人员和工业企业，共创共赢开发电
+  网级储能技术
+- 共性验证：通过在GSL实验室中提供的真实电网运行验证平台，测试下一代
+  电网储能材料和系统。
+- 加速创新：提供测试测试工作台到完整测试系统，降低新技术在严苛性能需
+  求下的产业化风险，加速开发速度。
+
+GSL电网储能启动台实验室将在今年下半年开始启动建设，到2025年完成建设
+投入使用。到时候，会提供以下基本测试验证和开发能力[fn:2]：
+- Materials synthesis and processing
+- In-operando characterization
+- Small-scale cell fabrication
+- KW-scale testing and validation
+- Advanced prototyping
+- Analytics and visualization
+- Standards development
+
+3月3日，英国提出了名为Longer Duration Energy Storage Demonstration的
+创新计划。
+
+英国计划在2025年3月之前，投入6800万英镑，约6.16亿人民币，用以支持电
+力、热能和Power-to-X[fn:3]等能灵活接入电网的长期低成本储能技术。方案
+计划通过2种方式进行资助：1）通过补助资金（grant funding）的方式，支
+持技术技术成熟度为6级的项目；2）通过小企业研发倡议（Small Business
+Research Initiative）方式，支持技术成熟度为4-5级的项目。
+
+电网储能技术，未来一定有比较好的发展前景。随着电池的材料技术提升，长
+寿命、高容量、稳定可靠、快速响应、低成本的电池技术发展，在电网储能领
+域会有很广阔的应用前景。
+
+* Footnotes
+
+[fn:1] https://www.energy.gov/articles/doe-launches-design-construction-75-million-grid-energy-storage-research-facility
+
+[fn:2] https://www.pnnl.gov/grid-storage-launchpad-pnnl
+
+[fn:3] Power-to-X指的是将多余的电能转化为长期储存的氢或甲烷等化学能源的各种技术。

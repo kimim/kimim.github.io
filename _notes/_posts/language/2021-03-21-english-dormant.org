@@ -1,0 +1,30 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：dormant
+categories: [language]
+tags: [Français, English]
+---
+#+END_EXPORT
+
+最近地球不太稳定啊。昨天，日本发生7级地震，引起1米海啸。冰岛沉睡了
+6000年的法格拉达尔火山爆发。Fox news报道：
+
+#+begin_quote
+A volcano near Iceland's capital city erupted Friday after sitting
+*dormant* for 6,000 years.
+#+end_quote
+
+学法语的同学一定很清楚，dormant（休眠、沉睡）来自法语，是 dormir（睡
+觉）的现在分词。
+- Qui *dort*? 谁睡觉？
+- Je *dors*. 我睡觉。
+- Il est l'heure de *dormir* les enfants. 孩子们，睡觉时间到了。
+- Le proverbe est menteur qui dit que la fortune vient en *dormant*. 俗话说睡觉能生财是骗人的。
+
+英语里还有 dorm 宿舍，是 dormitory 的简写。dormitive 安眠的，催眠的。
+- As I type this, I am in my university *dorm* room． 打下这些字的时候，
+  我正待在我的大学寝室里。
+- The *dormitive* eyeshade is made from pure cotton material, has good
+  effect of permeability and is comfortable for use. 助睡眼罩纯棉制
+  作，透气性好，使用舒适。
