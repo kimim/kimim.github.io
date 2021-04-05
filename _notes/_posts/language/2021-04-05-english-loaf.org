@@ -1,0 +1,41 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：loaf
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+在学组织行为学的时候，看到一个词 social loafing。大家可能经常察觉到，一个团队任
+务重，人数少的时候，大家工作的很积极，努力达到DDL，而随着团队成员人数增加，偷懒
+的人也会增加，平均战斗力反而降低了。这种现象就叫做 social loafing，社会化惰性，
+或者就叫摸鱼现象。In social psychology, social loafing is the phenomenon of a
+person exerting less effort to achieve a goal when they work in a group than
+when working alone. [fn:1] 我猜，很多人小时候最早是通过三个和尚没水喝的故事学会
+这个道理的。
+
+因为你单独工作的时候，你不会跟别人比，所以总是会尽力做好自己份内工作。当团队人员
+增加的时候，如果你觉得有人没有做好份内工作，你也会降低自己的努力程度来平衡自己内
+心。如果，团队中人人都这么想，那样，整个团队的工作积极性和输出就降低了。
+
+Social loafing is the tendency for individual effort to decrease when people work in
+groups rather than individually. 个人在群体中工作会比个人独自工作付出较少的努力，
+这种现象称为社会性偷懒。
+
+social loafing行为产生的主要原因，大概是因为个人在团队中的工作成果无法很好的直接
+体现。除了工作效率的降低，还会影响团队的责任感，导致很多重要决策没人拍板。因为一
+旦有人跳出来拍板，就得承担责任。于是导致企业的整体效率降低了。
+
+要解决这个问题呢，最好是控制团队数量，将任务拆分清楚，工作职责具体分配到人，明确
+个人的KPI，以及个人团队KPI的关系。
+
+奇怪的是，loaf这个词作为名词时，是一条面包的意思，可是作为动词时，游手好闲、无所
+事事的意思。真是有些奇怪。
+
+事实上，我们在企业里工作，赚一份薪水，买一条loaf，吃饱肚子，就应该好好工作么，上
+班摸鱼loafing，那多不好意思呀。
+
+* Footnotes
+
+[fn:1] https://en.wikipedia.org/wiki/Social_loafing
