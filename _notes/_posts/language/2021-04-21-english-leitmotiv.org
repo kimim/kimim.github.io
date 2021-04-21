@@ -1,0 +1,57 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：leitmotiv
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+不好意思，这个月更新有些少了。马老师已经开始一份新的工作了。但是这个月还没啥项
+目任务，所以每天上班看技术资料，看代码，看书学习。新的工作，生活也变得很规律。
+已经坚持三个星期，每天下班晚饭前跑步5公里，消耗卡路里350kcal。
+
+最近在看的一本书叫做《Documenting Software Architecture》。其中看到这么一句：
+"If it is not written down, it does not exist" became sort of a /leitmotiv/ in
+the architecture team for the following two years. cite:bachmann2010documenting
+
+试着翻译成中文就是：“不曾写下来的，就是不存在的”已经成为架构组接下来2年的主旋律。
+
+#+begin_verse
+leitmotif/leitmotiv
+US ['laɪtmoʊ.tif] UK ['laɪtməʊ.tiːf]
+n.（音乐的）主旋律；（书、艺术品等的）中心思想
+#+end_verse
+
+是的，今天马老师要介绍的词就是这个主旋律 leitmotiv。因为马老师在高中的时候，学
+过2个学期德语，所以，一眼就认出来了，这个词是德国人那边借来的。
+
+在德语里leit是个动词，就是leiten，意思是：lead，带领。motiv呢，就是motive，动机。
+在英语里，有时候，这个词也写成leitmotif。motif是艺术作品中的主题或者是生物学中，
+经常重复出现的基因序列或者生物特征之类的。组合起来呢，leitmotif就是音乐中的主旋
+律，引申为活动、作品、书等的中心思想了。
+
+百度百科是这么解释的：主导动机（leitmotiv）指一个贯穿整部音乐作品的动机。动机是
+音乐语汇的短小构成，通常的长度在一到两个小节。[fn:1]
+
+One of Wagner's greatest gifts to music was the /Leitmotif/. Simply put, it's a
+musical signature designed to represent a character or theme in an opera, and
+he uses them throughout his operas. Modern film composers have since adopted
+the technique, and you'll find countless examples across many Hollywood
+scores.[fn:2] Richard Wagner (May 22, 1813 - Feb 13, 1883) 在音乐中的最大贡献就
+是在其歌剧作品中不断重复强调的leitmotif。好莱坞电影也学会这招，比如星球大战。
+
+Others pointed to what they saw as a /leitmotif/ of Biden's answers that drew a
+sharp contrast with Trump and a throughline from domestic to global
+politics.[fn:3] Biden 回应的工作主旋律，相对Trump，更面向全球政治。
+
+Software architecture design will be a leitmotif of my work in following
+years. 软件架构设计，将会是马老师接下来几年的工作主旋律啦。
+
+* Footnotes
+
+[fn:1] https://baike.baidu.com/item/主导动机/2222221
+
+[fn:2] https://www.classicfm.com/composers/wagner/guides/wagner-facts-great-composer/richard-wagner-leitmotif/
+
+[fn:3] https://news.yahoo.com/title-same-biden-first-white-222300704.html
