@@ -55,3 +55,6 @@ years. 软件架构设计，将会是马老师接下来几年的工作主旋律�
 [fn:2] https://www.classicfm.com/composers/wagner/guides/wagner-facts-great-composer/richard-wagner-leitmotif/
 
 [fn:3] https://news.yahoo.com/title-same-biden-first-white-222300704.html
+
+<<bibliographystyle link>> bibliographystyle:apalike
+<<bibliography link>> bibliography:references.bib
