@@ -1,0 +1,45 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：vis a vis
+categories: [language]
+tags: [Français, English]
+---
+#+END_EXPORT
+
+放假的时候，一边玩，一边抽空看书。在看数据科学方法论
+的时候，读到：
+
+we identified the most common clusters of sub-optimal
+outcomes observed *vis a vis* those generic goals of a
+high-performing data science team. （我们 *对比着* 高绩
+效数据科学团队的目标，识别出了几个仅仅局部优化的输出
+结果。）
+
+这里用到了一个词组 vis a vis，应该是来自法语的 vis à
+vis，即face to face，面对面，引申为关于、对比。读作
+[ˈviːzaˈviː]。有时候，也写作 vis-à-vis。
+
+many agencies now have a unit to deal with women's
+needs *vis-à-vis* employment. 很多机构现在成立了单独的
+部门处理妇女们 *关于* 工作的需求。在这里，用作介词，类
+似于 with regard to。
+
+they sat vis-a-vis at the table. 他们在桌旁面对面坐着。
+
+另外，从法语借来的还有 tete-a-tete 头对头，比如a
+tete-a-tete supper，二人烛光晚餐。英语真是很喜欢借法
+语单词呢。
+
+需要注意是：There's a slightly pedantic ring to the
+term vis-a-vis so use it with caution. It's more a
+term that might be used in a newspaper article or
+academic treatise, and something best avoided in
+speech altogether, unless you're deliberately aiming
+for comic effect.[fn:1] 一般会在报纸和学术文章中用，
+在口语中不建议使用 vis-a-vis，不然会显得有些学究
+（pedantic）。
+
+* Footnotes
+
+[fn:1] https://www.vocabulary.com/dictionary/vis-a-vis
