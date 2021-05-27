@@ -1,0 +1,43 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：aficionado
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+昨天看书的时候看到有个叫做Michelle Segar[fn:1]的女教练，通过小步快跑、不断激励的
+方式，能够把顽固的沙发土豆改造成运动迷。原话是这么说的：Michelle Segar uses this
+dynamic to turn even the most stubborn coach potatoes into exercise aficionados.
+
+coach potato指的是喜欢躺在沙发上一直看电视的人。好在我们家电视机已经尘封很久，我
+也快10年没有躺在沙发上看电视了。
+
+coach potato这个词出现1982年Jack Mingo写的书《The Official Couch Potato
+Handbook》，指导人们如何做一个标准的电视迷。Couch不仅仅是一个包包品牌（蔻
+驰[fn:2]），还是长沙发的意思。
+
+而potato则又追溯到1976年，当时有个叫Tom Iacino的人，他所在的一个团体喜欢制作各种
+有趣食物、喜欢看各种电视节目。他们管自己叫boob tuber，boob就是傻乎乎得人，tube是
+电视电缆，也就指的是电视机了。而tuber又指植物的块茎，典型的，就是土豆potato。所
+以后来Jack Mingo就创造了couch potato这个说法了。
+
+另外，因为potato是植物，植物天生比较安静，所以vegetate表示植物的生长，也表示无所
+事事的生活。veg out就表示一种无所事事的状态。比如：He spends all his free time
+at home *vegetating* in front of the TV. People ofter *veg out* after a long day of
+working or study.[fn:3]
+
+哦哦，忘记了，本文的主题是aficionado。这个长的怪怪的。其实是从西班牙语里来的，原
+先指的是喜欢看斗牛的人。最早是从拉丁语affectionen变化来的。affection是钟情、爱情、
+喜爱之意。后来，不知道怎么的，aficionado就成了狂热热爱迷恋之人了。Are you an art
+*aficionado*? 你是个艺术迷吗？ The days when a car *aficionado* could repair his or
+her own car are long past, due primarily to the high software content.
+
+* Footnotes
+
+[fn:1] https://michellesegar.com/
+
+[fn:2] https://www.coach.com.cn
+
+[fn:3] https://www.reluctantgourmet.com/couch-potato-explained/
