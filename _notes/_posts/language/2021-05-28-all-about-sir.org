@@ -1,0 +1,64 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：先生
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+《全球通史》看了有大半个月了。看到第629页的时候，看到近现代世界各地的人如何称呼
+欧洲人：
+
+#+begin_quote
+在吉卜林的时代（19世纪末），欧洲人几乎被认为是上天注定的统治者。他们在印度被恭
+敬地称为“大人”（sahib），在中东被称为“先生”（effendi），在非洲被称为“老
+爷”（bwana），而在拉丁美洲，则被称为“恩主”（patron）。
+#+end_quote
+
+effendi这个词，让我联想到的是阿凡提，果然阿凡提的故事，英语就是《Tales of the
+Effendi》。他的全名就是Effendi Nasrenddin（阿凡提·纳斯尔丁）。根据百度百科，还
+是一个真是的历史人物，原名为霍加·纳斯尔丁：
+
+#+begin_quote
+霍加·纳斯尔丁是阿凡提的原形。“阿凡提”不是人名，正同“霍加”和“毛拉”一样，都是对人
+的尊称。“阿凡提”意为“先生”、“老师”，“霍加”、“毛拉”则是伊斯兰教宗教人士的尊号。
+又译阿方提，是维语“先生”的意思，阿拉伯文:جحا （旧哈） 或 نصر الدين （纳瑟·丁）
+是一位活跃在西起摩洛哥，东到中国新疆突厥语系诸民族中的传说人物，大智若愚，才辩
+超群。[fn:1]
+#+end_quote
+
+然后，我们看看bwana，有一首歌叫《Jambo Bwana》：
+
+#+begin_quote
+Jambo bwana (Jahm-boh bwah-nah) = Hello, sir.
+
+Habari gani rafiki (Hah-bah-ree gah-nee rah-fee-kee) = How are you doing today, my friend?
+
+Asante nzuri sana (Ah-sahn-teh ehn-nzoo-ree sah-nah) = I thank you, I’m very fine.
+
+Hakuna matata (Hah-koo-nah mah-tah-tah) = No worries, no problems here.
+#+end_quote
+
+其中还有那句很有名的“Hakuna matata”，在斯瓦希里语中是不用担心，无忧无虑的意思。
+然而，迪斯尼《狮子王》涉及侵权：
+
+#+begin_quote
+有网友查阅美国法律数据库，发现早在2003年，迪士尼就已成功将这一句“哈库纳玛塔塔”
+注册成了自己的版权专利商标，获得了它在美国地区的独家使用权，他人不得将其用在服
+装、鞋帽类产品之上。来自津巴布韦的社会活动家谢尔顿·姆帕拉（Shelton Mpala）便是
+这一网上请愿活动的发起人，他认为迪士尼此举犯下了“文化挪用”的大错误，“那又不是他
+们发明出来的东西，怎么可以把商标权授予他们呢？”[fn:2]
+#+end_quote
+
+patron是赞助者的意思，比如github上就有很多开源项目，需要patron提供资助。
+
+* Footnotes
+
+[fn:1]
+霍加·纳斯尔丁（1028或1029-1105或1106），也有人叫他纳斯尔丁·阿凡提或毛拉·纳斯尔
+丁，是一个真实的历史人物。
+https://baike.baidu.com/item/%E9%9C%8D%E5%8A%A0%C2%B7%E7%BA%B3%E6%96%AF%E5%B0%94%E4%B8%81/15256831?fr=aladdin
+
+[fn:2] 《狮子王》经典台词涉文化殖民 网上万人发起请愿
+https://news.sina.com.cn/o/2018-12-20/doc-ihmutuee0976152.shtml
