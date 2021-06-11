@@ -1,0 +1,71 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：gut feeling
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+最近看书碰到了一个词“gut feeling”，并且碰到不止一次：
+
+#+begin_quote
+Although managers try to quantify a decision when possible by using payoff and
+regret matrices, uncertainty often forces them to rely more on intuition,
+creativity, hunches, and "*gut feel*".
+#+end_quote
+
+尽管经理们尽可能的尝试通过支出、遗憾矩阵等方式量化决策，然而世界的不确定性常常限
+制他们更多的倚靠直觉、创造性、预感以及本能感觉。
+
+#+begin_quote
+Their decisions in complex situations are explicitly not made by long
+rational-analytical considerations, but rather come from the *gut*.
+#+end_quote
+
+在复杂情况下，他们的决策往往不是通过长时间的理性分析得出，而是通过本能。
+
+#+begin_quote
+*gut feeling* is not a mysterious force, but an incorporated history of
+experience. It is the sedimentation of deeply learned practice through numerous
+feedback loops on success or failure.
+#+end_quote
+
+本能直觉并不是什么神秘力量，而是对个人历史经验的内化。这是一种对各种成功或者失败
+的实践的深度沉淀。
+
+然后，今天开会的时候，因为项目进展不顺，遇到一些决策延迟，欧洲的老板讲了这么一句：
+
+#+begin_quote
+We cannot estimate the project schedule based on gut feeling.
+#+end_quote
+
+我们不能基于本能直觉评估项目计划。
+
+我猜想参加这会的人大概直到这句话什么意思，但是肯定没有留意 *gut feeling* 这个词的。
+学习单词的好处就是可以在这种情况，领会到它的意思。
+
+gut 本意是消化道，内脏，肚肠，肠胃。所以 *gut feeling* 可以直译为肚肠感觉。那种感
+觉，大概只有自己能感觉到，所以就是一种 *本能直觉* 了。
+
+另外，还有一些类似的说法：
+
+#+begin_quote
+*My gut told me* that he was the one to arrest, and I was right.
+#+end_quote
+
+*我的直觉告诉我* ，他要被捕。结果我对了。
+
+#+begin_quote
+My initial *gut response* was that the merger would result in a drop in stock
+prices, but the opposite turned out to be true.
+#+end_quote
+
+我最初的 *本能反应* 是这次兼并会导致股票价格下跌，然而事实正好相反。
+
+#+begin_quote
+If you're worried because your daughter isn't home yet, *go with your gut* and
+call the police.
+#+end_quote
+
+如果你因为女儿现在还不在家而担心， *相信你的直觉* ，赶紧报警吧。
