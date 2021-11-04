@@ -23,8 +23,7 @@ Let's have a try on Windows with =MingW64= =gcc= compiler.
 mkdir ~/tutorials
 git clone git@github.com:open62541/open62541.git
 cd ~/tutorials/open62541
-git submodule init
-git submodule update
+git submodule update --init --recursive
 #+end_src
 
 Terminal logs:
@@ -40,11 +39,9 @@ Receiving objects: 100% (57578/57578), 39.99 MiB | 1.92 MiB/s, done.
 Resolving deltas: 100% (43025/43025), done.
 Updating files: 100% (1941/1941), done.
 
-# git submodule init
+# git submodule update --init --recursive
 Submodule 'deps/mdnsd' (https://github.com/Pro/mdnsd.git) registered for path 'deps/mdnsd'
 Submodule 'deps/ua-nodeset' (https://github.com/OPCFoundation/UA-Nodeset) registered for path 'deps/ua-nodeset'
-
-# git submodule update
 Cloning into '~/open62541_tutorials/open62541/deps/mdnsd'...
 Cloning into '~/open62541_tutorials/open62541/deps/ua-nodeset'...
 Submodule path 'deps/mdnsd': checked out '3151afe5899dba5125dffa9f4cf3ae1fe2edc0f0'
