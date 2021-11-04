@@ -1,0 +1,145 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: open62541 firststep on windows
+categories: [technology]
+tags: [industry]
+---
+#+END_EXPORT
+
+* introduction
+
+OPC UA is a promising standard for future industrial applications. There are many implementations in C, C++, Python and Java.
+
+[[https://github.com/open62541/open62541][open62541]] is a pure C99 implementation, which could be a good option for embedded systems. I've commit some minor updates to it and I want to start learning it from the beginning.
+
+The first step according to the [[https://open62541.org/doc/current/tutorial_server_firststeps.html][manual]] is a simple server.
+
+Let's have a try on Windows with =MingW64= =gcc= compiler.
+
+* get the code
+
+#+begin_src sh
+mkdir ~/tutorials
+git clone git@github.com:open62541/open62541.git
+cd ~/tutorials/open62541
+git submodule init
+git submodule update
+#+end_src
+
+Terminal logs:
+
+#+begin_example
+# git clone git@github.com:open62541/open62541.git
+Cloning into 'open62541'...
+remote: Enumerating objects: 57578, done.
+remote: Counting objects: 100% (573/573), done.
+remote: Compressing objects: 100% (334/334), done.
+remote: Total 57578 (delta 282), reused 435 (delta 219), pack-reused 57005
+Receiving objects: 100% (57578/57578), 39.99 MiB | 1.92 MiB/s, done.
+Resolving deltas: 100% (43025/43025), done.
+Updating files: 100% (1941/1941), done.
+
+# git submodule init
+Submodule 'deps/mdnsd' (https://github.com/Pro/mdnsd.git) registered for path 'deps/mdnsd'
+Submodule 'deps/ua-nodeset' (https://github.com/OPCFoundation/UA-Nodeset) registered for path 'deps/ua-nodeset'
+
+# git submodule update
+Cloning into '~/open62541_tutorials/open62541/deps/mdnsd'...
+Cloning into '~/open62541_tutorials/open62541/deps/ua-nodeset'...
+Submodule path 'deps/mdnsd': checked out '3151afe5899dba5125dffa9f4cf3ae1fe2edc0f0'
+Submodule path 'deps/ua-nodeset': checked out '5fdc7d480901e405c78e5b0f429c7fcdbeef4d5d'
+#+end_example
+
+* prepare tools
+
+Install [[https://www.msys2.org/][msys2]] and open the shell, execute:
+
+#+begin_src sh
+pacman -S mingw64/mingw-w64-x86_64-cmake mingw64/mingw-w64-x86_64-gcc
+#+end_src
+* generate single file distribution
+
+#+begin_src sh
+cd ~/tutorials/open62541
+cmake -DUA_ENABLE_AMALGAMATION=ON .
+cmake --build .
+#+end_src
+
+After a successful compile, there will be a lib and two source code files:
+
+#+begin_example
+# ls ~/tutorials/open62541/bin
+libopen62541.a
+
+# ls ~/tutorials/open62541/open62541.*
+open62541.c  open62541.h
+#+end_example
+
+* get the tutorial code
+
+#+begin_src sh
+cd ~/tutorials
+mkdir step1
+cp open62541/open62541.* step1/
+cp open62541/examples/tutorial_server_firststeps.c step1/
+#+end_src
+
+#+begin_example
+# ls ~/tutorials/step1/
+open62541.c  open62541.h  tutorial_server_firststeps.c
+#+end_example
+
+* edit tutorial code
+
+Because ~tutorial_server_firststeps.c~ is written to be compiled together with the code base. If you want to compile with single file distribution, the ~#include~ part at the beginning should be changed, the whole code is like below:
+
+#+begin_src C
+#include "open62541.h"
+
+#include <signal.h>
+#include <stdlib.h>
+
+static volatile UA_Boolean running = true;
+static void stopHandler(int sig) {
+    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "received ctrl-c");
+    running = false;
+}
+
+int main(void) {
+    signal(SIGINT, stopHandler);
+    signal(SIGTERM, stopHandler);
+
+    UA_Server *server = UA_Server_new();
+    UA_ServerConfig_setDefault(UA_Server_getConfig(server));
+
+    UA_StatusCode retval = UA_Server_run(server, &running);
+
+    UA_Server_delete(server);
+    return retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+#+end_src
+
+* compile
+
+#+begin_src sh
+gcc -std=c99 open62541.c -lws2_32 tutorial_server_firststeps.c -o step1.exe
+#+end_src
+
+* execute
+
+There will be a new executable file ~step1.exe~. When it is executed, it will print these logs:
+
+#+begin_example
+# ./step1.exe
+[2021-11-04 19:21:20.084 (UTC+0800)] warn/server        AccessControl: Unconfigured AccessControl. Users have all permissions.
+[2021-11-04 19:21:20.084 (UTC+0800)] info/server        AccessControl: Anonymous login is enabled
+[2021-11-04 19:21:20.084 (UTC+0800)] info/server        AccessControl: x509 certificate user authentication is enabled
+[2021-11-04 19:21:20.084 (UTC+0800)] warn/server        Username/Password configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+[2021-11-04 19:21:20.084 (UTC+0800)] warn/userland      AcceptAll Certificate Verification. Any remote certificate will be accepted.
+[2021-11-04 19:21:20.104 (UTC+0800)] info/network       TCP network layer listening on opc.tcp://kimi.im:4840/
+#+end_example
+
+* monitor
+
+Then you can use UaExpert to view the server info.

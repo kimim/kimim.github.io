@@ -1,0 +1,196 @@
+---
+layout: post
+title: open62541 firststep on windows
+categories: [technology]
+tags: [industry]
+---
+
+<div id="outline-container-org5546102" class="outline-2">
+<h2 id="org5546102"><span class="section-number-2">1.</span> introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+OPC UA is a promising standard for future industrial applications. There are many implementations in C, C++, Python and Java.
+</p>
+
+<p>
+<a href="https://github.com/open62541/open62541">open62541</a> is a pure C99 implementation, which could be a good option for embedded systems. I&rsquo;ve commit some minor updates to it and I want to start learning it from the beginning.
+</p>
+
+<p>
+The first step according to the <a href="https://open62541.org/doc/current/tutorial_server_firststeps.html">manual</a> is a simple server.
+</p>
+
+<p>
+Let&rsquo;s have a try on Windows with <code>MingW64</code> <code>gcc</code> compiler.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0c483cd" class="outline-2">
+<h2 id="org0c483cd"><span class="section-number-2">2.</span> get the code</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-sh">mkdir ~/tutorials
+git clone git@github.com:open62541/open62541.git
+<span style="color: #7F0055; font-weight: bold;">cd</span> ~/tutorials/open62541
+git submodule init
+git submodule update
+</pre>
+</div>
+
+<p>
+Terminal logs:
+</p>
+
+<pre class="example" id="org045997d">
+# git clone git@github.com:open62541/open62541.git
+Cloning into 'open62541'...
+remote: Enumerating objects: 57578, done.
+remote: Counting objects: 100% (573/573), done.
+remote: Compressing objects: 100% (334/334), done.
+remote: Total 57578 (delta 282), reused 435 (delta 219), pack-reused 57005
+Receiving objects: 100% (57578/57578), 39.99 MiB | 1.92 MiB/s, done.
+Resolving deltas: 100% (43025/43025), done.
+Updating files: 100% (1941/1941), done.
+
+# git submodule init
+Submodule 'deps/mdnsd' (https://github.com/Pro/mdnsd.git) registered for path 'deps/mdnsd'
+Submodule 'deps/ua-nodeset' (https://github.com/OPCFoundation/UA-Nodeset) registered for path 'deps/ua-nodeset'
+
+# git submodule update
+Cloning into '~/open62541_tutorials/open62541/deps/mdnsd'...
+Cloning into '~/open62541_tutorials/open62541/deps/ua-nodeset'...
+Submodule path 'deps/mdnsd': checked out '3151afe5899dba5125dffa9f4cf3ae1fe2edc0f0'
+Submodule path 'deps/ua-nodeset': checked out '5fdc7d480901e405c78e5b0f429c7fcdbeef4d5d'
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org443a17a" class="outline-2">
+<h2 id="org443a17a"><span class="section-number-2">3.</span> prepare tools</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Install <a href="https://www.msys2.org/">msys2</a> and open the shell, execute:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">pacman -S mingw64/mingw-w64-x86_64-cmake mingw64/mingw-w64-x86_64-gcc
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org554308c" class="outline-2">
+<h2 id="org554308c"><span class="section-number-2">4.</span> generate single file distribution</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #7F0055; font-weight: bold;">cd</span> ~/tutorials/open62541
+cmake -DUA_ENABLE_AMALGAMATION=ON .
+cmake --build .
+</pre>
+</div>
+
+<p>
+After a successful compile, there will be a lib and two source code files:
+</p>
+
+<pre class="example" id="orgcba8d39">
+# ls ~/tutorials/open62541/bin
+libopen62541.a
+
+# ls ~/tutorials/open62541/open62541.*
+open62541.c  open62541.h
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org0b2821e" class="outline-2">
+<h2 id="org0b2821e"><span class="section-number-2">5.</span> get the tutorial code</h2>
+<div class="outline-text-2" id="text-5">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #7F0055; font-weight: bold;">cd</span> ~/tutorials
+mkdir step1
+cp open62541/open62541.* step1/
+cp open62541/examples/tutorial_server_firststeps.c step1/
+</pre>
+</div>
+
+<pre class="example" id="org00d7961">
+# ls ~/tutorials/step1/
+open62541.c  open62541.h  tutorial_server_firststeps.c
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org58271d8" class="outline-2">
+<h2 id="org58271d8"><span class="section-number-2">6.</span> edit tutorial code</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Because <code>tutorial_server_firststeps.c</code> is written to be compiled together with the code base. If you want to compile with single file distribution, the <code>#include</code> part at the beginning should be changed, the whole code is like below:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">"open62541.h"</span>
+
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">signal.h</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">stdlib.h</span><span style="color: #707183;">&gt;</span>
+
+<span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #7F0055; font-weight: bold;">volatile</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">UA_Boolean</span> <span style="color: #000000;">running</span> = <span style="color: #110099;">true</span>;
+<span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">stopHandler</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sig</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    UA_LOG_INFO<span style="color: #7388d6;">(</span>UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, <span style="color: #2A00FF;">"received ctrl-c"</span><span style="color: #7388d6;">)</span>;
+    running = <span style="color: #110099;">false</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    signal<span style="color: #7388d6;">(</span>SIGINT, stopHandler<span style="color: #7388d6;">)</span>;
+    signal<span style="color: #7388d6;">(</span>SIGTERM, stopHandler<span style="color: #7388d6;">)</span>;
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">UA_Server</span> *<span style="color: #000000;">server</span> = UA_Server_new<span style="color: #7388d6;">()</span>;
+    UA_ServerConfig_setDefault<span style="color: #7388d6;">(</span>UA_Server_getConfig<span style="color: #909183;">(</span>server<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">UA_StatusCode</span> <span style="color: #000000;">retval</span> = UA_Server_run<span style="color: #7388d6;">(</span>server, &amp;running<span style="color: #7388d6;">)</span>;
+
+    UA_Server_delete<span style="color: #7388d6;">(</span>server<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgedce84a" class="outline-2">
+<h2 id="orgedce84a"><span class="section-number-2">7.</span> compile</h2>
+<div class="outline-text-2" id="text-7">
+<div class="org-src-container">
+<pre class="src src-sh">gcc -std=c99 open62541.c -lws2_32 tutorial_server_firststeps.c -o step1.exe
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgffd0623" class="outline-2">
+<h2 id="orgffd0623"><span class="section-number-2">8.</span> execute</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+There will be a new executable file <code>step1.exe</code>. When it is executed, it will print these logs:
+</p>
+
+<pre class="example" id="org694f286">
+# ./step1.exe
+[2021-11-04 19:21:20.084 (UTC+0800)] warn/server        AccessControl: Unconfigured AccessControl. Users have all permissions.
+[2021-11-04 19:21:20.084 (UTC+0800)] info/server        AccessControl: Anonymous login is enabled
+[2021-11-04 19:21:20.084 (UTC+0800)] info/server        AccessControl: x509 certificate user authentication is enabled
+[2021-11-04 19:21:20.084 (UTC+0800)] warn/server        Username/Password configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+[2021-11-04 19:21:20.084 (UTC+0800)] warn/userland      AcceptAll Certificate Verification. Any remote certificate will be accepted.
+[2021-11-04 19:21:20.104 (UTC+0800)] info/network       TCP network layer listening on opc.tcp://kimi.im:4840/
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgf437610" class="outline-2">
+<h2 id="orgf437610"><span class="section-number-2">9.</span> monitor</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Then you can use UaExpert to view the server info.
+</p>
+</div>
+</div>
