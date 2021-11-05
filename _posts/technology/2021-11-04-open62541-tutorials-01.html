@@ -5,8 +5,8 @@ categories: [technology]
 tags: [industry]
 ---
 
-<div id="outline-container-org5546102" class="outline-2">
-<h2 id="org5546102"><span class="section-number-2">1.</span> introduction</h2>
+<div id="outline-container-org169efef" class="outline-2">
+<h2 id="org169efef"><span class="section-number-2">1.</span> introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 OPC UA is a promising standard for future industrial applications. There are many implementations in C, C++, Python and Java.
@@ -26,13 +26,13 @@ Let&rsquo;s have a try on Windows with <code>MingW64</code> <code>gcc</code> com
 </div>
 </div>
 
-<div id="outline-container-org0c483cd" class="outline-2">
-<h2 id="org0c483cd"><span class="section-number-2">2.</span> get the code</h2>
+<div id="outline-container-org2bd0f98" class="outline-2">
+<h2 id="org2bd0f98"><span class="section-number-2">2.</span> get the code</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-sh">mkdir ~/tutorials
 git clone git@github.com:open62541/open62541.git
-<span style="color: #ff55ff; font-weight: bold;">cd</span> ~/tutorials/open62541
+<span style="color: #7F0055; font-weight: bold;">cd</span> ~/tutorials/open62541
 git submodule update --init --recursive
 </pre>
 </div>
@@ -41,7 +41,7 @@ git submodule update --init --recursive
 Terminal logs:
 </p>
 
-<pre class="example" id="orgcb8f3c8">
+<pre class="example" id="org30fd3ab">
 # git clone git@github.com:open62541/open62541.git
 Cloning into 'open62541'...
 remote: Enumerating objects: 57578, done.
@@ -63,8 +63,8 @@ Submodule path 'deps/ua-nodeset': checked out '5fdc7d480901e405c78e5b0f429c7fcdb
 </div>
 </div>
 
-<div id="outline-container-org443a17a" class="outline-2">
-<h2 id="org443a17a"><span class="section-number-2">3.</span> prepare tools</h2>
+<div id="outline-container-org223eb2b" class="outline-2">
+<h2 id="org223eb2b"><span class="section-number-2">3.</span> prepare tools</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Install <a href="https://www.msys2.org/">msys2</a> and open the shell, execute:
@@ -76,11 +76,11 @@ Install <a href="https://www.msys2.org/">msys2</a> and open the shell, execute:
 </div>
 </div>
 </div>
-<div id="outline-container-org554308c" class="outline-2">
-<h2 id="org554308c"><span class="section-number-2">4.</span> generate single file distribution</h2>
+<div id="outline-container-orgbf1f577" class="outline-2">
+<h2 id="orgbf1f577"><span class="section-number-2">4.</span> generate single file distribution</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #ff55ff; font-weight: bold;">cd</span> ~/tutorials/open62541
+<pre class="src src-sh"><span style="color: #7F0055; font-weight: bold;">cd</span> ~/tutorials/open62541
 cmake -DUA_ENABLE_AMALGAMATION=ON .
 cmake --build .
 </pre>
@@ -90,7 +90,7 @@ cmake --build .
 After a successful compile, there will be a lib and two source code files:
 </p>
 
-<pre class="example" id="org0b98e83">
+<pre class="example" id="org587307f">
 # ls ~/tutorials/open62541/bin
 libopen62541.a
 
@@ -100,62 +100,62 @@ open62541.c  open62541.h
 </div>
 </div>
 
-<div id="outline-container-org0b2821e" class="outline-2">
-<h2 id="org0b2821e"><span class="section-number-2">5.</span> get the tutorial code</h2>
+<div id="outline-container-orgbc06fde" class="outline-2">
+<h2 id="orgbc06fde"><span class="section-number-2">5.</span> get the tutorial code</h2>
 <div class="outline-text-2" id="text-5">
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #ff55ff; font-weight: bold;">cd</span> ~/tutorials
+<pre class="src src-sh"><span style="color: #7F0055; font-weight: bold;">cd</span> ~/tutorials
 mkdir step1
 cp open62541/open62541.* step1/
 cp open62541/examples/tutorial_server_firststeps.c step1/
 </pre>
 </div>
 
-<pre class="example" id="org2545571">
+<pre class="example" id="orgf8a1cec">
 # ls ~/tutorials/step1/
 open62541.c  open62541.h  tutorial_server_firststeps.c
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org58271d8" class="outline-2">
-<h2 id="org58271d8"><span class="section-number-2">6.</span> edit tutorial code</h2>
+<div id="outline-container-orgfabd10b" class="outline-2">
+<h2 id="orgfabd10b"><span class="section-number-2">6.</span> edit tutorial code</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Because <code>tutorial_server_firststeps.c</code> is written to be compiled together with the code base. If you want to compile with single file distribution, the <code>#include</code> part at the beginning should be changed, the whole code is like below:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C"><span style="color: #ff55ff; font-weight: bold;">#include</span> <span style="color: #32cd32;">"open62541.h"</span>
+<pre class="src src-C"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">"open62541.h"</span>
 
-<span style="color: #ff55ff; font-weight: bold;">#include</span> <span style="color: #8c8c8c;">&lt;</span><span style="color: #32cd32;">signal.h</span><span style="color: #8c8c8c;">&gt;</span>
-<span style="color: #ff55ff; font-weight: bold;">#include</span> <span style="color: #8c8c8c;">&lt;</span><span style="color: #32cd32;">stdlib.h</span><span style="color: #8c8c8c;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">signal.h</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">stdlib.h</span><span style="color: #707183;">&gt;</span>
 
-<span style="color: #ff55ff; font-weight: bold;">static</span> <span style="color: #ff55ff; font-weight: bold;">volatile</span> <span style="color: #ffffff; font-style: italic; text-decoration: underline;">UA_Boolean</span> <span style="color: #ffffff;">running</span> = <span style="color: #00eeee;">true</span>;
-<span style="color: #ff55ff; font-weight: bold;">static</span> <span style="color: #ffffff; font-style: italic; text-decoration: underline;">void</span> <span style="color: #00bfff; font-weight: bold;">stopHandler</span><span style="color: #8c8c8c;">(</span><span style="color: #ffffff; font-style: italic; text-decoration: underline;">int</span> <span style="color: #ffffff;">sig</span><span style="color: #8c8c8c;">)</span> <span style="color: #8c8c8c;">{</span>
-    UA_LOG_INFO<span style="color: #93a8c6;">(</span>UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, <span style="color: #32cd32;">"received ctrl-c"</span><span style="color: #93a8c6;">)</span>;
-    running = <span style="color: #00eeee;">false</span>;
-<span style="color: #8c8c8c;">}</span>
+<span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #7F0055; font-weight: bold;">volatile</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">UA_Boolean</span> <span style="color: #000000;">running</span> = <span style="color: #110099;">true</span>;
+<span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">stopHandler</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sig</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    UA_LOG_INFO<span style="color: #7388d6;">(</span>UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, <span style="color: #2A00FF;">"received ctrl-c"</span><span style="color: #7388d6;">)</span>;
+    running = <span style="color: #110099;">false</span>;
+<span style="color: #707183;">}</span>
 
-<span style="color: #ffffff; font-style: italic; text-decoration: underline;">int</span> <span style="color: #00bfff; font-weight: bold;">main</span><span style="color: #8c8c8c;">(</span><span style="color: #ffffff; font-style: italic; text-decoration: underline;">void</span><span style="color: #8c8c8c;">)</span> <span style="color: #8c8c8c;">{</span>
-    signal<span style="color: #93a8c6;">(</span>SIGINT, stopHandler<span style="color: #93a8c6;">)</span>;
-    signal<span style="color: #93a8c6;">(</span>SIGTERM, stopHandler<span style="color: #93a8c6;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    signal<span style="color: #7388d6;">(</span>SIGINT, stopHandler<span style="color: #7388d6;">)</span>;
+    signal<span style="color: #7388d6;">(</span>SIGTERM, stopHandler<span style="color: #7388d6;">)</span>;
 
-    <span style="color: #ffffff; font-style: italic; text-decoration: underline;">UA_Server</span> *<span style="color: #ffffff;">server</span> = UA_Server_new<span style="color: #93a8c6;">()</span>;
-    UA_ServerConfig_setDefault<span style="color: #93a8c6;">(</span>UA_Server_getConfig<span style="color: #b0b1a3;">(</span>server<span style="color: #b0b1a3;">)</span><span style="color: #93a8c6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">UA_Server</span> *<span style="color: #000000;">server</span> = UA_Server_new<span style="color: #7388d6;">()</span>;
+    UA_ServerConfig_setDefault<span style="color: #7388d6;">(</span>UA_Server_getConfig<span style="color: #909183;">(</span>server<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
 
-    <span style="color: #ffffff; font-style: italic; text-decoration: underline;">UA_StatusCode</span> <span style="color: #ffffff;">retval</span> = UA_Server_run<span style="color: #93a8c6;">(</span>server, &amp;running<span style="color: #93a8c6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">UA_StatusCode</span> <span style="color: #000000;">retval</span> = UA_Server_run<span style="color: #7388d6;">(</span>server, &amp;running<span style="color: #7388d6;">)</span>;
 
-    UA_Server_delete<span style="color: #93a8c6;">(</span>server<span style="color: #93a8c6;">)</span>;
-    <span style="color: #ff55ff; font-weight: bold;">return</span> retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
-<span style="color: #8c8c8c;">}</span>
+    UA_Server_delete<span style="color: #7388d6;">(</span>server<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
+<span style="color: #707183;">}</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgedce84a" class="outline-2">
-<h2 id="orgedce84a"><span class="section-number-2">7.</span> compile</h2>
+<div id="outline-container-org9b2868b" class="outline-2">
+<h2 id="org9b2868b"><span class="section-number-2">7.</span> compile</h2>
 <div class="outline-text-2" id="text-7">
 <div class="org-src-container">
 <pre class="src src-sh">gcc -std=c99 open62541.c -lws2_32 tutorial_server_firststeps.c -o step1.exe
@@ -164,14 +164,14 @@ Because <code>tutorial_server_firststeps.c</code> is written to be compiled toge
 </div>
 </div>
 
-<div id="outline-container-orgffd0623" class="outline-2">
-<h2 id="orgffd0623"><span class="section-number-2">8.</span> execute</h2>
+<div id="outline-container-org46ca790" class="outline-2">
+<h2 id="org46ca790"><span class="section-number-2">8.</span> execute</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 There will be a new executable file <code>step1.exe</code>. When it is executed, it will print these logs:
 </p>
 
-<pre class="example" id="org38a6b91">
+<pre class="example" id="orga0c89f5">
 # ./step1.exe
 [2021-11-04 19:21:20.084 (UTC+0800)] warn/server        AccessControl: Unconfigured AccessControl. Users have all permissions.
 [2021-11-04 19:21:20.084 (UTC+0800)] info/server        AccessControl: Anonymous login is enabled
@@ -183,8 +183,8 @@ There will be a new executable file <code>step1.exe</code>. When it is executed,
 </div>
 </div>
 
-<div id="outline-container-orgf437610" class="outline-2">
-<h2 id="orgf437610"><span class="section-number-2">9.</span> monitor</h2>
+<div id="outline-container-orga4007b0" class="outline-2">
+<h2 id="orga4007b0"><span class="section-number-2">9.</span> monitor</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 Then you can use UaExpert to view the server info.
