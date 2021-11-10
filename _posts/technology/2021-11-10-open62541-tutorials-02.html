@@ -1,0 +1,125 @@
+---
+layout: post
+title: Server with variables
+categories: [technology]
+tags: [industry, OPC UA]
+---
+
+<p>
+The second tutorial example in open62541 project is a server with a
+scalar variable and a matrix variable.
+</p>
+
+<p>
+Firstly, generate the single file distribution of open62541:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #7F0055; font-weight: bold;">cd</span> ~/tutorials/open62541
+cmake -DUA_ENABLE_AMALGAMATION=ON .
+cmake --build .
+</pre>
+</div>
+
+<p>
+Then copy files to the tutorials folder:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">cp open62541.c open62541.h examples/tutorial_server_variable.c ~/tutorials/
+</pre>
+</div>
+
+<p>
+To use <code>open62541.h</code>, change the <code>#include</code> lines:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-diff"><span style="background-color: #d9d9d9;">--- </span><span style="background-color: #bfbfbf; font-weight: bold;">#&lt;buffer examples/tutorial_server_variable.c&gt;</span>
+<span style="background-color: #d9d9d9;">+++ </span><span style="background-color: #bfbfbf; font-weight: bold;">#&lt;buffer tutorials/tutorial_server_variable.c&gt;</span>
+<span style="background-color: #d9d9d9;">@@ -14,9 +14,7 @@</span>
+<span style="color: #aa2222; background-color: #ffeeee;">-</span><span style="background-color: #ffeeee;">#include &lt;open62541/plugin/log_stdout.h&gt;</span>
+<span style="color: #aa2222; background-color: #ffeeee;">-</span><span style="background-color: #ffeeee;">#include &lt;open62541/server.h&gt;</span>
+<span style="color: #aa2222; background-color: #ffeeee;">-</span><span style="background-color: #ffeeee;">#include &lt;open62541/server_config_default.h&gt;</span>
++#include "open62541.h"
+</pre>
+</div>
+
+<p>
+Then compile the example:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">gcc -std=c99 open62541.c -lws2_32 tutorial_server_variables.c -o srv_var.exe
+</pre>
+</div>
+
+<p>
+Execute the variable example:
+</p>
+
+<pre class="example" id="org9affe8e">
+# ./srv_var.exe
+[2021-11-10 13:55:48.424 (UTC+0800)] warn/server        AccessControl: Unconfigured AccessControl. Users have all permissions.
+[2021-11-10 13:55:48.424 (UTC+0800)] info/server        AccessControl: Anonymous login is enabled
+[2021-11-10 13:55:48.424 (UTC+0800)] info/server        AccessControl: x509 certificate user authentication is enabled
+[2021-11-10 13:55:48.424 (UTC+0800)] warn/server        Username/Password configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+[2021-11-10 13:55:48.424 (UTC+0800)] warn/userland      AcceptAll Certificate Verification. Any remote certificate will be accepted.
+[2021-11-10 13:55:48.424 (UTC+0800)] info/session       SecureChannel 0 | Session g=00000001-0000-0000-0000-000000000000 | WriteRequest returned status code BadTypeMismatch
+Writing a string returned statuscode BadTypeMismatch
+[2021-11-10 13:55:48.431 (UTC+0800)] info/network       TCP network layer listening on opc.tcp://CN-L-7386623:4840/
+[2021-11-10 13:55:50.669 (UTC+0800)] info/server        received ctrl-c
+[2021-11-10 13:55:50.716 (UTC+0800)] info/network       Shutting down the TCP network layer
+</pre>
+
+<p>
+As expected, it will report this error:
+</p>
+
+<pre class="example" id="org4f4fd26">
+Writing a string returned statuscode BadTypeMismatch
+</pre>
+
+<p>
+Which is printed inside <code>writeWrongVariable</code> function:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C"><span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>
+<span style="color: #0000ff; font-weight: bold;">writeWrongVariable</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">UA_Server</span> *<span style="color: #000000;">server</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">UA_NodeId</span> <span style="color: #000000;">myIntegerNodeId</span> = UA_NODEID_STRING<span style="color: #7388d6;">(</span>1, <span style="color: #2A00FF;">"the.answer"</span><span style="color: #7388d6;">)</span>;
+
+    <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">Write a string</span><span style="color: #3F7F5F;"> */</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">UA_String</span> <span style="color: #000000;">myString</span> = UA_STRING<span style="color: #7388d6;">(</span><span style="color: #2A00FF;">"test"</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">UA_Variant</span> <span style="color: #000000;">myVar</span>;
+    UA_Variant_init<span style="color: #7388d6;">(</span>&amp;myVar<span style="color: #7388d6;">)</span>;
+    UA_Variant_setScalar<span style="color: #7388d6;">(</span>&amp;myVar, &amp;myString, &amp;UA_TYPES<span style="color: #909183;">[</span>UA_TYPES_STRING<span style="color: #909183;">]</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">UA_StatusCode</span> <span style="color: #000000;">retval</span> = UA_Server_writeValue<span style="color: #7388d6;">(</span>server, myIntegerNodeId, myVar<span style="color: #7388d6;">)</span>;
+    printf<span style="color: #7388d6;">(</span><span style="color: #2A00FF;">"Writing a string returned statuscode %s\n"</span>, UA_StatusCode_name<span style="color: #909183;">(</span>retval<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+This function set a <code>UA_STRING</code> to an <code>UA_Variant</code>, and then try to write
+this <code>UA_Variant</code> <code>myVar</code> to the integer node <code>the.answer</code>. Because the
+datatype mismatch, the status code name is <code>BadTypeMismatch</code>.
+</p>
+
+<p>
+To use different data type, modify these lines in <code>addVariable</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-diff">    UA_VariableAttributes attr = UA_VariableAttributes_default;
+<span style="color: #aa2222; background-color: #ffeeee;">-</span><span style="background-color: #ffeeee;">   UA_Int32 myInteger = 42;</span>
+<span style="color: #22aa22; background-color: #eeffee;">+</span><span style="background-color: #eeffee;">   UA_Float myFloat = 3.1415926;</span>
+<span style="color: #aa2222; background-color: #ffeeee;">-</span><span style="background-color: #ffeeee;">   UA_Variant_setScalar(&amp;attr.value, &amp;myInteger, &amp;UA_TYPES[UA_TYPES_INT32]);</span>
+<span style="color: #22aa22; background-color: #eeffee;">+</span><span style="background-color: #eeffee;">   UA_Variant_setScalar(&amp;attr.value, &amp;myFloat, &amp;UA_TYPES[UA_TYPES_FLOAT]);</span>
+    attr.description = UA_LOCALIZEDTEXT("en-US","the answer");
+    attr.displayName = UA_LOCALIZEDTEXT("en-US","the answer");
+<span style="color: #aa2222; background-color: #ffeeee;">-</span><span style="background-color: #ffeeee;">   attr.dataType = UA_TYPES[UA_TYPES_INT32].typeId;</span>
+<span style="color: #22aa22; background-color: #eeffee;">+</span><span style="background-color: #eeffee;">   attr.dataType = UA_TYPES[UA_TYPES_FLOAT].typeId;</span>
+    attr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
+</pre>
+</div>
