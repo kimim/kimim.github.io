@@ -7,8 +7,9 @@ tags: [industry, OPC UA]
 ---
 #+END_EXPORT
 
-The second tutorial example in open62541 project is a server with a
-scalar variable and a matrix variable.
+I've tried the [[http://kimi.im/2021-11-04-open62541-tutorials-01][first open62541 tutorial server]], Now the second
+tutorial example in open62541 project is a server with a scalar
+variable and a matrix variable.
 
 Firstly, generate the single file distribution of open62541:
 
