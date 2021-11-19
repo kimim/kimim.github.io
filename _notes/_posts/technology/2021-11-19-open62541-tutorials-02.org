@@ -1,0 +1,100 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Server with variables
+categories: [technology]
+tags: [industry, OPC UA]
+---
+#+END_EXPORT
+
+The second tutorial example in open62541 project is a server with a
+scalar variable and a matrix variable.
+
+Firstly, generate the single file distribution of open62541:
+
+#+begin_src sh
+cd ~/tutorials/open62541
+cmake -DUA_ENABLE_AMALGAMATION=ON .
+cmake --build .
+#+end_src
+
+Then copy files to the tutorials folder:
+
+#+begin_src sh
+cp open62541.c open62541.h examples/tutorial_server_variable.c ~/tutorials/
+#+end_src
+
+To use ~open62541.h~, change the ~#include~ lines:
+#+begin_src diff
+--- #<buffer examples/tutorial_server_variable.c>
++++ #<buffer tutorials/tutorial_server_variable.c>
+@@ -14,9 +14,7 @@
+-#include <open62541/plugin/log_stdout.h>
+-#include <open62541/server.h>
+-#include <open62541/server_config_default.h>
++#include "open62541.h"
+#+end_src
+
+Then compile the example:
+
+#+begin_src sh
+gcc -std=c99 open62541.c -lws2_32 tutorial_server_variables.c -o srv_var.exe
+#+end_src
+
+Execute the variable example:
+
+#+begin_example
+# ./srv_var.exe
+[2021-11-10 13:55:48.424 (UTC+0800)] warn/server        AccessControl: Unconfigured AccessControl. Users have all permissions.
+[2021-11-10 13:55:48.424 (UTC+0800)] info/server        AccessControl: Anonymous login is enabled
+[2021-11-10 13:55:48.424 (UTC+0800)] info/server        AccessControl: x509 certificate user authentication is enabled
+[2021-11-10 13:55:48.424 (UTC+0800)] warn/server        Username/Password configured, but no encrypting SecurityPolicy. This can leak credentials on the network.
+[2021-11-10 13:55:48.424 (UTC+0800)] warn/userland      AcceptAll Certificate Verification. Any remote certificate will be accepted.
+[2021-11-10 13:55:48.424 (UTC+0800)] info/session       SecureChannel 0 | Session g=00000001-0000-0000-0000-000000000000 | WriteRequest returned status code BadTypeMismatch
+Writing a string returned statuscode BadTypeMismatch
+[2021-11-10 13:55:48.431 (UTC+0800)] info/network       TCP network layer listening on opc.tcp://kimi.im:4840/
+[2021-11-10 13:55:50.669 (UTC+0800)] info/server        received ctrl-c
+[2021-11-10 13:55:50.716 (UTC+0800)] info/network       Shutting down the TCP network layer
+#+end_example
+
+As expected, it will report this error:
+
+#+begin_example
+Writing a string returned statuscode BadTypeMismatch
+#+end_example
+
+Which is printed inside ~writeWrongVariable~ function:
+
+#+begin_src C
+static void
+writeWrongVariable(UA_Server *server) {
+    UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "the.answer");
+
+    /* Write a string */
+    UA_String myString = UA_STRING("test");
+    UA_Variant myVar;
+    UA_Variant_init(&myVar);
+    UA_Variant_setScalar(&myVar, &myString, &UA_TYPES[UA_TYPES_STRING]);
+    UA_StatusCode retval = UA_Server_writeValue(server, myIntegerNodeId, myVar);
+    printf("Writing a string returned statuscode %s\n", UA_StatusCode_name(retval));
+}
+#+end_src
+
+This function set a ~UA_STRING~ to an ~UA_Variant~, and then try to write
+this ~UA_Variant~ ~myVar~ to the integer node ~the.answer~. Because the
+datatype mismatch, the status code name is ~BadTypeMismatch~.
+
+To use different data type, modify these lines in ~addVariable~:
+
+#+begin_src diff
+    UA_VariableAttributes attr = UA_VariableAttributes_default;
+-   UA_Int32 myInteger = 42;
++   UA_Float myFloat = 3.1415926;
+-   UA_Variant_setScalar(&attr.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
++   UA_Variant_setScalar(&attr.value, &myFloat, &UA_TYPES[UA_TYPES_FLOAT]);
+    attr.description = UA_LOCALIZEDTEXT("en-US","the answer");
+    attr.displayName = UA_LOCALIZEDTEXT("en-US","the answer");
+-   attr.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
++   attr.dataType = UA_TYPES[UA_TYPES_FLOAT].typeId;
+    attr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
+#+end_src
