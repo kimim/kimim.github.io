@@ -1,0 +1,476 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: s-exp operations in emacs
+categories: [technology]
+tags: [lisp, clojure, emacs]
+---
+#+END_EXPORT
+
+Structural editing is very useful for lisp dialect languages, such as
+emacs-lisp, scheme, clojure and so on. Vanilla emacs ships Lisp
+editing commands for Emacs(lisp.el) and [[https://github.com/Fuco1/smartparens][smartparens]] provides a minor
+mode for Emacs that deals with parens pairs and tries to be smart
+about it. If we combine the power of lisp.el and smartparens, we will
+gain super productivity.
+
+Let's demo these keys and functions with code examples.
+
+* Navigation
+
+~down-lisp(C-M-d)~ will go down from ❶ to ❷ ❸ ❹ till ❺, and stop at ❺,
+because there is no inner place to go.
+
+~sp-down-sexp~ from smartparens achieves the same thing as ~lisp-down~.
+
+#+begin_example
+❶(❷deftest size-test
+  (❸let [❹ndm (❺nd/new-base-manager)]
+    (is (= 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_example
+
+~backward-up-list(C-M-u)~ will move the point backward, in from of each
+parenthesis. If the point starts from ❺, wherever inside the internal
+expression, it will move to ❹ ❸ ❷ ❶, respectively on each press of
+~C-M-u~.
+
+#+begin_example
+❶(deftest size-test
+  ❷(let ❸[ndm ❹(nd/new-ba❺se-manager)]
+    (is (= 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_example
+
+~up-list~ is actually ~forward-up-list~, if compares to ~backward-up-list~~,
+it will let the point move forward out of one level of parentheses,
+from ❶, wherever inside the internal expression, to ❷ ❸ ❹ till ❺. This
+function is not bound to any keys as default.
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-ba❶se-manager)❷]❸
+    (is (= 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100)))))❹)❺
+#+end_example
+
+~forward-sexp (C-M-f)~ will move forward across one balanced expression (sexp).
+
+Continue press ~C-M-f~, will move point from ❶ to ❷ and ❸, and stop at
+❸. While the smartparens version ~sp-forward-sexp~, will jump one level
+out from ❸.
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    ❶(is (= 0 (nd/size (nd/arange ndm 0 0))))❷
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))❸))
+#+end_example
+
+~backward-sexp (C-M-b)~ move backward across one balanced expression (sexp).
+
+The point will move from ❶ to ❺, and stop here, because there is no
+backward sexp at the same level.
+
+~sp-backward-sexp~ will jump one level up.
+
+#+begin_example
+(deftest size-test
+ (❺let ❹[ndm (nd/new-base-manager)]
+   ❸(is (= 0 (nd/size (nd/arange ndm 0 0))))
+   ❷(is (= 100
+           (nd/size (nd/arange ndm 0 100))))❶))
+#+end_example
+
+~beginning-of-defun (C-M-a)~ move backward to the beginning of a
+defun. Actually, it moves to the beginning of whatever a top level
+parenthesis.
+
+~end-of-defun (C-M-e)~ move forward to next end of defun, at the next
+line of last ~)~ of the defun.
+
+From anywhere between ❶ and ❷, ~C-M-a~ will move the point to ❶ and
+~C-M-e~ moves it to ❷:
+
+#+begin_example
+❶(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+❷
+#+end_example
+
+* Mark
+
+~mark-sexp (C-M-SPC)~ can be used to mark next sexp and more if
+repeatedly pressed.
+
+If the cursor is at ❶, press ~C-M-SPC~ once will mark the region from ❶
+to ❷, press twice, will mark the region from ❶ to ❸.
+
+~sp-mark-sexp~ works the same as this function.
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+   ❶(is (= 0 (nd/size (nd/arange ndm 0 0))))❷
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))❸))
+#+end_example
+
+* Kill
+
+~kill-sexp (C-M-k)~, Kill the sexp (balanced expression) following
+point. When the cursor is at ❶:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+   (is (= ❶(+ 0 0) (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_example
+
+~C-M-k~ will remain the code as below:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+   (is (= ❶ (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_example
+
+~sp-kill-sexp(M-k)~ does the same operations as ~kill-sexp~.
+
+But ~sp-kill-hybrid-sexp(C-k)~ will kill all expresses after point till
+end of the list:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+   (is (= ❶))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_example
+
+~sp-backward-kill-sexp~ and ~backward-kill-sexp(ESC C-<backspace>)~ kills
+the sexp (balanced expression) preceding point. ~(+ 0 0)~ is killed when
+press ~ESC C-<backspace>~:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+ 0 0)❶ (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_example
+
+~sp-backward-copy-sexp(C-M-<backspace>)~, will copy previous balanced
+expression. For example, this command will copy ~(+ 0 0)~ to kill ring.
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+ 0 0)❶ (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_example
+
+~sp-copy-sexp(C-M-w)~ does the same operation forwardly comparing to
+~sp-backward-copy-sexp~. ~(nd/size (nd/arange ndm 0 0))~ is copied in
+below example.
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+ 0 0)❶ (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_example
+
+* slurp and barf
+
+~sp-forward-slurp-sexp(C-<right>)~ adds sexp following the current list
+in it by moving the closing delimiter. When the point is at ❶:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+❶) 0 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_example
+
+~C-<right>~ will slurp the next ~0~ in the parenthesis. The new position
+of the right parenthesis is at ❷.
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+❶ 0❷) 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_example
+
+Continue press ~C-<right>~, twice, the next ~0~ and ~()~ will be slurped:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+❶ 0❷ 0❸ (nd/size (nd/arange ndm 0 0))❹)))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_example
+
+Press ~C-<right>~ again, it will slurp next ~(is ..)~ sexp, and put the
+right parenthesis to ❺:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+❶ 0 0 (nd/size (nd/arange ndm 0 0))
+              (is (= 100
+                     (nd/size (nd/arange ndm 0 100))))❺)))))
+
+#+end_example
+
+~sp-forward-barf-sexp(C-<left>)~ does the opposite operation that the
+delimiter will move one level inside. When the point is at ❺,
+continuously press ~C-<left>~ will move the point from ❶ to ❺:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+❺ 0❹ 0❸ (nd/size (nd/arange ndm 0 0))❷
+              (is (= 100
+                     (nd/size (nd/arange ndm 0 100))))❶)))))
+#+end_example
+
+~sp-backward-slurp-sexp(M-<left>)~ will slurp sexp from left side. When
+the point is at ❶:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+ 0❶ 0) (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+#+end_example
+
+~M-<left>~ will slurp ~=~ inside left parenthesis:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is ((= + 0❶ 0) (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+#+end_example
+
+Next, it will slurp ~is~:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    ((is (= + 0❶ 0) (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+#+end_example
+
+and ~is~ again:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (((is = + 0❶ 0) (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+#+end_example
+
+That means the backward slurp will always slurp the nearest sexp, if
+there is no sexp in the inner parenthesis, it will slurp outer sexp.
+
+~sp-backward-barf-sexp(M-<right>)~ is the opposite operation to
+~sp-backward-slurp-sexp~.
+
+* wrap and unwrap
+
+~sp-wrap-arround~, ~sp-wrap-curly~ and ~sp-wrap-square~ wraps the region
+with ~()~, ~{}~ or ~[]~.
+
+~sp-unwrap-sexp~ unwrap next sexp, while ~sp-backward-unwrap-sexp~ unwraps
+previous sexp.
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+ 0 0) ❶ (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+#+end_example
+
+If point is at ❶, ~sp-unwrap-sexp~ will remove parenthesis of next expression.
+
+#+begin_example
+❿(deftest size-test
+  ❾(let [ndm (nd/new-base-manager)]
+    ❽(is ❼(= (+ 0 0) ❶ nd/size ❷(nd/arange ndm 0 0)
+           ❸(is ❹(= 100
+                  ❺(nd/size ❻(nd/arange ndm 0 100))))))))
+#+end_example
+
+If continuously invoke it, emacs will remove parenthesis at ❷, ❸, ❹, ❺
+and ❻. And it will continue to remove outer parenthesis ❼, ❽, ❾, and
+❿.
+
+~sp-backward-unwrap-sexp~ will remove parenthesis of previous expression
+~(+ 0 0)~.
+
+#+begin_example
+❼(deftest size-test
+  ❻(let ❹[ndm ❺(nd/new-base-manager)]
+    ❸(is ❷(= + 0 0 ❶ (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+#+end_example
+
+If continuously invoked, if will remove ❷, ❸, ❹, ❺, ❻ till ❼. Remind
+the order of ❹ and ❺, because ❹ is the previous parenthesis when ❸ is
+removed and ❺ is the previous parenthesis, when ❹ is removed.
+
+* splice
+
+~sp-splice-sexp~ will remove the outer parenthesis, and splice the sexp
+from the list. When point is at ❶, this command will remove
+parenthesis pair of ❷.
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is ❷(= (+ 0 0) ❶ (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+#+end_example
+
+~sp-splice-sexp-killing-around~ will keep next expression ~(nd/size
+(nd/arange ndm 0 0))~ and kill all other expressions and spaces inside
+current list.
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is ❶(nd/size (nd/arange ndm 0 0)))))
+#+end_example
+
+~sp-splice-sexp-killing-forward(M-<down>)~ will remove parenthesis and
+kill following expressions:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is = (+ 0 0)❶)))
+#+end_example
+
+
+~sp-splice-sexp-killing-backward(M-<up>)~ will remove parenthesis and
+kill preceeding expressions:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is ❶(nd/size (nd/arange ndm 0 0))
+        (is (= 100
+               (nd/size (nd/arange ndm 0 100)))))))
+#+end_example
+
+* split and join
+
+~sp-split-sexp~ will add two parenthesis before and after ~) (~:
+
+#+begin_example
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+ 0 0)) ❶ ((nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+#+end_example
+
+~sp-join-sexp~ is the reverse operation of ~sp-split-sexp~.
+
+* convolute
+~sp-convolut-sexp~ will put proceeding sexp outside of outer proceeding
+sexp:
+
+#+begin_src clojure
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+   ❶(is (= 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_src
+
+#+begin_example
+(let [ndm (nd/new-base-manager)]
+  (deftest size-test
+   ❶(is (= (+ 0 0)  (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+#+end_example
+
+* Summary
+
+| Key                 | Map                             | Description                                                    |
+|---------------------+---------------------------------+----------------------------------------------------------------|
+| Navigation          |                                 |                                                                |
+|---------------------+---------------------------------+----------------------------------------------------------------|
+| ~C-M-d~               | ~down-list~                       | Move forward down one level of parentheses.                    |
+| ~C-M-u~               | ~backward-up-list~                | Move backward out of one level of parentheses.                 |
+| ~C-M-f~               | ~forward-sexp~                    | Move forward across one balanced expression (sexp).            |
+|                     | ~sp-forward-sexp~                 | Same as above, will forward up.                                |
+| ~C-M-b~               | ~backward-sexp~                   | Move backward across one balanced expression (sexp).           |
+|                     | ~sp-backward-sexp~                | Same as above, will backward up.                               |
+| ~C-M-n~               | ~forward-list~                    | Move forward across one balanced group of parentheses.         |
+| ~C-M-p~               | ~backward-list~                   | Move backward across one balanced group of parentheses.        |
+| ~C-M-a~               | ~beginning-of-defun~              | Move backward to the beginning of a defun.                     |
+| ~C-M-e~               | ~end-of-defun~                    | Move forward to next end of defun.                             |
+|---------------------+---------------------------------+----------------------------------------------------------------|
+| Kill and Yank       |                                 |                                                                |
+|---------------------+---------------------------------+----------------------------------------------------------------|
+| ~C-M-k~               | ~kill-sexp~                       | Kill the sexp (balanced expression) following point.           |
+| ~M-k~                 | ~sp-kill-sexp~                    | Kill the balanced expression following point.                  |
+| ~C-k~                 | ~sp-kill-hybrid-sexp~             | Kill a line as if with ‘kill-line’, but respecting delimiters. |
+| ~ESC C-<backspace>~   | ~backward-kill-sexp~              | Kill the sexp (balanced expression) preceding point.           |
+|                     | ~sp-backward-kill-sexp~           | Kill the balanced expression preceding point.                  |
+| ~C-M-<backspace>~     | ~sp-backward-copy-sexp~           | Copy the previous ARG expressions to the kill-ring.            |
+| ~C-M-w~               | ~sp-copy-sexp~                    | Copy the following ARG expressions to the kill-ring.           |
+|---------------------+---------------------------------+----------------------------------------------------------------|
+| Slurp and Barf      |                                 |                                                                |
+|---------------------+---------------------------------+----------------------------------------------------------------|
+| ~C-<right>~           | ~sp-forward-slurp-sexp~           | Add following sexp by moving the closing delimiter.            |
+| ~C-<left>~            | ~sp-forward-barf-sexp~            | Remove the last sexp by moving the closing delimiter.          |
+| ~M-<left>~            | ~sp-backward-slurp-sexp~          | Add preceding sexp  by moving the opening delimiter.           |
+| ~M-<right>~           | ~sp-backward-barf-sexp~           | Remove the first sexp by moving the opening delimiter.         |
+|---------------------+---------------------------------+----------------------------------------------------------------|
+| Wrap and Unwrap     |                                 |                                                                |
+|---------------------+---------------------------------+----------------------------------------------------------------|
+|                     | ~sp-wrap-arround~                 | Wrap region with ~()~                                            |
+|                     | ~sp-wrap-curly~                   | Wrap region with ~{}~                                            |
+|                     | ~sp-wrap-square~                  | Wrap region with ~[]~                                            |
+|                     | ~sp-unwrap-sexp~                  | remove parenthesis of next expression                          |
+|                     | ~sp-backward-unwrap-sexp~         | Remove parenthesis of previous expression                      |
+|---------------------+---------------------------------+----------------------------------------------------------------|
+| Splice, Split, Join |                                 |                                                                |
+|---------------------+---------------------------------+----------------------------------------------------------------|
+|                     | ~sp-splice-sexp~                  | Remove delimiters                                              |
+|                     | ~sp-splice-sexp-killing-around~   | Remove delimiters and keep next expression                     |
+| ~M-<down>~            | ~sp-splice-sexp-killing-forward~  | Remove delimiters and kill following expressions               |
+| ~M-<up>~              | ~sp-splice-sexp-killing-backward~ | Remove delimiters and kill proceeding expressions              |
+|                     | ~sp-split-sexp~                   | Add ~)~ and ~(~                                                    |
+|                     | ~sp-join-sexp~                    | Remove ~)~ and ~(~                                                 |
+|                     | ~sp-convolute-sexp~               | Put proceeding sexp outside of outer proceeding sexp           |

@@ -1,0 +1,806 @@
+---
+layout: post
+title: s-exp operations in emacs
+categories: [technology]
+tags: [lisp, clojure, emacs]
+---
+
+<p>
+Structural editing is very useful for lisp dialect languages, such as
+emacs-lisp, scheme, clojure and so on. Vanilla emacs ships Lisp
+editing commands for Emacs(lisp.el) and <a href="https://github.com/Fuco1/smartparens">smartparens</a> provides a minor
+mode for Emacs that deals with parens pairs and tries to be smart
+about it. If we combine the power of lisp.el and smartparens, we will
+gain super productivity.
+</p>
+
+<p>
+Let&rsquo;s demo these keys and functions with code examples.
+</p>
+
+<div id="outline-container-org8584946" class="outline-2">
+<h2 id="org8584946"><span class="section-number-2">1.</span> Navigation</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<code>down-lisp(C-M-d)</code> will go down from ❶ to ❷ ❸ ❹ till ❺, and stop at ❺,
+because there is no inner place to go.
+</p>
+
+<p>
+<code>sp-down-sexp</code> from smartparens achieves the same thing as <code>lisp-down</code>.
+</p>
+
+<pre class="example" id="org752cdae">
+❶(❷deftest size-test
+  (❸let [❹ndm (❺nd/new-base-manager)]
+    (is (= 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+</pre>
+
+<p>
+<code>backward-up-list(C-M-u)</code> will move the point backward, in from of each
+parenthesis. If the point starts from ❺, wherever inside the internal
+expression, it will move to ❹ ❸ ❷ ❶, respectively on each press of
+<code>C-M-u</code>.
+</p>
+
+<pre class="example" id="org3b9f90a">
+❶(deftest size-test
+  ❷(let ❸[ndm ❹(nd/new-ba❺se-manager)]
+    (is (= 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+</pre>
+
+<p>
+<code>up-list</code> is actually <code>forward-up-list</code>, if compares to <code>backward-up-list~</code>,
+it will let the point move forward out of one level of parentheses,
+from ❶, wherever inside the internal expression, to ❷ ❸ ❹ till ❺. This
+function is not bound to any keys as default.
+</p>
+
+<pre class="example" id="orgd93e266">
+(deftest size-test
+  (let [ndm (nd/new-ba❶se-manager)❷]❸
+    (is (= 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100)))))❹)❺
+</pre>
+
+<p>
+<code>forward-sexp (C-M-f)</code> will move forward across one balanced expression (sexp).
+</p>
+
+<p>
+Continue press <code>C-M-f</code>, will move point from ❶ to ❷ and ❸, and stop at
+❸. While the smartparens version <code>sp-forward-sexp</code>, will jump one level
+out from ❸.
+</p>
+
+<pre class="example" id="org0369ff2">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    ❶(is (= 0 (nd/size (nd/arange ndm 0 0))))❷
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))❸))
+</pre>
+
+<p>
+<code>backward-sexp (C-M-b)</code> move backward across one balanced expression (sexp).
+</p>
+
+<p>
+The point will move from ❶ to ❺, and stop here, because there is no
+backward sexp at the same level.
+</p>
+
+<p>
+<code>sp-backward-sexp</code> will jump one level up.
+</p>
+
+<pre class="example" id="orgfe945ea">
+(deftest size-test
+ (❺let ❹[ndm (nd/new-base-manager)]
+   ❸(is (= 0 (nd/size (nd/arange ndm 0 0))))
+   ❷(is (= 100
+           (nd/size (nd/arange ndm 0 100))))❶))
+</pre>
+
+<p>
+<code>beginning-of-defun (C-M-a)</code> move backward to the beginning of a
+defun. Actually, it moves to the beginning of whatever a top level
+parenthesis.
+</p>
+
+<p>
+<code>end-of-defun (C-M-e)</code> move forward to next end of defun, at the next
+line of last <code>)</code> of the defun.
+</p>
+
+<p>
+From anywhere between ❶ and ❷, <code>C-M-a</code> will move the point to ❶ and
+<code>C-M-e</code> moves it to ❷:
+</p>
+
+<pre class="example" id="org26a6296">
+❶(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+❷
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org228aa74" class="outline-2">
+<h2 id="org228aa74"><span class="section-number-2">2.</span> Mark</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<code>mark-sexp (C-M-SPC)</code> can be used to mark next sexp and more if
+repeatedly pressed.
+</p>
+
+<p>
+If the cursor is at ❶, press <code>C-M-SPC</code> once will mark the region from ❶
+to ❷, press twice, will mark the region from ❶ to ❸.
+</p>
+
+<p>
+<code>sp-mark-sexp</code> works the same as this function.
+</p>
+
+<pre class="example" id="org915f807">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+   ❶(is (= 0 (nd/size (nd/arange ndm 0 0))))❷
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))❸))
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgd9925b9" class="outline-2">
+<h2 id="orgd9925b9"><span class="section-number-2">3.</span> Kill</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<code>kill-sexp (C-M-k)</code>, Kill the sexp (balanced expression) following
+point. When the cursor is at ❶:
+</p>
+
+<pre class="example" id="org4330a5a">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+   (is (= ❶(+ 0 0) (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+</pre>
+
+<p>
+<code>C-M-k</code> will remain the code as below:
+</p>
+
+<pre class="example" id="org6d461ec">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+   (is (= ❶ (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+</pre>
+
+<p>
+<code>sp-kill-sexp(M-k)</code> does the same operations as <code>kill-sexp</code>.
+</p>
+
+<p>
+But <code>sp-kill-hybrid-sexp(C-k)</code> will kill all expresses after point till
+end of the list:
+</p>
+
+<pre class="example" id="org5f23ad6">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+   (is (= ❶))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+</pre>
+
+<p>
+<code>sp-backward-kill-sexp</code> and <code>backward-kill-sexp(ESC C-&lt;backspace&gt;)</code> kills
+the sexp (balanced expression) preceding point. <code>(+ 0 0)</code> is killed when
+press <code>ESC C-&lt;backspace&gt;</code>:
+</p>
+
+<pre class="example" id="org1afd291">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+ 0 0)❶ (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+</pre>
+
+<p>
+<code>sp-backward-copy-sexp(C-M-&lt;backspace&gt;)</code>, will copy previous balanced
+expression. For example, this command will copy <code>(+ 0 0)</code> to kill ring.
+</p>
+
+<pre class="example" id="org10da2fc">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+ 0 0)❶ (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+</pre>
+
+<p>
+<code>sp-copy-sexp(C-M-w)</code> does the same operation forwardly comparing to
+<code>sp-backward-copy-sexp</code>. <code>(nd/size (nd/arange ndm 0 0))</code> is copied in
+below example.
+</p>
+
+<pre class="example" id="org13f34f5">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+ 0 0)❶ (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org9b938b6" class="outline-2">
+<h2 id="org9b938b6"><span class="section-number-2">4.</span> slurp and barf</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+<code>sp-forward-slurp-sexp(C-&lt;right&gt;)</code> adds sexp following the current list
+in it by moving the closing delimiter. When the point is at ❶:
+</p>
+
+<pre class="example" id="org9fa4630">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+❶) 0 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+</pre>
+
+<p>
+<code>C-&lt;right&gt;</code> will slurp the next <code>0</code> in the parenthesis. The new position
+of the right parenthesis is at ❷.
+</p>
+
+<pre class="example" id="org4ab19e5">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+❶ 0❷) 0 (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+</pre>
+
+<p>
+Continue press <code>C-&lt;right&gt;</code>, twice, the next <code>0</code> and <code>()</code> will be slurped:
+</p>
+
+<pre class="example" id="org479ddbe">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+❶ 0❷ 0❸ (nd/size (nd/arange ndm 0 0))❹)))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+</pre>
+
+<p>
+Press <code>C-&lt;right&gt;</code> again, it will slurp next <code>(is ..)</code> sexp, and put the
+right parenthesis to ❺:
+</p>
+
+<pre class="example" id="org3dc31cf">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+❶ 0 0 (nd/size (nd/arange ndm 0 0))
+              (is (= 100
+                     (nd/size (nd/arange ndm 0 100))))❺)))))
+
+</pre>
+
+<p>
+<code>sp-forward-barf-sexp(C-&lt;left&gt;)</code> does the opposite operation that the
+delimiter will move one level inside. When the point is at ❺,
+continuously press <code>C-&lt;left&gt;</code> will move the point from ❶ to ❺:
+</p>
+
+<pre class="example" id="orgbce9dea">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+❺ 0❹ 0❸ (nd/size (nd/arange ndm 0 0))❷
+              (is (= 100
+                     (nd/size (nd/arange ndm 0 100))))❶)))))
+</pre>
+
+<p>
+<code>sp-backward-slurp-sexp(M-&lt;left&gt;)</code> will slurp sexp from left side. When
+the point is at ❶:
+</p>
+
+<pre class="example" id="orge4f26d3">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+ 0❶ 0) (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+</pre>
+
+<p>
+<code>M-&lt;left&gt;</code> will slurp <code>=</code> inside left parenthesis:
+</p>
+
+<pre class="example" id="orgbb9c16f">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is ((= + 0❶ 0) (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+</pre>
+
+<p>
+Next, it will slurp <code>is</code>:
+</p>
+
+<pre class="example" id="org7d28b3f">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    ((is (= + 0❶ 0) (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+</pre>
+
+<p>
+and <code>is</code> again:
+</p>
+
+<pre class="example" id="orgcd72412">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (((is = + 0❶ 0) (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+</pre>
+
+<p>
+That means the backward slurp will always slurp the nearest sexp, if
+there is no sexp in the inner parenthesis, it will slurp outer sexp.
+</p>
+
+<p>
+<code>sp-backward-barf-sexp(M-&lt;right&gt;)</code> is the opposite operation to
+<code>sp-backward-slurp-sexp</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6c72711" class="outline-2">
+<h2 id="org6c72711"><span class="section-number-2">5.</span> wrap and unwrap</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+<code>sp-wrap-arround</code>, <code>sp-wrap-curly</code> and <code>sp-wrap-square</code> wraps the region
+with <code>()</code>, <code>{}</code> or <code>[]</code>.
+</p>
+
+<p>
+<code>sp-unwrap-sexp</code> unwrap next sexp, while <code>sp-backward-unwrap-sexp</code> unwraps
+previous sexp.
+</p>
+
+<pre class="example" id="org1574c56">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+ 0 0) ❶ (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+</pre>
+
+<p>
+If point is at ❶, <code>sp-unwrap-sexp</code> will remove parenthesis of next expression.
+</p>
+
+<pre class="example" id="org2423d9c">
+❿(deftest size-test
+  ❾(let [ndm (nd/new-base-manager)]
+    ❽(is ❼(= (+ 0 0) ❶ nd/size ❷(nd/arange ndm 0 0)
+           ❸(is ❹(= 100
+                  ❺(nd/size ❻(nd/arange ndm 0 100))))))))
+</pre>
+
+<p>
+If continuously invoke it, emacs will remove parenthesis at ❷, ❸, ❹, ❺
+and ❻. And it will continue to remove outer parenthesis ❼, ❽, ❾, and
+❿.
+</p>
+
+<p>
+<code>sp-backward-unwrap-sexp</code> will remove parenthesis of previous expression
+<code>(+ 0 0)</code>.
+</p>
+
+<pre class="example" id="org4b551bf">
+❼(deftest size-test
+  ❻(let ❹[ndm ❺(nd/new-base-manager)]
+    ❸(is ❷(= + 0 0 ❶ (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+</pre>
+
+<p>
+If continuously invoked, if will remove ❷, ❸, ❹, ❺, ❻ till ❼. Remind
+the order of ❹ and ❺, because ❹ is the previous parenthesis when ❸ is
+removed and ❺ is the previous parenthesis, when ❹ is removed.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org72a77a6" class="outline-2">
+<h2 id="org72a77a6"><span class="section-number-2">6.</span> splice</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+<code>sp-splice-sexp</code> will remove the outer parenthesis, and splice the sexp
+from the list. When point is at ❶, this command will remove
+parenthesis pair of ❷.
+</p>
+
+<pre class="example" id="org5e594cb">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is ❷(= (+ 0 0) ❶ (nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+</pre>
+
+<p>
+<code>sp-splice-sexp-killing-around</code> will keep next expression <code>(nd/size
+(nd/arange ndm 0 0))</code> and kill all other expressions and spaces inside
+current list.
+</p>
+
+<pre class="example" id="org05d4fdb">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is ❶(nd/size (nd/arange ndm 0 0)))))
+</pre>
+
+<p>
+<code>sp-splice-sexp-killing-forward(M-&lt;down&gt;)</code> will remove parenthesis and
+kill following expressions:
+</p>
+
+<pre class="example" id="orgd44fb77">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is = (+ 0 0)❶)))
+</pre>
+
+
+<p>
+<code>sp-splice-sexp-killing-backward(M-&lt;up&gt;)</code> will remove parenthesis and
+kill preceeding expressions:
+</p>
+
+<pre class="example" id="orgbe231bd">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is ❶(nd/size (nd/arange ndm 0 0))
+        (is (= 100
+               (nd/size (nd/arange ndm 0 100)))))))
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org7e48fc5" class="outline-2">
+<h2 id="org7e48fc5"><span class="section-number-2">7.</span> split and join</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+<code>sp-split-sexp</code> will add two parenthesis before and after <code>) (</code>:
+</p>
+
+<pre class="example" id="org3565079">
+(deftest size-test
+  (let [ndm (nd/new-base-manager)]
+    (is (= (+ 0 0)) ❶ ((nd/size (nd/arange ndm 0 0))
+           (is (= 100
+                  (nd/size (nd/arange ndm 0 100))))))))
+</pre>
+
+<p>
+<code>sp-join-sexp</code> is the reverse operation of <code>sp-split-sexp</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org20828dd" class="outline-2">
+<h2 id="org20828dd"><span class="section-number-2">8.</span> convolute</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+<code>sp-convolut-sexp</code> will put proceeding sexp outside of outer proceeding
+sexp:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">deftest</span> <span style="color: #0000ff; font-weight: bold;">size-test</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">let</span> <span style="color: #909183;">[</span>ndm <span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">nd</span>/new-base-manager<span style="color: #709870;">)</span><span style="color: #909183;">]</span>
+   &#10102;<span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">is</span> <span style="color: #709870;">(</span>= 0 <span style="color: #907373;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">nd</span>/size <span style="color: #6276ba;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">nd</span>/arange ndm 0 0<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
+    <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">is</span> <span style="color: #709870;">(</span>= 100
+           <span style="color: #907373;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">nd</span>/size <span style="color: #6276ba;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">nd</span>/arange ndm 0 100<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example" id="orga94e28b">
+(let [ndm (nd/new-base-manager)]
+  (deftest size-test
+   ❶(is (= (+ 0 0)  (nd/size (nd/arange ndm 0 0))))
+    (is (= 100
+           (nd/size (nd/arange ndm 0 100))))))
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org8fd5fe1" class="outline-2">
+<h2 id="org8fd5fe1"><span class="section-number-2">9.</span> Summary</h2>
+<div class="outline-text-2" id="text-9">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">Map</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Navigation</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>C-M-d</code></td>
+<td class="org-left"><code>down-list</code></td>
+<td class="org-left">Move forward down one level of parentheses.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-M-u</code></td>
+<td class="org-left"><code>backward-up-list</code></td>
+<td class="org-left">Move backward out of one level of parentheses.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-M-f</code></td>
+<td class="org-left"><code>forward-sexp</code></td>
+<td class="org-left">Move forward across one balanced expression (sexp).</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-forward-sexp</code></td>
+<td class="org-left">Same as above, will forward up.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-M-b</code></td>
+<td class="org-left"><code>backward-sexp</code></td>
+<td class="org-left">Move backward across one balanced expression (sexp).</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-backward-sexp</code></td>
+<td class="org-left">Same as above, will backward up.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-M-n</code></td>
+<td class="org-left"><code>forward-list</code></td>
+<td class="org-left">Move forward across one balanced group of parentheses.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-M-p</code></td>
+<td class="org-left"><code>backward-list</code></td>
+<td class="org-left">Move backward across one balanced group of parentheses.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-M-a</code></td>
+<td class="org-left"><code>beginning-of-defun</code></td>
+<td class="org-left">Move backward to the beginning of a defun.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-M-e</code></td>
+<td class="org-left"><code>end-of-defun</code></td>
+<td class="org-left">Move forward to next end of defun.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Kill and Yank</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>C-M-k</code></td>
+<td class="org-left"><code>kill-sexp</code></td>
+<td class="org-left">Kill the sexp (balanced expression) following point.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>M-k</code></td>
+<td class="org-left"><code>sp-kill-sexp</code></td>
+<td class="org-left">Kill the balanced expression following point.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-k</code></td>
+<td class="org-left"><code>sp-kill-hybrid-sexp</code></td>
+<td class="org-left">Kill a line as if with ‘kill-line’, but respecting delimiters.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>ESC C-&lt;backspace&gt;</code></td>
+<td class="org-left"><code>backward-kill-sexp</code></td>
+<td class="org-left">Kill the sexp (balanced expression) preceding point.</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-backward-kill-sexp</code></td>
+<td class="org-left">Kill the balanced expression preceding point.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-M-&lt;backspace&gt;</code></td>
+<td class="org-left"><code>sp-backward-copy-sexp</code></td>
+<td class="org-left">Copy the previous ARG expressions to the kill-ring.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-M-w</code></td>
+<td class="org-left"><code>sp-copy-sexp</code></td>
+<td class="org-left">Copy the following ARG expressions to the kill-ring.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Slurp and Barf</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left"><code>C-&lt;right&gt;</code></td>
+<td class="org-left"><code>sp-forward-slurp-sexp</code></td>
+<td class="org-left">Add following sexp by moving the closing delimiter.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-&lt;left&gt;</code></td>
+<td class="org-left"><code>sp-forward-barf-sexp</code></td>
+<td class="org-left">Remove the last sexp by moving the closing delimiter.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>M-&lt;left&gt;</code></td>
+<td class="org-left"><code>sp-backward-slurp-sexp</code></td>
+<td class="org-left">Add preceding sexp  by moving the opening delimiter.</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>M-&lt;right&gt;</code></td>
+<td class="org-left"><code>sp-backward-barf-sexp</code></td>
+<td class="org-left">Remove the first sexp by moving the opening delimiter.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Wrap and Unwrap</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-wrap-arround</code></td>
+<td class="org-left">Wrap region with <code>()</code></td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-wrap-curly</code></td>
+<td class="org-left">Wrap region with <code>{}</code></td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-wrap-square</code></td>
+<td class="org-left">Wrap region with <code>[]</code></td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-unwrap-sexp</code></td>
+<td class="org-left">remove parenthesis of next expression</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-backward-unwrap-sexp</code></td>
+<td class="org-left">Remove parenthesis of previous expression</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Splice, Split, Join</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-splice-sexp</code></td>
+<td class="org-left">Remove delimiters</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-splice-sexp-killing-around</code></td>
+<td class="org-left">Remove delimiters and keep next expression</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>M-&lt;down&gt;</code></td>
+<td class="org-left"><code>sp-splice-sexp-killing-forward</code></td>
+<td class="org-left">Remove delimiters and kill following expressions</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>M-&lt;up&gt;</code></td>
+<td class="org-left"><code>sp-splice-sexp-killing-backward</code></td>
+<td class="org-left">Remove delimiters and kill proceeding expressions</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-split-sexp</code></td>
+<td class="org-left">Add <code>)</code> and <code>(</code></td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-join-sexp</code></td>
+<td class="org-left">Remove <code>)</code> and <code>(</code></td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><code>sp-convolute-sexp</code></td>
+<td class="org-left">Put proceeding sexp outside of outer proceeding sexp</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
