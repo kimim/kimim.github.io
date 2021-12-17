@@ -1,7 +1,7 @@
 #+BEGIN_EXPORT html
 ---
 layout: post
-title: 聊一聊 OPC UA
+title: 聊一聊OPC UA
 categories: [technology]
 tags: [OPCUA, industry]
 ---
