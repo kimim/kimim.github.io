@@ -1,0 +1,47 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：ultimatum
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+平时看资料的时候，遇到一些不认识的单词，我会随手做个记录。感谢 Emacs
+的 [[https://github.com/xuchunyang/youdao-dictionary.el][youdao-disctionary]] 插件和 org-mode capture 功能，我可以快速查到单词，
+然后用快捷键 ~Ctrl-c c~ 记录。
+
+最近看一些工业控制传感器采集数据之类的资料，看到几个 =-um= 结尾的词：
+- supremum 上确界
+- infimum 下确界
+- maximum 最大值
+- minimum 最小值
+- optimum 最优值
+- ultimatum 最后通牒
+
+前几个在数学书上会出现比较多吧。为了展示它们的区别，我特意绘制如下示意
+图：
+
+
+#+begin_example
+     infimum/minumum        supremum/maximum
+----------[---------------------]------------------>
+     infimum                supremum/maximum
+----------(---------------------]------------------>
+     infimum/minumum        supremum
+----------[---------------------)------------------>
+     infimum                supremum
+----------(---------------------)------------------>
+#+end_example
+
+从上图可以看出，在包含两个端点的情况下，最小值等于下确界，最大值等于上确界。而在不包含两个端点的情况下，就不存在最大值和最小值，只有上确界和下确界。
+
+最后那个单词 ultimatum 最后通牒的意思。似乎和数学就没什么关系了。放在
+一起只是因为长得跟签名的小兄弟有点像罢了。
+
+例句：
+- An *ultimatum* is a warning to someone that unless they act in a
+  particular way, action will be taken against them. *最后通牒* 用来警告
+  某些人，如果不按照某种行动，就会对他们采取行动。
+- They delivered an *ultimatum* to that country.他们给那个国家发出了 *最
+  后通牒* 。
