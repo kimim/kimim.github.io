@@ -1,0 +1,29 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：to act in concert
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+最近调研光伏侧储能项目，碰到这句话：Sonnen has long touted the
+advantages of connecting large numbers of residential systems together
+*to act in concert* to benefit both the grid and individual
+users. Sonnen 储能公司一直以来就自称是能够通过协同大量住宅系统，为电网
+和用户创造价值。
+
+这里，用 *to act in concert* 是齐心协力一致行动的意思。
+
+另外，在投资领域，也有一致行动的说法： *Acting in concert* is a slang
+term for when parties undertake identical investment actions to
+achieve the same goal. Acting in concert requires the cooperation of
+people or corporations to make the same transactions based on a
+previous arrangement.  *一致行动* 指的是多个投资方，采取一致的投资操作，
+实现共同目的。
+
+在音乐中，协奏曲 concerto 源自意大利语 concertare 意思是协调一致。此外，
+还有一个词 Symphony 交响乐，是包含多个乐章的大型管弦乐曲。单词来自希腊
+语 symphōnia，表示一起响的意思。syn 表示同步、phōnē 表示声音，合在一起
+就是同时发声咯。
+
