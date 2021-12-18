@@ -24,11 +24,11 @@ tags: [English]
 
 
 #+begin_example
-     infimum/minumum        supremum/maximum
+     infimum/minimum        supremum/maximum
 ----------[---------------------]------------------>
      infimum                supremum/maximum
 ----------(---------------------]------------------>
-     infimum/minumum        supremum
+     infimum/minimum        supremum
 ----------[---------------------)------------------>
      infimum                supremum
 ----------(---------------------)------------------>
