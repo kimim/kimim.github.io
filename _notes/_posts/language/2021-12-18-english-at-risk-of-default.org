@@ -12,13 +12,25 @@ of default.
 
 非金融行业的，看到 default risk 就只能猜测了。原来 default risk 是违约
 风险的意思，也叫 default probability，就是借贷人无法偿还债务的“默认”的
-可能性。德语是 Ausfallrisko，损失风险：Gefahr eines Verlustes, weil
-Schuldner teilweise oder vollständig ihren Zahlungen nicht nachkommen
-oder weil Sachwerte und Wertpapiere an Wert verlieren oder wertlos
-werden.
+可能性。违约风险指企业、债券或个人发僧违约或倒闭的风险，即无支付能力。
+
+百度百科[fn:1]说信用风险（Credit Risk），是指交易对方不履行到期债务的
+风险。信用风险又称违约风险，是指借款人、证券发行人或交易对方因种种原因，
+不愿或无力履行合同条件而构成违约，致使银行、投资者或交易对方遭受损失的
+可能性。由于结算方式的不同，场内衍生交易和场外衍生交易各自所涉的信用风
+险也有所不同。
+
+但是，似乎信用风险比违约风险范围要更大一些……
+
+Default risk在德语里是 Ausfallrisko，损失风险：Gefahr eines Verlustes,
+weil Schuldner teilweise oder vollständig ihren Zahlungen nicht
+nachkommen oder weil Sachwerte und Wertpapiere an Wert verlieren oder
+wertlos werden.
 
 在进行投资的时候，企业债务偿还能力的一个很重要的指标就是自由现金流
 （free flow cash）。如果一个公司的现金流总是很低，则标明该公司有很高的
 违约风险（default risk）。
 
+* Footnotes
 
+[fn:1] https://baike.baidu.com/item/%E4%BF%A1%E7%94%A8%E9%A3%8E%E9%99%A9/2467990
