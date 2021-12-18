@@ -1,0 +1,139 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines P.1 直接地用代码表达编程设计理念
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+Github上有个 [[https://github.com/isocpp/CppCoreGuidelines][C++ 核心指南]]。C++ 创始人 [[https://github.com/isocpp/CppCoreGuidelines/commits?author=BjarneStroustrup][Bjarne Stroustrup]] 亲自参与维护。
+应该值得好好学习。
+
+这个指南根据不同主题，分为多个章节，比如P代表编程哲学，I代表接口设计，
+F表示函数，C表示类与类层级，R表示资源管理，Per表示性能，CP表示并发与并
+行计算，Con表示常量与不变性等。
+
+在每个章节下，又用阿拉伯数字对规则进行进行标注。比如 [[https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#p1-express-ideas-directly-in-code][P.1 Express ideas
+directly in code]] 这个章节讲的是如何直接地用代码表达编程设计理念。
+
+每一个规则的阐述包含：
+- Reasons 原理
+- Examples 示例
+- Alternatives 替代方案
+- Exceptions 例外
+- Enforcement 改进方案
+- See also 指南中的其他相关规则
+- Notes 备注说明
+- Discussion 扩展讨论
+
+
+接下来，学习学习第一个规则：P.1 Express ideas directly in code 直接用
+代码表达设计想法。
+
+编译器直接处理代码，程序员也总是直接读代码。所以尽量直接在代码中传达设
+计理念。
+
+以下代码中，第一个函数声明表达更清晰： ~month~ 函数返回 ~Month~ 对象，并且
+是一个 ~const~ 成员函数，所以 ~month~ 不改变 ~Date~ 成员变量，也不能调用类中
+非 ~const~ 的成员函数。
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
+class Date {
+public:
+    Month month() const;
+    int month();
+};
+#+end_src
+
+相比较，第二个函数声明，表达的信息和设计理念就少很多。使用这个函数的程
+序员得猜测怎么使用它，容易造成潜在的 bug。
+
+第二个坏例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
+void f(vector<string>& v)
+{
+    string val;
+    cin >> val;
+    // ...
+    int index = -1;                    // bad, plus should use gsl::index
+    for (int i = 0; i < v.size(); ++i) {
+        if (v[i] == val) {
+            index = i;
+            break;
+        }
+    }
+    // ...
+}
+#+end_src
+
+~std::find~ 更直接表达程序的目的。
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void f(vector<string>& v)
+{
+    string val;
+    cin >> val;
+    // ...
+    auto p = find(begin(v), end(v), val);  // better
+    // ...
+}
+#+end_src
+
+C++ 程序员要熟悉标准库和[[https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#S-gsl][GSL库]]。可复用的库抽象了常用的功能，经过验证、
+性能保障、不易出错、有助理解。
+
+以下例子中，最后一个使用了 C++ 的自定义后缀。可以用来表示不同的物理量：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
+change_speed(double s);   // bad: what does s signify?
+change_speed(2.3);
+
+change_speed(Speed s);    // better: the meaning of s is specified
+change_speed(2.3);        // error: no unit
+change_speed(23_m / 10s); // meters per second
+#+end_src
+
+以下程序定义了 =_m= 和 =_s= 后缀，这样就可以很直观的表达速度是如何计算出来
+的，即：米/秒。
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> :eval no-export
+long double operator""_m(long double x) {return x;}
+long double operator""_s(long double x) {return x;}
+int main()
+{
+    auto speed = 23.1_m / 10.0_s;
+    cout << speed << endl;
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 2.31
+
+需要注意的是，根据 C++11 标准，只有以下数据类型才是合法的 =operator""_xx= 参数：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
+char const *
+unsigned long long
+long double
+char const *, size_t
+wchar_t const *, size_t
+char16_t const *, size_t
+char32_t const *, size_t    
+#+end_src
+
+所以，其实还可以这样定义后缀，用来返回字符串的 =size= ：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> :eval no-export
+size_t operator""_sz(char const *str, size_t sz) {return sz;}
+int main()
+{
+    cout << "size of \'hello world\' is: " << "hello world"_sz << endl;
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: size of 'hello world' is: 11

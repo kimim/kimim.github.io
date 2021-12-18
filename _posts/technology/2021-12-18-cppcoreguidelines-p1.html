@@ -1,0 +1,170 @@
+---
+layout: post
+title: CppCoreGuidelines P.1 直接地用代码表达编程设计理念
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+Github上有个 <a href="https://github.com/isocpp/CppCoreGuidelines">C++ 核心指南</a>。C++ 创始人 <a href="https://github.com/isocpp/CppCoreGuidelines/commits?author=BjarneStroustrup">Bjarne Stroustrup</a> 亲自参与维护。应该值得好好学习。
+</p>
+
+<p>
+这个指南根据不同主题，分为多个章节，比如P代表编程哲学，I代表接口设计，
+F表示函数，C表示类与类层级，R表示资源管理，Per表示性能，CP表示并发与并行计算，Con表示常量与不变性等。
+</p>
+
+<p>
+在每个章节下，又用阿拉伯数字对规则进行进行标注。比如 <a href="https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#p1-express-ideas-directly-in-code">P.1 Express ideas
+directly in code</a> 这个章节讲的是如何直接地用代码表达编程设计理念。
+</p>
+
+<p>
+每一个规则的阐述包含：
+</p>
+<ul class="org-ul">
+<li>Reasons 原理</li>
+<li>Examples 示例</li>
+<li>Alternatives 替代方案</li>
+<li>Exceptions 例外</li>
+<li>Enforcement 改进方案</li>
+<li>See also 指南中的其他相关规则</li>
+<li>Notes 备注说明</li>
+<li>Discussion 扩展讨论</li>
+</ul>
+
+
+<p>
+接下来，学习学习第一个规则：P.1 Express ideas directly in code 直接用代码表达设计想法。
+</p>
+
+<p>
+编译器直接处理代码，程序员也总是直接读代码。所以尽量直接在代码中传达设计理念。
+</p>
+
+<p>
+以下代码中，第一个函数声明表达更清晰： <code>month</code> 函数返回 <code>Month</code> 对象，并且是一个 <code>const</code> 成员函数，所以 <code>month</code> 不改变 <code>Date</code> 成员变量，也不能调用类中非 <code>const</code> 的成员函数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #0000ff; font-weight: bold;">month</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">month</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+相比较，第二个函数声明，表达的信息和设计理念就少很多。使用这个函数的程序员得猜测怎么使用它，容易造成潜在的 bug。
+</p>
+
+<p>
+第二个坏例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">val</span>;
+    cin &gt;&gt; val;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">index</span> = -1;                    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, plus should use gsl::index</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; v.size<span style="color: #909183;">()</span>; ++i<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>v<span style="color: #709870;">[</span>i<span style="color: #709870;">]</span> == val<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            index = i;
+            <span style="color: #7F0055; font-weight: bold;">break</span>;
+        <span style="color: #909183;">}</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+<code>std::find</code> 更直接表达程序的目的。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">val</span>;
+    cin &gt;&gt; val;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = find<span style="color: #7388d6;">(</span>begin<span style="color: #909183;">(</span>v<span style="color: #909183;">)</span>, end<span style="color: #909183;">(</span>v<span style="color: #909183;">)</span>, val<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+C++ 程序员要熟悉标准库和<a href="https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#S-gsl">GSL库</a>。可复用的库抽象了常用的功能，经过验证、性能保障、不易出错、有助理解。
+</p>
+
+<p>
+以下例子中，最后一个使用了 C++ 的自定义后缀。可以用来表示不同的物理量：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">change_speed<span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: what does s signify?</span>
+change_speed<span style="color: #707183;">(</span>2.3<span style="color: #707183;">)</span>;
+
+change_speed<span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Speed</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better: the meaning of s is specified</span>
+change_speed<span style="color: #707183;">(</span>2.3<span style="color: #707183;">)</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: no unit</span>
+change_speed<span style="color: #707183;">(</span>23_m / 10s<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">meters per second</span>
+</pre>
+</div>
+
+<p>
+以下程序定义了 <code>_m</code> 和 <code>_s</code> 后缀，这样就可以很直观的表达速度是如何计算出来的，即：米/秒。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #2A00FF;">""</span>_m<span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">return</span> x;<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #2A00FF;">""</span>_s<span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">return</span> x;<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">speed</span> = 23.1_m / 10.0_s;
+    cout &lt;&lt; speed &lt;&lt; endl;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+2.31
+</pre>
+
+
+<p>
+需要注意的是，根据 C++11 标准，只有以下数据类型才是合法的 <code>operator""_xx</code> 参数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #7F0055; font-weight: bold;">const</span> *
+<span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">long</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #7F0055; font-weight: bold;">const</span> *, <span style="color: #000000;">size_t</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">wchar_t</span> <span style="color: #7F0055; font-weight: bold;">const</span> *, <span style="color: #000000;">size_t</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">char16_t</span> <span style="color: #7F0055; font-weight: bold;">const</span> *, <span style="color: #000000;">size_t</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">char32_t</span> <span style="color: #7F0055; font-weight: bold;">const</span> *, <span style="color: #000000;">size_t</span>    
+</pre>
+</div>
+
+<p>
+所以，其实还可以这样定义后缀，用来返回字符串的 <code>size</code> ：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">size_t <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #2A00FF;">""</span>_sz<span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #7F0055; font-weight: bold;">const</span> *<span style="color: #000000;">str</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #000000;">sz</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">return</span> sz;<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    cout &lt;&lt; <span style="color: #2A00FF;">"size of \'hello world\' is: "</span> &lt;&lt; <span style="color: #2A00FF;">"hello world"</span>_sz &lt;&lt; endl;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+size of 'hello world' is: 11
+</pre>
