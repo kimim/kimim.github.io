@@ -1,0 +1,32 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：oestrus
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+前几天看了几篇农业物联网的论文，真是打开眼界。比如说猪这个动物，其实是
+很爱卫生的，生活环境不清洁就会心情不好。还有动物发情期，也会情绪暴躁、
+体温升高等。
+
+传统农业，为了促进动物繁殖，人们会通过观察，确定动物的繁殖期
+Historically, oestrus detection in cattle has been carried out by a
+skilled observer, the farmer or stockman who look for visual signs of
+*oestrus*.
+
+前面提到过，动物发情期的行为习惯、身体体温都会有一些变化，所以物联网技
+术就有发挥的空间了：it is widely recognised that *oestrus* detection is
+one area where a technology may have a role to play.
+
+这个奇怪的单词 *oestrus* 就是（雌性动物）发情期的意思，也是牛虻的意思。
+有可能，牛被牛虻叮咬的时候，就会脾气暴躁，而脾气暴躁是牛发情期的一个表
+现。所以牛虻就和牛的发情期关联到了一个单词了。
+
+因为这些行为体征的变化，一般会在牛的耳朵上戴一个传感器，可以检测牛的运
+动频率、运动轨迹和身体温度变化。一方面监控它们的健康情况，另一方面也能
+及时监测牛的发情期，从而及时配种，促进繁殖。
+
+此外，农场里，除了牛虻oestrus，还有horsefly，gadfly，warble fly，
+botfly等各种fly。
