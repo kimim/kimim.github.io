@@ -1,0 +1,35 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：flounder
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+英语里，同样一个词，名词和动词怎么能差别这么大呢?
+
+作为一个合格的架构师，我在持续不断的学习，最近看一本书《Documenting
+Software Architectures: Views and Beyond》，在提到架构文档的重要性时，
+作者 Felix Bachmann 写道：Even with a superb architecture, if it is
+not well understood and well communicated -- in other words, well
+documented -- the project is likely to *flounder*. 
+
+那么，问题来了， flounder 什么意思呢？作为名词和动词，flounder 分别是：
+- n. 比目鱼；偏口鱼
+- v. 不知所措；挠头；支吾；困难重重
+
+所以前面这句话里，应该采取动词的意思，即困难重重。那么整句话就翻译为：
+哪怕是最杰出的架构设计，如果没有理解好、沟通好、没有形成好的文档，开发
+项目可能就会困难重重了。
+
+难道是因为比目鱼长得比较扁，在大海里生活经常不知所措、困难重重？
+
+也有可能，flounder 是从 founder 笔误而来，那么 founder 什么意思呢？它
+作为名词和动词，也有两个很不一样的意思：
+- n. 创始人；（方正集团）
+- v. 沉没；破产；失败
+
+最近听说方正集团破产重整了，难道是因为名字没取好的原因？
+
+英语里，同样一个词，名词和动词差别真大啊。
