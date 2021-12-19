@@ -1,0 +1,132 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: OPC UA 的发展历史
+categories: [technology]
+tags: [industry, OPCUA]
+---
+#+END_EXPORT
+
+之前，我写了[[http://kimi.im/2021-12-18-opcua-intro][OPC UA 的简介]]。接下来，看看 OPC 的发展历史。
+
+* 1990年代
+- 因为工业领域大部分都在用微软操作系统，因此自动化厂商在其产品中使用微
+  软的 COM 和 DCOM 技术提供数据访问功能
+* 1995年
+- 费希尔-罗斯蒙特（Fisher-Rosemount）、Intellution、奥普图（Opto 22）、
+  罗克韦尔软件等多家自动化厂商组成工作小组，计划基于微软 COM 和 DCOM 开发一套数据访问标准，称之为 OPC，即 OLE for Process Control 的缩写。OLE 则是微软 Object Linking & Embedding 的缩写。
+
+费希尔-罗斯蒙特是 1992 年由费希尔（Fisher）和罗斯蒙特（Rosemount）两家自动化企业合并而来。最终，又都并入到了艾默生（Emerson）。
+* 1996年
+- 工作组发布了 1.0 版本的 OPC DA 标准规范。
+- 其他自动化厂商也开始使用 OPC DA
+- 1996 年 4 月 22 日成立了 OPC 基金会（OPC Foundation）进行合规、集成、
+  认证、测试等标准化工作
+* 1998年
+- OPC 基金开始把标准规范转成 web 服务
+* 1999年
+- 发布 OPC 报警与事件规范（OPC Alarms & Events, AE）
+* 2001年
+- 发布 OPC 历史数据访问规范（OPC Historical Data Access, HDA)
+- 发布批处理（Batch）和安全（Security）规范
+* 2003年
+- 发布 OPC 复杂数据（Complex Data）、数据交换（Data eXchange, DX）、XML-DA 规范
+- 发布 OPC UA 13 分册
+- 第一次 OPC UA 工作组会议在 11 月 3-7 日召开
+- 重新命名之前的 OPC 规范为经典 OPC（Classic OPC, OPC Classic）
+* 2004年
+- 发布 OPC 命令规范（OPC Commands）
+* 2006年
+- 2006 年 7 月 28 日，发布 OPC UA 1.0 版本
+* 2007年
+- 推出 OPC 认证项目和测试实验室
+- 自动化厂商开始提供基于 OPC UA 产品
+* 2009年
+- 发布 OPC UA 1.1 版本
+- 发布 OPC UA 分析设备伙伴规范（Analyzer Devices, ADI）
+* 2010年
+- 发布第一款嵌入式 OPC UA 设备
+- 发布 OPC UA IEC 61131 伙伴协议
+* 2012年
+- 发布 OPC UA 的国际标准 IEC 62541 标准
+* 2013年
+- 发布 OPC UA 1.02 版本
+- 发布 OPC UA ISA-95 伙伴规范
+- 发布 OPC UA 设备规范 1.01 版
+- 来自中国、欧洲、日本、北美的 OPC 基金会成员超过 480 个
+* 2015年
+- 发布 OPC UA 1.03 版本
+- 发布 IEC 62541:2015 版本
+- 工业 4.0 参考架构模型（RAMI4.0）将 OPC UA 列为通信层
+- VDMA 计划基于 OPC UA 开发工厂自动化的标准信息模型
+* 2016年
+- 欧洲 OPC 实验室创立
+- 发布 OPC UA AutoID 伙伴规范
+- 发布 基于 OPC UA 的 PLC 控制器间通信功能块
+- 来自中国、欧洲、日本、北美的 OPC 基金会成员达到 490 个
+* 2017年
+- 发布 OPC UA MDIS 伙伴协议，该协议用于石油天然气行业的深海生产控制系
+  统通信
+- 发布 OPC UA CNC 伙伴协议，用于与计算机辅助数控系统通信
+- 发布 OPC UA FDI 伙伴协议，用于与现场设备进行通信
+- VDMA 发布基于 OPC UA 的工业 4.0 通信指南
+* 2018年
+- 发布 OPC UA 1.04 版本
+- 发布了 18 个伙伴协议，包括能源自动化行业（IEC 61850）、烟草行业、
+  PackML包装行业、AutomationML
+- 成立了 20 个工作组开发伙伴协议
+- 来自中国、欧洲、日本、北美的 OPC 基金会成员达到 636 个
+* 2019年
+- 发布 OPC 10000-100 设备伙伴协议 1.02 版本
+- 发布 OPC 40010-1 机器人伙伴协议
+- 发布 OPC 30070-1 MTConnect 伙伴协议
+- 发布 OPC 30200 商业厨房设备伙伴协议
+- 发布 OPC 40100-1 机器视觉伙伴协议
+- 由 ODVA 牵头成立 CIP 设备工作组
+- 由 VDMA 牵头成立矿机设备工作组
+- 由 VDMA Food 牵头成立 Weihenstephan 标准工作组
+- 由 ISA 100 无线规范学院（ISA 100 Wireless Compliance Institute, WCI）
+  牵头成立 ISA 100 工作组
+- 由 VDMA 牵头成立泵机真空泵机工作组
+- 由 VDMA 牵头成立塑料橡胶机器工作组
+- 由 VDMA 牵头成立表面处理技术工作组
+- 由 VDMA 牵头成立木材处理机器工作组
+- 成立 OPC Hub India、新加坡/ASEAN、FranceOPC基金会成员
+- 达到 737 个会员
+* 2020年
+- 发布 OPC 30000 - IEC 61131-3 PLCOpen 1.2 版本
+- 发布 OPC 30260 - OpenSCS 伙伴协议
+- 发布 OPC 30050 - PackML 伙伴协议
+- 增加 OPC UA 椭圆曲线加密算法（Elliptic Curve Cryptography, ECC）
+- 发布 OPC 40501-2 机器工具基础模型
+- 发布 OPC 40001-1 机床基础构建块
+- 发布 OPC 10000-200 工业自动化伙伴协议
+- 发布 OPC 30010 AutoID 伙伴协议 1.01.07 版本
+- 发布 OPC 40200 称重技术伙伴协议
+- 发布 OPC 30081 过程自动化 PADIM 伙伴协议
+- 由 VDMA 牵头成立升降机起重机工作组
+- 由 VDMA 牵头成立长度测量系统（LMS）工作组
+- 由 OPC 基金会牵头成立 ISA-95 第2版本工作组
+- 由 VDMA 牵头成立织布纺纱测试设备（FYTD）工作组
+- 由 VDMA 牵头成立过程空气提取过滤系统（PAEFS）工作组
+- 由 VDMA 牵头成立压缩空气系统（CAS）工作组
+- 由 CESMII 牵头成立Cloud Library工作组
+- 由 Spectaris 牵头成立实验室和分析设备标准（LADS）工作组
+- 由 VDMA 牵头成立机床通用模型工作组
+- 2020 年底 OPC 基金会成员达到 803 家
+* 2021年
+- 发布 OPC 40001-1 机床基础构建块 1.01 版本
+- 发布 OPC 30131 PROFIenergy 伙伴协议
+- 发布 OPC 40084-12 压模压光机伙伴协议
+- 发布 OPC 10000-100 设备伙伴协议 1.03 版本
+- 发布 OPC 11031-4 ISA-95 排产伙伴协议
+- 发布 OPC 30261 OpenSCS 排产伙伴协议
+- 发布 OPC 40223 泵机真空泵机伙伴协议
+- 发布 OPC 40083 塑料橡胶通用类型伙伴协议
+- 发布 OPC 30270 设备管理壳（Asset Administration Shell, AAS）伙伴协议
+- 发布 OPC 40250-1 压缩空气系统伙伴协议
+- 发布 OPC 10000-200 工业自动化伙伴协议 1.01 版本
+- 发布 OPC 40600 Weihenstephan 标准伙伴协议
+- 成立 M2X 内部物流通信协议工作组
+- 成立云联邦工作组
+- 2021年8月，OPC 基金会成员达到 840 家
