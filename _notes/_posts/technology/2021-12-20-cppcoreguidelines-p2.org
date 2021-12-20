@@ -1,7 +1,7 @@
 #+BEGIN_EXPORT html
 ---
 layout: post
-title: CppCoreGuidelines P.2 用 ISO 标准 C++ 写代码
+title: CppCoreGuidelines P.2 用 ISO C++ 标准写代码
 categories: [technology]
 tags: [CppCoreGuidelines]
 ---
@@ -9,7 +9,7 @@ tags: [CppCoreGuidelines]
 
 [[http://kimi.im/2021-12-18-cppcoreguidelines-p1][P.1 直接地用代码表达编程设计理念]]
 
-这条指南是说尽量按照 C++ ISO 国际标准写代码。
+这条指南是说尽量按照 ISO C++ 国际标准写代码。
 
 注意事项：
 - 避免使用编译器特有的扩展功能。不同编译器针对不同扩展功能会有差别，就
