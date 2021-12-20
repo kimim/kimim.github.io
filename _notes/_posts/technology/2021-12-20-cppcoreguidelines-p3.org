@@ -1,0 +1,128 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines P.3 明确地表达程序意图
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+- [[http://kimi.im/2021-12-18-cppcoreguidelines-p1][P.1 直接地用代码表达编程设计理念]]
+- [[http://kimi.im/2021-12-20-cppcoreguidelines-p2][P.2 用 ISO C++ 标准写代码]]
+
+  
+如果要读代码注释才能理解代码意图，那可能就意味着代码写的不够清晰，代码
+意图没有明确地表达了。
+
+例如，以下例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
+vector<int> v = {1, 2, 3, 4, 5};
+gsl::index i = 0;
+while (i < v.size()) {
+    cout << v[i] << " ";
+    i++;
+}
+#+end_src
+
+#+RESULTS:
+: 1 2 3 4 5 
+
+这里，我们的意图其实就是要循环一遍 ~v~ ，把其元素的值打印出来。然而，别
+人可能无法一眼看出来代码要做的事情。并且，代码里还多余的定义了一个索引
+变量 ~i~ ，这个变量的有效范围还超出了循环体。
+
+
+倘若把 ~while~ 循环改成以下 ~for~ 循环，就比较直截了当了：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
+vector<int> v = {1, 2, 3, 4, 5};
+for (const auto& x : v) {
+    cout << x << " ";
+}
+#+end_src
+
+#+RESULTS:
+: 1 2 3 4 5 
+
+并且，还用了 ~const~ 修饰 ~x~ ，表示循环内不会修改 ~x~ 的值。如果循环中修改了 ~x~ 的值，编译器会报错。
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
+vector<int> v = {1, 2, 3, 4, 5};
+for (const auto& x : v) {
+    cout << ++x << " ";
+}
+#+end_src
+
+#+RESULTS:
+#+begin_example
+C-src-eO7Jst.cpp: In function 'int main()':
+C-src-eO7Jst.cpp:14:15: error: increment of read-only reference 'x'
+   14 |     cout << ++x << " ";
+      |               ^
+#+end_example
+
+如果明确要在循环中修改 ~x~ ，那么可以去掉 ~const~ ：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
+vector<int> v = {1, 2, 3, 4, 5};
+for (auto& x : v) {
+    cout << ++x << " ";
+}
+#+end_src
+
+#+RESULTS:
+: 2 3 4 5 6 
+
+也可以用 ~std::ranges::for_each~ 更清晰的表达程序意图：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
+vector<int> v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+std::ranges::for_each(v, [](const auto &x) { cout << x << " "; });
+#+end_src
+
+#+RESULTS:
+: 1 2 3 4 5 6 7 8 9 0 
+
+需要注意的是，在 ~algorithm~ 中，也有一个 ~std::for_each~ ，它的前两个参数
+是 ~InputIterator~ ：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
+vector<int> v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+for_each(begin(v), end(v), [](int x) { cout << x << " "; });
+#+end_src
+
+#+RESULTS:
+: 1 2 3 4 5 6 7 8 9 0 
+
+如果，循环访问的时候，不用按顺序，可以添加 ~execute::par~ 表示并行访问。
+因为 ~v~ 的元素不够多，所以看不出什么变化：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> <execution> :eval no-export
+vector<int> v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+for_each(execution::par, v.begin(), v.end(), [](int x) { cout << x << " "; });
+#+end_src
+
+#+RESULTS:
+: 1 2 3 4 5 6 7 8 9 0 
+
+如果要表示在两点间画线，以下两种写法里，第二种就比较明确：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+draw_line(int, int, int, int);  // obscure
+draw_line(Point, Point);        // clearer
+#+end_src
+
+
+一些建议：
+- 熟悉掌握指南支持的程序库（guidelines support library, gsl）
+- 熟悉了解 ISO C++ 标准库
+- 其他项目中使用的基础库
+
+
+一些需要注意的地方：
+- 简单的 for 循环 vs. 带范围的 ~for_each~
+- ~f(T*, int)~ 接口 vs. ~f(span<T>)~ 接口
+- 循环变量超出循环体范围
+- naked ~new~ and ~delete~ （没看懂……）
+- 有过多内置类型的函数参数
