@@ -1,0 +1,177 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines P.4 理想情况下，程序应该要静态类型安全
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+- [[http://kimi.im/2021-12-18-cppcoreguidelines-p1][P.1 直接地用代码表达编程设计理念]]
+- [[http://kimi.im/2021-12-20-cppcoreguidelines-p2][P.2 用 ISO C++ 标准写代码]]
+- [[http://kimi.im/2021-12-20-cppcoreguidelines-p3][P.3 明确地表达程序意图]]
+
+* 注意事项
+理想情况下，写程序要做到完全的静态（编译期）类型安全。可是，实际开发工
+作中，也避免不了，比如以下这些情况：
+- 联合体（union）：使用 C++17 的 variant
+- 类型转换（cast）： 减少使用，多用模板
+- 数组衰变（array decay）：使用 GSL 的 span
+- 范围错误（range error）：使用 span
+- 收缩转换（narrowing conversion）：减少使用，使用 GSL 中的 ~narrow_cast~
+
+* 示例
+** 联合体
+
+~variant~ 是 C++17 增加的一个功能，用以作为 ~union~ 的安全替代。它可以保存
+模板参数列表中的某一类型的值。
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> <variant> :eval no-export
+//#include <variant>
+variant<int, double, string> var1{1};
+cout << "index is: " << var1.index() << endl;
+cout << "var1 is int now: " << get<0>(var1) << endl;
+var1 = 1.2;
+cout << "index is: " << var1.index() << endl;
+cout << "var1 is double now: " << get<1>(var1) << endl;
+var1 = "kimi.im";
+cout << "index is: " << var1.index() << endl;
+cout << "var1 is string now: " << get<2>(var1) << endl;
+#+end_src
+
+#+RESULTS:
+: index is: 0
+: var1 is int now: 1
+: index is: 1
+: var1 is double now: 1.2
+: index is: 2
+: var1 is string now: kimi.im
+
+
+** 数组衰变
+所谓的数组衰变是指在使用数组的过程中，数组元素类型和长度信息丢失的情况。
+比如当我们以指针或数值的形式传递数组参数给函数的时候，数组的长度信息就
+丢失了。
+
+举个例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void display_array_from_value(int *p) {
+   cout << "以数值形式传递的数组参数，计算的内存占用值为：";
+   cout << sizeof(p) << endl;
+}
+void display_array_from_pointer(int (*p)[10]) {
+   cout << "以指针形式传递的数组参数，计算的内存占用值为：";
+   cout << sizeof(p) << endl;
+}
+
+int main() {
+   int arr[10] = {1, 2, };
+   cout << "数组实际占用内存空间是：";
+   cout << sizeof(arr) << endl;
+   display_array_from_value(arr);
+   display_array_from_pointer(&arr);
+   return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 数组实际占用内存空间是：40
+: 以数值形式传递的数组参数，计算的内存占用值为：8
+: 以指针形式传递的数组参数，计算的内存占用值为：8
+
+为了避免数组衰变:
+- 可以以指针或数值传递数组参数的同时，传一个数组长度给函数，然后不用 ~sizeof~
+- 或者以引用形式传递数组参数
+- 使用 GSL 的 ~span~
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
+void display_array_from_value_with_size(int *p, size_t sz) {
+   cout << "参数传入的内存占用值：";
+   cout << sz << endl;
+}
+
+void display_array_from_reference(int (&p)[10]) {
+   cout << "以数值形式传递的数组参数，计算内存占用值为：";
+   cout << sizeof(p) << endl;
+}
+
+void display_array_from_span(gsl::span<int> p) {
+    for(const auto v: p) {
+        cout << v << " ";
+    }
+}
+
+int main() {
+   int arr[10] = {1, 2, };
+   cout << "数组实际占用内存空间是：";
+   cout << sizeof(arr) << endl;
+   display_array_from_value_with_size(arr, sizeof(arr));
+   display_array_from_reference(arr);
+   display_array_from_span(arr);
+   return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 数组实际占用内存空间是：40
+: 参数传入的内存占用值：40
+: 以数值形式传递的数组参数，计算内存占用值为：40
+: 1 2 0 0 0 0 0 0 0 0
+
+** 范围错误
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
+void access_out_of_range(int *p) {
+    cout << p[3] << endl;
+}
+void pass_span(gsl::span<int> p) {
+    cout << p[1] <<endl;
+}
+int main() {
+   int arr[2] = {1, 2};
+   access_out_of_range(arr);
+   pass_span(arr);
+   return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 454
+: 2
+
+** 收缩转换
+
+~gsl::narrow~ 在收缩转换出错的时候，会异常。
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
+int var1 = -42;
+cout << (unsigned int)var1 << endl;
+cout << static_cast<unsigned int>(var1) << endl;
+cout << gsl::narrow_cast<unsigned int>(var1) << endl;
+try {
+    cout << gsl::narrow<unsigned int>(var1) << endl;
+} catch (gsl::narrowing_error &e) {
+    cout << e.what() << endl;
+}
+
+char var2 = 10;
+cout << (unsigned int)var2 << endl;
+cout << static_cast<unsigned int>(var2) << endl;
+cout << gsl::narrow_cast<unsigned int>(var2) << endl;
+try {
+    cout << gsl::narrow<unsigned int>(var2) << endl;
+} catch (gsl::narrowing_error &e) {
+    cout << e.what() << endl;
+}
+#+end_src
+
+#+RESULTS:
+: 4294967254
+: 4294967254
+: 4294967254
+: std::exception
+: 10
+: 10
+: 10
+: 10
