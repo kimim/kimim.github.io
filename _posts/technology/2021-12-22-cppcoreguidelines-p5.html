@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 编译时检查比运行时检查好
+title: CppCoreGuidelines P.5 编译时检查比运行时检查好
 categories: [technology]
 tags: [CppCoreGuidelines]
 ---
@@ -47,7 +47,7 @@ cout &lt;&lt; bits;
 </pre>
 </div>
 
-<pre class="example" id="orgde46d46">
+<pre class="example" id="orgcab0a41">
 C-src-99WMqo.cpp:11:27: error: static assertion failed
    11 | static_assert(sizeof(int) &gt;= 8);    // do: compile-time check
       |               ~~~~~~~~~~~~^~~~
