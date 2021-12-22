@@ -1,0 +1,92 @@
+---
+layout: post
+title: 编译时检查比运行时检查好
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+C++ 核心指南说，能在编译时检查出错误，就不要在运行时检查，这样可以不用编写错误处理代码。代码的可读性会更好、性能会更佳。
+</p>
+
+<p>
+以下代码在运行时检查 <code>int</code> 类型的长度是不是小于 32 位：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">bits</span> = 0;         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't: avoidable code</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 1; i; i &lt;&lt;= 1<span style="color: #707183;">)</span>
+    ++bits;
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>bits &lt; 32<span style="color: #707183;">)</span>
+    cout &lt;&lt; <span style="color: #2A00FF;">"int too small\n"</span>;
+cout &lt;&lt; bits;
+</pre>
+</div>
+
+<pre class="example">
+32
+</pre>
+
+
+<p>
+因为数值溢出的行为是未定义的，因此以上实现是不可靠的。可以用
+<code>static_assert</code> 进行判断：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">static_assert<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span> &gt;= 4<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">do: compile-time check</span>
+</pre>
+</div>
+
+<p>
+如果改成 <code>&gt;=8</code> 静态判断就出错了：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">static_assert<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span> &gt;= 8<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">do: compile-time check</span>
+</pre>
+</div>
+
+<pre class="example" id="orgde46d46">
+C-src-99WMqo.cpp:11:27: error: static assertion failed
+   11 | static_assert(sizeof(int) &gt;= 8);    // do: compile-time check
+      |               ~~~~~~~~~~~~^~~~
+</pre>
+
+<p>
+更好的做法是使用 <code>int32_t</code> 类型。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #707183;">(</span>int32_t<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<pre class="example">
+4
+</pre>
+
+
+<p>
+另一个例子：如果设置第二个参数给 <code>read</code> 函数，一旦参数过大，就会导致数组越界访问了：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">read</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read max n integers into *p</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #707183;">[</span>100<span style="color: #707183;">]</span>;
+read<span style="color: #707183;">(</span>a, 1000<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, off the end</span>
+</pre>
+</div>
+
+<p>
+如果使用了 <code>gsl::span</code> ，编译器就会确定一次能放多少数据到数组了：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">read</span><span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">r</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read into the range of integers r</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #707183;">[</span>100<span style="color: #707183;">]</span>;
+read<span style="color: #707183;">(</span>a<span style="color: #707183;">)</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better: let the compiler figure out the number of elements</span>
+</pre>
+</div>

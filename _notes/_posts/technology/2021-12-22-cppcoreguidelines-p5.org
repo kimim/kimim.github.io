@@ -1,0 +1,74 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 编译时检查比运行时检查好
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+C++ 核心指南说，能在编译时检查出错误，就不要在运行时检查，这样可以不用
+编写错误处理代码。代码的可读性会更好、性能会更佳。
+
+以下代码在运行时检查 ~int~ 类型的长度是不是小于 32 位：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+int bits = 0;         // don't: avoidable code
+for (int i = 1; i; i <<= 1)
+    ++bits;
+if (bits < 32)
+    cout << "int too small\n";
+cout << bits;
+#+end_src
+
+#+RESULTS:
+: 32
+
+因为数值溢出的行为是未定义的，因此以上实现是不可靠的。可以用
+~static_assert~ 进行判断：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+static_assert(sizeof(int) >= 4);    // do: compile-time check
+#+end_src
+
+#+RESULTS:
+
+如果改成 ~>=8~ 静态判断就出错了：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+static_assert(sizeof(int) >= 8);    // do: compile-time check
+#+end_src
+
+#+RESULTS:
+#+begin_example
+C-src-99WMqo.cpp:11:27: error: static assertion failed
+   11 | static_assert(sizeof(int) >= 8);    // do: compile-time check
+      |               ~~~~~~~~~~~~^~~~
+#+end_example
+
+更好的做法是使用 ~int32_t~ 类型。
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+cout << sizeof(int32_t);
+#+end_src
+
+#+RESULTS:
+: 4
+
+另一个例子：如果设置第二个参数给 ~read~ 函数，一旦参数过大，就会导致数组越界访问了：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void read(int* p, int n);   // read max n integers into *p
+
+int a[100];
+read(a, 1000);    // bad, off the end
+#+end_src
+
+如果使用了 ~gsl::span~ ，编译器就会确定一次能放多少数据到数组了：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
+void read(gsl::span<int> r); // read into the range of integers r
+
+int a[100];
+read(a);        // better: let the compiler figure out the number of elements
+#+end_src
