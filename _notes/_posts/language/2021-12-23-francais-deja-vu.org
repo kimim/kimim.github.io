@@ -40,7 +40,7 @@ The term *jamais vu* is used by psychologists and neuroscientists to define a me
 在心理和神经科学里， *jamais vu* 是一种在熟悉的环境却感到陌生的心理感觉。
 一种短期的记忆消失现象。
 
-此外，还有一种 vu 叫做 *presque vu* ：
+此外，还有一种 vu 叫做 *presque vu* [fn:2]：
 
 #+begin_quote
 *Presque vu* literally means 'almost seen'. The way we experience it is
@@ -63,3 +63,5 @@ presque vu 就是当我们马上要想起来了，可是就是想不起来的时
 * Footnotes
 
 [fn:1] [[https://www.learning-mind.com/mysterious-phenomenon-of-jamais-vu-the-opposite-of-deja-vu/][Jamais Vu: the Mysterious Opposite of Déjà vu You’ve Probably Experienced]]
+
+[fn:2] [[https://www.learning-mind.com/presque-vu-mental-effect/][Presque Vu: An Annoying Mental Effect You Have Probably Experienced]]
