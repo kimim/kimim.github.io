@@ -1,0 +1,149 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines P.7 尽早捕获运行时错误
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+- [[http://kimi.im/2021-12-18-cppcoreguidelines-p1][P.1 直接地用代码表达编程设计理念]]
+- [[http://kimi.im/2021-12-20-cppcoreguidelines-p2][P.2 用 ISO C++ 标准写代码]]
+- [[http://kimi.im/2021-12-20-cppcoreguidelines-p3][P.3 明确地表达程序意图]]
+- [[http://kimi.im/2021-12-21-cppcoreguidelines-p4][P.4 理想情况下，程序应该要静态类型安全]]
+- [[http://kimi.im/2021-12-22-cppcoreguidelines-p5][P.5 编译时检查比运行时检查好]]
+- [[http://kimi.im/2021-12-23-cppcoreguidelines-p6][P.6 不能在编译时检查的，要能在在运行时检查]]
+
+
+这条指南背后的原因是尽早发现错误，避免导致诡异的故障。
+
+以下程序传给 ~increment1~ 数组指针和数组大小作为参数。如果数组大小不小心
+写错了，会导致数组越界。程序可能会继续执行，但是随时可能运行奔溃。
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
+#include <iostream>
+using namespace std;
+void increment1(int* p, int n)    // bad: error-prone
+{
+    for (int i = 0; i < n; ++i) ++p[i];
+}
+
+void use1(int m)
+{
+    const int n = 10;
+    int a[n] = {};
+    for (int i = 10; i < m; i++) cout << a[i] << " ";
+    cout << endl;
+    increment1(a, m);   // maybe typo, maybe m <= n is supposed
+                        // but assume that m == 20
+    for (int i = 10; i < m; i++) cout << a[i] << " ";
+    cout << endl;
+}
+int main()
+{
+    use1(20);
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 24 0 0 10 0 15 1925183920 163 1207703186 32758
+: 25 1 1 11 14 21 1925183921 164 1207703187 32759
+
+以下代码用了 ~span~ ，但是数组大小还是分开设置了，依然会导致越界访问：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
+#include <iostream>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+void increment2(span<int> p)
+{
+    for (int& x : p) ++x;
+}
+
+void use2(int m)
+{
+    const int n = 10;
+    int a[n] = {};
+    for (int i = 10; i < m; i++) cout << a[i] << " ";
+    cout << endl;
+    increment2({a, m});    // maybe typo, maybe m <= n is supposed
+    for (int i = 10; i < m; i++) cout << a[i] << " ";
+    cout << endl;
+}
+int main()
+{
+    use2(20);
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 0 0 -2018306080 32758 24 0 0 10 0 19
+: 1 1 21 1 281016609 124 1 11 18 21
+
+直接传递一个带数组长度信息的 ~span~ 给 ~increment2~ 就不会出错了：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
+#include <iostream>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+void increment2(span<int> p)
+{
+    for (int& x : p) ++x;
+}
+
+void use2(int m)
+{
+    const int n = 10;
+    int a[n] = {};
+    for (int i = 10; i < m; i++) cout << a[i] << " ";
+    cout << endl;
+    increment2(a); // the number of elements of a need not be repeated
+    for (int i = 10; i < m; i++) cout << a[i] << " ";
+    cout << endl;
+}
+int main()
+{
+    use2(20);
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 0 0 -684714032 32759 24 0 0 10 0 19
+: 0 0 10 0 1256192352 76 0 10 18 20
+
+以下代码定义了 ~Date~ 对象，在 ~user2~ 中，获取到了 ~Date~ 却又把它转成
+~string~ 。之后，又用 ~extract_date~ 把 ~string~ 转成 ~Date~ 。做了一次多余的
+数据转换操作，实在没有必要。
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
+Date read_date(istream& is);    // read date from istream
+
+Date extract_date(const string& s);    // extract date from string
+
+void user1(const string& date)    // manipulate date
+{
+    auto d = extract_date(date);
+    // ...
+}
+
+void user2()
+{
+    Date d = read_date(cin);
+    // ...
+    user1(d.to_string());
+    // ...
+}
+#+end_src
+
+注意事项：
+- 避免多余的、过早的检查
+- 避免在 =O(1)= 算法中添加 =O(n)= 的检查
+- 查看指针和数组：是否进行范围检测，检测是否重复多多余？
+- 查看类型转换：能否避免窄化转换？
+- 查看未检测的输入值
+- 查看结构化数据是否又转成字符串使用？

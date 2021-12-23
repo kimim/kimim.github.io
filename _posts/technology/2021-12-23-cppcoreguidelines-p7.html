@@ -1,0 +1,171 @@
+---
+layout: post
+title: CppCoreGuidelines P.7 尽早捕获运行时错误
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<ul class="org-ul">
+<li><a href="http://kimi.im/2021-12-18-cppcoreguidelines-p1">P.1 直接地用代码表达编程设计理念</a></li>
+<li><a href="http://kimi.im/2021-12-20-cppcoreguidelines-p2">P.2 用 ISO C++ 标准写代码</a></li>
+<li><a href="http://kimi.im/2021-12-20-cppcoreguidelines-p3">P.3 明确地表达程序意图</a></li>
+<li><a href="http://kimi.im/2021-12-21-cppcoreguidelines-p4">P.4 理想情况下，程序应该要静态类型安全</a></li>
+<li><a href="http://kimi.im/2021-12-22-cppcoreguidelines-p5">P.5 编译时检查比运行时检查好</a></li>
+<li><a href="http://kimi.im/2021-12-23-cppcoreguidelines-p6">P.6 不能在编译时检查的，要能在在运行时检查</a></li>
+</ul>
+
+
+<p>
+这条指南背后的原因是尽早发现错误，避免导致诡异的故障。
+</p>
+
+<p>
+以下程序传给 <code>increment1</code> 数组指针和数组大小作为参数。如果数组大小不小心写错了，会导致数组越界。程序可能会继续执行，但是随时可能运行奔溃。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">increment1</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: error-prone</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; n; ++i<span style="color: #7388d6;">)</span> ++p<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use1</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span> = 10;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">[</span>n<span style="color: #7388d6;">]</span> = <span style="color: #7388d6;">{}</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 10; i &lt; m; i++<span style="color: #7388d6;">)</span> cout &lt;&lt; a<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">" "</span>;
+    cout &lt;&lt; endl;
+    increment1<span style="color: #7388d6;">(</span>a, m<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">maybe typo, maybe m &lt;= n is supposed</span>
+                        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">but assume that m == 20</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 10; i &lt; m; i++<span style="color: #7388d6;">)</span> cout &lt;&lt; a<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">" "</span>;
+    cout &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    use1<span style="color: #7388d6;">(</span>20<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+24 0 0 10 0 15 1925183920 163 1207703186 32758
+25 1 1 11 14 21 1925183921 164 1207703187 32759
+</pre>
+
+
+<p>
+以下代码用了 <code>span</code> ，但是数组大小还是分开设置了，依然会导致越界访问：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">increment2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>&amp; <span style="color: #000000;">x</span> : p<span style="color: #7388d6;">)</span> ++x;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span> = 10;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">[</span>n<span style="color: #7388d6;">]</span> = <span style="color: #7388d6;">{}</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 10; i &lt; m; i++<span style="color: #7388d6;">)</span> cout &lt;&lt; a<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">" "</span>;
+    cout &lt;&lt; endl;
+    increment2<span style="color: #7388d6;">(</span><span style="color: #909183;">{</span>a, m<span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">maybe typo, maybe m &lt;= n is supposed</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 10; i &lt; m; i++<span style="color: #7388d6;">)</span> cout &lt;&lt; a<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">" "</span>;
+    cout &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    use2<span style="color: #7388d6;">(</span>20<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+0 0 -2018306080 32758 24 0 0 10 0 19
+1 1 21 1 281016609 124 1 11 18 21
+</pre>
+
+
+<p>
+直接传递一个带数组长度信息的 <code>span</code> 给 <code>increment2</code> 就不会出错了：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">increment2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>&amp; <span style="color: #000000;">x</span> : p<span style="color: #7388d6;">)</span> ++x;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span> = 10;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">[</span>n<span style="color: #7388d6;">]</span> = <span style="color: #7388d6;">{}</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 10; i &lt; m; i++<span style="color: #7388d6;">)</span> cout &lt;&lt; a<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">" "</span>;
+    cout &lt;&lt; endl;
+    increment2<span style="color: #7388d6;">(</span>a<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the number of elements of a need not be repeated</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 10; i &lt; m; i++<span style="color: #7388d6;">)</span> cout &lt;&lt; a<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">" "</span>;
+    cout &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    use2<span style="color: #7388d6;">(</span>20<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+0 0 -684714032 32759 24 0 0 10 0 19
+0 0 10 0 1256192352 76 0 10 18 20
+</pre>
+
+
+<p>
+以下代码定义了 <code>Date</code> 对象，在 <code>user2</code> 中，获取到了 <code>Date</code> 却又把它转成
+<code>string</code> 。之后，又用 <code>extract_date</code> 把 <code>string</code> 转成 <code>Date</code> 。做了一次多余的数据转换操作，实在没有必要。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #0000ff; font-weight: bold;">read_date</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read date from istream</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #0000ff; font-weight: bold;">extract_date</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">extract date from string</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">user1</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">date</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">manipulate date</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">d</span> = extract_date<span style="color: #7388d6;">(</span>date<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">user2</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #000000;">d</span> = read_date<span style="color: #7388d6;">(</span>cin<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    user1<span style="color: #7388d6;">(</span>d.to_string<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意事项：
+</p>
+<ul class="org-ul">
+<li>避免多余的、过早的检查</li>
+<li>避免在 <code>O(1)</code> 算法中添加 <code>O(n)</code> 的检查</li>
+<li>查看指针和数组：是否进行范围检测，检测是否重复多多余？</li>
+<li>查看类型转换：能否避免窄化转换？</li>
+<li>查看未检测的输入值</li>
+<li>查看结构化数据是否又转成字符串使用？</li>
+</ul>

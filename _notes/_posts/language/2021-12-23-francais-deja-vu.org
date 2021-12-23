@@ -1,0 +1,65 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：déjà vu
+categories: [language]
+tags: [English, Français]
+---
+#+END_EXPORT
+
+因为工作关系，加入到某个国际协会的标准评审工作。圣诞节快到了，收到协会
+主席的一封信，在信的开头，他写了这句话：
+
+#+begin_quote
+Formulating a suitable text for this Christmas greeting is
+particularly difficult for me this year. It seems like a *déjà vu* of
+last year.
+#+end_quote
+
+大概意思是说，现在这个疫情环境，都不知道应该说圣诞快乐还是圣诞难过了。
+今年似乎是去年的 *昨日重现/似曾相识* 。
+
+是的，今天的单词是 *déjà vu*
+
+记得以前看过一部玄幻片就叫《déjà vu》中文翻译叫《[[https://movie.douban.com/subject/1789283/][时空线索]]》。讲的是一
+个特工调查一个案子的时候，感觉有些似曾相识，通过时空机器拯救美女。完了，
+我已经不记得故事情节了。是时候重新看一遍这个片子了……
+
+这个词来自法语，déjà 是 already、已经的意思。vu 呢，是动词 voir “看”的
+过去式，即“看到过”。所以，合起来就是 already seen，曾看到过之意。
+
+那么既然有似曾相识，是不是还有似曾不相识？是的，也是从法语里来的：
+jamais vu。 jamais 是 never 从来不的意思。字面意思即从来没见过。
+
+根据这里 [fn:1] 解释：
+
+#+begin_quote
+The term *jamais vu* is used by psychologists and neuroscientists to define a mental effect in which a familiar situation makes you feel as if you experience it for the first time.
+#+end_quote
+
+在心理和神经科学里， *jamais vu* 是一种在熟悉的环境却感到陌生的心理感觉。
+一种短期的记忆消失现象。
+
+此外，还有一种 vu 叫做 *presque vu* ：
+
+#+begin_quote
+*Presque vu* literally means 'almost seen'. The way we experience it is
+a failure to remember something but feeling as though it is
+imminent. In other words, it is on the tip of our tongues. The
+experience is often coupled with absolute confidence that we know the
+answer. This can make it a little embarrassing when we can't
+remember. Presque vu is the frustrating incident of almost
+remembering, but not quite.
+#+end_quote
+
+presque vu 就是当我们马上要想起来了，可是就是想不起来的时候，舌头打结
+了，想说说不出的那个状态。
+
+好了，学了三个 vu ，分别是：
+- déjà vu 似曾相识
+- jamais vu 熟识似忘
+- presque vu 熟识难忆
+
+* Footnotes
+
+[fn:1] [[https://www.learning-mind.com/mysterious-phenomenon-of-jamais-vu-the-opposite-of-deja-vu/][Jamais Vu: the Mysterious Opposite of Déjà vu You’ve Probably Experienced]]
