@@ -1,0 +1,193 @@
+---
+layout: post
+title: CppCoreGuidelines P.6 不能在编译时检查的，要能在在运行时检查
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<ul class="org-ul">
+<li><a href="http://kimi.im/2021-12-18-cppcoreguidelines-p1">P.1 直接地用代码表达编程设计理念</a></li>
+<li><a href="http://kimi.im/2021-12-20-cppcoreguidelines-p2">P.2 用 ISO C++ 标准写代码</a></li>
+<li><a href="http://kimi.im/2021-12-20-cppcoreguidelines-p3">P.3 明确地表达程序意图</a></li>
+<li><a href="http://kimi.im/2021-12-21-cppcoreguidelines-p4">P.4 理想情况下，程序应该要静态类型安全</a></li>
+<li><a href="http://kimi.im/2021-12-22-cppcoreguidelines-p5">P.5 编译时检查比运行时检查好</a></li>
+</ul>
+
+<p>
+如果程序里有很难检查到的错误的话，可能会在特定的条件下，导致莫明其妙的错误。因此要尽量在编译时和运行时检测到这些错误。当然，错误检测是需要代价的，如计算资源、计算时间。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout &lt;&lt; p<span style="color: #7388d6;">[</span>50<span style="color: #7388d6;">]</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: the number of elements is not passed to f()</span>
+    f<span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">[</span>n<span style="color: #909183;">]</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    g<span style="color: #7388d6;">(</span>3<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+-2043739824
+</pre>
+
+
+<p>
+以上代码打印出了一个莫明其妙的数字。因为数组大小没有传给 <code>f</code> ，在 <code>f</code> 中又可以访问 <code>p</code> 的任意元素。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout &lt;&lt; p<span style="color: #7388d6;">[</span>n<span style="color: #7388d6;">]</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    f2<span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">[</span>n<span style="color: #909183;">]</span>, 10<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: a wrong number of elements can be passed to f()</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    g2<span style="color: #7388d6;">(</span>3<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+1647575376
+</pre>
+
+
+<p>
+上面代码虽然添加了数组大小作为参数，但是这个参数的值可以是任何数字，一旦数值给错，就访问越界了，所以也不安全。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">memory</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f3</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">[]</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout &lt;&lt; p<span style="color: #7388d6;">[</span>n<span style="color: #7388d6;">]</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g3</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    f3<span style="color: #7388d6;">(</span>make_unique<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #709870;">[]</span><span style="color: #909183;">&gt;(</span>n<span style="color: #909183;">)</span>, 10<span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: pass ownership and size separately</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    g3<span style="color: #7388d6;">(</span>3<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+-1123024560
+</pre>
+
+
+<p>
+独占指针（ <code>unique_ptr</code> ）可以用来传递指针所有权。但是上面还是又单独的传了个数组大小参数给 <code>f3</code> 。错误的参数，依然会导致数组越界访问。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">memory</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">vector</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f4</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">v</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout &lt;&lt; v<span style="color: #7388d6;">[</span>5<span style="color: #7388d6;">]</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f5</span><span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout &lt;&lt; v<span style="color: #7388d6;">[</span>5<span style="color: #7388d6;">]</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g3</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #7388d6;">(</span>n<span style="color: #7388d6;">)</span>;
+    f4<span style="color: #7388d6;">(</span>v<span style="color: #7388d6;">)</span>;                     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">pass a reference, retain ownership</span>
+    f5<span style="color: #7388d6;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">&gt;{</span>v<span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">pass a view, retain ownership</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    g3<span style="color: #7388d6;">(</span>9<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+0
+</pre>
+
+
+<p>
+以上代码，通过引用和 <code>span</code> view 的方式传递参数，数组大小是对象自身包含的数据，可以在运行时检查访问越界。
+</p>
+
+<p>
+以下代码使用 <code>vector</code> 对象能够传递所有权，并且同时保留了大小信息：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">vector</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">f5</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: move</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #7388d6;">(</span>n<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... initialize v ...</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> v;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">[]</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">f6</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: loses n</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = make_unique<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">[]</span><span style="color: #7388d6;">&gt;(</span>n<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... initialize *p ...</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> p;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">f7</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: loses n and we might forget to delete</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">[</span>n<span style="color: #7388d6;">]</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... initialize *p ...</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> p;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">v5</span> = f5<span style="color: #7388d6;">(</span>5<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; v5.size<span style="color: #7388d6;">()</span> &lt;&lt; endl;
+    cout &lt;&lt; v5.at<span style="color: #7388d6;">(</span>4<span style="color: #7388d6;">)</span> &lt;&lt; endl;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">v6</span> = f6<span style="color: #7388d6;">(</span>5<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; v6<span style="color: #7388d6;">[</span>6<span style="color: #7388d6;">]</span> &lt;&lt; endl;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">out of range</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">v7</span> = f7<span style="color: #7388d6;">(</span>5<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; v7<span style="color: #7388d6;">[</span>6<span style="color: #7388d6;">]</span> &lt;&lt; endl;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">out of range</span>
+    <span style="color: #7F0055; font-weight: bold;">delete</span> v7;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+5
+0
+-1355022000
+-1554522460
+</pre>
