@@ -1,0 +1,91 @@
+---
+layout: post
+title: 单词本：juxtapose
+categories: [language]
+tags: [English]
+---
+
+<p>
+昨天看了一个写作技巧的文章。在讲到怎么给文章标题取名的时候，作者
+Michael Nielsen 提到概念并列技巧。
+</p>
+
+<p>
+并置：很多标题将两个不太相关的概念并置在一起。奇特的并置会产生特别的效果。
+</p>
+
+<blockquote>
+<p>
+<b>Juxtaposition</b>: Many titles <b>juxtapose</b> two words (or concepts) that are not
+usually together. This is particularly effective when the <b>juxtaposition</b> is
+surprising, but in retrospect meaningful. &ldquo;The Selfish Gene&rdquo; is, for example,
+more surprising than &ldquo;The Future of Ideas&rdquo;. &ldquo;Future Shock&rdquo; is an excellent
+<b>juxtaposition</b>.<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>
+</p>
+</blockquote>
+
+<p>
+例如：He is known for <b>juxtaposing</b> a variety of different musical
+styles. 他懂得如何将不同的音乐风格并置在一起（产生特殊效果）。
+</p>
+
+<p>
+另外，在 Clojure 编程语言里，有个函数就叫 <code>juxt</code> ：
+</p>
+
+<blockquote>
+<p>
+(juxt f)  (juxt f g)  (juxt f g h)  (juxt f g h &amp; fs)
+</p>
+
+<p>
+Takes a set of functions and returns a fn that is the juxtaposition
+of those fns.  The returned fn takes a variable number of args, and
+returns a vector containing the result of applying each fn to the
+args (left-to-right).
+</p>
+</blockquote>
+
+<p>
+<code>juxt</code> 函数可以接受多个函数作为参数，将这些函数串联起来，然后形成一个新的函数。这个新的函数可以把计算结果并置装进一个 <code>vec</code> 。我们写几个例子看看：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">juxt</span> first last<span style="color: #7388d6;">)</span> <span style="color: #2A00FF;">"Guten Morgen"</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+[\G \n]
+</pre>
+
+
+<p>
+上面这个语句将 <code>first</code> 函数和 <code>last</code> 函数并置一起，形成一个新的 <code>first-last</code>
+函数。然后我们将这个新的函数应用到 &ldquo;Guten Morgen&rdquo; 上，就的到了这个字符串的第一个字符和最后一个字符。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">juxt</span> take drop<span style="color: #7388d6;">)</span> 3 <span style="color: #7388d6;">[</span>1 2 3 4 5 6 7 8<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+[(1 2 3) (4 5 6 7 8)]
+</pre>
+
+
+<p>
+上面这个 <code>juxt</code> 并置了 <code>take</code> 函数和 <code>drop</code> 函数。前者取后面的 <code>vec</code> 的前三个元素，后者取丢掉前三个元素后剩下的。然后把两个结果放入一个 <code>vec</code> 。
+</p>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+<a href="https://github.com/mnielsen/notes-on-writing/blob/master/notes_on_writing.md">https://github.com/mnielsen/notes-on-writing/blob/master/notes_on_writing.md</a>
+</p></div></div>
+
+
+</div>
+</div>

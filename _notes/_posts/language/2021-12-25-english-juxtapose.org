@@ -1,0 +1,63 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：juxtapose
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+昨天看了一个写作技巧的文章。在讲到怎么给文章标题取名的时候，作者
+Michael Nielsen 提到概念并列技巧。
+
+并置：很多标题将两个不太相关的概念并置在一起。奇特的并置会产生特别的效果。
+
+#+begin_quote
+*Juxtaposition*: Many titles *juxtapose* two words (or concepts) that are not
+usually together. This is particularly effective when the *juxtaposition* is
+surprising, but in retrospect meaningful. "The Selfish Gene" is, for example,
+more surprising than "The Future of Ideas". "Future Shock" is an excellent
+*juxtaposition*.[fn:1]
+#+end_quote
+
+例如：He is known for *juxtaposing* a variety of different musical
+styles. 他懂得如何将不同的音乐风格并置在一起（产生特殊效果）。
+
+另外，在 Clojure 编程语言里，有个函数就叫 ~juxt~ ：
+
+#+begin_quote
+(juxt f)  (juxt f g)  (juxt f g h)  (juxt f g h & fs)
+
+Takes a set of functions and returns a fn that is the juxtaposition
+of those fns.  The returned fn takes a variable number of args, and
+returns a vector containing the result of applying each fn to the
+args (left-to-right).
+#+end_quote
+
+~juxt~ 函数可以接受多个函数作为参数，将这些函数串联起来，然后形成一个新
+的函数。这个新的函数可以把计算结果并置装进一个 ~vec~ 。我们写几个例子看看：
+
+#+begin_src clojure :exports both :eval no-export
+((juxt first last) "Guten Morgen")
+#+end_src
+
+#+RESULTS:
+: [\G \n]
+
+上面这个语句将 ~first~ 函数和 ~last~ 函数并置一起，形成一个新的 ~first-last~
+函数。然后我们将这个新的函数应用到 "Guten Morgen" 上，就的到了这个字符
+串的第一个字符和最后一个字符。
+
+#+begin_src clojure :exports both :eval no-export
+((juxt take drop) 3 [1 2 3 4 5 6 7 8])
+#+end_src
+
+#+RESULTS:
+: [(1 2 3) (4 5 6 7 8)]
+
+上面这个 ~juxt~ 并置了 ~take~ 函数和 ~drop~ 函数。前者取后面的 ~vec~ 的前三个
+元素，后者取丢掉前三个元素后剩下的。然后把两个结果放入一个 ~vec~ 。
+
+* Footnotes
+
+[fn:1] https://github.com/mnielsen/notes-on-writing/blob/master/notes_on_writing.md
