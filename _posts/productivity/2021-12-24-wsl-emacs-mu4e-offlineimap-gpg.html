@@ -1,0 +1,291 @@
+---
+layout: post
+title: Send and Receive outlook email in WSL2 Emacs with mu4e, offlineimap and gnugpg
+categories: [productivity]
+tags: [emacs]
+---
+
+<p>
+I&rsquo;ve tried many times to enable <a href="https://github.com/djcb/mu">mu4e</a> and <a href="https://github.com/OfflineIMAP/offlineimap">offlineimap</a> in <a href="https://www.msys2.org/">msys2</a>
+environment, but no result. Although the author of mu4e provides the
+<a href="https://github.com/msys2-unofficial/MSYS2-packages">unofficial package files</a> for msys2, but I still get a compile
+failure. Worse off, offlineimap is not working in msys2 environment.
+</p>
+
+<p>
+I&rsquo;ve configured <a href="http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows">emacs under WSL2</a> and I feel little difference from
+msys2 mingw64 emacs. And It is also quite easy to configure mu4e and
+offlineimap for <a href="https://github.com/sileshn/ManjaroWSL">Manjaro</a>.
+</p>
+
+<p>
+This guide will lead you to configure mu4e and offlineimap in emacs,
+and securely encrypt the email credentials.
+</p>
+
+<div id="outline-container-orgb462eee" class="outline-2">
+<h2 id="orgb462eee"><span class="section-number-2">1.</span> install</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Supposing you have configured <a href="http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows">Manjaro WSL2</a> and then open Manjaro WSL2
+shell:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #3F7F5F;"># </span><span style="color: #3F7F5F;">install pip</span>
+sudo pacman -S python-pip
+<span style="color: #3F7F5F;"># </span><span style="color: #3F7F5F;">install python gpg</span>
+sudo pip install python-gnupg getpass4
+<span style="color: #3F7F5F;"># </span><span style="color: #3F7F5F;">offlineimap</span>
+sudo pacman -S offlineimap
+<span style="color: #3F7F5F;"># </span><span style="color: #3F7F5F;">mu4e</span>
+wget https://github.com/djcb/mu/archive/1.6.10.tar.gz
+tar zxvf 1.6.10.tar.gz
+<span style="color: #7F0055; font-weight: bold;">cd</span> mu-1.6.10
+./augogen.sh
+make
+sudo make install
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0a11312" class="outline-2">
+<h2 id="org0a11312"><span class="section-number-2">2.</span> configure Emacs</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Emacs config extracted from my <a href="https://github.com/kimim/kimim-emacs">.emacs</a>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">get load path</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">eval-and-compile</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">mu4e-load-path</span> <span style="color: #909183;">()</span>
+    <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">cond</span> <span style="color: #709870;">(</span><span style="color: #907373;">(</span>eq system-type 'darwin<span style="color: #907373;">)</span>
+           <span style="color: #2A00FF;">"/usr/local/Cellar/mu/1.0_1/share/emacs/site-lisp/mu/mu4e"</span><span style="color: #709870;">)</span>
+          <span style="color: #709870;">(</span><span style="color: #907373;">(</span>eq system-type 'windows-nt<span style="color: #907373;">)</span>
+           <span style="color: #2A00FF;">"/usr/local/share/emacs/site-lisp/mu4e"</span><span style="color: #709870;">)</span>
+          <span style="color: #709870;">(</span><span style="color: #907373;">(</span>eq system-type 'gnu/linux<span style="color: #907373;">)</span>
+           <span style="color: #2A00FF;">"/usr/local/share/emacs/site-lisp/mu4e/"</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">use-package</span> <span style="color: #110099;">mu4e</span>
+  <span style="color: #7F0055; font-weight: bold;">:ensure</span> nil
+  <span style="color: #7F0055; font-weight: bold;">:functions</span> <span style="color: #7388d6;">(</span>mu4e-compose-reply
+              mu4e~view-quit-buffer<span style="color: #7388d6;">)</span>
+  <span style="color: #7F0055; font-weight: bold;">:defines</span> <span style="color: #7388d6;">(</span>mu4e-html2text-command
+            mu4e-mu-binary
+            mu4e-get-mail-command
+            mu4e-update-interval
+            mu4e-hide-index-messages
+            mu4e-use-fancy-chars
+            mu4e-view-show-images
+            mu4e-view-fields
+            mu4e-headers-fields
+            mu4e-compose-cite-function
+            mu4e-compose-reply-recipients
+            mu4e-headers-mode-map
+            mu4e-compose-mode-map
+            mu4e-view-mode-map
+            shr-color-visible-luminance-min
+            shr-color-visible-distance-min<span style="color: #7388d6;">)</span>
+  <span style="color: #7F0055; font-weight: bold;">:custom</span>
+  <span style="color: #7388d6;">(</span>mu4e-compose-reply-recipients 'sender<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span>mu4e-compose-signature-auto-include nil<span style="color: #7388d6;">)</span>
+  <span style="color: #7F0055; font-weight: bold;">:commands</span> <span style="color: #7388d6;">(</span>mu4e mu4e-compose-new<span style="color: #7388d6;">)</span>
+  <span style="color: #7F0055; font-weight: bold;">:load-path</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">lambda</span> <span style="color: #909183;">()</span> <span style="color: #909183;">(</span>list <span style="color: #709870;">(</span>mu4e-load-path<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+  <span style="color: #7F0055; font-weight: bold;">:config</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">require</span> '<span style="color: #110099;">sendmail</span><span style="color: #7388d6;">)</span>
+  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">turn html email to lighter color in dark theme</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">require</span> '<span style="color: #110099;">mu4e-contrib</span><span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> mu4e-html2text-command 'mu4e-shr2text<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> shr-color-visible-luminance-min 60<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> shr-color-visible-distance-min 5<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> shr-use-colors nil<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span>advice-add #'shr-colorize-region <span style="color: #7F0055; font-weight: bold;">:around</span>
+              <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">shr-no-colourise-region</span> <span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">&amp;rest</span> ignore<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">require</span> '<span style="color: #110099;">org-mu4e</span><span style="color: #7388d6;">)</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">capture link</span>
+  <span style="color: #7388d6;">(</span>add-to-list 'Info-additional-directory-list <span style="color: #2A00FF;">"/usr/local/share/info"</span><span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> mu4e-mu-binary <span style="color: #2A00FF;">"/usr/local/bin/mu"</span><span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> mail-user-agent 'mu4e-user-agent<span style="color: #7388d6;">)</span>
+  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">Fetch mail by offlineimap</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> mu4e-get-mail-command <span style="color: #2A00FF;">"offlineimap -c ~/.offlineimaprc -u quiet"</span><span style="color: #7388d6;">)</span>
+  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">Fetch mail in 60 sec interval</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> mu4e-update-interval 300<span style="color: #7388d6;">)</span>
+  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">hide indexing messages from minibuffer</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> mu4e-hide-index-messages t<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> mu4e-use-fancy-chars nil<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> mu4e-view-show-images t<span style="color: #7388d6;">)</span>
+  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">configure view fields</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> mu4e-view-fields
+        '<span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:subject</span> <span style="color: #7F0055; font-weight: bold;">:from</span> <span style="color: #7F0055; font-weight: bold;">:to</span> <span style="color: #7F0055; font-weight: bold;">:cc</span> <span style="color: #7F0055; font-weight: bold;">:date</span> <span style="color: #7F0055; font-weight: bold;">:mailing-list</span>
+                   <span style="color: #7F0055; font-weight: bold;">:attachments</span> <span style="color: #7F0055; font-weight: bold;">:signature</span> <span style="color: #7F0055; font-weight: bold;">:decryption</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> mu4e-headers-fields
+        '<span style="color: #909183;">(</span> <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">:human-date</span>    .   12<span style="color: #709870;">)</span>
+           <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">:flags</span>         .    6<span style="color: #709870;">)</span>
+           <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">:from</span>          .   22<span style="color: #709870;">)</span>
+           <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">:subject</span>       .   nil<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> mu4e-compose-cite-function 'mu-cite-original<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span>add-hook 'mu4e-view-mode-hook 'visual-line-mode<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span>add-hook 'mu4e-compose-mode-hook 'orgalist-mode<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span>add-hook 'mu4e-compose-mode-hook <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">lambda</span> <span style="color: #709870;">()</span>
+                                      <span style="color: #709870;">(</span>auto-fill-mode -1<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">setup shortcuts</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> mu4e-maildir-shortcuts
+        '<span style="color: #909183;">(</span> <span style="color: #709870;">(</span><span style="color: #2A00FF;">"/outlook/Inbox"</span>    . ?i<span style="color: #709870;">)</span>
+           <span style="color: #709870;">(</span><span style="color: #2A00FF;">"/outlook/Sent"</span>     . ?s<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">smtp send settings</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> send-mail-function 'smtpmail-send-it
+        smtpmail-stream-type 'starttls
+        smtpmail-smtp-service 587<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc5aca7a" class="outline-2">
+<h2 id="orgc5aca7a"><span class="section-number-2">3.</span> add .offlineimaprc</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+create <code>~/.offlineimaprc</code> replace <code>_your_email_</code> with your email address
+(for example: kimim@outlook.com ):
+</p>
+
+<pre class="example" id="orga28341f">
+[general]
+accounts = outlook
+maxsyncaccounts = 3
+pythonfile = ~/passwd_prompt.py
+
+[Account outlook]
+localrepository = outlook-Local
+remoterepository = outlook-Remote
+utf8foldernames = True
+
+[Repository outlook-Local]
+type = Maildir
+localfolders = ~/.mail/outlook
+
+[Repository outlook-Remote]
+type = IMAP
+remotehost = imap.outlook.com
+remoteuser = _your_email_
+remotepasseval = get_api_pass()
+ssl = true
+sslcacertfile = /etc/ssl/cert.pem
+maxconnections = 4
+realdelete = yes
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgb0ede01" class="outline-2">
+<h2 id="orgb0ede01"><span class="section-number-2">4.</span> add python password prompt script</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+create <code>~/passwd_prompt.py</code> (copied from <a href="https://learningactors.com/enter-invisible-passwords-using-this-python-module/">Seth Kenlon</a>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #3F7F5F;">#</span><span style="color: #3F7F5F;">!/usr/bin/env python</span>
+<span style="color: #3F7F5F;"># </span><span style="color: #3F7F5F;">by Seth Kenlon</span>
+<span style="color: #3F7F5F;"># </span><span style="color: #3F7F5F;">GPLv3</span>
+
+<span style="color: #7F0055; font-weight: bold;">import</span> os
+<span style="color: #7F0055; font-weight: bold;">import</span> gnupg
+<span style="color: #7F0055; font-weight: bold;">import</span> getpass
+<span style="color: #7F0055; font-weight: bold;">from</span> pathlib <span style="color: #7F0055; font-weight: bold;">import</span> Path
+
+<span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #0000ff; font-weight: bold;">get_api_pass</span><span style="color: #707183;">()</span>:
+    <span style="color: #000000;">homedir</span> = <span style="color: #7F0055; font-weight: bold;">str</span><span style="color: #707183;">(</span>Path.home<span style="color: #7388d6;">()</span><span style="color: #707183;">)</span>
+    <span style="color: #000000;">gpg</span> = gnupg.GPG<span style="color: #707183;">(</span>gnupghome=os.path.join<span style="color: #7388d6;">(</span>homedir, <span style="color: #2A00FF;">".gnupg"</span><span style="color: #7388d6;">)</span>, use_agent=<span style="color: #110099;">True</span><span style="color: #707183;">)</span>
+    passwd = getpass.getpass<span style="color: #707183;">(</span>prompt=<span style="color: #2A00FF;">"Enter your GnuPG password: "</span>, stream=<span style="color: #110099;">None</span><span style="color: #707183;">)</span>
+
+    <span style="color: #7F0055; font-weight: bold;">with</span> <span style="color: #7F0055; font-weight: bold;">open</span><span style="color: #707183;">(</span>os.path.join<span style="color: #7388d6;">(</span>homedir, <span style="color: #2A00FF;">'pass.gpg'</span><span style="color: #7388d6;">)</span>, <span style="color: #2A00FF;">'rb'</span><span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">as</span> f:
+        apipass = <span style="color: #707183;">(</span>gpg.decrypt_file<span style="color: #7388d6;">(</span>f, passphrase=passwd<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+        f.close<span style="color: #707183;">()</span>
+
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">str</span><span style="color: #707183;">(</span>apipass<span style="color: #707183;">)</span>
+
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7F0055; font-weight: bold;">__name__</span> == <span style="color: #2A00FF;">"__main__"</span>:
+    apipass = get_api_pass<span style="color: #707183;">()</span>
+    <span style="color: #7F0055; font-weight: bold;">print</span><span style="color: #707183;">(</span>apipass<span style="color: #707183;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2bb7620" class="outline-2">
+<h2 id="org2bb7620"><span class="section-number-2">5.</span> add encrypted password file: <code>pass.gpg</code></h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Use emacs to find a new file <code>~/pass.gpg</code>, type in your password, and
+save with master password protection.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0174c23" class="outline-2">
+<h2 id="org0174c23"><span class="section-number-2">6.</span> add smtp send credentials: <code>.authinfo.gpg</code></h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Use emacs to find a new file <code>~/.authoinfo.gpg</code>, type in following line:
+</p>
+
+<pre class="example" id="org7c8e849">
+machine smtp.outlook.com login _your_email_ port 587 password _your_passwd_
+</pre>
+
+<p>
+Replace <code>_your_email_</code> with your email address, and replace
+<code>_your_passwd_</code> with your password.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge2cc28a" class="outline-2">
+<h2 id="orge2cc28a"><span class="section-number-2">7.</span> download email</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Execute in Manjaro WSL2 shell:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #7F0055; font-weight: bold;">cd</span> ~
+offlineimap
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0bb2f59" class="outline-2">
+<h2 id="org0bb2f59"><span class="section-number-2">8.</span> initialize mu4e</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+Initialize mu and index your emails:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">mu init -m ~/.mail --my-address=_your_email_
+mu index
+</pre>
+</div>
+
+<p>
+Replace <code>_your_email_</code> with your email address.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1db6bf7" class="outline-2">
+<h2 id="org1db6bf7"><span class="section-number-2">9.</span> have a try</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Now type <code>M-x mu4e</code>, emacs will show mu4e dashboard for you. <code>j i</code> will
+show the inbox and <code>C</code> will create a new email for you. You may need to
+type the master password for sending and updating email. But your
+email credential is not stored in file system as plain text.
+</p>
+</div>
+</div>

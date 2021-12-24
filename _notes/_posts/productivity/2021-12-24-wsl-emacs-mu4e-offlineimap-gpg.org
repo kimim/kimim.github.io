@@ -1,0 +1,233 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Send and Receive outlook email in WSL2 Emacs with mu4e, offlineimap and gnugpg
+categories: [productivity]
+tags: [emacs]
+---
+#+END_EXPORT
+
+I've tried many times to enable [[https://github.com/djcb/mu][mu4e]] and [[https://github.com/OfflineIMAP/offlineimap][offlineimap]] in [[https://www.msys2.org/][msys2]]
+environment, but no result. Although the author of mu4e provides the
+[[https://github.com/msys2-unofficial/MSYS2-packages][unofficial package files]] for msys2, but I still get a compile
+failure. Worse off, offlineimap is not working in msys2 environment.
+
+I've configured [[http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows][emacs under WSL2]] and I feel little difference from
+msys2 mingw64 emacs. And It is also quite easy to configure mu4e and
+offlineimap for [[https://github.com/sileshn/ManjaroWSL][Manjaro]].
+
+This guide will lead you to configure mu4e and offlineimap in emacs,
+and securely encrypt the email credentials.
+
+* install
+
+Supposing you have configured [[http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows][Manjaro WSL2]] and then open Manjaro WSL2
+shell:
+
+#+begin_src sh
+# install pip
+sudo pacman -S python-pip
+# install python gpg
+sudo pip install python-gnupg getpass4
+# offlineimap
+sudo pacman -S offlineimap
+# mu4e
+wget https://github.com/djcb/mu/archive/1.6.10.tar.gz
+tar zxvf 1.6.10.tar.gz
+cd mu-1.6.10
+./augogen.sh
+make
+sudo make install
+#+end_src
+
+* configure Emacs
+
+Emacs config extracted from my [[https://github.com/kimim/kimim-emacs][.emacs]]:
+
+#+begin_src emacs-lisp
+;; get load path
+(eval-and-compile
+  (defun mu4e-load-path ()
+    (cond ((eq system-type 'darwin)
+           "/usr/local/Cellar/mu/1.0_1/share/emacs/site-lisp/mu/mu4e")
+          ((eq system-type 'windows-nt)
+           "/usr/local/share/emacs/site-lisp/mu4e")
+          ((eq system-type 'gnu/linux)
+           "/usr/local/share/emacs/site-lisp/mu4e/"))))
+
+(use-package mu4e
+  :ensure nil
+  :functions (mu4e-compose-reply
+              mu4e~view-quit-buffer)
+  :defines (mu4e-html2text-command
+            mu4e-mu-binary
+            mu4e-get-mail-command
+            mu4e-update-interval
+            mu4e-hide-index-messages
+            mu4e-use-fancy-chars
+            mu4e-view-show-images
+            mu4e-view-fields
+            mu4e-headers-fields
+            mu4e-compose-cite-function
+            mu4e-compose-reply-recipients
+            mu4e-headers-mode-map
+            mu4e-compose-mode-map
+            mu4e-view-mode-map
+            shr-color-visible-luminance-min
+            shr-color-visible-distance-min)
+  :custom
+  (mu4e-compose-reply-recipients 'sender)
+  (mu4e-compose-signature-auto-include nil)
+  :commands (mu4e mu4e-compose-new)
+  :load-path (lambda () (list (mu4e-load-path)))
+  :config
+  (require 'sendmail)
+  ;; turn html email to lighter color in dark theme
+  (require 'mu4e-contrib)
+  (setq mu4e-html2text-command 'mu4e-shr2text)
+  (setq shr-color-visible-luminance-min 60)
+  (setq shr-color-visible-distance-min 5)
+  (setq shr-use-colors nil)
+  (advice-add #'shr-colorize-region :around
+              (defun shr-no-colourise-region (&rest ignore)))
+
+  (require 'org-mu4e) ;; capture link
+  (add-to-list 'Info-additional-directory-list "/usr/local/share/info")
+  (setq mu4e-mu-binary "/usr/local/bin/mu")
+  (setq mail-user-agent 'mu4e-user-agent)
+  ;; Fetch mail by offlineimap
+  (setq mu4e-get-mail-command "offlineimap -c ~/.offlineimaprc -u quiet")
+  ;; Fetch mail in 60 sec interval
+  (setq mu4e-update-interval 300)
+  ;; hide indexing messages from minibuffer
+  (setq mu4e-hide-index-messages t)
+  (setq mu4e-use-fancy-chars nil)
+  (setq mu4e-view-show-images t)
+  ;; configure view fields
+  (setq mu4e-view-fields
+        '(:subject :from :to :cc :date :mailing-list
+                   :attachments :signature :decryption))
+  (setq mu4e-headers-fields
+        '( (:human-date    .   12)
+           (:flags         .    6)
+           (:from          .   22)
+           (:subject       .   nil)))
+  (setq mu4e-compose-cite-function 'mu-cite-original)
+  (add-hook 'mu4e-view-mode-hook 'visual-line-mode)
+  (add-hook 'mu4e-compose-mode-hook 'orgalist-mode)
+  (add-hook 'mu4e-compose-mode-hook (lambda ()
+                                      (auto-fill-mode -1)))
+  ;; setup shortcuts
+  (setq mu4e-maildir-shortcuts
+        '( ("/outlook/Inbox"    . ?i)
+           ("/outlook/Sent"     . ?s)))
+  ;; smtp send settings
+  (setq send-mail-function 'smtpmail-send-it
+        smtpmail-stream-type 'starttls
+        smtpmail-smtp-service 587))
+#+end_src
+
+* add .offlineimaprc
+
+create =~/.offlineimaprc= replace =_your_email_= with your email address
+(for example: kimim@outlook.com ):
+
+#+begin_example
+[general]
+accounts = outlook
+maxsyncaccounts = 3
+pythonfile = ~/passwd_prompt.py
+
+[Account outlook]
+localrepository = outlook-Local
+remoterepository = outlook-Remote
+utf8foldernames = True
+
+[Repository outlook-Local]
+type = Maildir
+localfolders = ~/.mail/outlook
+
+[Repository outlook-Remote]
+type = IMAP
+remotehost = imap.outlook.com
+remoteuser = _your_email_
+remotepasseval = get_api_pass()
+ssl = true
+sslcacertfile = /etc/ssl/cert.pem
+maxconnections = 4
+realdelete = yes
+#+end_example
+
+* add python password prompt script
+
+create =~/passwd_prompt.py= (copied from [[https://learningactors.com/enter-invisible-passwords-using-this-python-module/][Seth Kenlon]]):
+
+#+begin_src python
+#!/usr/bin/env python
+# by Seth Kenlon
+# GPLv3
+
+import os
+import gnupg
+import getpass
+from pathlib import Path
+
+def get_api_pass():
+    homedir = str(Path.home())
+    gpg = gnupg.GPG(gnupghome=os.path.join(homedir, ".gnupg"), use_agent=True)
+    passwd = getpass.getpass(prompt="Enter your GnuPG password: ", stream=None)
+
+    with open(os.path.join(homedir, 'pass.gpg'), 'rb') as f:
+        apipass = (gpg.decrypt_file(f, passphrase=passwd))
+
+        f.close()
+
+    return str(apipass)
+
+if __name__ == "__main__":
+    apipass = get_api_pass()
+    print(apipass)
+#+end_src
+
+* add encrypted password file: =pass.gpg=
+
+Use emacs to find a new file =~/pass.gpg=, type in your password, and
+save with master password protection.
+
+* add smtp send credentials: =.authinfo.gpg=
+
+Use emacs to find a new file =~/.authoinfo.gpg=, type in following line:
+
+#+begin_example
+machine smtp.outlook.com login _your_email_ port 587 password _your_passwd_
+#+end_example
+
+Replace =_your_email_= with your email address, and replace
+=_your_passwd_= with your password.
+
+* download email
+
+Execute in Manjaro WSL2 shell:
+
+#+begin_src sh
+cd ~
+offlineimap
+#+end_src
+
+* initialize mu4e
+
+Initialize mu and index your emails:
+
+#+begin_src sh
+mu init -m ~/.mail --my-address=_your_email_
+mu index
+#+end_src
+
+Replace =_your_email_= with your email address.
+
+* have a try
+
+Now type =M-x mu4e=, emacs will show mu4e dashboard for you. =j i= will
+show the inbox and =C= will create a new email for you. You may need to
+type the master password for sending and updating email. But your
+email credential is not stored in file system as plain text.
