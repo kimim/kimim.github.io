@@ -1,0 +1,72 @@
+---
+layout: post
+title: CppCoreGuidelines P.8 不要泄漏任何资源
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<ul class="org-ul">
+<li><a href="http://kimi.im/2021-12-18-cppcoreguidelines-p1">P.1 直接地用代码表达编程设计理念</a></li>
+<li><a href="http://kimi.im/2021-12-20-cppcoreguidelines-p2">P.2 用 ISO C++ 标准写代码</a></li>
+<li><a href="http://kimi.im/2021-12-20-cppcoreguidelines-p3">P.3 明确地表达程序意图</a></li>
+<li><a href="http://kimi.im/2021-12-21-cppcoreguidelines-p4">P.4 理想情况下，程序应该要静态类型安全</a></li>
+<li><a href="http://kimi.im/2021-12-22-cppcoreguidelines-p5">P.5 编译时检查比运行时检查好</a></li>
+<li><a href="http://kimi.im/2021-12-23-cppcoreguidelines-p6">P.6 不能在编译时检查的，要能在在运行时检查</a></li>
+<li><a href="http://kimi.im/2021-12-23-cppcoreguidelines-p7">P.7 尽早捕获运行时错误</a></li>
+</ul>
+
+<p>
+如果系统是长期运行的，哪怕是很小的资源没有及时释放，都有可能耗尽系统资源。因此，及时释放系统资源是一种负责任的编程态度。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">name</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">FILE</span>* <span style="color: #000000;">input</span> = fopen<span style="color: #7388d6;">(</span>name, <span style="color: #2A00FF;">"r"</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>something<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: if something == true, a file handle is leaked</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    fclose<span style="color: #7388d6;">(</span>input<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+以上例程中，如果 <code>something</code> 为真，函数直接返回了，没有及时关闭 <code>input</code> 文件结构体，产生资源泄漏。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">name</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">ifstream</span> <span style="color: #000000;">input</span> <span style="color: #7388d6;">{</span>name<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>something<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: no leak</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+改用 <code>ifstream</code> 文件输入对象可以避免资源泄漏。当函数返回的时候，自动调用解构函数释放内存数据。
+</p>
+
+<p>
+所谓的泄漏（leak）通俗的讲，就是出现任何没有及时释放的资源（anything
+that isn&rsquo;t cleaned up）。细分下去，更重要的一类泄漏是：任何不能被释放的资源（anything that can no longer be cleaned up）。比如在堆中分配一个对象，然后运行过程中，对象的地址指针被覆盖掉了。于是，就再也没办法释放这个对象了。所以，对任何中途结束的程序，要么释放内存，要么把分配的对象返回给上层函数继续使用或者晚些时候释放。
+</p>
+
+<p>
+建议：
+</p>
+<ul class="org-ul">
+<li>审查指针的使用。区分有主和无主指针。如以上例子用标准库资源句柄替换。或者用 GSL 中的 <code>unique_ptr</code> 和 <code>shared_ptr</code> 标记指针所有权。</li>
+<li><p>
+审查暴露的 <code>new</code> 和 <code>delete</code> ，相对的是封装的 <code>new</code> ：
+</p>
+<div class="org-src-container">
+<pre class="src src-C++">  <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">[</span>10<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+</pre>
+</div></li>
+<li>审查返回裸指针（raw pointer）的资源分配函数。比如： <code>fopen</code>, <code>malloc</code>,
+<code>strdup</code>.</li>
+</ul>
