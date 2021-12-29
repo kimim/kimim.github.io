@@ -78,6 +78,7 @@ Emacs config extracted from my [[https://github.com/kimim/kimim-emacs][.emacs]]:
   :custom
   (mu4e-compose-reply-recipients 'sender)
   (mu4e-compose-signature-auto-include nil)
+  (mu4e-index-update-in-background nil) ;; prompt for gpg passwd
   :commands (mu4e mu4e-compose-new)
   :load-path (lambda () (list (mu4e-load-path)))
   :config
@@ -175,7 +176,7 @@ from pathlib import Path
 def get_api_pass():
     homedir = str(Path.home())
     gpg = gnupg.GPG(gnupghome=os.path.join(homedir, ".gnupg"), use_agent=True)
-    passwd = getpass.getpass(prompt="Enter your GnuPG password: ", stream=None)
+    passwd = getpass.getpass(prompt="Remote: Enter password: ", stream=None)
 
     with open(os.path.join(homedir, 'pass.gpg'), 'rb') as f:
         apipass = (gpg.decrypt_file(f, passphrase=passwd))
@@ -187,6 +188,15 @@ def get_api_pass():
 if __name__ == "__main__":
     apipass = get_api_pass()
     print(apipass)
+#+end_src
+
+It is important to set the prompt in above code as "Remote: Enter
+password: ", because it is used by mu4e to trigger emacs to ask for
+password:
+
+#+begin_src emacs-lisp :eval no-export
+(defvar mu4e~get-mail-password-regexp "^Remote: Enter password: $"
+  "Regexp to match a password query in the `mu4e-get-mail-command' output.")
 #+end_src
 
 * add encrypted password file: =pass.gpg=
@@ -231,3 +241,9 @@ Now type =M-x mu4e=, emacs will show mu4e dashboard for you. =j i= will
 show the inbox and =C= will create a new email for you. You may need to
 type the master password for sending and updating email. But your
 email credential is not stored in file system as plain text.
+
+* Limitation
+
+When mu4e triggers offlineimap to update email, you need to type in
+the master password for offlineimap password, because we cannot keep
+the password for each invoke of offlineimap.
