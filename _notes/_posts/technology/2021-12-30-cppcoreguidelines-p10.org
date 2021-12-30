@@ -17,6 +17,8 @@ tags: [CppCoreGuidelines]
 - [[http://kimi.im/2021-12-29-cppcoreguidelines-p8][P.8 不要泄漏任何资源]]
 - [[http://kimi.im/2021-12-30-cppcoreguidelines-p9][P.9 不要浪费计算时间和计算空间]]
 
+
+
 - 常量的计算更容易进行推导。
 - 不可变数据能避免异常变动。
 - 不可变数据能更好的优化。
