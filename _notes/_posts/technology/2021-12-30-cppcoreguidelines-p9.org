@@ -1,0 +1,107 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines P.9 不要浪费计算时间和计算空间
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+为更好达到既定目的，可以消耗更多计算时间和计算空间。比如加快开发进度、
+保障资源安全、简化系统测试。
+
+亚历山大·斯特潘诺夫 [fn:1] 曾说过：追求效率的另一个好处是，这个过程可
+以迫使你更深入地理解所要解决的问题。
+
+#+begin_quote
+"Another benefit of striving for efficiency is that the process forces
+you to understand the problem in more depth." - Alex Stepanov
+#+end_quote
+
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std  :eval no-export
+#include <iostream>
+#include <exception>
+#include <cstring>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+struct X {
+    char ch;
+    int i;
+    string s;
+    char ch2;
+
+    X& operator=(const X& a) {
+        ch = a.ch; i = a.i; s = a.s; ch2 = a.ch2;
+        return *this;
+    }
+    X() {ch='\0'; i=0; s=""; ch2='\0';}
+    X(const X& a) {ch = a.ch; i = a.i; s = a.s; ch2 = a.ch2;}
+};
+
+X waste(const char* p)
+{
+    if (!p) throw bad_exception{};
+    int n = strlen(p);
+    auto buf = new char[n];
+    if (!buf) throw bad_alloc{};
+    for (int i = 0; i < n; ++i)
+        buf[i] = p[i];     // ... manipulate buffer ...
+    X x;
+    x.ch = 'a';
+    x.s = string(n, '\0');  // give x.s space for *p
+    for (gsl::index i = 0; i < x.s.size(); ++i)
+        x.s[i] = buf[i];    // copy buf into x.s
+    delete[] buf;
+    return x;
+}
+
+void driver()
+{
+    X x = waste("Typical argument");
+    cout << x.s << endl;
+}
+int main()
+{
+    driver();
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: Typical argument
+
+以上例子以夸张的手法，展现了计算资源如何被无情的浪费。 ~X~ 的内部内部数
+据布局至少浪费了 6 字节（每个 ~char~ 处浪费 3 字节）。 ~buf~ 多余的创建和
+删除操作。
+
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void lower(zstring s)
+{
+    for (int i = 0; i < strlen(s); ++i) s[i] = tolower(s[i]);
+}
+#+end_src
+
+以上代码中， ~i < strlen(s)~ 每次循环都会执行。因为只是改了字符串字符的
+大小写，并不改变字符串长度，因此没必要重复计算 ~s~ 的长度。因此可以这样改：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void lower(zstring s)
+{
+    int len = strlen(s);
+    for (int i = 0; i < len; ++i) s[i] = tolower(s[i]);
+}
+#+end_src
+
+
+* Footnotes
+
+[fn:1] 亚历山大·斯特潘诺夫（[[http://stepanovpapers.com/][Alexander Stepanov]]），Alex Stepanov，
+STL（标准模板库）之父，并因此在1995年获得了第一届 Dr. Dobb's 程序设计
+杰出奖，他曾任 Compaq 公司副总裁和首席科学家，AT&T 实验室副总裁和首席
+构架师，SGI服务器和巨型计算机公司技术总监。Alexander 曾先后在 HP 实验
+室、AT&T 实验室、通用电气公司 R&D、Polytechnic University of New York
+大学控制研究所和复杂自动化研究所工作和研究了 25 年。他的研究工作涉及程
+序设计、语言设计、存贮系统、路径计划算法、实时操作系统等。
