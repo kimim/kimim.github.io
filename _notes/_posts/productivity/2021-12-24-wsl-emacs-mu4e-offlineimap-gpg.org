@@ -207,7 +207,7 @@ trigger emacs to ask for password:
 #+end_src
 
 If you use ~get_authinfo_password()~, the password extraction is done by
-=gpg=, thus you do not need to add above emacs configuration.
+=gpg=, thus you do not need to add above emacs configuration. This function is borrowed from [[http://quotenil.com/offlineimap-with-encrypted-authinfo.html][Gábor Melis]].
 
 * add encrypted password file: =pass.gpg=
 

@@ -152,7 +152,7 @@ create <code>~/.offlineimaprc</code> replace <code>_your_email_</code> with your
 (for example: kimim@outlook.com ):
 </p>
 
-<pre class="example" id="orgcd0c760">
+<pre class="example" id="orgb9e9a82">
 [general]
 accounts = outlook
 maxsyncaccounts = 3
@@ -236,7 +236,7 @@ trigger emacs to ask for password:
 
 <p>
 If you use <code>get_authinfo_password()</code>, the password extraction is done by
-<code>gpg</code>, thus you do not need to add above emacs configuration.
+<code>gpg</code>, thus you do not need to add above emacs configuration. This function is borrowed from <a href="http://quotenil.com/offlineimap-with-encrypted-authinfo.html">Gábor Melis</a>.
 </p>
 </div>
 </div>
@@ -258,7 +258,7 @@ save with master password protection.
 Use emacs to find a new file <code>~/.authoinfo.gpg</code>, type in following line:
 </p>
 
-<pre class="example" id="org5487c39">
+<pre class="example" id="orgb34d869">
 machine smtp.outlook.com login _your_email_ port 587 password _your_passwd_
 </pre>
 
