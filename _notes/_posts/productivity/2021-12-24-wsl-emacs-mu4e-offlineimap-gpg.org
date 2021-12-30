@@ -152,7 +152,7 @@ localfolders = ~/.mail/outlook
 type = IMAP
 remotehost = imap.outlook.com
 remoteuser = _your_email_
-remotepasseval = get_api_pass()
+remotepasseval = get_authinfo_password()
 ssl = true
 sslcacertfile = /etc/ssl/cert.pem
 maxconnections = 4
@@ -185,19 +185,29 @@ def get_api_pass():
 
     return str(apipass)
 
+def get_authinfo_password():
+    authinfo = os.popen("gpg -q --no-tty -d ~/pass.gpg").read()
+    return authinfo
+
 if __name__ == "__main__":
     apipass = get_api_pass()
     print(apipass)
+    apipass = get_authinfo_password()
+    print(apipass)
 #+end_src
 
-It is important to set the prompt in above code as "Remote: Enter
-password: ", because it is used by mu4e to trigger emacs to ask for
-password:
+If you use ~get_api_pass()~ inside =.offlineimaprc=, you can enable
+password prompt filter. It is important to set the prompt in above
+code as "Remote: Enter password: ", because it is used by mu4e to
+trigger emacs to ask for password:
 
 #+begin_src emacs-lisp :eval no-export
 (defvar mu4e~get-mail-password-regexp "^Remote: Enter password: $"
   "Regexp to match a password query in the `mu4e-get-mail-command' output.")
 #+end_src
+
+If you use ~get_authinfo_password()~, the password extraction is done by
+=gpg=, thus you do not need to add above emacs configuration.
 
 * add encrypted password file: =pass.gpg=
 

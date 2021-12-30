@@ -23,8 +23,8 @@ This guide will lead you to configure mu4e and offlineimap in emacs,
 and securely encrypt the email credentials.
 </p>
 
-<div id="outline-container-org29e82bb" class="outline-2">
-<h2 id="org29e82bb"><span class="section-number-2">1.</span> install</h2>
+<div id="outline-container-org3341aa0" class="outline-2">
+<h2 id="org3341aa0"><span class="section-number-2">1.</span> install</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Supposing you have configured <a href="http://kimi.im/2021-01-28-emacs-inside-manjaro-wsl2-windows">Manjaro WSL2</a> and then open Manjaro WSL2
@@ -50,8 +50,8 @@ sudo make install
 </div>
 </div>
 
-<div id="outline-container-org08c9f58" class="outline-2">
-<h2 id="org08c9f58"><span class="section-number-2">2.</span> configure Emacs</h2>
+<div id="outline-container-org32fd6de" class="outline-2">
+<h2 id="org32fd6de"><span class="section-number-2">2.</span> configure Emacs</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Emacs config extracted from my <a href="https://github.com/kimim/kimim-emacs">.emacs</a>:
@@ -144,15 +144,15 @@ Emacs config extracted from my <a href="https://github.com/kimim/kimim-emacs">.e
 </div>
 </div>
 
-<div id="outline-container-org8c8153c" class="outline-2">
-<h2 id="org8c8153c"><span class="section-number-2">3.</span> add .offlineimaprc</h2>
+<div id="outline-container-orgca7d5f2" class="outline-2">
+<h2 id="orgca7d5f2"><span class="section-number-2">3.</span> add .offlineimaprc</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 create <code>~/.offlineimaprc</code> replace <code>_your_email_</code> with your email address
 (for example: kimim@outlook.com ):
 </p>
 
-<pre class="example" id="org239d9d1">
+<pre class="example" id="orgcd0c760">
 [general]
 accounts = outlook
 maxsyncaccounts = 3
@@ -171,7 +171,7 @@ localfolders = ~/.mail/outlook
 type = IMAP
 remotehost = imap.outlook.com
 remoteuser = _your_email_
-remotepasseval = get_api_pass()
+remotepasseval = get_authinfo_password()
 ssl = true
 sslcacertfile = /etc/ssl/cert.pem
 maxconnections = 4
@@ -180,8 +180,8 @@ realdelete = yes
 </div>
 </div>
 
-<div id="outline-container-orga9d2a33" class="outline-2">
-<h2 id="orga9d2a33"><span class="section-number-2">4.</span> add python password prompt script</h2>
+<div id="outline-container-org724529c" class="outline-2">
+<h2 id="org724529c"><span class="section-number-2">4.</span> add python password prompt script</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 create <code>~/passwd_prompt.py</code> (copied from <a href="https://learningactors.com/enter-invisible-passwords-using-this-python-module/">Seth Kenlon</a>):
@@ -209,16 +209,23 @@ create <code>~/passwd_prompt.py</code> (copied from <a href="https://learningact
 
     <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">str</span><span style="color: #707183;">(</span>apipass<span style="color: #707183;">)</span>
 
+<span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #0000ff; font-weight: bold;">get_authinfo_password</span><span style="color: #707183;">()</span>:
+    authinfo = os.popen<span style="color: #707183;">(</span><span style="color: #2A00FF;">"gpg -q --no-tty -d ~/pass.gpg"</span><span style="color: #707183;">)</span>.read<span style="color: #707183;">()</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> authinfo
+
 <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7F0055; font-weight: bold;">__name__</span> == <span style="color: #2A00FF;">"__main__"</span>:
     apipass = get_api_pass<span style="color: #707183;">()</span>
+    <span style="color: #7F0055; font-weight: bold;">print</span><span style="color: #707183;">(</span>apipass<span style="color: #707183;">)</span>
+    apipass = get_authinfo_password<span style="color: #707183;">()</span>
     <span style="color: #7F0055; font-weight: bold;">print</span><span style="color: #707183;">(</span>apipass<span style="color: #707183;">)</span>
 </pre>
 </div>
 
 <p>
-It is important to set the prompt in above code as &ldquo;Remote: Enter
-password: &rdquo;, because it is used by mu4e to trigger emacs to ask for
-password:
+If you use <code>get_api_pass()</code> inside <code>.offlineimaprc</code>, you can enable
+password prompt filter. It is important to set the prompt in above
+code as &ldquo;Remote: Enter password: &rdquo;, because it is used by mu4e to
+trigger emacs to ask for password:
 </p>
 
 <div class="org-src-container">
@@ -226,11 +233,16 @@ password:
   <span style="color: #2A00FF;">"Regexp to match a password query in the `</span><span style="color: #110099;">mu4e-get-mail-command</span><span style="color: #2A00FF;">' output."</span><span style="color: #707183;">)</span>
 </pre>
 </div>
+
+<p>
+If you use <code>get_authinfo_password()</code>, the password extraction is done by
+<code>gpg</code>, thus you do not need to add above emacs configuration.
+</p>
 </div>
 </div>
 
-<div id="outline-container-org2b632fd" class="outline-2">
-<h2 id="org2b632fd"><span class="section-number-2">5.</span> add encrypted password file: <code>pass.gpg</code></h2>
+<div id="outline-container-orge3e7b8b" class="outline-2">
+<h2 id="orge3e7b8b"><span class="section-number-2">5.</span> add encrypted password file: <code>pass.gpg</code></h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Use emacs to find a new file <code>~/pass.gpg</code>, type in your password, and
@@ -239,14 +251,14 @@ save with master password protection.
 </div>
 </div>
 
-<div id="outline-container-org71f4f18" class="outline-2">
-<h2 id="org71f4f18"><span class="section-number-2">6.</span> add smtp send credentials: <code>.authinfo.gpg</code></h2>
+<div id="outline-container-orgfcb7992" class="outline-2">
+<h2 id="orgfcb7992"><span class="section-number-2">6.</span> add smtp send credentials: <code>.authinfo.gpg</code></h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Use emacs to find a new file <code>~/.authoinfo.gpg</code>, type in following line:
 </p>
 
-<pre class="example" id="orgb7844ef">
+<pre class="example" id="org5487c39">
 machine smtp.outlook.com login _your_email_ port 587 password _your_passwd_
 </pre>
 
@@ -257,8 +269,8 @@ Replace <code>_your_email_</code> with your email address, and replace
 </div>
 </div>
 
-<div id="outline-container-org855338e" class="outline-2">
-<h2 id="org855338e"><span class="section-number-2">7.</span> download email</h2>
+<div id="outline-container-org76c6d26" class="outline-2">
+<h2 id="org76c6d26"><span class="section-number-2">7.</span> download email</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Execute in Manjaro WSL2 shell:
@@ -272,8 +284,8 @@ offlineimap
 </div>
 </div>
 
-<div id="outline-container-org7dfbeed" class="outline-2">
-<h2 id="org7dfbeed"><span class="section-number-2">8.</span> initialize mu4e</h2>
+<div id="outline-container-org0e7bb43" class="outline-2">
+<h2 id="org0e7bb43"><span class="section-number-2">8.</span> initialize mu4e</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 Initialize mu and index your emails:
@@ -291,8 +303,8 @@ Replace <code>_your_email_</code> with your email address.
 </div>
 </div>
 
-<div id="outline-container-orgad0c437" class="outline-2">
-<h2 id="orgad0c437"><span class="section-number-2">9.</span> have a try</h2>
+<div id="outline-container-org29e3620" class="outline-2">
+<h2 id="org29e3620"><span class="section-number-2">9.</span> have a try</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 Now type <code>M-x mu4e</code>, emacs will show mu4e dashboard for you. <code>j i</code> will
@@ -303,8 +315,8 @@ email credential is not stored in file system as plain text.
 </div>
 </div>
 
-<div id="outline-container-orgae51341" class="outline-2">
-<h2 id="orgae51341"><span class="section-number-2">10.</span> Limitation</h2>
+<div id="outline-container-org04852d7" class="outline-2">
+<h2 id="org04852d7"><span class="section-number-2">10.</span> Limitation</h2>
 <div class="outline-text-2" id="text-10">
 <p>
 When mu4e triggers offlineimap to update email, you need to type in
