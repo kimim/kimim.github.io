@@ -1,0 +1,74 @@
+---
+layout: post
+title: CppCoreGuidelines P.11 通过封装整理混乱代码
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+代码散乱既难维护又容易隐藏 bug。尽量通过接口封装代码。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">algorithm</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sz</span> = 10;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span> = <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">)</span> malloc<span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">)</span> * sz<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">count</span> = 0;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">input_max</span> = 20;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">input_val</span> = 0;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span>;;<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = input_val++;
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>input_val &gt; input_max<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">break</span>;
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>count == sz<span style="color: #909183;">)</span>
+            p = <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #909183;">)</span> realloc<span style="color: #909183;">(</span>p, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #709870;">)</span> * sz * 2<span style="color: #909183;">)</span>;
+        p<span style="color: #909183;">[</span>count++<span style="color: #909183;">]</span> = x;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>=0; i&lt;count; i++<span style="color: #7388d6;">)</span> cout &lt;&lt; p<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">" "</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+</pre>
+
+
+<p>
+上面的代码进行底层内存操作、繁琐又容易出错。此处可以使用 <code>vector</code> ：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">vector</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">algorithm</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span>;
+    v.reserve<span style="color: #7388d6;">(</span>10<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">input_max</span> = 20;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">input_val</span> = 0;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span>;;<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = input_val++;
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>input_val &gt; input_max<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">break</span>;
+        v.push_back<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #110099;">ranges</span>::for_each<span style="color: #7388d6;">(</span>v, <span style="color: #909183;">[](</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">auto</span> &amp;<span style="color: #000000;">x</span><span style="color: #909183;">){</span>cout &lt;&lt; x &lt;&lt; <span style="color: #2A00FF;">" "</span>;<span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+</pre>
+
+
+<p>
+用抽象层次更高的 <code>vector</code> ， <code>span</code> ， <code>lock_guard</code> 以及 <code>future</code> 。避免处理数组、联合体、类型转换和 <code>gsl::owner</code> 。尽量使用标准库和 GSL。
+</p>
