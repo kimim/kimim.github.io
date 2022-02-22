@@ -1,0 +1,52 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.1 接口定义要清晰明确
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+理由：正确性。没有定义的接口假设，很容易被忽视，很难测试。
+
+坏例子：通过全局变量控制函数行为。很容易造成误解。
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+int round(double d)
+{
+    return (round_up) ? ceil(d) : d;    // don't: "invisible" dependency
+}
+#+end_src
+
+一旦 ~round_up~ 变了，对相同的参数调用，返回不同的结果。
+
+例外：有时需要通过环境变量来切换一组操作，比如：
+- 正常输出（normal）
+- 详细输出（verbose）
+- debug
+- 优化（optimized）
+
+
+坏例子：通过 ~errno~ 等非局部变量报错，很容易被忽视。
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+// don't: no test of printf's return value
+fprintf(connection, "logging: %d %d %d\n", x, y, s);
+#+end_src
+
+~connection~ 可能挂掉，导致没有日志输出。
+
+
+替代选项：抛出一个异常。异常不会被忽略。
+
+
+替代配方：避免在接口之间通过非局部的或隐藏状态传递信息。比如非 ~const~
+成员函数通过对象状态传递信息给其他成员函数。
+
+
+替代配方：接口应该是一个函数或一组函数。函数可以是函数模板；一组函数可
+以是类或类模板。
+
+
+加强：
+- 函数不该通过 namespace 范围的变量决定控制流
+- 函数不可往 namespace 范围的变量写数据
