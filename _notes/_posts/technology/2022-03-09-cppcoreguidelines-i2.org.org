@@ -1,0 +1,60 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.2 避免使用全局变量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+- [[http://kimi.im/2022-02-22-cppcoreguidelines-i1][I.1 接口定义要清晰明确]]
+
+理由：非 const 的全局变量隐藏依赖关系，会导致不可预知的事情。比如：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+struct Data {
+    // ... lots of stuff ...
+} data;             // non-const data
+
+void compute()      // don't
+{
+    // ... use data ...
+}
+
+void output()       // don't
+{
+    // ... use data ...
+}
+#+end_src
+
+可能还有其他地方会修改数据。这样的话，compute 和 output 的计算结果就不
+可预期了。
+
+警告：全局的对象初始化的时候，不一定完全按顺序进行。 const 对象的初始
+化顺序是无序进行的。因此，最好把全局对象初始化为常量。
+
+例外：
+- 全局对象一般来说比单例 singleton 好。
+- 全局常量自有其妙用
+
+针对名字空间范围的变量，此规则也适用。
+
+其他选项：如果你要用全局（名字空间）变量来避免重复copy，可以考虑以指向
+const 的引用形式传递数据。另一个解决办法是把数据定义为某个对象的状态，
+把数据的操作函数设定为对象的成员方法。
+
+警告：注意数据竞争情况。如果一个线程能访问非本地数据（或作为引用传进来
+的数据），而另一个线程执行的时候调用函数修改数据，就会造成数据竞争。任
+何可变数据的指针或引用都可能导致数据竞争。
+
+使用全局指针或引用访问/修改非 const，非全局的变量，依然避免不了隐藏的
+数据依赖关系，也可能导致数据竞争情况。
+
+不可变数据不会造成竞争情况。
+
+交叉参考：查看调用函数的规则。
+
+当然也有例外情况，比如 cin, cout, 以及 cerr.
+
+强化：清点所有在名字空间作用域的非 const 变量，以及全局范围的指向非
+const 数据的指针和引用。
