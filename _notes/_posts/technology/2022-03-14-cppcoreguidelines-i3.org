@@ -1,0 +1,75 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.3 避免使用单例模式
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+理由：
+
+单例（Singleton）其实只不过是伪装的复杂全局对象:
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+class Singleton {
+    // ... lots of stuff to ensure that only one Singleton object is created,
+    // that it is initialized properly, etc.
+};
+#+end_src
+
+另外一个问题是，单例的形式也有很多种……
+
+注意：
+
+如果不想改变全局对象，把它声明为 ~const~ 或 ~constexpr~ 。
+
+例外：
+
+可以用最简单的单例模式。第一次使用的时候，把它初始化。
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+typedef int X;
+X& myX()
+{
+    static X my_x {3};
+    return my_x;
+}
+
+int main()
+{
+    cout << myX() << endl;
+    cout << myX();
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 3
+: 3
+
+以上是解决初始化顺序问题的最有效方法之一。在多线程环境下，初始化静态对
+象不会导致竞争条件。除非是在构造器中访问了共享对象。
+
+局部静态变量的初始会不会导致竞争条件。但是对象的解构如果需要同步进行的
+话，就要用简单一些的解决办法。比如：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+X& myX()
+{
+    static auto p = new X {3};
+    return *p;  // potential leak
+}
+#+end_src
+
+以上代码返回的是一个指针，就需要在某个地方以恰当的线程安全的方式删除其
+存储。这样就容易出错，所以尽量避免使用，除非： ~myX~ 是一个多线程代码，
+~X~ 对象需要释放， ~X~ 的解构器代码同步进行。
+
+如果定义了单实例类，该类只创建了一个对象，那么 ~myX~ 函数就不是单实例。
+此种情况，也非本规则的例外。即也要遵循本规则。
+
+强化办法：
+- 找到名字中有 singleton 的类
+- 找到只创建一个对象的类：数对象数，检查构造器
+- 如类有一公开静态函数，函数里本地静态构造了此类的一对象，并作为指针或
+  引用返回此对象。禁之。
