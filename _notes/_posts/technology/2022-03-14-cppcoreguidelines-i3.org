@@ -7,6 +7,8 @@ tags: [CppCoreGuidelines]
 ---
 #+END_EXPORT
 
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
 理由：
 
 单例（Singleton）其实只不过是伪装的复杂全局对象:
