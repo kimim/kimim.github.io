@@ -7,6 +7,8 @@ tags: [CppCoreGuidelines]
 ---
 #+END_EXPORT
 
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
 Github上有个 [[https://github.com/isocpp/CppCoreGuidelines][C++ 核心指南]]。C++ 创始人 [[https://github.com/isocpp/CppCoreGuidelines/commits?author=BjarneStroustrup][Bjarne Stroustrup]] 亲自参与维护。
 应该值得好好学习。
 
@@ -121,7 +123,7 @@ long double
 char const *, size_t
 wchar_t const *, size_t
 char16_t const *, size_t
-char32_t const *, size_t    
+char32_t const *, size_t
 #+end_src
 
 所以，其实还可以这样定义后缀，用来返回字符串的 =size= ：

@@ -5,28 +5,28 @@ categories: [technology]
 tags: [CppCoreGuidelines]
 ---
 
-<ul class="org-ul">
-<li><a href="http://kimi.im/2022-02-22-cppcoreguidelines-i1">I.1 接口定义要清晰明确</a></li>
-</ul>
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
 
 <p>
 理由：非 const 的全局变量隐藏依赖关系，会导致不可预知的事情。比如：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Data</span> <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... lots of stuff ...</span>
-<span style="color: #707183;">}</span> <span style="color: #000000;">data</span>;             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">non-const data</span>
+<pre class="src src-C++"><span style="color: #ff55ff; font-weight: bold;">struct</span> <span style="color: #ffffff; font-style: italic; text-decoration: underline;">Data</span> <span style="color: #8c8c8c;">{</span>
+    <span style="color: #3cb371;">// </span><span style="color: #3cb371;">... lots of stuff ...</span>
+<span style="color: #8c8c8c;">}</span> <span style="color: #ffffff;">data</span>;             <span style="color: #3cb371;">// </span><span style="color: #3cb371;">non-const data</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">compute</span><span style="color: #707183;">()</span>      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't</span>
-<span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... use data ...</span>
-<span style="color: #707183;">}</span>
+<span style="color: #ffffff; font-style: italic; text-decoration: underline;">void</span> <span style="color: #00bfff; font-weight: bold;">compute</span><span style="color: #8c8c8c;">()</span>      <span style="color: #3cb371;">// </span><span style="color: #3cb371;">don't</span>
+<span style="color: #8c8c8c;">{</span>
+    <span style="color: #3cb371;">// </span><span style="color: #3cb371;">... use data ...</span>
+<span style="color: #8c8c8c;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">output</span><span style="color: #707183;">()</span>       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't</span>
-<span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... use data ...</span>
-<span style="color: #707183;">}</span>
+<span style="color: #ffffff; font-style: italic; text-decoration: underline;">void</span> <span style="color: #00bfff; font-weight: bold;">output</span><span style="color: #8c8c8c;">()</span>       <span style="color: #3cb371;">// </span><span style="color: #3cb371;">don't</span>
+<span style="color: #8c8c8c;">{</span>
+    <span style="color: #3cb371;">// </span><span style="color: #3cb371;">... use data ...</span>
+<span style="color: #8c8c8c;">}</span>
 </pre>
 </div>
 

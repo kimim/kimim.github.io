@@ -7,7 +7,7 @@ tags: [CppCoreGuidelines]
 ---
 #+END_EXPORT
 
-- [[http://kimi.im/2022-02-22-cppcoreguidelines-i1][I.1 接口定义要清晰明确]]
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
 理由：非 const 的全局变量隐藏依赖关系，会导致不可预知的事情。比如：
 

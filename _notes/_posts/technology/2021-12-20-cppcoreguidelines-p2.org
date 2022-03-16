@@ -7,9 +7,8 @@ tags: [CppCoreGuidelines]
 ---
 #+END_EXPORT
 
-- [[http://kimi.im/2021-12-18-cppcoreguidelines-p1][P.1 直接地用代码表达编程设计理念]]
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-  
 这条指南是说尽量按照 ISO C++ 国际标准写代码。
 
 注意事项：
@@ -25,6 +24,3 @@ tags: [CppCoreGuidelines]
   功能。
 - 使用最新的 C++ 编译器（C++17, C++14, C++11）
 - 设置编译选项，关闭非标准的扩展功能
-
-  
-  

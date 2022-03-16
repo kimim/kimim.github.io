@@ -5,14 +5,12 @@ categories: [technology]
 tags: [CppCoreGuidelines]
 ---
 
-<ul class="org-ul">
-<li><a href="http://kimi.im/2021-12-18-cppcoreguidelines-p1">P.1 直接地用代码表达编程设计理念</a></li>
-<li><a href="http://kimi.im/2021-12-20-cppcoreguidelines-p2">P.2 用 ISO C++ 标准写代码</a></li>
-<li><a href="http://kimi.im/2021-12-20-cppcoreguidelines-p3">P.3 明确地表达程序意图</a></li>
-</ul>
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
 
-<div id="outline-container-orgb7aa101" class="outline-2">
-<h2 id="orgb7aa101"><span class="section-number-2">1.</span> 注意事项</h2>
+<div id="outline-container-orgafd6466" class="outline-2">
+<h2 id="orgafd6466"><span class="section-number-2">1.</span> 注意事项</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 理想情况下，写程序要做到完全的静态（编译期）类型安全。可是，实际开发工作中，也避免不了，比如以下这些情况：
@@ -27,12 +25,12 @@ tags: [CppCoreGuidelines]
 </div>
 </div>
 
-<div id="outline-container-org9fe3e8b" class="outline-2">
-<h2 id="org9fe3e8b"><span class="section-number-2">2.</span> 示例</h2>
+<div id="outline-container-org4a92061" class="outline-2">
+<h2 id="org4a92061"><span class="section-number-2">2.</span> 示例</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org3ac33d0" class="outline-3">
-<h3 id="org3ac33d0"><span class="section-number-3">2.1.</span> 联合体</h3>
+<div id="outline-container-org0900d26" class="outline-3">
+<h3 id="org0900d26"><span class="section-number-3">2.1.</span> 联合体</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 <code>variant</code> 是 C++17 增加的一个功能，用以作为 <code>union</code> 的安全替代。它可以保存模板参数列表中的某一类型的值。
@@ -64,8 +62,8 @@ var1 is string now: kimi.im
 </div>
 
 
-<div id="outline-container-org423af81" class="outline-3">
-<h3 id="org423af81"><span class="section-number-3">2.2.</span> 数组衰变</h3>
+<div id="outline-container-orgfa6627f" class="outline-3">
+<h3 id="orgfa6627f"><span class="section-number-3">2.2.</span> 数组衰变</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 所谓的数组衰变是指在使用数组的过程中，数组元素类型和长度信息丢失的情况。比如当我们以指针或数值的形式传递数组参数给函数的时候，数组的长度信息就丢失了。
@@ -150,8 +148,8 @@ var1 is string now: kimi.im
 </div>
 </div>
 
-<div id="outline-container-org707d8b6" class="outline-3">
-<h3 id="org707d8b6"><span class="section-number-3">2.3.</span> 范围错误</h3>
+<div id="outline-container-orgff862bc" class="outline-3">
+<h3 id="orgff862bc"><span class="section-number-3">2.3.</span> 范围错误</h3>
 <div class="outline-text-3" id="text-2-3">
 <div class="org-src-container">
 <pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">access_out_of_range</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> *<span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
@@ -176,8 +174,8 @@ var1 is string now: kimi.im
 </div>
 </div>
 
-<div id="outline-container-orgb30586e" class="outline-3">
-<h3 id="orgb30586e"><span class="section-number-3">2.4.</span> 收缩转换</h3>
+<div id="outline-container-org979c035" class="outline-3">
+<h3 id="org979c035"><span class="section-number-3">2.4.</span> 收缩转换</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 <code>gsl::narrow</code> 在收缩转换出错的时候，会异常。

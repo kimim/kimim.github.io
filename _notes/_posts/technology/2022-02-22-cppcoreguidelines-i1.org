@@ -7,6 +7,8 @@ tags: [CppCoreGuidelines]
 ---
 #+END_EXPORT
 
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
 理由：正确性。没有定义的接口假设，很容易被忽视，很难测试。
 
 坏例子：通过全局变量控制函数行为。很容易造成误解。
