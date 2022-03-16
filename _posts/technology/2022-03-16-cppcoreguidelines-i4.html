@@ -1,0 +1,194 @@
+---
+layout: post
+title: CppCoreGuidelines I.4 精确强化接口的类型
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+类型乃文档之最简最佳者。其明确其定义，提升可读性，又支持运行时检测。另外，类型精确的代码，编译器和运行系统可以做更好的优化。反例：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">pass</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>* <span style="color: #000000;">data</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#24369;&#19988;&#26080;&#31867;&#22411;&#30340;  void* &#24456;&#21487;&#30097;</span>
+</pre>
+</div>
+
+<p>
+调用者不确定能传入什么类型的数据，因为没有标注为 <code>const</code> 也不知道数据是不是会被改变。因为所有的指针类型都能默默地转成 <code>void*</code> ，对调用者来说，倒是很容易提供这类数据。
+</p>
+
+<p>
+然而，被调用的函数，却需要用 <code>static_cast</code> 转化成没有验证过的类型使用。这样又容易出错，又繁琐。
+</p>
+
+<p>
+只有设计 C++ 程序时描述不了数据类型的时候，小范围内使用 <code>const void*</code> 。考虑下，能否改用 <code>variant</code> 或指向基类的指针。
+</p>
+
+<p>
+替代方案：模板参数往往能避免 <code>void*</code> ，就可以用 <code>T*</code> 或 <code>T&amp;</code> 替代。对于泛型代码来说， <code>T</code> 可以是通用的类型，或是模板参数设定的类型。
+</p>
+
+<p>
+反例：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">draw_rect<span style="color: #707183;">(</span>100, 200, 100, 500<span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#36825;&#20123;&#25968;&#23383;&#25351;&#30340;&#26159;&#20160;&#20040;&#65311;</span>
+
+draw_rect<span style="color: #707183;">(</span>p.x, p.y, 10, 20<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">10 &#21644; 20 &#30340;&#21333;&#20301;&#26159;&#21861;&#65311;</span>
+</pre>
+</div>
+
+<p>
+清楚的是：调用者用这四个参数描述一个长方形。但是不清楚这些参数代表长方形的哪部分。另外，整数类型 <code>int</code> 可以表示多种信息：不同单位的数值。这样，我们就只能猜测这四个整数类型代表了什么。很可能，前两个是坐标 x 和y ，那么后两个是什么呢？
+</p>
+
+<p>
+使用注释和参数名可以提供一些信息，但是我们可以在明确一些：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw_rectangle</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">top_left</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">bottom_right</span><span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw_rectangle</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">top_left</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Size</span> <span style="color: #000000;">height_width</span><span style="color: #707183;">)</span>;
+
+draw_rectangle<span style="color: #707183;">(</span>p, Point<span style="color: #7388d6;">{</span>10, 20<span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#20004;&#20010;&#28857;</span>
+draw_rectangle<span style="color: #707183;">(</span>p, Size<span style="color: #7388d6;">{</span>10, 20<span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#19968;&#20010;&#35282;&#65292;&#19968;&#23545;&#36793;&#38271;</span>
+</pre>
+</div>
+
+<p>
+显然，我们不可能通过静态类型系统避免所有错误。比如上面例子，第一个参数，如果调用者传进其他位置，而不是左上角的点。可能需要注释和变量名来澄清。
+</p>
+
+
+<p>
+坏例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">set_settings<span style="color: #707183;">(</span><span style="color: #110099;">true</span>, <span style="color: #110099;">false</span>, 42<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#36825;&#20010;&#25968;&#25351;&#30340;&#26159;&#20160;&#20040;&#65311;</span>
+</pre>
+</div>
+
+<p>
+从参数类型和参数值看不出来这个函数是要设置什么东西。
+</p>
+
+<p>
+按照以下改发，看起来就比较明确、安全，且可读性更好：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">alarm_settings</span> <span style="color: #000000;">s</span><span style="color: #707183;">{}</span>;
+s.enabled = <span style="color: #110099;">true</span>;
+s.displayMode = <span style="color: #110099;">alarm_settings</span>::<span style="color: #110099;">mode</span>::spinning_light;
+s.frequency = <span style="color: #110099;">alarm_settings</span>::every_10_seconds;
+set_settings<span style="color: #707183;">(</span>s<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+如果是一组相关的开关量，可以考虑标记枚举：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">enable_lamp_options<span style="color: #707183;">(</span><span style="color: #110099;">lamp_option</span>::on | <span style="color: #110099;">lamp_option</span>::animate_state_transitions<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+坏例子：
+</p>
+
+<p>
+以下例子，从接口看不出 <code>time_to_blink</code> 是秒还是毫秒？
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">blink_led</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">time_to_blink</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#19981;&#22909; -- &#21333;&#20301;&#19981;&#28165;</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">do something with time_to_blink</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    blink_led<span style="color: #7388d6;">(</span>2<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+好例子：
+</p>
+
+<p>
+<code>std::chrono::duration</code> 类型可以帮助明确时间长度的单位。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">blink_led</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">milliseconds</span> <span style="color: #000000;">time_to_blink</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#22909; -- &#26102;&#38388;&#21333;&#20301;&#26126;&#30830;</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">do something with time_to_blink</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    blink_led<span style="color: #7388d6;">(</span>1500ms<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+这个函数也可以改写成可以接受任何时间单位：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">chrono</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">chrono</span>;
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">rep</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">period</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">blink_led</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">duration</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">rep</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">period</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">time_to_blink</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#22909; -- &#21333;&#20301;&#26126;&#30830;</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assuming that millisecond is the smallest relevant unit</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">milliseconds_to_blink</span> = duration_cast<span style="color: #7388d6;">&lt;</span>milliseconds<span style="color: #7388d6;">&gt;(</span>time_to_blink<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    cout &lt;&lt; <span style="color: #2A00FF;">"blink "</span> &lt;&lt; milliseconds_to_blink.count<span style="color: #7388d6;">()</span> &lt;&lt; <span style="color: #2A00FF;">" ms"</span> &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    blink_led<span style="color: #7388d6;">(</span>2s<span style="color: #7388d6;">)</span>;
+    blink_led<span style="color: #7388d6;">(</span>150ms<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+blink 2000 ms
+blink 150 ms
+</pre>
+
+
+<p>
+强化：
+</p>
+<ul class="org-ul">
+<li>（简单）统计多少使用 <code>void*</code> 作为参数和返回类型</li>
+<li>（简单）统计超过1个以上的布尔量作为参数的接口</li>
+<li>（困难）检查过多使用原生类型作为参数的函数</li>
+</ul>
