@@ -1,0 +1,37 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：penchant
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+昨天看《Mastering Emacs》的时候，看到这句话：
+
+#+begin_quote
+The first thing a beginner sees is Emacs's *penchant for* creating
+windows: when you view a help file, when you compile a file, or when
+you open a shell.
+
+初学者觉得使用 Emacs 首先会 *特别倾向于* 创建窗口：当你查看帮助文件的时
+候，当你编译文件的时候，或者当你打开一个 shell 命令行的时候。
+#+end_quote
+
+这里，我看到一个新的单词， *penchant* 。查了字典发现这个词是从法语里来的，
+难怪读音也是法语味：[ˈpɒ̃ʃɒ̃]
+
+在法语里它的动词形式是 *pencher* ，倚靠、倾斜之意。比如：
+
+- L'enfant s'est penché pour faire ses lacets. 小朋友倚靠着系鞋带。
+- L'arbre penche légèrement à cause du vent. 风吹起，树儿轻微的倾斜。
+
+其实， *penchant* 是 *pencher* 的名词化，引进到英语里，也是以名词形式使用。
+再比如：
+
+- He would go to higher places because of his rare humility and
+  *penchant for* peace.
+- Bappi, who was known as the 'Disco King' among the masses, had a
+  *penchant for* wearing gold jewellery and trademark black glasses.
+- Bullying is rife: So is schools' *penchant for* dismissing it as
+  harmless even when it is not.
