@@ -1,0 +1,78 @@
+---
+layout: post
+title: CppCoreGuidelines I.5 尽量声明输入条件
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+函数参数的实际意义会限制函数调用者的使用。
+</p>
+
+<p>
+例如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+此处 <code>x</code> 必须是非负的。类型系统不能很好很自然的表达这种属性，因此我们要通过其他途径表达。比如，通过代码注释：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">x &#39035;&#20026;&#38750;&#36127;</span>
+</pre>
+</div>
+
+<p>
+有些前提条件可以用断言语句表达，比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl_assert</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> Expects<span style="color: #7388d6;">(</span>x &gt;= 0<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    sqrt<span style="color: #7388d6;">(</span>-1.0<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+terminate called without an active exception
+</pre>
+
+
+<p>
+理想的情况， <code>Expects(x &gt;= 0)</code> 应该是 <code>sqrt()</code> 接口的一部分。但是很难实现，目前，我们暂时可以将断言放在函数体定义内。
+</p>
+
+<p>
+注意：尽量选择以正式的规格需求表达，如 <code>Expects(p);</code> 如果不可行，就在注释中写：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the sequence [p:q) is ordered using &lt;.</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#24207;&#21015; [p:q) &#20197; &lt; &#25490;&#24207;</span>
+</pre>
+</div>
+
+<p>
+注意（以下文字，我看不懂了！）：
+</p>
+
+<p>
+Most member functions have as a precondition that some class invariant holds. That invariant is established by a constructor and must be reestablished upon exit by every member function called from outside the class. We don’t need to mention it for each member function.
+</p>

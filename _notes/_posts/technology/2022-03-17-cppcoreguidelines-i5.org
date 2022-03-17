@@ -1,0 +1,57 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.5 尽量声明输入条件
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+函数参数的实际意义会限制函数调用者的使用。
+
+例如：
+
+#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+double sqrt(double x);
+#+end_src
+
+此处 ~x~ 必须是非负的。类型系统不能很好很自然的表达这种属性，因此我们要
+通过其他途径表达。比如，通过代码注释：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+double sqrt(double x); // x 须为非负
+#+end_src
+
+有些前提条件可以用断言语句表达，比如：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+#include <gsl/gsl_assert>
+double sqrt(double x) { Expects(x >= 0); /* ... */ }
+int main()
+{
+    sqrt(-1.0);
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: terminate called without an active exception
+
+理想的情况， ~Expects(x >= 0)~ 应该是 ~sqrt()~ 接口的一部分。但是很难实现，
+目前，我们暂时可以将断言放在函数体定义内。
+
+注意：
+尽量选择以正式的规格需求表达，如 ~Expects(p);~ 如果不可行，就在注释中写：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+// the sequence [p:q) is ordered using <.
+// 序列 [p:q) 以 < 排序
+#+end_src
+
+注意（以下文字，我看不懂了！）：
+
+Most member functions have as a precondition that some class invariant holds. That invariant is established by a constructor and must be reestablished upon exit by every member function called from outside the class. We don’t need to mention it for each member function.
