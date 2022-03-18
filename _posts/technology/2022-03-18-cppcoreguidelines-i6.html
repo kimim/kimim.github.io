@@ -1,0 +1,71 @@
+---
+layout: post
+title: CppCoreGuidelines I.6 首选 ~Expects()~ 表达前置条件
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+可以明确前置条件，可以引入工具支持。
+</p>
+
+<p>
+比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">area</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">height</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">width</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    Expects<span style="color: #7388d6;">(</span>height &gt; 0 &amp;&amp; width &gt; 0<span style="color: #7388d6;">)</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>height &lt;= 0 || width &lt;= 0<span style="color: #7388d6;">)</span> my_error<span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">obscure</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意事项：
+</p>
+
+<p>
+前置条件可以通过多种方式声明：注释、if 条件语句、 <code>assert()</code> 断言。然而，这些方式要么很难和普通代码区分开，要么很难更新，要么很难让工具处理，而且可能语义上是错的。（debug 模式下总是中断？生产环境不做检查？）
+</p>
+
+<p>
+注意事项：
+</p>
+
+<p>
+前置条件应该是接口的一部分，而不是实现的一部分。但是 C++ 语言目前还不支持。一旦<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf">语言支持</a>，核心指南会引入标准的前置条件、后置条件与断言判断。
+</p>
+
+<p>
+注意事项：
+</p>
+
+<p>
+<code>Expects()</code> 也可以在算法过程中，检查条件是否满足。
+</p>
+
+<p>
+注意事项：
+</p>
+
+<p>
+不建议用无符号型数据来确保传入的数据非负。
+</p>
+
+<p>
+强化措施：
+</p>
+<ul class="org-ul">
+<li>目前语言层面还不支持，请检查 <code>assert()</code> 判断是否合理</li>
+</ul>

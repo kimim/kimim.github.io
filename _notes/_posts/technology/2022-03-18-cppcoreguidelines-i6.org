@@ -1,0 +1,45 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.6 首选 ~Expects()~ 表达前置条件
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+可以明确前置条件，可以引入工具支持。
+
+比如：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+int area(int height, int width)
+{
+    Expects(height > 0 && width > 0);            // good
+    if (height <= 0 || width <= 0) my_error();   // obscure
+    // ...
+}
+#+end_src
+
+注意事项：
+
+前置条件可以通过多种方式声明：注释、if 条件语句、 ~assert()~ 断言。然而，这些方式要么很难和普通代码区分开，要么很难更新，要么很难让工具处理，而且可能语义上是错的。（debug 模式下总是中断？生产环境不做检查？）
+
+注意事项：
+
+前置条件应该是接口的一部分，而不是实现的一部分。但是 C++ 语言目前还不
+支持。一旦[[http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf][语言支持]]，核心指南会引入标准的前置条件、后置条件与断言判断。
+
+注意事项：
+
+~Expects()~ 也可以在算法过程中，检查条件是否满足。
+
+注意事项：
+
+不建议用无符号型数据来确保传入的数据非负。
+
+强化措施：
+- 目前语言层面还不支持，请检查 ~assert()~ 判断是否合理
