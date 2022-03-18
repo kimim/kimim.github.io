@@ -1,7 +1,7 @@
 #+BEGIN_EXPORT html
 ---
 layout: post
-title: CppCoreGuidelines I.6 首选 ~Expects()~ 表达前置条件
+title: CppCoreGuidelines I.6 首选 Expects() 表达前置条件
 categories: [technology]
 tags: [CppCoreGuidelines]
 ---
