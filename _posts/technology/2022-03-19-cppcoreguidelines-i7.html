@@ -1,0 +1,207 @@
+---
+layout: post
+title: CppCoreGuidelines I.7 声明后置条件
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+检测到针对输出结果可能的误解，可能捕捉到错误的实现。
+</p>
+
+<p>
+坏例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">area</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">height</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">width</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> height * width; <span style="color: #707183;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
+</pre>
+</div>
+
+<p>
+此处，我们故意不做前置条件判断，因此长宽不一定是正数。我们也没有检查后置条件，长宽的乘积可能超过最大整数，从而产生溢出。
+</p>
+
+<p>
+考虑使用：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl_assert</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">area</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">height</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">width</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">res</span> = height * width;
+    Ensures<span style="color: #7388d6;">(</span>res &gt; 0<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> res;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    cout &lt;&lt; area<span style="color: #7388d6;">(</span>-10, 10<span style="color: #7388d6;">)</span> &lt;&lt; endl;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+terminate called without an active exception
+</pre>
+
+
+
+<p>
+坏例子：
+</p>
+
+<p>
+考虑这个著名的安全bug：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">string.h</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">MAX</span> = 10;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">problematic</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">buffer</span><span style="color: #7388d6;">[</span>MAX<span style="color: #7388d6;">]</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    memset<span style="color: #7388d6;">(</span>buffer, 0, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span>buffer<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+因为没有后置条件说 buffer 必须清零，所以显然多余的 <code>memset()</code> 调用可能会被编译优化掉（实际执行看不出来）。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl_assert</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">string.h</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">MAX</span> = 10;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">problematic</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">buffer</span><span style="color: #7388d6;">[</span>MAX<span style="color: #7388d6;">]</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    memset<span style="color: #7388d6;">(</span>buffer, 0, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span>buffer<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+    Ensures<span style="color: #7388d6;">(</span>buffer<span style="color: #909183;">[</span>0<span style="color: #909183;">]</span> == 0<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意：
+</p>
+
+<p>
+后置条件经常在注释中非正式的介绍函数的目的； <code>Ensures()</code> 可以更系统化、更明显、更容易检查。
+</p>
+
+<p>
+注意：
+</p>
+
+<p>
+除了直接返回结果的情况，后置条件也可用于其他如数据结构状态的检查。
+</p>
+
+<p>
+例如：
+</p>
+
+<p>
+一个操作 <code>Record</code> 的函数，使用互斥锁避免竞争条件：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000;">m</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">manipulate</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span>&amp; <span style="color: #000000;">r</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't</span>
+<span style="color: #707183;">{</span>
+    m.lock<span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no m.unlock() ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+此处，我们忘记了说明是否要释放互斥锁，因此我们不知道这是有意为之，还是
+bug。标明后置条件可以澄清：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">manipulate</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span>&amp; <span style="color: #000000;">r</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">postcondition: m is unlocked upon exit</span>
+<span style="color: #707183;">{</span>
+    m.lock<span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no m.unlock() ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这时候，我们就知道，这是个bug。但是需要读注释。
+</p>
+
+<p>
+更好地办法是，通过过 RAII （Resource Acquisition Is Initialization，资源获取就是初始化）确保满足“函数结束时释放互斥锁”这个后置条件：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">mutex</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">thread</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
+<span style="color: #707183;">}</span> <span style="color: #000000;">r</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000;">m</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">manipulate</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span>&amp; <span style="color: #000000;">r</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">best</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">_</span> <span style="color: #7388d6;">{</span>m<span style="color: #7388d6;">}</span>;
+    r.x = n;
+    cout &lt;&lt; r.x &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">t</span><span style="color: #7388d6;">(</span><span style="color: #909183;">[]{</span> manipulate<span style="color: #709870;">(</span>r, 1<span style="color: #709870;">)</span>;<span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    manipulate<span style="color: #7388d6;">(</span>r, 2<span style="color: #7388d6;">)</span>;
+    t.join<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+2
+1
+</pre>
+
+
+<p>
+注意：
+</p>
+<ul class="org-ul">
+<li>理想情况下，最好可以在接口声明中标明后置条件，用户可以方便看到。</li>
+<li>只有与用户相关的后置条件展示在接口定义中。</li>
+<li>内部状态相关的后置条件放在实现和定义中。</li>
+</ul>
+
+<p>
+强化：
+</p>
+<ul class="org-ul">
+<li>比较难。工具可以支持锁的状态检查。</li>
+</ul>
