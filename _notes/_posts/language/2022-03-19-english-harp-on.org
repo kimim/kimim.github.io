@@ -1,0 +1,32 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：harp on
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+这又是一个跟音乐相关的词 harp 竖琴。之前我们学过 [[http://kimi.im/2021-12-18-english-to-act-in-concert][to act in concert]] 齐
+心协力，其中 concert 是协奏曲。
+
+harp on 的意思是喋喋不休的唠叨。
+
+It was one small mistake, why do you keep harping on me about it? 这仅
+仅是个小错，为啥跟我唠唠叨叨没完没了？
+
+Jörg's been harping on us to get the project plan ready for next
+increment. 约克总是跟我们喋喋不休的催促我们快把下个迭代的项目计划做好。
+
+其实，harp on 是 harp on the same string （在竖琴的同一根弦上不停弹）
+的简化。
+
+Johan is always harping on the same string about how little money he
+makes. 约翰总是不断旧弦重弹，讲他赚钱如何如何少的事情。
+
+上面，我把 harp on the same string 翻译成旧弦重弹。这里是改用了咱们的
+一个成语旧调重弹：陈旧的调子又重新弹奏。比喻把过去的主张或陈旧的议论、
+说法重新搬出来。
+
+比如朱自清《回来杂记》：“北平早就被称为‘大学城’和‘文化城’，这原是旧调
+重弹，不过似乎弹得更响了。”
