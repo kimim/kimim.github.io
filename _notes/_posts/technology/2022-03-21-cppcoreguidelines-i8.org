@@ -1,0 +1,53 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.8 首选 Ensures() 表达后置条件
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+明确后置条件，引入工具支持。
+
+例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+#include <gsl/gsl_assert>
+#include <string.h>
+const int MAX = 10;
+void f()    // problematic
+{
+    char buffer[MAX];
+    // ...
+    memset(buffer, 0, sizeof(buffer));
+    Ensures(buffer[0] == 0);
+}
+int main()
+{
+    f();
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+
+注意：
+
+有多种方式标明后置条件，包括代码注释、条件判断、 ~assert()~ 。然而，这些
+方式要么很难和普通代码区分开，要么很难更新，要么很难让工具处理，而且可
+能语义上是错的。
+
+替代方案：
+
+某些函数调用完后必须释放的资源，最好通过 RAII 表达。
+
+注意：
+
+理想情况， ~Ensures~ 最好是接口的一部分，但是比较难实现。目前我们放在接口定义内。一旦[[http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf][语言支持]]，核心指南会引入标准的前置条件、后置条件与断言判断。
+
+强化：
+- 目前语言层面还不支持，请检查 ~assert()~ 判断是否合理。
