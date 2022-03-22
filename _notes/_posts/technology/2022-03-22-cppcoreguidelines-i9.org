@@ -1,0 +1,42 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.9 如果是模板接口，用 concept 编写参数文档
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+使接口更清晰，编译时能检查。
+
+比如：
+
+使用 C++20 风格的需求规格（requirements specification）
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+template<typename Iter, typename Val>
+requires input_iterator<Iter> && equality_comparable<ValueType<Iter>, Val>
+Iter find(Iter first, Iter last, Val v)
+{
+    // ...
+}
+int main()
+{
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+
+注意：
+
+很快编译器就能支持 C++20 的 ~requires~ 语句。GCC 6.1 之后的版本已经支持了。
+
+强化：
+
+目前编程语言还不支持。等标准制定后，警告不符合 ~requires~ 的不可变模板参
+数。
