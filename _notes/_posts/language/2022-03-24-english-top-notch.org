@@ -1,0 +1,38 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：top-notch
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+看书的时候，读到这句话：
+
+the best strategies are created with the collective wisdom from a
+*top-notch* team.
+
+最好的策略是顶尖团队集体智慧的结果。
+
+这是关于敏捷软件开发的书，书中说最好的软件架构、软件设计策略应该是敏捷
+团队的集体智慧的产物。其实，在人类史前历史中，人类就已经在进行集体创作
+了。比如 6000 年前科布斯坦保护区的大片的岩石画。
+
+这句话里有个单词 *top-notch* ，是我第一次见到的单词。正如往常一样，对于
+新学到的单词，我们都要好好探究探究。
+
+notch 是刻痕，记号的意思。top-notch，是说在最棒的东西上刻上记号么？大
+概就是挑选出最棒的，刻上标记，能卖好价钱吧。
+
+anyway，top-notch 就是顶呱呱、一流、顶尖的。比如：
+
+For golfers, Sanya offers 11 *top-notch* courses, including the famous
+Yalong Bay National Resort. 亚龙湾有 11 个一流的高尔夫球场，包括最有名
+的亚龙湾国际度假区。
+
+还有个词 top-of-the-line 也是最好的：
+
+On many new, top-of-the-line computer mice, there are built-in macro
+keys.  在很多新款，顶级的电脑鼠标上，会有内置的快捷按键哦。
+
+能在 top-notch team 工作，那其实是很开心的事情。
