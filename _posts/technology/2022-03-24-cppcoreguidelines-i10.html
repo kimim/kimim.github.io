@@ -1,0 +1,154 @@
+---
+layout: post
+title: CppCoreGuidelines I.10 使用异常
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+不可忽视错误，错误导致不可预期的系统状态或计算结果。大部分系统错误是因为这种疏忽导致的。
+</p>
+
+<p>
+例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">printf</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* ...<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: return negative number if output fails</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">F</span>, <span style="color: #7F0055; font-weight: bold;">class</span> ...<span style="color: #000000; font-style: italic; text-decoration: underline;">Args</span><span style="color: #707183;">&gt;</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good: throw system_error if unable to start the new thread</span>
+<span style="color: #7F0055; font-weight: bold;">explicit</span> <span style="color: #0000ff; font-weight: bold;">thread</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">F</span>&amp;&amp; <span style="color: #000000;">f</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Args</span>&amp;&amp;... <span style="color: #000000;">args</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+备注：
+</p>
+<ol class="org-ol">
+<li>构造函数被 <code>explicit</code> 修饰后, 就不能再被隐式调用了。</li>
+<li><code>thread</code> 构造函数出错 <code>errc::resource_unavailable_try_again</code> 会抛出
+<code>system_error</code> （<a href="https://www.cplusplus.com/reference/thread/thread/thread/">thread</a>）</li>
+</ol>
+
+<p>
+注意：
+</p>
+
+<p>
+什么是错误？
+</p>
+
+<p>
+错误，意味着某个功能无法实现预期的目的（包括无法达到后置条件）。代码调用时，忽略错误，可能导致错误的结果或不确定的系统状态。比如，无法与远程服务器建立连接本身可能不是一个错误：服务器也可能因为自身原因拒绝所有连接请求，所以最自然的事情是返回一个结果，让调用者去检查无法连接的原因。然而，如果认为无法建立连接是一种错误，那么应该抛出一个异常。
+</p>
+
+
+<p>
+例外：
+</p>
+
+<p>
+传统的接口函数（如 Unix 信号处理函数）使用错误码（errno）汇报实际错误状态。没有其他替代方案，因此调用这类函数可以违反此规则。violate the rule.
+</p>
+
+
+<p>
+替代方案：
+</p>
+
+<p>
+如果你不能使用异常（比如代码中使用很多老式的 raw pointer，或者有硬实时要求），考虑使用以下方式，返回一对值：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">tuple</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">tuple</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> make_tuple<span style="color: #7388d6;">(</span>1, 2<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">val</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">error_code</span>;
+    tie<span style="color: #7388d6;">(</span>val, error_code<span style="color: #7388d6;">)</span> = do_something<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>error_code<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"val= "</span> &lt;&lt; val &lt;&lt; <span style="color: #2A00FF;">", error= "</span> &lt;&lt; error_code &lt;&lt; endl;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+val= 1, error= 2
+</pre>
+
+
+<p>
+这个方式会产生未初始化的变量。因此 C++17 的“结构化绑定”功能可以直接从返回值初始化变量：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">val</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">error_code</span>;
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> S<span style="color: #7388d6;">(</span>1, 2<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #7388d6;">[</span>val, error_code<span style="color: #7388d6;">]</span> = do_something<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>error_code<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"val= "</span> &lt;&lt; val &lt;&lt; <span style="color: #2A00FF;">", error= "</span> &lt;&lt; error_code &lt;&lt; endl;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+val= 1, error= 2
+</pre>
+
+
+
+<p>
+注意：
+</p>
+
+<p>
+我们不认为性能是不用异常处理的原因。
+</p>
+
+<p>
+通常情况，显式的出错检查和处理消耗的时间和空间与异常处理差不多。
+</p>
+
+<p>
+通常，使用异常处理，简洁清晰的代码性能更好（通过程序优化，简化出错分支处理）。
+</p>
+
+<p>
+对于性能要求高的代码，可以将出错检查移到性能关键代码外。
+</p>
+
+<p>
+长期来看，普通的代码能更好的优化。声明性能指标前，最好仔细测量。
+</p>
+
+<p>
+强化：
+</p>
+<ul class="org-ul">
+<li>本理论指南，无法直接检查。</li>
+<li>审查使用 <code>errno</code> 的地方</li>
+</ul>

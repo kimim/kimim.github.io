@@ -1,0 +1,113 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.10 使用异常
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+不可忽视错误，错误导致不可预期的系统状态或计算结果。大部分系统错误是因
+为这种疏忽导致的。
+
+例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+int printf(const char* ...);    // bad: return negative number if output fails
+
+template<class F, class ...Args>
+// good: throw system_error if unable to start the new thread
+explicit thread(F&& f, Args&&... args);
+#+end_src
+
+备注：
+1) 构造函数被 ~explicit~ 修饰后, 就不能再被隐式调用了。
+2) ~thread~ 构造函数出错 ~errc::resource_unavailable_try_again~ 会抛出
+   ~system_error~ （[[https://www.cplusplus.com/reference/thread/thread/thread/][thread]]）
+
+注意：
+
+什么是错误？
+
+错误，意味着某个功能无法实现预期的目的（包括无法达到后置条件）。代码调
+用时，忽略错误，可能导致错误的结果或不确定的系统状态。比如，无法与远程
+服务器建立连接本身可能不是一个错误：服务器也可能因为自身原因拒绝所有连
+接请求，所以最自然的事情是返回一个结果，让调用者去检查无法连接的原因。
+然而，如果认为无法建立连接是一种错误，那么应该抛出一个异常。
+
+
+例外：
+
+传统的接口函数（如 Unix 信号处理函数）使用错误码（errno）汇报实际错误
+状态。没有其他替代方案，因此调用这类函数可以违反此规则。violate the rule.
+
+
+替代方案：
+
+如果你不能使用异常（比如代码中使用很多老式的 raw pointer，或者有硬实时
+要求），考虑使用以下方式，返回一对值：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+#include <tuple>
+tuple<int, int> do_something() {
+    return make_tuple(1, 2);
+}
+int main()
+{
+    int val;
+    int error_code;
+    tie(val, error_code) = do_something();
+    if (error_code) {
+        cout << "val= " << val << ", error= " << error_code << endl;
+    }
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: val= 1, error= 2
+
+这个方式会产生未初始化的变量。因此 C++17 的“结构化绑定”功能可以直接从
+返回值初始化变量：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+struct S {
+    int val;
+    int error_code;
+};
+S do_something() {
+    return S(1, 2);
+}
+int main()
+{
+    auto [val, error_code] = do_something();
+    if (error_code) {
+        cout << "val= " << val << ", error= " << error_code << endl;
+    }
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: val= 1, error= 2
+
+
+注意：
+
+我们不认为性能是不用异常处理的原因。
+
+通常情况，显式的出错检查和处理消耗的时间和空间与异常处理差不多。
+
+通常，使用异常处理，简洁清晰的代码性能更好（通过程序优化，简化出错分支处理）。
+
+对于性能要求高的代码，可以将出错检查移到性能关键代码外。
+
+长期来看，普通的代码能更好的优化。声明性能指标前，最好仔细测量。
+
+强化：
+- 本理论指南，无法直接检查。
+- 审查使用 ~errno~ 的地方
