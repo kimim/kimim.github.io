@@ -1,0 +1,33 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：pretzel
+categories: [language]
+tags: [Deutsch, English]
+---
+#+END_EXPORT
+
+今天的主题是食物。德国有种蝴蝶结样子的椒盐卷饼，叫 pretzel。可以看到，
+有 tz 组合出现的词，很多是来自德语的。
+
+原来我心爱的小女朋友最爱的碱水面包，英文名叫 pretzel 呀。今天才知道。
+
+pretzel 好像有两种款式，一种是碱水面包款，表皮棕色，撒了些盐。另一种是
+饼干款，比较香脆。
+
+Pretzel was so long that he could in fact twist his body into the
+shape of his namesake.
+
+因为很硬，据说 2002年，乔治布什因吃椒盐卷饼而鲠喉晕倒。不知真假。
+
+有传言称椒盐卷饼的形状是效仿一个僧侣在交叉双手祈祷。所以，难怪 pretzel
+和拉丁语 brachiatus 形状和发音有些像，表示像手臂一样。brachium 则是拉
+丁语手臂的意思。而法语中，手臂一词则很好的继承了拉丁语：bras
+
+好了，总结一下：
+
+- pretzel 德国椒盐卷饼，德国碱水面包
+- brachium 拉丁语：手臂
+- bras 法语：手臂
+- arm 英语：手臂
+- der Arm 德语：手臂
