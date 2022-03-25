@@ -1,0 +1,76 @@
+---
+layout: post
+title: CppCoreGuidelines I.12 用 not_null 声明不能为 null 的指针
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+<ul class="org-ul">
+<li>避免对空指针取值操作错误。</li>
+<li>避免对空指针的多余检查，提升性能。</li>
+</ul>
+
+<p>
+例如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">length</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#19981;&#28165;&#26970; length(nullptr) &#26159;&#21542;&#27491;&#30830;</span>
+
+length<span style="color: #707183;">(</span><span style="color: #110099;">nullptr</span><span style="color: #707183;">)</span>;                      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK?</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">length</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">not_null</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>*<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#26356;&#22909;&#65306;&#21487;&#20197;&#35748;&#20026; p &#38750;&#31354;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">length</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">p &#21487;&#20197;&#26159;&#31354;&#25351;&#38024;</span>
+</pre>
+</div>
+
+<p>
+在代码中表明代码意图，可以让实现的人和工具提供更好的诊断信息。比如通过静态检测发现某些错误。可以提升性能，比如去除空指针判断分支。
+</p>
+
+
+<p>
+注意：
+</p>
+
+<p>
+GSL 定义了 <code>not_null</code>
+</p>
+
+<p>
+注意：
+</p>
+
+<p>
+<code>const char*</code> 这种指向 <code>char</code> 的指针用来表示 C 风格的 <code>\0</code> 结束的字符串，不太直接，容易误解和出错。建议使用 <code>czstring</code> 。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">we can assume that p cannot be nullptr</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">we can assume that p points to a zero-terminated array of characters</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">length</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">not_null</span><span style="color: #7388d6;">&lt;</span>zstring<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+注意：
+</p>
+
+<p>
+这里 <code>length()</code> 实际代码中应该用 <code>std::strlen()</code>
+</p>
+
+<p>
+强化：
+</p>
+<ul class="org-ul">
+<li>（简单，基础）如果函数在各种分支检查参数指针是否为空指针。这种情况，还是把参数声明为 <code>not_null</code> 比较好。</li>
+<li>（复杂）如果函数在各个返回路径都要确保返回的不是空指针，这时，可以把返回类型声明为 <code>not_null</code></li>
+</ul>
