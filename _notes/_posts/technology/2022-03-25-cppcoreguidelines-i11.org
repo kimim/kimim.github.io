@@ -1,0 +1,106 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.11 切不可通过原始指针（T*）或引用（T&）转移所有权
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+当不清楚某对象的所有权是属于调用者和被调用者时，可能会导致内存泄漏，或
+产生不恰当的结构。
+
+例如：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+struct X {int x;};
+X* compute(int y)    // don't
+{
+    X* res = new X{};
+    // ...
+    cout << res << endl;
+    return res;
+}
+int main()
+{
+    auto xx = compute(0);
+    cout << xx;
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 0x208072a27f0
+: 0x208072a27f0
+
+
+谁来删除返回的 ~X~ ？如果返回的是引用，此问题更难定位。考虑返回值（如果
+结果很大，使用移动）。
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+vector<double> compute(int x)  // good
+{
+    vector<double> res(10000);
+    // ...
+    res[0] = x;
+    return res;
+}
+int main()
+{
+    auto xx = compute(999);
+    cout << xx[0];
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 999
+
+替代选项：通过智能型指针传递所有权。比如 ~unique_ptr~ （所有权互斥），
+~shared_ptr~ （所有权共享）。然后，这个方法并不优雅，可能比返回对象本身
+性能差。
+
+替代选项：有时候因为 ABI 兼容要求，无法修改老的代码，或资源不足。这时，可以使用 GSL 标注指针所有者。
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+#include <gsl/gsl>
+using namespace gsl;
+struct X {int x;};
+owner<X*> compute(int x)    // It is now clear that ownership is transferred
+{
+    owner<X*> res = new X{};
+    // ...
+    cout << res << endl;
+    return res;
+}
+int main()
+{
+    auto xx = compute(10);
+    cout << xx;
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 0x20d54de27f0
+: 0x20d54de27f0
+
+这里我们告诉代码分析工具， ~res~ 是一个 ~owner~ 。它的值必须删除或转移给其
+他所有者。这里通过 ~return~ 传递所有权。
+
+注意：
+
+以原始指针传递的对象，其所有者默认就是调用者。因此，其生存周期由调用者
+处理。Viewed another way: ownership transferring APIs are relatively
+rare compared to pointer-passing APIs, so the default is "no ownership
+transfer."
+
+加强：
+- （简单） ~delete~ 非 ~owner<T>~ 的原始指针的时候，报警。建议使用标准库的资源处理程序，或使用 ~owner<T>~
+- （简单） 在重置或显示删除有主指针的时候，报警。
+- （简单）返回值是 ~new~ 或函数调用返回值是 ~owner~ 指针但是赋给原始指针或
+  无主引用的时候，报警。

@@ -31,3 +31,4 @@ shape of his namesake.
 - bras 法语：手臂
 - arm 英语：手臂
 - der Arm 德语：手臂
+- branch 英语：分支、枝干，其实来自拉丁语 brachium
