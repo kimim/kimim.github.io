@@ -1,0 +1,105 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.13 不要以单独指针传递数组
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+指针+大小风格的接口容易出错。指向数组的指针必须依靠其他途径传递其大小。
+
+举例：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void copy_n(const T* p, T* q, int n); // copy from [p:p+n) to [q:q+n)
+#+end_src
+
+如果 ~q~ 的元素数少于 ~n~ 会怎么样？我们覆盖了一些不想管的内存。如果 ~p~ 的
+长度小于 ~n~ 会怎么样？我们可能复制了一些无关的内存。任何一种情况，都导
+致了未定义的行为，可能是很难处理的 bug。
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void my_copy_n(const char* p, char* q, int n) {
+    for (; n>0 ; n--) {
+        *q = *p; p++; q++;
+    }
+}
+int main()
+{
+    char pp[] = "hello";
+    char qq[] = "hel";
+    cout << qq << endl;
+    my_copy_n(pp, qq, 5);
+    cout << qq << endl;
+
+    char pp1[] = "hel";
+    char qq1[] = "hello";
+    cout << qq1 << endl;
+    my_copy_n(pp1, qq1, 5);
+    cout << qq1;
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: hel
+: helloello
+: hello
+: hel
+
+替代方案：
+
+考虑显式地用 ~span~
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void copy(span<const T> r, span<T> r2); // copy r to r2
+#+end_src
+
+反例：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void draw(Shape* p, int n);  // poor interface; poor code
+Circle arr[10];
+// ...
+draw(arr, 10);
+#+end_src
+
+给参数 ~n~ 传 10可能出错：C语言里的不成文的习俗是 [0:n) 即包括 0，不包括
+n。更坏的情况是， ~draw()~ 函数的调用编译没有问题，数组隐式的转换成指针
+（数组衰减），另一个隐式转换： ~Circle~ 转成了 ~Shape~ 。 ~draw()~ 函数无法
+访问数组的逐个元素，因为无从知道元素的大小（ ~Shape~ 和 ~Circle~ 大小不一）。
+
+替代方案：
+
+使用支持类，确保元素数量可知，避免危险的隐式转换。
+比如：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void draw2(span<Circle>);
+Circle arr[10];
+// ...
+draw2(span<Circle>(arr));  // deduce the number of elements
+draw2(arr);    // deduce the element type and array size
+
+void draw3(span<Shape>);
+draw3(arr);    // error: cannot convert Circle[10] to span<Shape>
+#+end_src
+
+~draw2()~ 可以给 ~draw()~ 传递同样数量的信息。但是不在会隐式转换 ~Circle~ 类
+型。
+
+例外：
+
+使用 ~zstring~ 和 ~czstring~ 表示 C 风格的 ~\0~ 结尾的字符串。这时候，要用
+GSL 的 ~std::string_view~ 或 ~span<char>~ 避免错误的范围。
+
+强化：
+- （简单）隐式的将数组类型转换成指针类型的地方，报警。允许例外情况：
+  ~zstring~ 和 ~czstring~ 指针。
+- （简单）指针类型的数值计算，报警。允许例外情况： ~zstring~ 和 ~czstring~
+  指针。
