@@ -18,10 +18,10 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #ffffff; font-style: italic; text-decoration: underline;">int</span> <span style="color: #00bfff; font-weight: bold;">round</span><span style="color: #8c8c8c;">(</span><span style="color: #ffffff; font-style: italic; text-decoration: underline;">double</span> <span style="color: #ffffff;">d</span><span style="color: #8c8c8c;">)</span>
-<span style="color: #8c8c8c;">{</span>
-    <span style="color: #ff55ff; font-weight: bold;">return</span> <span style="color: #93a8c6;">(</span>round_up<span style="color: #93a8c6;">)</span> ? ceil<span style="color: #93a8c6;">(</span>d<span style="color: #93a8c6;">)</span> : d;    <span style="color: #3cb371;">// </span><span style="color: #3cb371;">don't: "invisible" dependency</span>
-<span style="color: #8c8c8c;">}</span>
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">round</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7388d6;">(</span>round_up<span style="color: #7388d6;">)</span> ? ceil<span style="color: #7388d6;">(</span>d<span style="color: #7388d6;">)</span> : d;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't: "invisible" dependency</span>
+<span style="color: #707183;">}</span>
 </pre>
 </div>
 
@@ -44,8 +44,8 @@ tags: [CppCoreGuidelines]
 坏例子：通过 <code>errno</code> 等非局部变量报错，很容易被忽视。
 </p>
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3cb371;">// </span><span style="color: #3cb371;">don't: no test of printf's return value</span>
-fprintf<span style="color: #8c8c8c;">(</span>connection, <span style="color: #32cd32;">"logging: %d %d %d\n"</span>, x, y, s<span style="color: #8c8c8c;">)</span>;
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't: no test of printf's return value</span>
+fprintf<span style="color: #707183;">(</span>connection, <span style="color: #2A00FF;">"logging: %d %d %d\n"</span>, x, y, s<span style="color: #707183;">)</span>;
 </pre>
 </div>
 

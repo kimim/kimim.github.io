@@ -24,13 +24,7 @@ Iter find(Iter first, Iter last, Val v)
 {
     // ...
 }
-int main()
-{
-    return 0;
-}
 #+end_src
-
-#+RESULTS:
 
 注意：
 
