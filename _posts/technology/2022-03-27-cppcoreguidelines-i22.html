@@ -1,0 +1,62 @@
+---
+layout: post
+title: CppCoreGuidelines I.22 避免对全局对象进行复杂的初始化
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+奇怪，13后面没有14，直接跳到22了。
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+复杂的初始化会导致不确定的执行顺序。
+</p>
+
+<p>
+例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">file1.c</span>
+
+<span style="color: #7F0055; font-weight: bold;">extern</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">x</span>;
+
+<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Y</span> <span style="color: #000000;">y</span> = f<span style="color: #707183;">(</span>x<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read x; write y</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">file2.c</span>
+
+<span style="color: #7F0055; font-weight: bold;">extern</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Y</span> <span style="color: #000000;">y</span>;
+
+<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">x</span> = g<span style="color: #707183;">(</span>y<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read y; write x</span>
+</pre>
+</div>
+
+<p>
+因为 <code>x</code> 和 <code>y</code> 在不同编译单元里， <code>f()</code> 和 <code>g()</code> 的调用顺序不确定。其中一个函数会访问到一个未初始化的 <code>const</code> 。
+</p>
+
+
+<p>
+注意：
+</p>
+
+<p>
+在并发代码中初始化顺序问题会更加难处理。最好避免使用全局对象。
+</p>
+
+<p>
+强化：
+</p>
+<ul class="org-ul">
+<li>标注调用非 <code>constexpr</code> 函数的全局初始化函数</li>
+<li>标注访问 <code>extern</code> 对象的全局初始化函数</li>
+</ul>
