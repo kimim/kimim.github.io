@@ -1,0 +1,135 @@
+---
+layout: post
+title: CppCoreGuidelines I.23 函数参数数量不要太多
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+参数数量太多容易混乱出错。传递太多参数，也常成本很高。
+</p>
+
+<p>
+讨论：
+</p>
+
+<p>
+函数参数太多的两个最常见的理由：
+</p>
+<ul class="org-ul">
+<li>缺少抽象。因为缺少抽象，本该组合的对象被分散单个传递。不仅参数数量大，也容易出错，因为没有一个不变框架约束参数数值。</li>
+<li>违背了“一个函数一个职责”。函数的工作超越了其本该做的单个任务。</li>
+</ul>
+
+<p>
+例子：
+</p>
+
+<p>
+标准库函数 <code>merge()</code> 是我们能舒服处理的极限：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator1</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator2</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">OutputIterator</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Compare</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">OutputIterator</span> <span style="color: #0000ff; font-weight: bold;">merge</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator1</span> <span style="color: #000000;">first1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator1</span> <span style="color: #000000;">last1</span>,
+                     <span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator2</span> <span style="color: #000000;">first2</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator2</span> <span style="color: #000000;">last2</span>,
+                     <span style="color: #000000; font-style: italic; text-decoration: underline;">OutputIterator</span> <span style="color: #000000;">result</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Compare</span> <span style="color: #000000;">comp</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+因为“缺少抽象”，本该是传进一个范围（抽象），STL却传进了迭代器对（未封装的组件值）。
+</p>
+
+<p>
+这里，我们有4个模板参数，6个函数参数。如果我们默认比较器参数为 “&lt;”，则可以改写成下面代码：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator1</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator2</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">OutputIterator</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">OutputIterator</span> <span style="color: #0000ff; font-weight: bold;">merge</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator1</span> <span style="color: #000000;">first1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator1</span> <span style="color: #000000;">last1</span>,
+                     <span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator2</span> <span style="color: #000000;">first2</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator2</span> <span style="color: #000000;">last2</span>,
+                     <span style="color: #000000; font-style: italic; text-decoration: underline;">OutputIterator</span> <span style="color: #000000;">result</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+降低了一些表面的复杂度，但是没有降低整体复杂度。要真正减少参数数量，我们需要把参数捆绑到更高层的抽象：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">InputRange1</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">InputRange2</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">OutputIterator</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">OutputIterator</span> <span style="color: #0000ff; font-weight: bold;">merge</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">InputRange1</span> <span style="color: #000000;">r1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">InputRange2</span> <span style="color: #000000;">r2</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">OutputIterator</span> <span style="color: #000000;">result</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+把参数分组打包是一种常用的减少参数数量的技术。并且还可以提升检查的可能性。
+</p>
+
+<p>
+另外，我们也可以用 ISO TS 定义的概念，指定必须有三个类型用于合并：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">Mergeable<span style="color: #707183;">{</span>In1, In2, Out<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">OutputIterator</span> <span style="color: #0000ff; font-weight: bold;">merge</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">In1</span> <span style="color: #000000;">r1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">In2</span> <span style="color: #000000;">r2</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Out</span> <span style="color: #000000;">result</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+例子：
+</p>
+
+<p>
+安全配置建议
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">some_ints</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">some_ints_length</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: C style, unsafe</span>
+</pre>
+</div>
+
+<p>
+改为
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">some_ints</span><span style="color: #707183;">)</span>;              <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">GOOD: safe, bounds-checked</span>
+</pre>
+</div>
+
+<p>
+此处使用抽象，更安全，更可靠，同时减少了参数数量。
+</p>
+
+<p>
+注意：
+</p>
+
+<p>
+多少参数算太多？尽量少于4个参数。有的函数可以用四个参数很好的表达，但是不多。
+</p>
+
+<p>
+替代方案：用更好的抽象。把参数分组到有意义的对象，（以值或引用）传递对象。
+</p>
+
+<p>
+替代方案：用默认参数或重载。这样常用的调用要少一些参数。
+</p>
+
+<p>
+强化：
+</p>
+<ul class="org-ul">
+<li>函数声明了两个一样类型的迭代器或指针，而没用 <code>range</code> 或 <code>view</code> ，警告。</li>
+</ul>
