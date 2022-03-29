@@ -1,0 +1,92 @@
+---
+layout: post
+title: CppCoreGuidelines I.24 避免相邻参数类型一样的情况下，交换其顺序，意义却不同
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+类型相同的相邻两个参数很容易不小心顺序互换。比如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">copy_n</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">q</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy from [p:p + n) to [q:q + n)</span>
+</pre>
+</div>
+
+<p>
+这是 K&amp;R C 风格接口的一个讨厌的变体，目标和源头参数很容易搞错。
+</p>
+
+<p>
+把源头参数声明成 <code>const</code> 就容易识别他们的关系了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">copy_n</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">q</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy from [p:p + n) to [q:q + n)</span>
+</pre>
+</div>
+
+<p>
+例外：
+</p>
+
+<p>
+如果不关心参数顺序，那就不存在问题，不需要 <code>const</code> 修饰了：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">max</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+替代方案：
+</p>
+
+<p>
+不要用指针传递数组。可以通过 <code>span</code> 表示一个序列对象：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">copy_n</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">q</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy from p to q</span>
+</pre>
+</div>
+
+<p>
+替代方案：
+</p>
+
+<p>
+定义结构体，用结构体的成员名表示相应的参数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">SystemParams</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">config_file</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">output_path</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">seconds</span> <span style="color: #000000;">timeout</span>;
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">initialize</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">SystemParams</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+因为调用的时候，要把参数填到带名字的成员变量中，这样可以明确参数的意义。
+</p>
+
+
+<p>
+强化策略：
+</p>
+<ul class="org-ul">
+<li>（简单）如果出现连续两个相同类型的参数，警告。</li>
+</ul>

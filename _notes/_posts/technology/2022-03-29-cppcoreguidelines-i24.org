@@ -1,0 +1,61 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.24 避免相邻参数类型一样的情况下，交换其顺序，意义却不同
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+类型相同的相邻两个参数很容易不小心顺序互换。比如
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void copy_n(T* p, T* q, int n);  // copy from [p:p + n) to [q:q + n)
+#+end_src
+
+这是 K&R C 风格接口的一个讨厌的变体，目标和源头参数很容易搞错。
+
+把源头参数声明成 ~const~ 就容易识别他们的关系了。
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void copy_n(const T* p, T* q, int n);  // copy from [p:p + n) to [q:q + n)
+#+end_src
+
+例外：
+
+如果不关心参数顺序，那就不存在问题，不需要 ~const~ 修饰了：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+int max(int a, int b);
+#+end_src
+
+替代方案：
+
+不要用指针传递数组。可以通过 ~span~ 表示一个序列对象：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void copy_n(span<const T> p, span<T> q);  // copy from p to q
+#+end_src
+
+替代方案：
+
+定义结构体，用结构体的成员名表示相应的参数：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+struct SystemParams {
+    string config_file;
+    string output_path;
+    seconds timeout;
+};
+void initialize(SystemParams p);
+#+end_src
+
+因为调用的时候，要把参数填到带名字的成员变量中，这样可以明确参数的意义。
+
+
+强化策略：
+- （简单）如果出现连续两个相同类型的参数，警告。
