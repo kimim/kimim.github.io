@@ -1,0 +1,39 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：en masse
+categories: [language]
+tags: [Français, English]
+---
+#+END_EXPORT
+
+昨天看技术资料，看到一个词 en masse ，来自法语，意思是全体的、一大批人
+的、大众的。感觉写书作者用上几个法语里过来的单词，就会显得比较文雅。就
+好像我们在写作的时候，能恰当的用上几个生龙活虎的成语，就会显得很阳春白
+雪。
+
+其实 masse 就是法语里的质量，英语里是 mass：
+
+la masse: Terme de physique. Somme des points matériels que chaque
+corps renferme, par opposition à volume qui exprime l'espace
+occupé. La gravitation s'exerce en raison directe des masses et en
+raison inverse du carré des distances.
+
+最近新闻中的例句：
+
+Migrants who come from Kharkiv, Kyiv, Mykolaiv and go abroad via Lviv
+leave animals en masse. 来自哈尔科夫，基辅，尼古拉耶夫的移民，通过利沃
+夫离境，留下了大量的家畜动物。[fn:1]
+
+E Ink hasn't revealed when it will be available en masse. 目前还不清楚
+电子墨水屏幕什么时候普及到大众使用。[fn:2]
+
+At the end of the assembly, the students moved en masse toward the gym
+doors. 学生集合后，一帮人往体育馆大门走去。
+
+
+* Footnotes
+
+[fn:1] https://www.france24.com/en/live-news/20220327-abandoned-animals-join-ukraine-s-war-exodus
+
+[fn:2] https://gizmodo.com/e-inks-digital-posters-now-feature-improved-contrast-so-1848703392
