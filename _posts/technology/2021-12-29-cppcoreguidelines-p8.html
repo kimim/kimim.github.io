@@ -10,7 +10,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-如果系统是长期运行的，哪怕是很小的资源没有及时释放，都有可能耗尽系统资源。因此，及时释放系统资源是一种负责任的编程态度。
+如果系统长期运行的，哪怕没有及时释放很小的资源，都有可能导致系统资源耗尽。因此，及时释放系统资源是一种负责任的编程态度。
 </p>
 
 <div class="org-src-container">
@@ -55,10 +55,10 @@ that isn&rsquo;t cleaned up）。细分下去，更重要的一类泄漏是：�
 <ul class="org-ul">
 <li>审查指针的使用。区分有主和无主指针。如以上例子用标准库资源句柄替换。或者用 GSL 中的 <code>unique_ptr</code> 和 <code>shared_ptr</code> 标记指针所有权。</li>
 <li><p>
-审查暴露的 <code>new</code> 和 <code>delete</code> ，相对的是封装的 <code>new</code> ：
+审查暴露的 <code>new</code> 和 <code>delete</code> ，相对的是定义了释放规则的封装的 <code>new</code> ：
 </p>
 <div class="org-src-container">
-<pre class="src src-C++">  <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">[</span>10<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<pre class="src src-C++">  <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">[</span>10<span style="color: #7388d6;">]</span>&#65292; <span style="color: #7388d6;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span><span style="color: #7F0055; font-weight: bold;">delete</span> <span style="color: #909183;">[]</span>p;<span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>
 </pre>
 </div></li>
 <li>审查返回裸指针（raw pointer）的资源分配函数。比如： <code>fopen</code>, <code>malloc</code>,

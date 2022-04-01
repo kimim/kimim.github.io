@@ -1,0 +1,70 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：confiscate
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+这几天还是继续在学隐私计算、加密技术。
+
+Privacy sensitivity is most applicable to home users who own and
+control their platform. In an enterprise, the IT department may
+control the platform completely and weaken the privacy features. This
+discussion is also concerned mostly with remote correlation — it
+doesn't consider an attacker who can *confiscate* a platform.
+
+对于自己拥有设备的个人用户对个人数据隐私比较敏感。在企业中，IT 部门完
+全控制平台设备，隐私功能相对不太关心。书中讨论的也都是远程管理相关的。
+不太会考虑攻击者能够没收平台设备的情况。
+
+这里，看到一个单词 confiscate，这个词是没收、查抄（某人财产）、罚没
+（某物，尤其指土地）。这个词由两部分组成 con- 是一起、一块的意思。
+fiscate 是拉丁语 fiscus 演变来的，fiscus有这些意思：
+
+1. (罗马人习惯上用以装大额货币的)柳条筐；背篓
+2. (罗马法)皇家私人金库区别于国库或公共金库〔aerarium〕。大概由奥古斯
+   都〔Augustus〕创设，其收入来源包括帝国行省纳税、没收财产
+   〔confiscated property〕和无人认领的土地〔unclaimed land〕。皇家私
+   人金库专设有账目官〔rationibus〕，内尔瓦〔Nerva〕任命了一个专门的裁
+   判官〔praetor〕来解决皇家私人金库和国库之间的纠纷，哈德良〔Hadrian〕
+   设立了财政辩护人〔advocati fisci〕以在法院出庭。随着时间的推移，皇
+   家私人金库日益变得比国库更为重要，它负责支付军队、舰队以及帝国行政
+   活动的薪俸和费用。在法国，这个词与国库并无区别。罗马帝国后期，国库
+   一词遂被fiscus一词吸收，fiscus后就被用以指帝国金库。
+
+合起来，大概就是把私人财产、土地没收到国库的意思了。
+
+不好意思，昨天提到的 obfuscate 的词根 fuscus 时，提到 “青海田鼠”
+“microtus fuscus” fuscus 刚好打错了，写成 fiscus了。这不成了青海国库了
+么……
+
+因为 fiscus 是帝国金库，所有派生出：
+- fiscal（财政的；国库的；国家岁入的）
+- fiscal year（财政年度；会计年度）
+- fiscal and tax policy（财政和税收政策）
+
+
+最近新闻：
+- 2022-03-28: Florida officials confiscate 75 guns amid spring break
+  surge: "There are no words that can describe the way they have
+  behaved"[fn:1] 春假人群飙升之际，Florida 官方没收了 75 把枪支，官方
+  说“无法描述他们到底要干什么”。
+- 2022-03-27: Durban police confiscate R500k worth of hydroponic
+  dagga. [fn:2] 3月27日，南非德班警方没收了价值50万南非兰特（Rand，南
+  非货币）的水培大麻。
+
+总结下：
+- fiscus 罗马帝国金库
+- fiscus 拉丁语黑暗的
+- confiscate 没收
+- fiscal 财政的
+- fiscal year 财年
+
+
+* Footnotes
+
+[fn:1] https://www.cbsnews.com/news/florida-spring-break-condemn-shooting-miami/
+
+[fn:2] https://www.sowetanlive.co.za/news/south-africa/2022-03-27-durban-police-confiscate-r500k-worth-of-hydroponic-dagga/

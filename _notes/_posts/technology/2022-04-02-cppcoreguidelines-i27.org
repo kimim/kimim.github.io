@@ -1,0 +1,56 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.27 对于稳定库 ABI，考虑 Pimpl 惯例
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+因为私有成员数据构成类的内部布局，私有成员函数则参与函数重载解析，修改
+底层实现，就要求重新编译使用类的所有文件。
+
+通过让一个非多态的接口保管一个指向实现的指针（Pimpl），就可以分离代码
+实现的变动。其成本是对实现的非直接访问。
+
+例子：
+
+接口 (widget.h)
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+class widget {
+    class impl;
+    std::unique_ptr<impl> pimpl;
+public:
+    void draw(); // public API that will be forwarded to the implementation
+    widget(int); // defined in the implementation file
+    ~widget();   // defined in the implementation file,
+                 // where impl is a complete type
+    widget(widget&&); // defined in the implementation file
+    widget(const widget&) = delete;
+    widget& operator=(widget&&); // defined in the implementation file
+    widget& operator=(const widget&) = delete;
+};
+#+end_src
+
+实现 (widget.cpp)
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+class widget::impl {
+    int n; // private data
+public:
+    void draw(const widget& w) { /* ... */ }
+    impl(int n) : n(n) {}
+};
+void widget::draw() { pimpl->draw(*this); }
+widget::widget(int n) : pimpl{std::make_unique<impl>(n)} {}
+widget::widget(widget&&) = default;
+widget::~widget() = default;
+widget& widget::operator=(widget&&) = default;
+#+end_src
+
+注意：
+
+更多实现细节 [[https://herbsutter.com/gotw/_100/][GOTW #100]] [[https://en.cppreference.com/w/cpp/language/pimpl][cppreference]]

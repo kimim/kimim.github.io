@@ -28,7 +28,7 @@ while not seeing the actual values.
 
 这个词，最早可能来自拉丁语 fuscus 黑暗的的动词形式 obfuscare。
 
-其实目前 fuscus 在英语里还是一种田鼠的名字“青海田鼠” “microtus fiscus”：
+其实目前 fuscus 在英语里还是一种田鼠的名字“青海田鼠” “microtus fuscus”：
 
 The above results showed that Ochotona curzoniae and *Microtus fuscus*
 were the main intermediate hosts of Echinococcus multilocularis. 以上

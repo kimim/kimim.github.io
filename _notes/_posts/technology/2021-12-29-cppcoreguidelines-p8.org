@@ -9,8 +9,8 @@ tags: [CppCoreGuidelines]
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-如果系统是长期运行的，哪怕是很小的资源没有及时释放，都有可能耗尽系统资
-源。因此，及时释放系统资源是一种负责任的编程态度。
+如果系统长期运行的，哪怕没有及时释放很小的资源，都有可能导致系统资源耗
+尽。因此，及时释放系统资源是一种负责任的编程态度。
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
 void f(char* name)
@@ -49,9 +49,9 @@ that isn't cleaned up）。细分下去，更重要的一类泄漏是：任何�
 建议：
 - 审查指针的使用。区分有主和无主指针。如以上例子用标准库资源句柄替换。
   或者用 GSL 中的 ~unique_ptr~ 和 ~shared_ptr~ 标记指针所有权。
-- 审查暴露的 ~new~ 和 ~delete~ ，相对的是封装的 ~new~ ：
+- 审查暴露的 ~new~ 和 ~delete~ ，相对的是定义了释放规则的封装的 ~new~ ：
   #+begin_src C++
-  shared_ptr<int> p(new int[10])
+  shared_ptr<int> p(new int[10]， [](int* p) {delete []p;})
   #+end_src
 - 审查返回裸指针（raw pointer）的资源分配函数。比如： ~fopen~, ~malloc~,
   ~strdup~.

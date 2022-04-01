@@ -1,0 +1,72 @@
+---
+layout: post
+title: CppCoreGuidelines I.27 对于稳定库 ABI，考虑 Pimpl 惯例
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+因为私有成员数据构成类的内部布局，私有成员函数则参与函数重载解析，修改底层实现，就要求重新编译使用类的所有文件。
+</p>
+
+<p>
+通过让一个非多态的接口保管一个指向实现的指针（Pimpl），就可以分离代码实现的变动。其成本是对实现的非直接访问。
+</p>
+
+<p>
+例子：
+</p>
+
+<p>
+接口 (widget.h)
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">impl</span>;
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">impl</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">pimpl</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">public API that will be forwarded to the implementation</span>
+    <span style="color: #0000ff; font-weight: bold;">widget</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">defined in the implementation file</span>
+    ~<span style="color: #0000ff; font-weight: bold;">widget</span><span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">defined in the implementation file,</span>
+                 <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">where impl is a complete type</span>
+    <span style="color: #0000ff; font-weight: bold;">widget</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span>&amp;&amp;<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">defined in the implementation file</span>
+    <span style="color: #0000ff; font-weight: bold;">widget</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span>&amp;&amp;<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">defined in the implementation file</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+实现 (widget.cpp)
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #110099;">widget</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">impl</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">private data</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span>&amp; <span style="color: #000000;">w</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>
+    <span style="color: #0000ff; font-weight: bold;">impl</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #7388d6;">)</span> : n<span style="color: #7388d6;">(</span>n<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{}</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #110099;">widget</span>::<span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span> pimpl-&gt;draw<span style="color: #7388d6;">(</span>*<span style="color: #7F0055; font-weight: bold;">this</span><span style="color: #7388d6;">)</span>; <span style="color: #707183;">}</span>
+<span style="color: #110099;">widget</span>::<span style="color: #0000ff; font-weight: bold;">widget</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span> : pimpl<span style="color: #707183;">{</span><span style="color: #110099;">std</span>::make_unique<span style="color: #7388d6;">&lt;</span>impl<span style="color: #7388d6;">&gt;(</span>n<span style="color: #7388d6;">)</span><span style="color: #707183;">}</span> <span style="color: #707183;">{}</span>
+<span style="color: #110099;">widget</span>::<span style="color: #0000ff; font-weight: bold;">widget</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span>&amp;&amp;<span style="color: #707183;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+<span style="color: #110099;">widget</span>::~<span style="color: #0000ff; font-weight: bold;">widget</span><span style="color: #707183;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span>&amp; <span style="color: #110099;">widget</span>::<span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span>&amp;&amp;<span style="color: #707183;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+</pre>
+</div>
+
+<p>
+注意：
+</p>
+
+<p>
+更多实现细节 <a href="https://herbsutter.com/gotw/_100/">GOTW #100</a> <a href="https://en.cppreference.com/w/cpp/language/pimpl">cppreference</a>
+</p>
