@@ -1,0 +1,46 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：obfuscate
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+最近在研究密码学底层工具，还是继续在看可信硬件模块的功能和接口。
+
+看到这句：
+
+The values are *obfuscated* when the signing key isn't in the
+endorsement or platform hierarchy. The *obfuscation* is consistent when
+using the same key so the receiver can detect a change in the values
+while not seeing the actual values.
+
+当签名密钥不在托管层级和平台层级中，为避免暴露TPM中的隐秘数据，要对这
+些数值进行混淆。如果用相同的密钥进行混淆，其过程是一致的。所以接收方可
+以检查数值是否变化确定接收到的是不是实际数据。
+
+今天要学的单词就是上面出现的 obfuscate 和 obfuscation。混淆，以及混淆
+的名词形式（混淆过程）。
+
+在发布产品代码时，为了保护知识产权，有人会进行 code obfuscation，混淆
+代码。
+
+这个词，最早可能来自拉丁语 fuscus 黑暗的的动词形式 obfuscare。
+
+其实目前 fuscus 在英语里还是一种田鼠的名字“青海田鼠” “microtus fiscus”：
+
+The above results showed that Ochotona curzoniae and *Microtus fuscus*
+were the main intermediate hosts of Echinococcus multilocularis. 以上
+结果表明高原鼠兔、青海田鼠是当地多房棘球绦虫的重要中间宿主。
+
+另外，Liasis Fuscus is also the Latin name for the Brown
+Water-Python. Liasis Fuscus 还是棕色水蟒的拉丁名。Liasis fuscus (Brown
+Water Python) is a species of snakes in the family pythons.
+
+总结下：
+- obfuscate : 使模糊; 混淆; 弄黑暗; 模糊
+- obfuscation : 困惑、昏迷、模糊处理
+- code obfuscation : 代码混淆处理（避免他人逆向工程提取源码）
+- microtus fiscus : 青海田鼠
+- liasis fuscus : 棕色水蟒，brown water python

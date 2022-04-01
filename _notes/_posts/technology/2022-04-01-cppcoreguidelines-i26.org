@@ -1,0 +1,23 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.26 如果需要跨编译器的 ABI，使用 C 风格子集
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+对于类、异常处理过程、函数名以及其他实现细节，不同的编译器实现了不同的二进制布局。
+
+例外：
+
+某些平台上，通用的 API 已经融合，减少了一些严苛的限制。
+
+注意：
+
+如果只使用单一编译器，可以完全用 C++ 接口。更换或升级编译器的话，可能
+需要重新编译。

@@ -10,7 +10,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-这条指南背后的原因是尽早发现错误，避免导致诡异的故障。
+这条指南背后的原因是尽早发现错误，避免导致诡异的 bug。
 </p>
 
 <p>
@@ -106,10 +106,10 @@ tags: [CppCoreGuidelines]
 <span style="color: #707183;">{</span>
     <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span> = 10;
     <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">[</span>n<span style="color: #7388d6;">]</span> = <span style="color: #7388d6;">{}</span>;
-    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 10; i &lt; m; i++<span style="color: #7388d6;">)</span> cout &lt;&lt; a<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">" "</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; m; i++<span style="color: #7388d6;">)</span> cout &lt;&lt; a<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">" "</span>;
     cout &lt;&lt; endl;
     increment2<span style="color: #7388d6;">(</span>a<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the number of elements of a need not be repeated</span>
-    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 10; i &lt; m; i++<span style="color: #7388d6;">)</span> cout &lt;&lt; a<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">" "</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; m; i++<span style="color: #7388d6;">)</span> cout &lt;&lt; a<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">" "</span>;
     cout &lt;&lt; endl;
 <span style="color: #707183;">}</span>
 <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
@@ -121,8 +121,8 @@ tags: [CppCoreGuidelines]
 </div>
 
 <pre class="example">
-0 0 -684714032 32759 24 0 0 10 0 19
-0 0 10 0 1256192352 76 0 10 18 20
+0 0 0 0 0 0 0 0 0 0 0 0 1600133072 32758 24 0 0 10 0 19
+1 1 1 1 1 1 1 1 1 1 0 0 10 0 1119876608 149 0 10 18 20
 </pre>
 
 

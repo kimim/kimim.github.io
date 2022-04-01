@@ -9,7 +9,7 @@ tags: [CppCoreGuidelines]
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-这条指南背后的原因是尽早发现错误，避免导致诡异的故障。
+这条指南背后的原因是尽早发现错误，避免导致诡异的 bug。
 
 以下程序传给 ~increment1~ 数组指针和数组大小作为参数。如果数组大小不小心
 写错了，会导致数组越界。程序可能会继续执行，但是随时可能运行奔溃。
@@ -93,10 +93,10 @@ void use2(int m)
 {
     const int n = 10;
     int a[n] = {};
-    for (int i = 10; i < m; i++) cout << a[i] << " ";
+    for (int i = 0; i < m; i++) cout << a[i] << " ";
     cout << endl;
     increment2(a); // the number of elements of a need not be repeated
-    for (int i = 10; i < m; i++) cout << a[i] << " ";
+    for (int i = 0; i < m; i++) cout << a[i] << " ";
     cout << endl;
 }
 int main()
@@ -107,8 +107,8 @@ int main()
 #+end_src
 
 #+RESULTS:
-: 0 0 -684714032 32759 24 0 0 10 0 19
-: 0 0 10 0 1256192352 76 0 10 18 20
+: 0 0 0 0 0 0 0 0 0 0 0 0 1600133072 32758 24 0 0 10 0 19
+: 1 1 1 1 1 1 1 1 1 1 0 0 10 0 1119876608 149 0 10 18 20
 
 以下代码定义了 ~Date~ 对象，在 ~user2~ 中，获取到了 ~Date~ 却又把它转成
 ~string~ 。之后，又用 ~extract_date~ 把 ~string~ 转成 ~Date~ 。做了一次多余的
