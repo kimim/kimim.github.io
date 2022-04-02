@@ -1,0 +1,96 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：circadian
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+前不久上了个时间管理的课程。有个视频说到每个人的时间安排要符合自己的生
+理周期节律。并引用了美国作家 Daniel Pink 为证：
+
+"We are smarter, faster, dimmer, slower, more creative, and less
+creative in some parts of the day than others."  -- Daniel Pink
+
+“在一天的不同时间段，我们聪明，敏捷，模糊，迟钝，创新，守旧。人人不同。”
+
+
+*circadian rhythm*
+
+这就是所谓的 circadian rhythm，生理周期节律。
+
+每个人的一天的生理周期都不一样。有的是晨型人，有的是夜猫子。比如我就是
+个晨型人，基本上早上6点会自然醒，上午工作效率是最高的时候，下午1点会有
+些迟钝，2点之后，又恢复活力。傍晚7点脑力又差了些。然后8点到10点又活力
+四射。11点之后就很困了，躺下去基本上5分钟就睡着了。
+
+不过，生理规律也不是一成不变的。比如我的小女朋友以前是个夜猫子。现在也
+跟我一样，是个早睡早起的晨型人了。
+
+circadian 这个词的意思是 (of biological processes) recurring naturally
+on a twenty-four-hour cycle, even in the absence of light
+fluctuations. 人的生理过程在 24 小时周期中自然出现的规律，甚至与光照变
+化无关。
+
+*circa*
+
+这个词一看就是拉丁语演变过来的。 circa 是拉丁语大概、近似的意思。
+
+The story tells of a runaway slave girl in Louisiana, circa 1850（大概在 1985年）.
+
+经常在论文中看到的circa的缩写形式：c, c., ca, ca., cir., circ. 比如：
+
+Melting point/range : ca. 63 ℃ 熔点/范围：约63℃
+
+
+*dies*
+
+那么，circadian 的后面部分 -dian 是什么意思呢？应该也是拉丁语里的 dies
+演变来。dies 是 day 的意思：
+
+Dies Lunæ hodie est. 今天是星期一。Dies Lunæ 星期一，法语里是 lundi，
+还是挺接近的么。
+
+Dies secundus huius mensis est. 今天是这个月的第二天。
+
+我想到另外一个词也是由 dies 组成的 quotidian 日常、每日：Television
+has become part of our quotidian existence. 电视已成为我们日常生活的一
+部分。
+
+
+*circadian*
+
+所以，circadian 合在一起，字面意思就是“大概一天的”，也就是一日之周期。
+circadian rhythm即一天之周期的节律。
+
+
+*新闻例句*
+
+心理邮报 2022-03-28：New research in mice suggests Alzheimer's disease
+is linked to circadian rhythm.[fn:1] 最新研究标明，小鼠的阿兹海默症与生理周
+期节律相关。
+
+Newton Media Group 2022-04-02: Your *circadian* rhythm is your body's
+own inbuilt sense of when to wake and when to sleep. Parts of your
+body perceive and respond to changes in light around you and move
+through cycles, with physical and behavioral changes occurring over a
+twenty-four-hour period.[fn:2] (from Time Management According To Your
+Unique Rhythms)
+
+The human body follows a sleep and wake cycle called circadian
+rhythm. This 24-hour cycle regulates all our essential functions,
+including metabolism, alertness, body temperature and blood pressure.
+
+
+*总结*
+- circadian rhythm 生理周期节律
+- c, c., ca, ca., cir., circ., circa 大约
+- quotidian 每日的，日常的
+
+
+* Footnotes
+
+[fn:1] https://www.psypost.org/2022/03/new-research-in-mice-suggests-alzheimers-disease-is-linked-to-circadian-rhythm-62805
+
+[fn:2] https://newtonmg.com/2022/04/02/time-management-according-to-your-unique-rhythms/
