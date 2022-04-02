@@ -1,0 +1,83 @@
+---
+layout: post
+title: CppCoreGuidelines I.30 封装违规操作
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+保持代码简洁、安全。但是有时候为了逻辑清晰和性能考量，需要用到一些丑陋、不安全、容易出错的技巧。如果用到了，那么将这些代码保持在本地，而不要影响接口。这样使用接口的程序员就不需要关注细节。复杂的实现，尽可能不要通过接口流到用户代码中。
+</p>
+
+<p>
+例子：
+</p>
+
+<p>
+考虑这样一个程序，会通过文件、命令行、标准输入等不同的输入（main函数的参数）执行。我们可能写成这样：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #000000;">owned</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>*<span style="color: #707183;">&gt;</span> <span style="color: #000000;">inp</span>;
+<span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #707183;">(</span>source<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">case</span> std_in:        owned = <span style="color: #110099;">false</span>; inp = &amp;cin;                       <span style="color: #7F0055; font-weight: bold;">break</span>;
+<span style="color: #7F0055; font-weight: bold;">case</span> command_line:  owned = <span style="color: #110099;">true</span>;  inp = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">istringstream</span><span style="color: #7388d6;">{</span>argv<span style="color: #909183;">[</span>2<span style="color: #909183;">]</span><span style="color: #7388d6;">}</span>; <span style="color: #7F0055; font-weight: bold;">break</span>;
+<span style="color: #7F0055; font-weight: bold;">case</span> file:          owned = <span style="color: #110099;">true</span>;  inp = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ifstream</span><span style="color: #7388d6;">{</span>argv<span style="color: #909183;">[</span>2<span style="color: #909183;">]</span><span style="color: #7388d6;">}</span>;      <span style="color: #7F0055; font-weight: bold;">break</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">in</span> = *inp;
+</pre>
+</div>
+
+<p>
+以上代码违反了这些规则：
+</p>
+<ul class="org-ul">
+<li>不要有未初始化的变量</li>
+<li>不要忽略所有权</li>
+<li>不要用魔法常量</li>
+</ul>
+
+<p>
+还得有人记得在摸出这样写：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>owned<span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">delete</span> inp;
+</pre>
+</div>
+
+<p>
+此处，我们可以用一个有特殊删除操作的 <code>unique_ptr</code> 实现，当然如果是 <code>cin</code>
+就不需要删除。但这样对新手来说太麻烦。这里我们遇到的是一个静态变量，即所有权，偶尔需要在运行时检查。我们可以写一个类：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Istream</span> <span style="color: #707183;">{</span> <span style="color: #7388d6;">[</span><span style="color: #909183;">[</span><span style="color: #110099;">gsl</span>::suppress<span style="color: #709870;">(</span>lifetime<span style="color: #709870;">)</span><span style="color: #909183;">]</span><span style="color: #7388d6;">]</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Opt</span> <span style="color: #7388d6;">{</span> <span style="color: #000000;">from_line</span> = 1 <span style="color: #7388d6;">}</span>;
+    <span style="color: #0000ff; font-weight: bold;">Istream</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read from file</span>
+    <span style="color: #0000ff; font-weight: bold;">Istream</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">zstring</span> <span style="color: #000000;">p</span><span style="color: #7388d6;">)</span> : owned<span style="color: #7388d6;">{</span><span style="color: #110099;">true</span><span style="color: #7388d6;">}</span>, inp<span style="color: #7388d6;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ifstream</span><span style="color: #909183;">{</span>p<span style="color: #909183;">}</span><span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read from command line</span>
+    <span style="color: #0000ff; font-weight: bold;">Istream</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">zstring</span> <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Opt</span><span style="color: #7388d6;">)</span> : owned<span style="color: #7388d6;">{</span><span style="color: #110099;">true</span><span style="color: #7388d6;">}</span>, inp<span style="color: #7388d6;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">istringstream</span><span style="color: #909183;">{</span>p<span style="color: #909183;">}</span><span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    ~<span style="color: #0000ff; font-weight: bold;">Istream</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>owned<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">delete</span> inp; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">operator</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp;<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> *inp; <span style="color: #7388d6;">}</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #000000;">owned</span> = <span style="color: #110099;">false</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>* <span style="color: #000000;">inp</span> = &amp;cin;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+这样，就封装了输入流的所有权。实际代码中再增加一些错误检测即可。
+</p>

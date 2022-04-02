@@ -1,0 +1,67 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines I.30 封装违规操作
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+保持代码简洁、安全。但是有时候为了逻辑清晰和性能考量，需要用到一些丑陋、
+不安全、容易出错的技巧。如果用到了，那么将这些代码保持在本地，而不要影
+响接口。这样使用接口的程序员就不需要关注细节。复杂的实现，尽可能不要通
+过接口流到用户代码中。
+
+例子：
+
+考虑这样一个程序，会通过文件、命令行、标准输入等不同的输入（main函数的
+参数）执行。我们可能写成这样：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+bool owned;
+owner<istream*> inp;
+switch (source) {
+case std_in:        owned = false; inp = &cin;                       break;
+case command_line:  owned = true;  inp = new istringstream{argv[2]}; break;
+case file:          owned = true;  inp = new ifstream{argv[2]};      break;
+}
+istream& in = *inp;
+#+end_src
+
+以上代码违反了这些规则：
+- 不要有未初始化的变量
+- 不要忽略所有权
+- 不要用魔法常量
+
+还得有人记得在摸出这样写：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+if (owned) delete inp;
+#+end_src
+
+此处，我们可以用一个有特殊删除操作的 ~unique_ptr~ 实现，当然如果是 ~cin~
+就不需要删除。但这样对新手来说太麻烦。这里我们遇到的是一个静态变量，即
+所有权，偶尔需要在运行时检查。我们可以写一个类：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+class Istream { [[gsl::suppress(lifetime)]]
+public:
+    enum Opt { from_line = 1 };
+    Istream() { }
+    // read from file
+    Istream(zstring p) : owned{true}, inp{new ifstream{p}} {}
+    // read from command line
+    Istream(zstring p, Opt) : owned{true}, inp{new istringstream{p}} {}
+    ~Istream() { if (owned) delete inp; }
+    operator istream&() { return *inp; }
+private:
+    bool owned = false;
+    istream* inp = &cin;
+};
+#+end_src
+
+这样，就封装了输入流的所有权。实际代码中再增加一些错误检测即可。
