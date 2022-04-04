@@ -1,0 +1,41 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：pelikan
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+昨天，在钢笔爱好者群里分享了一个文章，增加了10个关注，真是蓬荜生辉。看
+来爱好文具的小朋友，也爱好学习呢。
+
+我买的钢笔不多，就2支LAMY 2000和一支英雄鼎新100，分别灌了蓝色、黑色、
+橘色墨水，做笔记的时候换着颜色图图画画。
+
+LAMY是德国钢笔品牌。在德国还有一个有名的钢笔品牌叫 Pelikan 百利金，其
+历史可以追溯到 1832年，化学家 Carl Hornemann 在汉诺威建立了一家墨水厂。
+之后40年，墨水厂的雇员 Günter Wangner 收购了这家工厂，用自己家的族徽鹈
+鹕做为logo，改名为 Pelikan。
+
+Pelikan's history stretches back to 1832 when the chemist Carl
+Hornemann founded an ink factory in Hanover Germany. The company was
+subsequently bought by employee Günter Wangner in 1871. Wangner took
+his family emblem, a pelican, for the company logo and Pelikan was
+born.
+
+也就是说，pelikan 就是一种鹈鹕的名字。有棕鹈鹕（brown pelikan，
+Pelecanus occidentalis），白鹈鹕（white pelikan，Pelecanus
+erythrorhynchos），还有北美白鹈鹕（North American white pelican，
+Pelecanus erythrorhynchos）。具体Günter Wangner家的鹈鹕是那种鹈鹕，我
+就不得而知了。
+
+百度百科说“Pelikan (百利金)1838年起始于德国汉诺威，1883年被欧洲古勒万
+纳王族所接手而创立”。似乎似乎有些问题。所谓的古勒万纳王族，不就是指墨
+水厂雇员Günter Wangner吗？德语音译应该是“俊特·万格纳”。俊特可能是王族
+后裔，但说他是王族，可能也不妥吧。总之，百度百科可能是百利金的销售撰写
+的，用传奇的说法，彰显其高贵吧。
+
+总结：
+- pelikan，学名pelecanus，鹈鹕
+- emblem，源自拉丁语emblema，雕刻的装饰，族徽、象征、标记

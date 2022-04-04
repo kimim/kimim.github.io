@@ -1,0 +1,55 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.1 把一组相关的操作封装成仔细命名的函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+提取共用代码，可以是代码可读性更好，更易重用，避免复杂代码导致的错误。
+如果有些操作已经明确定义了，可以将其从代码中提取出来，取一个有意义的函
+数名。
+
+错误例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void read_and_print(istream& is)    // read and print an int
+{
+    int x;
+    if (is >> x)
+        cout << "the int is " << x << '\n';
+    else
+        cerr << "no int on input\n";
+}
+#+end_src
+
+~read_and_print~ 函数几乎全错了。写到固定输出流、只处理 int 类型，不可重
+用，逻辑上不相关的操作混在一起，局部变量在使用范围外。
+
+如果一个 lambda 在多处使用，可以给把它赋值给一个变量：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+sort(a, b, [](T x, T y) { return x.rank() < y.rank() && x.value() < y.value();});
+
+auto lessT = [](T x, T y) { return x.rank() < y.rank() && x.value() < y.value();};
+
+sort(a, b, lessT);
+find_if(a, b, lessT);
+#+end_src
+
+最短的代码，不一定是性能最好、最好维护的代码。
+
+例外：
+
+- 循环体中的代码很少会重用。循环体要保持尽量短。
+- 同样的，回调函数也很少重用。
+
+
+强化：
+- 保持代码简短
+- 标注代码中相似的 lambda，可能可以给 lambda 命名，从而可以在别处重用
