@@ -1,0 +1,94 @@
+---
+layout: post
+title: CppCoreGuidelines F.2 一个函数只处理一个逻辑操作
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+一个函数一次只处理一个逻辑上相关的操作，更容易理解、测试、重用。
+</p>
+
+<p>
+例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">read_and_print</span><span style="color: #707183;">()</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
+    cin &gt;&gt; x;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">check for errors</span>
+    cout &lt;&lt; x &lt;&lt; <span style="color: #2A00FF;">"\n"</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这样的整块代码，需要特定输入，很难重用。相反，拆分成多个逻辑相关的函数，并参数化，更清晰，更可重用：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">read</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
+    is &gt;&gt; x;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">check for errors</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> x;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #000000;">os</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    os &lt;&lt; x &lt;&lt; <span style="color: #2A00FF;">"\n"</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这样，就可以根据需要组装函数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">read_and_print</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x</span> = read<span style="color: #7388d6;">(</span>cin<span style="color: #7388d6;">)</span>;
+    print<span style="color: #7388d6;">(</span>cout, x<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果需要，还可以进一步将 <code>read()</code> 和 <code>print()</code> 的数据类型，输入输出机制，错误处理等参数化。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">read</span> = <span style="color: #707183;">[](</span><span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">input</span>, <span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">value</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better</span>
+<span style="color: #707183;">{</span>
+    input &gt;&gt; value;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">check for errors</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">output</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">value</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    output &lt;&lt; value &lt;&lt; <span style="color: #2A00FF;">"\n"</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+强化：
+</p>
+
+<ul class="org-ul">
+<li>遇到有多个输出参数的函数，看看可不可以用返回值，或者用 <code>tuple</code> 返回多个值。</li>
+<li>看到不能一个屏幕显示的函数，考虑是否可以拆分成命名良好、规模小的子函数</li>
+<li>看到 7 个以上参数的函数，考虑是否能优化</li>
+</ul>
