@@ -1,0 +1,86 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.3 函数要短小、简洁
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+长函数复杂难读、变量范围也易过大。复杂逻辑结构过长，容易隐藏逻辑错误。
+
+例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+double simple_func(double val, int flag1, int flag2)
+    // simple_func: takes a value and calculates the expected ASIC output,
+    // given the two mode flags.
+{
+    double intermediate;
+    if (flag1 > 0) {
+        intermediate = func1(val);
+        if (flag2 % 2)
+             intermediate = sqrt(intermediate);
+    }
+    else if (flag1 == -1) {
+        intermediate = func1(-val);
+        if (flag2 % 2)
+             intermediate = sqrt(-intermediate);
+        flag1 = -flag1;
+    }
+    if (abs(flag2) > 10) {
+        intermediate = func2(intermediate);
+    }
+    switch (flag2 / 10) {
+    case 1: if (flag1 == -1) return finalize(intermediate, 1.171);
+            break;
+    case 2: return finalize(intermediate, 13.1);
+    default: break;
+    }
+    return finalize(intermediate, 0.);
+}
+#+end_src
+
+以上代码太过复杂。很难判断分支有没有全部覆盖到。
+
+我们可以这样重构：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+double func1_muon(double val, int flag)
+{
+    // ???
+}
+
+double func1_tau(double val, int flag1, int flag2)
+{
+    // ???
+}
+
+double simple_func(double val, int flag1, int flag2)
+    // simple_func: takes a value and calculates the expected ASIC output,
+    // given the two mode flags.
+{
+    if (flag1 > 0)
+        return func1_muon(val, flag2);
+    if (flag1 == -1)
+        // handled by func1_tau: flag1 = -flag1;
+        return func1_tau(-val, flag1, flag2);
+    return 0.;
+}
+#+end_src
+
+注意：
+
+一个函数“无法满屏显示”就太长了。5行以内的函数比较正常。
+
+注意：
+
+把长函数拆成高内聚的独立函数。小函数也很容易内联，函数调用消耗也不大。
+
+强化：
+- 标注无法“一个屏幕显示”的函数。一屏多大？140 字符 x 60 行。差不多一张书页大小。
+- 标注太复杂的函数。多复杂？可以使用圈复杂度分析。10 个逻辑分支以上就够复杂的了。

@@ -1,0 +1,110 @@
+---
+layout: post
+title: CppCoreGuidelines F.3 函数要短小、简洁
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+长函数复杂难读、变量范围也易过大。复杂逻辑结构过长，容易隐藏逻辑错误。
+</p>
+
+<p>
+例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">simple_func</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">val</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">flag1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">flag2</span><span style="color: #707183;">)</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">simple_func: takes a value and calculates the expected ASIC output,</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">given the two mode flags.</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">intermediate</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>flag1 &gt; 0<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        intermediate = func1<span style="color: #909183;">(</span>val<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>flag2 % 2<span style="color: #909183;">)</span>
+             intermediate = sqrt<span style="color: #909183;">(</span>intermediate<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>flag1 == -1<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        intermediate = func1<span style="color: #909183;">(</span>-val<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>flag2 % 2<span style="color: #909183;">)</span>
+             intermediate = sqrt<span style="color: #909183;">(</span>-intermediate<span style="color: #909183;">)</span>;
+        flag1 = -flag1;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>abs<span style="color: #909183;">(</span>flag2<span style="color: #909183;">)</span> &gt; 10<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        intermediate = func2<span style="color: #909183;">(</span>intermediate<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #7388d6;">(</span>flag2 / 10<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> 1: <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>flag1 == -1<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> finalize<span style="color: #909183;">(</span>intermediate, 1.171<span style="color: #909183;">)</span>;
+            <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">case</span> 2: <span style="color: #7F0055; font-weight: bold;">return</span> finalize<span style="color: #909183;">(</span>intermediate, 13.1<span style="color: #909183;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">default</span>: <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> finalize<span style="color: #7388d6;">(</span>intermediate, 0.<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+以上代码太过复杂。很难判断分支有没有全部覆盖到。
+</p>
+
+<p>
+我们可以这样重构：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">func1_muon</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">val</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">flag</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">???</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">func1_tau</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">val</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">flag1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">flag2</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">???</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">simple_func</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">val</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">flag1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">flag2</span><span style="color: #707183;">)</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">simple_func: takes a value and calculates the expected ASIC output,</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">given the two mode flags.</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>flag1 &gt; 0<span style="color: #7388d6;">)</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> func1_muon<span style="color: #7388d6;">(</span>val, flag2<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>flag1 == -1<span style="color: #7388d6;">)</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">handled by func1_tau: flag1 = -flag1;</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> func1_tau<span style="color: #7388d6;">(</span>-val, flag1, flag2<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0.;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意：
+</p>
+
+<p>
+一个函数“无法满屏显示”就太长了。5行以内的函数比较正常。
+</p>
+
+<p>
+注意：
+</p>
+
+<p>
+把长函数拆成高内聚的独立函数。小函数也很容易内联，函数调用消耗也不大。
+</p>
+
+<p>
+强化：
+</p>
+<ul class="org-ul">
+<li>标注无法“一个屏幕显示”的函数。一屏多大？140 字符 x 60 行。差不多一张书页大小。</li>
+<li>标注太复杂的函数。多复杂？可以使用圈复杂度分析。10 个逻辑分支以上就够复杂的了。</li>
+</ul>
