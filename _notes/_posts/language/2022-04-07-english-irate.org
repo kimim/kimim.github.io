@@ -1,0 +1,60 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：irate
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+昨天看了下预算成本分析技术，看到这句话：
+
+Considering factors in addition to operating income, they should check
+if they can step up their manufacturing efforts enough to support the
+added sales. If they can't, the company could end up with very *irate*
+customers in the months ahead.
+
+当运营收入增加的时候，他们也要确认下是否有足够的生产能力满足增加的销售
+量，如果不能满足，公司会在几个月后面应付发怒的客户。
+
+此处有个词 irate 是发怒的意思。这个词来自拉丁语 iratus：
+
+Cum *iratus* es, deciens numera; cum furas, centiens. 当你生气的时候，数
+到10；当你愤怒的时候，数到100。
+
+这里，我们看到拉丁语里的 deciens 在法语里是 dix，centiens 在法语里是
+cent。还有 furas，英语里现在是 fury 狂怒。
+
+不知道法语里 irrité 是不是也是从 iratus 演变来的：
+
+Le vieux moine est devenu de nouveau irrité. 那个老僧侣又发怒了。
+
+
+新闻：
+
+2022-04-03: Dr. George Akuffo Dampare, Inspector-General of Police, on
+Saturday visited Essiama and Nkroful in the Western Region, where some
+irate youth attacked some state institutions Friday, including the
+Essiama Divisional Police headquarters.[fn:1] 加纳西部愤怒的年轻人攻击
+政府机构，加纳的警察总长 George Akuffo Dampare 亲自前往。
+
+同样这则新闻里，还有一句：
+
+This infuriated the youth, who later besieged the Essiama police
+station. 这个狂怒的年轻人，被关在了 Essiama 警察局。infuriate 这个词应
+该是前面提到的 fury 动词化后，再作形容词用。意思是 into fury state，进
+入狂怒状态。
+
+
+总结：
+
+- irate 英语，发怒的
+- iratus 拉丁语，发怒的
+- fury 英语，狂怒的
+- furas 拉丁语，狂怒的
+- irrité 法语，发怒的
+- infuriate 英语，激怒
+
+* Footnotes
+
+[fn:1] https://www.gna.org.gh/1.21447988
