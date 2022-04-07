@@ -1,0 +1,82 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.4 如果函数可以在编译期计算出结果，可以声明为 constexpr
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+通过 ~constexpr~ 让编译器在编译期进行计算。
+
+例子：
+
+著名的阶乘计算：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+constexpr int fac(int n)
+{
+    // constexpr enables max_exp to be used in Expects
+    constexpr int max_exp = 17;
+    // prevent silliness and overflow
+    Expects(0 <= n && n < max_exp);
+    int x = 1;
+    for (int i = 2; i <= n; ++i) x *= i;
+    return x;
+}
+int main()
+{
+    cout << fac(10);
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 3628800
+
+C++14 可以这么玩。C++11 可以用递归方式计算。
+
+注意：
+
+~constexpr~ 不保证编译时能计算出来。它只是保证，在程序员要求下或编译器进
+行优化的时候，常量表达式参数可以在编译时计算。
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+constexpr int min(int x, int y) { return x < y ? x : y; }
+
+void test(int v)
+{
+    int m1 = min(-1, 2);            // probably compile-time evaluation
+    constexpr int m2 = min(-1, 2);  // compile-time evaluation
+    int m3 = min(-1, v);            // run-time evaluation
+    constexpr int m4 = min(-1, v);  // error: cannot evaluate at compile time
+}
+int main()
+{
+    test(10);
+    return 0;
+}
+#+end_src
+
+编译出错：
+
+#+RESULTS:
+:  'v' is not a constant expression
+:   17 |     constexpr int m4 = min(-1, v);
+:      |                                 ^
+
+注意：
+
+不要把所有函数的声明为 ~constexpr~ 。很多计算适合在运行时进行。
+
+需要在更高一层级运行时进行配置或业务逻辑的 API 不能是 ~constexpr~ 的。因
+为编译器无法优化。任何依靠这些 API 的 ~constexpr~ 函数最终都要重构，或去
+掉 ~constexpr~ 。
+
+强化：
+
+编译器遇到声明为 ~constexpr~ 的调用中使用了非常量变量，会报错。
