@@ -1,0 +1,64 @@
+---
+layout: post
+title: CppCoreGuidelines F.5 把时延敏感的小函数声明为 inline
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+不能依靠编译器优化内联。40年前我们承诺编译器比人类内联优化的更好。但是我们还在等待。把类内部的成员函数标注成 <code>inline</code> 可以让编译器优化的更好。
+</p>
+
+<p>
+例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">inline</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">cat</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s2</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> s + s2; <span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+例外：
+</p>
+
+<p>
+不要把内联函数放在还没稳定的接口。内联函数是一种 ABI。
+</p>
+
+<p>
+<code>constexpr</code> 默认是 <code>inline</code>
+</p>
+
+<p>
+注意：
+</p>
+
+<p>
+类定义内的成员函数默认为 <code>inline</code>
+</p>
+
+<p>
+例外：
+</p>
+
+<p>
+函数模板（包括类模板的成员函数 <code>A&lt;T&gt;::function()</code> 以及成员函数模板
+<code>A::function&lt;T&gt;()</code> 一般定义在头文件中，所以是 <code>inline</code> 函数。
+</p>
+
+<p>
+强化：
+</p>
+
+<p>
+超过3个语句的函数，如果声明为 <code>inline</code> 的需要注意下。可能要声明成非 <code>inline</code> 的。
+</p>
