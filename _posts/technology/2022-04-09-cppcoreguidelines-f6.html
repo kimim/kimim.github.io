@@ -1,0 +1,166 @@
+---
+layout: post
+title: CppCoreGuidelines F.6 如果函数不能抛出异常，声明为 noexcept
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+如果不打算异常，程序也不打算处理异常，可以直接终止。声明一个函数为
+<code>noexcept</code> 可优化，从而减少执行路径，加快错误时的退出速度。
+</p>
+
+<p>
+例子：
+</p>
+
+<p>
+把不支持异常的 C 或其他语言写的函数标注为 <code>noexcept</code> 。C++ 标准库默认所有 C 标准库函数为 <code>noexcept</code> 。
+</p>
+
+<p>
+注意：
+</p>
+
+<p>
+<code>constexpr</code> 函数在运行时计算可能会抛出异常，所以需要带条件的 <code>noexcept</code> 。根据条件判断是否抛出异常。
+</p>
+
+<p>
+例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">collect</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">res</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>; is &gt;&gt; s;<span style="color: #7388d6;">)</span>
+        res.push_back<span style="color: #7388d6;">(</span>s<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> res;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+<code>collect</code> 运行时如果内存不足，程序直接退出。除非程序设计好能处理内存耗尽的情况。终止函数 <code>terminate()</code> 可能会产生一个错误日志信息。
+</p>
+
+<p>
+例子：
+</p>
+
+<p>
+我们首先定义一个函数，抛出一个异常：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++" id="orgddd9f0f"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">throw_err</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">throw</span> 1;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+然后，定义个没有标记 <code>noexcept</code> 的函数调用 <code>throw_err</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">throw_err</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">throw</span> 1;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">no_block_throw</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    throw_err<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #7388d6;">{</span>
+        no_block_throw<span style="color: #909183;">()</span>;
+    <span style="color: #7388d6;">}</span> <span style="color: #7F0055; font-weight: bold;">catch</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; i &lt;&lt; endl;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+异常成功捕捉：
+</p>
+
+<pre class="example">
+1
+</pre>
+
+
+<p>
+在定义个有 <code>noexcept</code> 的函数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">throw_err</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">throw</span> 1;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">block_throw</span><span style="color: #707183;">()</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span> <span style="color: #707183;">{</span>
+    throw_err<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #7388d6;">{</span>
+        block_throw<span style="color: #909183;">()</span>;
+    <span style="color: #7388d6;">}</span> <span style="color: #7F0055; font-weight: bold;">catch</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; i &lt;&lt; endl;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+程序直接终止：
+</p>
+
+<pre class="example">
+terminate called after throwing an instance of 'int'
+</pre>
+
+
+<p>
+注意：
+</p>
+
+<p>
+在决定是否用 <code>noexcept</code> 前，要评估程序的执行环境，是否有异常抛出和内存分配的问题。某些执行环境能处理分配异常 <code>bad_alloc</code> 等，标准库可以抛出异常。然而很多执行环境，无法正常处理异常，最直接最简单的办法就是终止程序。如果代码无法处理内存分配错误，最好的办法就是给可能导致内存分配错误的函数添加 <code>noexcept</code> 。
+</p>
+
+<p>
+换句话说，如果能处理好异常的情况，就不要加 <code>noexcept</code> 。
+</p>
+
+<p>
+<code>noexcept</code> 主要用于底层函数。
+</p>
+
+<p>
+注意：
+</p>
+
+<p>
+析构函数、数据交换函数、转移操作还有默认析构函数不可抛出异常。
+</p>
+
+<p>
+加强：
+</p>
+
+<ul class="org-ul">
+<li>标注不能抛出异常，但是没有声明 <code>noexcept</code> 的函数</li>
+<li>标注不该抛出异常却抛出异常的交换、转移、析构函数、默认析构函数</li>
+</ul>
