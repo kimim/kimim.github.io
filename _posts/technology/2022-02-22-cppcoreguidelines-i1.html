@@ -10,7 +10,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-理由：正确性。没有定义的接口假设，很容易被忽视，很难测试。
+理由：正确性。没有定义的接口推测，很容易忽视，很难测试。
 </p>
 
 <p>
@@ -26,7 +26,7 @@ tags: [CppCoreGuidelines]
 </div>
 
 <p>
-一旦 <code>round_up</code> 变了，对相同的参数调用，返回不同的结果。
+一旦 <code>round_up</code> 变了，传入相同的参数，返回不同的结果。
 </p>
 
 <p>
@@ -41,8 +41,9 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-坏例子：通过 <code>errno</code> 等非局部变量报错，很容易被忽视。
+坏例子：通过 <code>errno</code> 等非局部变量报错，容易被忽略。
 </p>
+
 <div class="org-src-container">
 <pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't: no test of printf's return value</span>
 fprintf<span style="color: #707183;">(</span>connection, <span style="color: #2A00FF;">"logging: %d %d %d\n"</span>, x, y, s<span style="color: #707183;">)</span>;
@@ -60,7 +61,7 @@ fprintf<span style="color: #707183;">(</span>connection, <span style="color: #2A
 
 
 <p>
-替代配方：避免在接口之间通过非局部的或隐藏状态传递信息。比如非 <code>const</code>
+替代配方：避免在接口之间以非局部的或隐藏状态来传递信息。比如非 <code>const</code>
 成员函数通过对象状态传递信息给其他成员函数。
 </p>
 
@@ -74,6 +75,6 @@ fprintf<span style="color: #707183;">(</span>connection, <span style="color: #2A
 加强：
 </p>
 <ul class="org-ul">
-<li>函数不该通过 namespace 范围的变量决定控制流</li>
-<li>函数不可往 namespace 范围的变量写数据</li>
+<li>函数不该通过 namespace 作用域的变量决定控制流</li>
+<li>函数不可往 namespace 作用域的变量写数据</li>
 </ul>

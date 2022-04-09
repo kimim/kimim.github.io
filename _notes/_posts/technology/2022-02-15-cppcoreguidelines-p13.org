@@ -9,10 +9,10 @@ tags: [CppCoreGuidelines]
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-设计精良、文档丰富、支持给力的程序库，可以节省大量的时间和精力。代码质
-量和文档一般来说会比自己开发更好。因为多个用户共享成果，分摊的时间、精
-力和金钱也会花费更少。广泛使用的程序库，维护的更好，也能更快适配新的系
-统，节省移植成本。
+设计精良、文档丰富、支持给力的程序库，可以节省大量的时间和精力。代码和
+文档的质量一般来说会比自己开发的更好。因为多个用户共享成果，分摊的时间、
+精力和金钱也更少。应用广泛的程序库，有更好的维护，也能更快适配新的系统，
+节省移植成本。
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 vector v = {4, 3, 6, 1, 9};
@@ -23,8 +23,8 @@ std::for_each(begin(v), end(v), [](auto x){std::cout<< x << " ";});
 #+RESULTS:
 : 9 6 4 3 1
 
-通常标准库提供的排序算法执行效率比较高。除非有特殊原因，你需要自己实现
-排序等标准库中的算法。
+通常标准库提供的排序算法执行效率比较高。尽量使用标准库，除非有特殊原因，
+需要自己实现排序等标准库中的算法。
 
 尽量使用：
 - ISO C++ 标准库
