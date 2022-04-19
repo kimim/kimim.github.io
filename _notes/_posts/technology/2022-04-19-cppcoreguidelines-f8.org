@@ -1,0 +1,32 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.8 首选纯函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+纯函数更容易推导，更容易优化（甚至并行处理），更容易做成记忆函数（memoize）。
+
+例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+template<class T>
+auto square(T t) { return t * t; }
+
+int main()
+{
+    cout << square(10) << endl;
+    cout << square(10.1) << endl;
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 100
+: 102.01
