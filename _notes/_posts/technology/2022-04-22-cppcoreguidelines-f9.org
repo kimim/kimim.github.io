@@ -1,0 +1,44 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.9 没有用到的参数应该不需要命名
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+更好的可读性。免除“参数未被使用”的警告。
+
+例子
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+// once upon a time, a hint was used
+X* find(map<Blob>& m, const string& s, Hint);
+#+end_src
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void print_params(const int i, const string& s, double) {
+    cout << i << " " << s << endl;
+}
+
+int main()
+{
+    print_params(10, "hello", 1.1);
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 10 hello
+
+注意
+
+早在 1980 年就允许没有名称的参数。
+
+强化
+
+- 标记出有名称但是没有用到的参数

@@ -1,0 +1,62 @@
+---
+layout: post
+title: CppCoreGuidelines F.9 没有用到的参数应该不需要命名
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+更好的可读性。免除“参数未被使用”的警告。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">once upon a time, a hint was used</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>* <span style="color: #0000ff; font-weight: bold;">find</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">map</span><span style="color: #7388d6;">&lt;</span>Blob<span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">m</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span>, Hint<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print_params</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout &lt;&lt; i &lt;&lt; <span style="color: #2A00FF;">" "</span> &lt;&lt; s &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    print_params<span style="color: #7388d6;">(</span>10, <span style="color: #2A00FF;">"hello"</span>, 1.1<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+10 hello
+</pre>
+
+
+<p>
+注意
+</p>
+
+<p>
+早在 1980 年就允许没有名称的参数。
+</p>
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记出有名称但是没有用到的参数</li>
+</ul>
