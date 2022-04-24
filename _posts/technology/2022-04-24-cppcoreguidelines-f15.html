@@ -1,0 +1,170 @@
+---
+layout: post
+title: CppCoreGuidelines F.15 首选简单、常规的方式传递信息
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+“不寻常的、聪明的”技巧会让其他程序员吃惊、难以理解、容易出bug。如果确实觉得不走寻常路是代码优化的需要，请进行测试，是否提升性能，并用文档和注释解释原因。
+</p>
+
+<p>
+以下表格总结了 F.16-21 的建议。
+</p>
+
+<p>
+常规传参表：
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">复制成本低[1]</th>
+<th scope="col" class="org-left">移动成本低/适中[2]</th>
+<th scope="col" class="org-left">移动成本高[3]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">出参</td>
+<td class="org-left"><code>X f()</code></td>
+<td class="org-left"><code>X f()</code></td>
+<td class="org-left"><code>f(X&amp;)</code></td>
+</tr>
+
+<tr>
+<td class="org-left">出参/入参</td>
+<td class="org-left"><code>f(X&amp;)</code></td>
+<td class="org-left"><code>f(X&amp;)</code></td>
+<td class="org-left"><code>f(X&amp;)</code></td>
+</tr>
+
+<tr>
+<td class="org-left">入参</td>
+<td class="org-left"><code>f(X)</code></td>
+<td class="org-left"><code>f(const X&amp;)</code></td>
+<td class="org-left"><code>f(const X&amp;)</code></td>
+</tr>
+
+<tr>
+<td class="org-left">入参，保留副本</td>
+<td class="org-left"><code>f(X)</code></td>
+<td class="org-left"><code>f(const X&amp;)</code></td>
+<td class="org-left"><code>f(const X&amp;)</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+高级传参表：
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">复制成本低[1]</th>
+<th scope="col" class="org-left">移动成本低/适中[2]</th>
+<th scope="col" class="org-left">移动成本高[3]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">出参</td>
+<td class="org-left"><code>X f()</code></td>
+<td class="org-left"><code>X f()</code></td>
+<td class="org-left"><code>f(X&amp;)</code></td>
+</tr>
+
+<tr>
+<td class="org-left">出参/入参</td>
+<td class="org-left"><code>f(X&amp;)</code></td>
+<td class="org-left"><code>f(X&amp;)</code></td>
+<td class="org-left"><code>f(X&amp;)</code></td>
+</tr>
+
+<tr>
+<td class="org-left">入参</td>
+<td class="org-left"><code>f(X)</code></td>
+<td class="org-left"><code>f(const X&amp;)</code></td>
+<td class="org-left"><code>f(const X&amp;)</code></td>
+</tr>
+
+<tr>
+<td class="org-left">入参，保留副本</td>
+<td class="org-left"><code>f(X)</code></td>
+<td class="org-left"><code>f(const X&amp;)</code> + <code>f(X&amp;&amp;)</code> &amp; move</td>
+<td class="org-left"><code>f(const X&amp;)</code></td>
+</tr>
+
+<tr>
+<td class="org-left">入参，移入</td>
+<td class="org-left"><code>f(X&amp;&amp;)</code></td>
+<td class="org-left"><code>f(X&amp;&amp;)</code></td>
+<td class="org-left"><code>f(X&amp;&amp;)</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+其中：
+</p>
+<ul class="org-ul">
+<li>[1]
+<ul class="org-ul">
+<li>复制成本低</li>
+<li>无法复制（如 <code>int</code>, <code>unique_ptr</code> ）</li>
+</ul></li>
+<li>[2]
+<ul class="org-ul">
+<li>移动成本低（如 <code>vector&lt;T&gt;</code>, <code>string</code> ）</li>
+<li>移动成本适中（如 <code>array&lt;vector&gt;</code>, <code>BigPOD</code> ）</li>
+<li>未知（如：未知类型，模板）</li>
+</ul></li>
+<li>[3]
+<ul class="org-ul">
+<li>移动成本高（如 <code>BigPOD[]</code>, <code>array&lt;BigPOD&gt;</code> ）</li>
+</ul></li>
+</ul>
+
+<p>
+只有证明是必需的时候，才使用高级技巧，并添加文档或代码注释。
+</p>
+
+<p>
+【注】 <code>&amp;&amp;</code> 是 C++11 标准定义的新的引用操作符：右值引用 (rvalue
+reference)。 <code>int&amp;&amp; a</code> 表示 <code>a</code> 是一个右值（r-value）引用。一般用于声明函数的参数。简单来说：右值没有内存地址，如数字 6 或字符 &rsquo;v&rsquo;。 <code>int a</code> ， <code>a</code>
+是一个左值（l-value）。不过 <code>a+2</code> 是一个右值。
+</p>
