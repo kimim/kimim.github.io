@@ -1,0 +1,115 @@
+---
+layout: post
+title: CppCoreGuidelines F.16 入参：复制成本低的用值传递；其他用 const 引用
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+值传递和 <code>const</code> 引用标明函数不会修改参数，允许用右值初始化。
+</p>
+
+<p>
+“复制成本低”与机器的体系架构相关。一般 2 到 3 word 的数据（double，指针，引用）通过值传递。对于几个 word 的小对象，因为无需间接访问，值传递也比引用传递速度快。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: pass by reference to const; always cheap</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: potentially expensive</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f3</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: Unbeatable</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f4</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>&amp; <span style="color: #000000;">x</span><span style="color: #707183;">)</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: overhead on access in f4()</span>
+</pre>
+</div>
+
+
+<p>
+什么情况需要用右值传递“只读输入”参数：
+</p>
+<ul class="org-ul">
+<li>如果函数任何情况下都会移入参数，用右值引用 <code>&amp;&amp;</code> 。详见 F.18</li>
+<li>如果函数保留一份参数副本，除了可以用 <code>const&amp;</code> 进行左值传递；也可以重载函数，接收 <code>&amp;&amp;</code> 右值引用，并在函数体内通过 <code>std::move</code> “移动”到目的地。事实上， <code>std::move</code> 并不能移动任何东西，其功能是将一个左值强制转化为右值引用，继而可以通过右值引用使用该值。从实现上讲， <code>std::move</code> 基本等同于一个类型转换： <code>static_cast&lt;T&amp;&amp;&gt;(lvalue);</code> 详见 F.18</li>
+<li>一些特殊情况，如多个“输入+复制”参数，考虑使用完美转发
+<code>std::forward&lt;Args&gt;(args)</code> 。详见 F.19</li>
+</ul>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">multiply</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">just input ints, pass by value</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">suffix is input-only but not as cheap as an int, pass by const&amp;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #0000ff; font-weight: bold;">concatenate</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp;, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">suffix</span><span style="color: #707183;">)</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sink</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span>widget<span style="color: #7388d6;">&gt;</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">input only, and moves ownership of the widget</span>
+</pre>
+</div>
+
+<p>
+避免深奥的技巧，比如：
+</p>
+<ul class="org-ul">
+<li>为了提高执行效率使用 <code>T&amp;&amp;</code> 传递参数。大部分关于 <code>&amp;&amp;</code> 的性能优势都是错的，不可靠的。（详见 F.18 F.19）</li>
+<li>通过 <code>const T&amp;</code> 返回。（详见 F.47）</li>
+</ul>
+
+<p>
+例子
+</p>
+
+<p>
+假设 <code>Matrix</code> 有移动操作（比如把元素保留在 <code>std::vector</code> ）：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Matrix</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">+</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Matrix</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Matrix</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Matrix</span> <span style="color: #000000;">res</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... fill res with the sum ...</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> res;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Matrix</span> <span style="color: #000000;">x</span> = m1 + m2;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">move constructor</span>
+
+y = m3 + m3;         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">move assignment</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+The return value optimization doesn&rsquo;t handle the assignment case, but
+the move assignment does.
+</p>
+
+<p>
+引用指向有效的对象，不存在空引用的情况。如果需要表示可选值，请使用指针，
+<code>std::optional</code> 或能表示“无值”的特殊值。
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>（简单）（基础）值的空间大于 <code>2 * sizeof(void*)</code> 却通过值传递时，报警。建议使用 <code>const&amp;</code> 常量引用。</li>
+<li>（简单）（基础）值的空间小于 <code>2 * sizeof(void*)</code> 却通过常量引用传递时，报警。建议使用值传递。</li>
+<li>（简单）（基础）当参数通过常量引用传递，却被移动了，报警。</li>
+</ul>
