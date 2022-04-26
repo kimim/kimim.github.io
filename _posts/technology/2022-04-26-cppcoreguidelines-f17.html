@@ -1,0 +1,75 @@
+---
+layout: post
+title: CppCoreGuidelines F.17 输入输出参数，通过非 const 引用传递
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+非 <code>const</code> 引用表示函数会修改参数。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">update</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span>&amp; <span style="color: #000000;">r</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assume that update writes to r</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+<code>T&amp;</code> 参数能传入数据，也能传出数据。所以 <code>T&amp;</code> 可以作为输入输出参数。不过可能导致一些错误：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    s = <span style="color: #2A00FF;">"New York"</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">non-obvious error</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">buffer</span> = <span style="color: #2A00FF;">"................................."</span>;
+    f<span style="color: #7388d6;">(</span>buffer<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; buffer &lt;&lt; endl;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">buffer2</span> = <span style="color: #2A00FF;">"."</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">size is too short</span>
+    f<span style="color: #7388d6;">(</span>buffer2<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; buffer2 &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    g<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+New York
+New York
+</pre>
+
+
+<p>
+这里，函数 <code>g()</code> 提供 <code>buffer</code> 给 <code>f()</code> 填充，但是 <code>f()</code> 只是简单的把它替换掉。有一个潜在的逻辑层错误，比如 <code>g()</code> 函数的程序员可能错误假定 <code>buffer</code> 的长度。
+</p>
+
+<p>
+强化：
+</p>
+<ul class="org-ul">
+<li>（适中）（基础）函数用了非常量引用，却没有往参数写东西。警告。</li>
+<li>（简单）（基础）函数移动了非常量引用。警告。</li>
+</ul>

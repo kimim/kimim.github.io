@@ -1,0 +1,58 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.17 输入输出参数，通过非 const 引用传递
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+非 ~const~ 引用表示函数会修改参数。
+
+例子
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void update(Record& r);  // assume that update writes to r
+#+end_src
+
+注意
+
+~T&~ 参数能传入数据，也能传出数据。所以 ~T&~ 可以作为输入输出参数。不过可
+能导致一些错误：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void f(string& s)
+{
+    s = "New York";  // non-obvious error
+}
+void g()
+{
+    string buffer = ".................................";
+    f(buffer);
+    cout << buffer << endl;
+    string buffer2 = ".";  // size is too short
+    f(buffer2);
+    cout << buffer2 << endl;
+}
+int main()
+{
+    g();
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: New York
+: New York
+
+这里，函数 ~g()~ 提供 ~buffer~ 给 ~f()~ 填充，但是 ~f()~ 只是简单的把它替换掉。
+有一个潜在的逻辑层错误，比如 ~g()~ 函数的程序员可能错误假定 ~buffer~ 的长
+度。
+
+强化：
+- （适中）（基础）函数用了非常量引用，却没有往参数写东西。警告。
+- （简单）（基础）函数移动了非常量引用。警告。
