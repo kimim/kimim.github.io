@@ -1,0 +1,52 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.18 要移动的参数，通过 X&& 传递，并用 std::move 移动
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+如果在调用的地方需要显式的用 ~std::move~ 转移一个左值，这个参数最好是以
+~X&&~ 的方式传入。这样效率高，且避免调用处产生 bug。
+
+例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+// sink takes ownership of whatever the argument owned
+void sink(vector<int>&& v)
+{
+    // usually there might be const accesses of v here
+    store_somewhere(std::move(v));
+    // usually no more use of v here; it is moved-from
+}
+#+end_src
+
+注意， ~std::move(v)~ 会让 ~store_somewhere()~ 把 ~v~ 留在移动之前的状态。比
+较危险。
+
+例外
+
+如 ~unique_ptr~ 这样单一所有者的类型只能移动，且移动成本低。
+
+也能以值传递达到同样的效果。不过值传递会有一些额外的移动操作。然而，能
+够实现简洁和清晰，也是值得的。
+
+例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+template<class T>
+void sink(std::unique_ptr<T> p)
+{
+    // use p ... possibly std::move(p) onward somewhere else
+}   // p gets destroyed
+#+end_src
+
+强化：
+- 标注函数体内没有进行 ~std::move~ 操作的 ~X&&~ 参数
+- 标注对象转移后还进行访问的地方
+- 不要在条件分支里进行移动

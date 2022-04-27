@@ -1,0 +1,72 @@
+---
+layout: post
+title: CppCoreGuidelines F.18 要移动的参数，通过 X&& 传递，并用 std::move 移动
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+如果在调用的地方需要显式的用 <code>std::move</code> 转移一个左值，这个参数最好是以
+<code>X&amp;&amp;</code> 的方式传入。这样效率高，且避免调用处产生 bug。
+</p>
+
+<p>
+例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">sink takes ownership of whatever the argument owned</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sink</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp;&amp; <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">usually there might be const accesses of v here</span>
+    store_somewhere<span style="color: #7388d6;">(</span><span style="color: #110099;">std</span>::move<span style="color: #909183;">(</span>v<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">usually no more use of v here; it is moved-from</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意， <code>std::move(v)</code> 会让 <code>store_somewhere()</code> 把 <code>v</code> 留在移动之前的状态。比较危险。
+</p>
+
+<p>
+例外
+</p>
+
+<p>
+如 <code>unique_ptr</code> 这样单一所有者的类型只能移动，且移动成本低。
+</p>
+
+<p>
+也能以值传递达到同样的效果。不过值传递会有一些额外的移动操作。然而，能够实现简洁和清晰，也是值得的。
+</p>
+
+<p>
+例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sink</span><span style="color: #707183;">(</span><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">use p ... possibly std::move(p) onward somewhere else</span>
+<span style="color: #707183;">}</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">p gets destroyed</span>
+</pre>
+</div>
+
+<p>
+强化：
+</p>
+<ul class="org-ul">
+<li>标注函数体内没有进行 <code>std::move</code> 操作的 <code>X&amp;&amp;</code> 参数</li>
+<li>标注对象转移后还进行访问的地方</li>
+<li>不要在条件分支里进行移动</li>
+</ul>
