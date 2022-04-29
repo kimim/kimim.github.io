@@ -1,0 +1,35 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Background Color of Inline Image for Orgmode in Dark Theme
+categories: [productivity]
+tags: [org-mode, emacs]
+---
+#+END_EXPORT
+
+Displaying [[https://orgmode.org/manual/Images.html][inline image]] in orgmode is useful. But when emacs theme is
+dark theme and the image has transparent background, the image is
+difficult to view.
+
+To fix this problem, we can define an advice to filter the image from
+~org--create-inline-image~.
+
+#+begin_src emacs-lisp
+(defun org--create-inline-image-advice (img)
+  (nconc img (list :background "#f8f8f8")))
+(advice-add 'org--create-inline-image
+            :filter-return #'org--create-inline-image-advice)
+#+end_src
+
+~org--create-inline-image-advice~ adds ~:background~ to the image. ~#f8f8f8~
+is the light white color I used for light theme.
+
+~:filter-return~ is the ~where~ argument for ~advice-add~, this means the
+advice function is applied to the result of the original function:
+
+#+begin_src emacs-lisp
+(lambda (&rest r) (funcall advice-function (apply oldfun r)))
+#+end_src
+
+With the advice, the transparent background inline image looks the
+same no matter light or dark theme.

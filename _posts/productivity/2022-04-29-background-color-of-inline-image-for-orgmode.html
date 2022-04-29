@@ -1,0 +1,45 @@
+---
+layout: post
+title: Background Color of Inline Image for Orgmode in Dark Theme
+categories: [productivity]
+tags: [org-mode, emacs]
+---
+
+<p>
+Displaying <a href="https://orgmode.org/manual/Images.html">inline image</a> in orgmode is useful. But when emacs theme is
+dark theme and the image has transparent background, the image is
+difficult to view.
+</p>
+
+<p>
+To fix this problem, we can define an advice to filter the image from
+<code>org--create-inline-image</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">org--create-inline-image-advice</span> <span style="color: #7388d6;">(</span>img<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span>nconc img <span style="color: #909183;">(</span>list <span style="color: #7F0055; font-weight: bold;">:background</span> <span style="color: #2A00FF;">"#f8f8f8"</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span>advice-add 'org--create-inline-image
+            <span style="color: #7F0055; font-weight: bold;">:filter-return</span> #'org--create-inline-image-advice<span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<p>
+<code>org--create-inline-image-advice</code> adds <code>:background</code> to the image. <code>#f8f8f8</code>
+is the light white color I used for light theme.
+</p>
+
+<p>
+<code>:filter-return</code> is the <code>where</code> argument for <code>advice-add</code>, this means the
+advice function is applied to the result of the original function:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">lambda</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">&amp;rest</span> r<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">(</span>funcall advice-function <span style="color: #909183;">(</span>apply oldfun r<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<p>
+With the advice, the transparent background inline image looks the
+same no matter light or dark theme.
+</p>
