@@ -1,0 +1,57 @@
+---
+layout: post
+title: CppCoreGuidelines F.19 要“完美转发”参数，通过 TP&& 传递参数，只用 std::forward 转发参数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+如果一个函数不直接使用用参数，只是要把它传给其他函数，那么要有办法让这个函数不改变参数的 <code>const</code> 属性和右值属性。
+</p>
+
+<p>
+当且仅当在这种情况下，要把参数设置成右值引用 <code>TP&amp;&amp;</code> ，其中 <code>TP</code> 为模板参数类型。这样就不用关心只读 <code>const</code> 属性和右值属性，也会保留这些属性。因此，任何代码使用了 <code>TP&amp;&amp;</code> 就表示其不关心且保留只读 <code>const</code> 属性和右值属性，但是它可以把这些属性完美的转发给其他代码。因为调用过程中， <code>TP&amp;&amp;</code> 参数是个只读的临时对象，所以是安全的。 <code>TP&amp;&amp;</code> 类型的参数，在函数体中，最终应该通过 <code>std::forward</code> 转发给别的函数。
+</p>
+
+<p>
+例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">F</span>, <span style="color: #7F0055; font-weight: bold;">class</span>... <span style="color: #000000; font-style: italic; text-decoration: underline;">Args</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">inline</span> <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #0000ff; font-weight: bold;">my_invoke</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">F</span> <span style="color: #000000;">f</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Args</span>&amp;&amp;... <span style="color: #000000;">args</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> f<span style="color: #7388d6;">(</span>forward<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Args</span><span style="color: #909183;">&gt;(</span>args<span style="color: #909183;">)</span>...<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">ff</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout &lt;&lt; x &lt;&lt; <span style="color: #2A00FF;">" "</span> &lt;&lt; y &lt;&lt; endl;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    my_invoke<span style="color: #7388d6;">(</span>ff, 11, 12<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+11 12
+</pre>
+
+
+<p>
+强化：
+</p>
+<ul class="org-ul">
+<li>如果一个函数接受 <code>TP&amp;&amp;</code> 类型参数，但是没有在每个静态分支路径上用
+<code>std::forward</code> 转发给其他函数。标记警告。</li>
+</ul>

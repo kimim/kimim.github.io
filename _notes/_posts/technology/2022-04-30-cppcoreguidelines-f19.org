@@ -1,0 +1,48 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.19 要“完美转发”参数，通过 TP&& 传递参数，只用 std::forward 转发参数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由：
+
+如果一个函数不直接使用用参数，只是要把它传给其他函数，那么要有办法让这
+个函数不改变参数的 ~const~ 属性和右值属性。
+
+当且仅当在这种情况下，要把参数设置成右值引用 ~TP&&~ ，其中 ~TP~ 为模板参数
+类型。这样就不用关心只读 ~const~ 属性和右值属性，也会保留这些属性。因此，
+任何代码使用了 ~TP&&~ 就表示其不关心且保留只读 ~const~ 属性和右值属性，但
+是它可以把这些属性完美的转发给其他代码。因为调用过程中， ~TP&&~ 参数是个
+只读的临时对象，所以是安全的。 ~TP&&~ 类型的参数，在函数体中，最终应该通
+过 ~std::forward~ 转发给别的函数。
+
+例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+template<class F, class... Args>
+inline auto my_invoke(F f, Args&&... args)
+{
+    return f(forward<Args>(args)...);
+}
+int ff (int x, int y) {
+    cout << x << " " << y << endl;
+    return 0;
+}
+int main()
+{
+    my_invoke(ff, 11, 12);
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 11 12
+
+强化：
+- 如果一个函数接受 ~TP&&~ 类型参数，但是没有在每个静态分支路径上用
+  ~std::forward~ 转发给其他函数。标记警告。
