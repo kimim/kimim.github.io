@@ -1,7 +1,7 @@
 #+BEGIN_EXPORT html
 ---
 layout: post
-title: CppCoreGuidelines I.23 函数参数数量不要太多
+title: CppCoreGuidelines I.23 函数参数的数量不要太多
 categories: [technology]
 tags: [CppCoreGuidelines]
 ---
@@ -11,14 +11,14 @@ tags: [CppCoreGuidelines]
 
 理由：
 
-参数数量太多容易混乱出错。传递太多参数，也常成本很高。
+参数的数量太多容易混乱出错。传递太多参数，成本也通常会很高。
 
 讨论：
 
-函数参数太多的两个最常见的理由：
-- 缺少抽象。因为缺少抽象，本该组合的对象被分散单个传递。不仅参数数量大，
-  也容易出错，因为没有一个不变框架约束参数数值。
-- 违背了“一个函数一个职责”。函数的工作超越了其本该做的单个任务。
+导致函数的参数太多，通常有两个理由：
+- 缺少抽象。因为缺少抽象，本该组合的对象被分散为单个传递。因为没有一个
+  不变的框架来约束参数的数值，不仅参数的数量变大，也容易出错。
+- 违背了“一个函数一个职责”的原则。函数的工作超越了其本该完成的单个任务。
 
 例子：
 
@@ -31,7 +31,7 @@ OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
                      OutputIterator result, Compare comp);
 #+end_src
 
-因为“缺少抽象”，本该是传进一个范围（抽象），STL却传进了迭代器对（未封装的组件值）。
+因为“缺少抽象”，本该是传进一个范围（抽象），STL 却传进了迭代器对（未封装的组件值）。
 
 这里，我们有4个模板参数，6个函数参数。如果我们默认比较器参数为 “<”，则
 可以改写成下面代码：
@@ -51,9 +51,9 @@ template<class InputRange1, class InputRange2, class OutputIterator>
 OutputIterator merge(InputRange1 r1, InputRange2 r2, OutputIterator result);
 #+end_src
 
-把参数分组打包是一种常用的减少参数数量的技术。并且还可以提升检查的可能性。
+把参数分组打包是一种常用的减少参数数量的技术。并且还可以提升可检查性。
 
-另外，我们也可以用 ISO TS 定义的概念，指定必须有三个类型用于合并：
+另外，我们也可以用 ISO TS 中的定义概念，指定必须有三个类型用于合并：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 Mergeable{In1, In2, Out}
@@ -62,7 +62,7 @@ OutputIterator merge(In1 r1, In2 r2, Out result);
 
 例子：
 
-安全配置建议
+安全配置建议将以下函数
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void f(int* some_ints, int some_ints_length);  // BAD: C style, unsafe
@@ -74,15 +74,17 @@ void f(int* some_ints, int some_ints_length);  // BAD: C style, unsafe
 void f(gsl::span<int> some_ints);              // GOOD: safe, bounds-checked
 #+end_src
 
-此处使用抽象，更安全，更可靠，同时减少了参数数量。
+此处使用抽象，更安全，更可靠，同时减少了参数的数量。
 
 注意：
 
-多少参数算太多？尽量少于4个参数。有的函数可以用四个参数很好的表达，但是不多。
+多少参数算太多？尽量少于 4 个参数。尽管有的函数需要用四个参数很好的表
+达，但是不多。
 
-替代方案：用更好的抽象。把参数分组到有意义的对象，（以值或引用）传递对象。
+替代方案：用更好的抽象。把参数分组到有意义的对象，（以值或引用）传递对
+象。
 
 替代方案：用默认参数或重载。这样常用的调用要少一些参数。
 
 强化：
-- 函数声明了两个一样类型的迭代器或指针，而没用 ~range~ 或 ~view~ ，警告。
+- 函数声明了两个类型一样的迭代器或指针，而没用 ~range~ 或 ~view~ ，警告。

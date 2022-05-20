@@ -14,7 +14,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-指针+大小风格的接口容易出错。指向数组的指针必须依靠其他途径传递其大小。
+用数组指针+数组大小作为参数的接口很容易出错。指向数组的指针必须依靠其他途径传递其大小。
 </p>
 
 <p>
@@ -27,7 +27,7 @@ tags: [CppCoreGuidelines]
 </div>
 
 <p>
-如果 <code>q</code> 的元素数少于 <code>n</code> 会怎么样？我们覆盖了一些不想管的内存。如果 <code>p</code> 的长度小于 <code>n</code> 会怎么样？我们可能复制了一些无关的内存。任何一种情况，都导致了未定义的行为，可能是很难处理的 bug。
+如果 <code>q</code> 的元素数少于 <code>n</code> 会怎么样？我们会覆盖一些无关的内存。如果 <code>p</code> 的长度小于 <code>n</code> 会怎么样？我们可能复制了一些无关的内存。任何一种情况，都导致了未定义的行为，可能是很难处理的 bug。
 </p>
 
 <div class="org-src-container">
@@ -88,8 +88,8 @@ draw<span style="color: #707183;">(</span>arr, 10<span style="color: #707183;">)
 </div>
 
 <p>
-给参数 <code>n</code> 传 10可能出错：C语言里的不成文的习俗是 [0:n) 即包括 0，不包括
-n。更坏的情况是， <code>draw()</code> 函数的调用编译没有问题，数组隐式的转换成指针（数组衰减），另一个隐式转换： <code>Circle</code> 转成了 <code>Shape</code> 。 <code>draw()</code> 函数无法访问数组的逐个元素，因为无从知道元素的大小（ <code>Shape</code> 和 <code>Circle</code> 大小不一）。
+给参数 <code>n</code> 的值如果是 10 可能会出错：C语言里数组下标的不成文的习俗是
+[0:n) 即包括 0，不包括 n。更坏的情况是， 调用 <code>draw()</code> 函数在编译时没有问题，数组隐式的转换成了指针（数组衰减），另一个隐式转换： <code>Circle</code> 转成了 <code>Shape</code> 。 <code>draw()</code> 函数无法逐个访问数组的元素，因为无从知道元素本身的大小（ <code>Shape</code> 和 <code>Circle</code> 大小不一）。
 </p>
 
 <p>
@@ -97,7 +97,11 @@ n。更坏的情况是， <code>draw()</code> 函数的调用编译没有问题�
 </p>
 
 <p>
-使用支持类，确保元素数量可知，避免危险的隐式转换。比如：
+使用支持类，确保元素数量可知，避免危险的隐式转换。
+</p>
+
+<p>
+比如：
 </p>
 
 <div class="org-src-container">
@@ -113,7 +117,7 @@ draw3<span style="color: #707183;">(</span>arr<span style="color: #707183;">)</s
 </div>
 
 <p>
-<code>draw2()</code> 可以给 <code>draw()</code> 传递同样数量的信息。但是不在会隐式转换 <code>Circle</code> 类型。
+<code>draw2()</code> 得到与 <code>draw()</code> 同样数量的信息。但是不在会隐式转换 <code>Circle</code> 类型。
 </p>
 
 <p>

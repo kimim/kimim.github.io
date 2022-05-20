@@ -1,6 +1,6 @@
 ---
 layout: post
-title: CppCoreGuidelines I.23 函数参数数量不要太多
+title: CppCoreGuidelines I.23 函数参数的数量不要太多
 categories: [technology]
 tags: [CppCoreGuidelines]
 ---
@@ -14,7 +14,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-参数数量太多容易混乱出错。传递太多参数，也常成本很高。
+参数的数量太多容易混乱出错。传递太多参数，成本也通常会很高。
 </p>
 
 <p>
@@ -22,11 +22,11 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-函数参数太多的两个最常见的理由：
+导致函数的参数太多，通常有两个理由：
 </p>
 <ul class="org-ul">
-<li>缺少抽象。因为缺少抽象，本该组合的对象被分散单个传递。不仅参数数量大，也容易出错，因为没有一个不变框架约束参数数值。</li>
-<li>违背了“一个函数一个职责”。函数的工作超越了其本该做的单个任务。</li>
+<li>缺少抽象。因为缺少抽象，本该组合的对象被分散为单个传递。因为没有一个不变的框架来约束参数的数值，不仅参数的数量变大，也容易出错。</li>
+<li>违背了“一个函数一个职责”的原则。函数的工作超越了其本该完成的单个任务。</li>
 </ul>
 
 <p>
@@ -46,7 +46,7 @@ tags: [CppCoreGuidelines]
 </div>
 
 <p>
-因为“缺少抽象”，本该是传进一个范围（抽象），STL却传进了迭代器对（未封装的组件值）。
+因为“缺少抽象”，本该是传进一个范围（抽象），STL 却传进了迭代器对（未封装的组件值）。
 </p>
 
 <p>
@@ -72,11 +72,11 @@ tags: [CppCoreGuidelines]
 </div>
 
 <p>
-把参数分组打包是一种常用的减少参数数量的技术。并且还可以提升检查的可能性。
+把参数分组打包是一种常用的减少参数数量的技术。并且还可以提升可检查性。
 </p>
 
 <p>
-另外，我们也可以用 ISO TS 定义的概念，指定必须有三个类型用于合并：
+另外，我们也可以用 ISO TS 中的定义概念，指定必须有三个类型用于合并：
 </p>
 
 <div class="org-src-container">
@@ -90,7 +90,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-安全配置建议
+安全配置建议将以下函数
 </p>
 
 <div class="org-src-container">
@@ -108,7 +108,7 @@ tags: [CppCoreGuidelines]
 </div>
 
 <p>
-此处使用抽象，更安全，更可靠，同时减少了参数数量。
+此处使用抽象，更安全，更可靠，同时减少了参数的数量。
 </p>
 
 <p>
@@ -116,7 +116,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-多少参数算太多？尽量少于4个参数。有的函数可以用四个参数很好的表达，但是不多。
+多少参数算太多？尽量少于 4 个参数。尽管有的函数需要用四个参数很好的表达，但是不多。
 </p>
 
 <p>
@@ -131,5 +131,5 @@ tags: [CppCoreGuidelines]
 强化：
 </p>
 <ul class="org-ul">
-<li>函数声明了两个一样类型的迭代器或指针，而没用 <code>range</code> 或 <code>view</code> ，警告。</li>
+<li>函数声明了两个类型一样的迭代器或指针，而没用 <code>range</code> 或 <code>view</code> ，警告。</li>
 </ul>

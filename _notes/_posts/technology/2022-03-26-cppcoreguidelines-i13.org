@@ -11,7 +11,8 @@ tags: [CppCoreGuidelines]
 
 理由：
 
-指针+大小风格的接口容易出错。指向数组的指针必须依靠其他途径传递其大小。
+用数组指针+数组大小作为参数的接口很容易出错。指向数组的指针必须依靠其
+他途径传递其大小。
 
 举例：
 
@@ -19,9 +20,9 @@ tags: [CppCoreGuidelines]
 void copy_n(const T* p, T* q, int n); // copy from [p:p+n) to [q:q+n)
 #+end_src
 
-如果 ~q~ 的元素数少于 ~n~ 会怎么样？我们覆盖了一些不想管的内存。如果 ~p~ 的
-长度小于 ~n~ 会怎么样？我们可能复制了一些无关的内存。任何一种情况，都导
-致了未定义的行为，可能是很难处理的 bug。
+如果 ~q~ 的元素数少于 ~n~ 会怎么样？我们会覆盖一些无关的内存。如果 ~p~ 的长
+度小于 ~n~ 会怎么样？我们可能复制了一些无关的内存。任何一种情况，都导致
+了未定义的行为，可能是很难处理的 bug。
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void my_copy_n(const char* p, char* q, int n) {
@@ -69,14 +70,16 @@ Circle arr[10];
 draw(arr, 10);
 #+end_src
 
-给参数 ~n~ 传 10可能出错：C语言里的不成文的习俗是 [0:n) 即包括 0，不包括
-n。更坏的情况是， ~draw()~ 函数的调用编译没有问题，数组隐式的转换成指针
-（数组衰减），另一个隐式转换： ~Circle~ 转成了 ~Shape~ 。 ~draw()~ 函数无法
-访问数组的逐个元素，因为无从知道元素的大小（ ~Shape~ 和 ~Circle~ 大小不一）。
+给参数 ~n~ 的值如果是 10 可能会出错：C语言里数组下标的不成文的习俗是
+[0:n) 即包括 0，不包括 n。更坏的情况是， 调用 ~draw()~ 函数在编译时没有
+问题，数组隐式的转换成了指针（数组衰减），另一个隐式转换： ~Circle~ 转成
+了 ~Shape~ 。 ~draw()~ 函数无法逐个访问数组的元素，因为无从知道元素本身的
+大小（ ~Shape~ 和 ~Circle~ 大小不一）。
 
 替代方案：
 
 使用支持类，确保元素数量可知，避免危险的隐式转换。
+
 比如：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
@@ -90,8 +93,7 @@ void draw3(span<Shape>);
 draw3(arr);    // error: cannot convert Circle[10] to span<Shape>
 #+end_src
 
-~draw2()~ 可以给 ~draw()~ 传递同样数量的信息。但是不在会隐式转换 ~Circle~ 类
-型。
+~draw2()~ 得到与 ~draw()~ 同样数量的信息。但是不在会隐式转换 ~Circle~ 类型。
 
 例外：
 
