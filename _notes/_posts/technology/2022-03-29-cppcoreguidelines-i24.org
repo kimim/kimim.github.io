@@ -11,15 +11,16 @@ tags: [CppCoreGuidelines]
 
 理由：
 
-类型相同的相邻两个参数很容易不小心顺序互换。比如
+两个相邻参数，如果类型相同，很容易顺序颠倒。比如
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void copy_n(T* p, T* q, int n);  // copy from [p:p + n) to [q:q + n)
 #+end_src
 
-这是 K&R C 风格接口的一个讨厌的变体，目标和源头参数很容易搞错。
+这是 K&R C 风格接口的一个讨厌的变体，目标和源头参数很容易颠倒。
 
-把源头参数声明成 ~const~ 就容易识别他们的关系了。
+把源头参数声明成 ~const~ 就比较容易识别他们的关系了。因为，我们复制的时
+候，一般不会去改变数据源。
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void copy_n(const T* p, T* q, int n);  // copy from [p:p + n) to [q:q + n)
@@ -27,7 +28,7 @@ void copy_n(const T* p, T* q, int n);  // copy from [p:p + n) to [q:q + n)
 
 例外：
 
-如果不关心参数顺序，那就不存在问题，不需要 ~const~ 修饰了：
+如果不关心参数顺序，那就不存在这个问题，就不需要 ~const~ 修饰了：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 int max(int a, int b);
