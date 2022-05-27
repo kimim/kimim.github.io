@@ -11,11 +11,11 @@ tags: [CppCoreGuidelines]
 
 理由：
 
-因为私有成员数据构成类的内部布局，私有成员函数则参与函数重载解析，修改
-底层实现，就要求重新编译使用类的所有文件。
+因为私有成员变量构成类的内部布局，私有成员函数则参与函数重载解析，修改
+了类的底层实现，就要求重新编译使用该类的所有文件。
 
 通过让一个非多态的接口保管一个指向实现的指针（Pimpl），就可以分离代码
-实现的变动。其成本是对实现的非直接访问。
+实现的变动。其成本是不能直接访问底层实现。
 
 例子：
 
@@ -36,7 +36,7 @@ public:
 };
 #+end_src
 
-实现 (widget.cpp)
+widget的底层实现 (widget.cpp)
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 class widget::impl {
     int n; // private data

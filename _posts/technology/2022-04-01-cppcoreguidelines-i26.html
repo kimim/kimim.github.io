@@ -10,6 +10,11 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
+所谓 ABI 就是 Application Binary Interface 的缩写。编程语言的 ABI 决定了底层实现的细节。编译出来的模块遵循相同的 ABI，就可以互相链接，一起工作。不同的 C++ 编译器的 ABI 会略有差异，因此为了确保不同编译器编译出来的代码能一起工作，最好相对精简且稳定的使用 C 风格子集。
+</p>
+
+
+<p>
 理由：
 </p>
 

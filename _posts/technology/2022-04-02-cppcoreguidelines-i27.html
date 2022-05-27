@@ -14,11 +14,11 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-因为私有成员数据构成类的内部布局，私有成员函数则参与函数重载解析，修改底层实现，就要求重新编译使用类的所有文件。
+因为私有成员变量构成类的内部布局，私有成员函数则参与函数重载解析，修改了类的底层实现，就要求重新编译使用该类的所有文件。
 </p>
 
 <p>
-通过让一个非多态的接口保管一个指向实现的指针（Pimpl），就可以分离代码实现的变动。其成本是对实现的非直接访问。
+通过让一个非多态的接口保管一个指向实现的指针（Pimpl），就可以分离代码实现的变动。其成本是不能直接访问底层实现。
 </p>
 
 <p>
@@ -46,7 +46,7 @@ tags: [CppCoreGuidelines]
 </div>
 
 <p>
-实现 (widget.cpp)
+widget的底层实现 (widget.cpp)
 </p>
 <div class="org-src-container">
 <pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #110099;">widget</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">impl</span> <span style="color: #707183;">{</span>
