@@ -1,7 +1,7 @@
 #+BEGIN_EXPORT html
 ---
 layout: post
-title: CppCoreGuidelines I.30 封装违规操作
+title: CppCoreGuidelines I.30 把例外的操作封装隔离起来
 categories: [technology]
 tags: [CppCoreGuidelines]
 ---
@@ -13,8 +13,8 @@ tags: [CppCoreGuidelines]
 
 保持代码简洁、安全。但是有时候为了逻辑清晰和性能考量，需要用到一些丑陋、
 不安全、容易出错的技巧。如果用到了，那么将这些代码保持在本地，而不要影
-响接口。这样使用接口的程序员就不需要关注细节。复杂的实现，尽可能不要通
-过接口流到用户代码中。
+响到接口。这样使用接口的程序员就不需要关注细节。那些复杂的实现，尽可能
+不要通过接口流到用户代码中。
 
 例子：
 
@@ -37,13 +37,13 @@ istream& in = *inp;
 - 不要忽略所有权
 - 不要用魔法常量
 
-还得有人记得在摸出这样写：
+最后还得清理资源：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 if (owned) delete inp;
 #+end_src
 
-此处，我们可以用一个有特殊删除操作的 ~unique_ptr~ 实现，当然如果是 ~cin~
+以下，我们可以用一个有特殊删除操作的 ~unique_ptr~ 来实现，当然如果是 ~cin~
 就不需要删除。但这样对新手来说太麻烦。这里我们遇到的是一个静态变量，即
 所有权，偶尔需要在运行时检查。我们可以写一个类：
 

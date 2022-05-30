@@ -1,0 +1,159 @@
+---
+layout: post
+title: CppCoreGuidelines F.20 需要输出值的话，返回值比输出参数更好
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+返回值本身就是代码的显式文档。然而如果用 <code>&amp;</code> 引用参数，就可能是输入输出参数，也可能只是输出参数，容易被误用。
+</p>
+
+<p>
+此指南也适用于标准容器这类大对象，在返回过程中，为了保证性能，隐式的用了移动操作，避免了显式的内存管理。
+</p>
+
+<p>
+如果有多个值需要返回，可以用元组或类似的多成员类型。
+</p>
+
+<p>
+例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: return pointers to elements with the value x</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">find_all_ok</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">v</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">rv</span> = vector<span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">&gt;()</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #110099;">vector</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">&gt;</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">const_iterator</span> <span style="color: #000000;">it</span>=v.begin<span style="color: #909183;">()</span>; it!=v.end<span style="color: #909183;">()</span>; it++<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>*it == x<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            rv.push_back<span style="color: #709870;">(</span>&amp;*it<span style="color: #709870;">)</span>;
+        <span style="color: #909183;">}</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> rv;
+<span style="color: #707183;">}</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: place pointers to elements with value x in-out</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">find_all_bad</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">v</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">out</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #110099;">vector</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">&gt;</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">const_iterator</span> <span style="color: #000000;">it</span>=v.begin<span style="color: #909183;">()</span>; it!=v.end<span style="color: #909183;">()</span>; it++<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>*it == x<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            out.push_back<span style="color: #709870;">(</span>&amp;*it<span style="color: #709870;">)</span>;
+        <span style="color: #909183;">}</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">vv</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;{</span>1,2,3,4<span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">vvv</span> = find_all_ok<span style="color: #7388d6;">(</span>vv, 3<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>=0; i&lt;vvv.size<span style="color: #909183;">()</span>; i++<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; *vvv<span style="color: #909183;">[</span>i<span style="color: #909183;">]</span>;
+    <span style="color: #7388d6;">}</span>
+    cout &lt;&lt; endl;
+    vvv = vector<span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">&gt;()</span>;
+    find_all_bad<span style="color: #7388d6;">(</span>vv, vvv, 3<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>=0; i&lt;vvv.size<span style="color: #909183;">()</span>; i++<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; *vvv<span style="color: #909183;">[</span>i<span style="color: #909183;">]</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+3
+3
+</pre>
+
+
+
+<p>
+注意
+</p>
+
+<p>
+移动含有多个小对象的结构体，性能可能较差。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+不建议返回 <code>const</code> 值。返回 <code>const</code> 值没啥价值，并且对移动操作有影响。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: that "const" is more trouble than it is worth</span>
+<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">fct</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;{</span>1,2,3<span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">vx</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    fct<span style="color: #7388d6;">()</span> = vx;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">prevented by the "const"</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    vx = fct<span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">expensive copy: move semantics suppressed by the "const"</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+返回值设置成 <code>const</code> 是为了避免不小心访问临时数据（很少发生）。添加
+<code>const</code> 阻止移动机制，从而导致性能变差（经常发生）。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+如果是继承层级中的非具体类型，可通过 <code>unique_ptr</code> 或 <code>shared_ptr</code> 返回对象。
+</p>
+
+<p>
+如果类型的移动成本很高（如 <code>array&lt;BiPOD&gt;</code> ），考虑先分配内存，再返回指针（如 <code>unique_ptr</code> ），或传入一个非 <code>const</code> 的目标对象，把数据填入此对象。
+</p>
+
+<p>
+如果要在一个内部循环中多次调用函数，需要重用一个对象保存数据（如
+<code>std::string</code> <code>std::vector</code> ），可以设置为输入输出参数，通过引用传递。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Package</span> <span style="color: #707183;">{</span>      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">exceptional case: expensive-to-move object</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">header</span><span style="color: #7388d6;">[</span>16<span style="color: #7388d6;">]</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">load</span><span style="color: #7388d6;">[</span>2024 - 16<span style="color: #7388d6;">]</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Package</span> <span style="color: #0000ff; font-weight: bold;">fill</span><span style="color: #707183;">()</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: large return value</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">fill</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Package</span>&amp;<span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">val</span><span style="color: #707183;">()</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">val</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>&amp;<span style="color: #707183;">)</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: Is val reading its argument</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>非 <code>const</code> 参数，改写之前没有读取操作，其实可以用低成本的返回值的方式。标注告警。</li>
+<li>返回一个常量值。去除 <code>const</code> ，返回一个非 <code>const</code> 值。</li>
+</ul>
