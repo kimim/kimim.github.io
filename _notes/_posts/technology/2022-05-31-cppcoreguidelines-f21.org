@@ -1,0 +1,160 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.21 如果要输出多个值，返回结构体或元组更好
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+用返回值，代码更容易理解。C++ 里可以返回多个值。其一是用元组（包括数值
+对），可能在调用处需要额外的结构绑定（C++17）；其二是结构体，成员名能
+提供语义解释（推荐）。不命名的元组在泛型代码中用的比较多。
+
+例子
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+// BAD: output-only parameter documented in a comment
+int f1(const string& input, /*output only*/ string& output_data)
+{
+    // ...
+    int status = 1;
+    output_data = input + " hello";
+    return status;
+}
+
+// GOOD: self-documenting
+tuple<int, string> f2(const string& input)
+{
+    // ...
+    int status = 1;
+    return make_tuple(status, input + " hello");
+}
+int main()
+{
+    auto ss = string();
+    if(f1("bonjour,", ss)) {
+        cout << ss << endl;
+    }
+
+    auto tt = f2("bonjour,");
+    if(get<int>(tt)) {
+        cout << get<string>(tt) << endl;
+    }
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: bonjour, hello
+: bonjour, hello
+
+C++98 标准库就已经在用这个方法返回值。比如下面代码中， ~pair~ 其实就是有
+两个元素的 ~tuple~ ：
+
+#+begin_src C++ :results output :exports both :flags -std=c++98 :namespaces std :includes <iostream> <vector> <algorithm> <set> :eval no-export
+// C++98
+set<string> my_set;
+pair<set<string>::iterator, bool> result = my_set.insert("Hello");
+if (result.second) {
+    cout << result.second << endl;          //1
+    cout << *result.first;                  // workaround
+}
+#+end_src
+
+#+RESULTS:
+: 1
+: Hello
+
+在 C++11 中，可以直接把结果填入多个局部变量：
+
+#+begin_src C++ :results output :exports both :flags -std=c++11 :namespaces std :includes <iostream> <vector> <algorithm> <set> <tuple> :eval no-export
+set<string> my_set;
+set<string>::iterator iter;
+int success;
+
+tie(iter, success) = my_set.insert("Hello");
+if (success) cout << *iter;
+#+end_src
+
+#+RESULTS:
+: Hello
+
+C++17 支持以“结构绑定”的方式直接初始化多个变量：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> <set> :eval no-export
+set<string> my_set;
+if (auto [ iter, success ] = my_set.insert("Hello"); success) cout << *iter;
+#+end_src
+
+#+RESULTS:
+: Hello
+
+
+例外
+
+有时，我们要传一个对象给函数，让函数修改其状态。这时候，最好通过引用
+~T&~ 传递对象。通常不需要显式的传一个 in-out 参数做为返回值。
+
+例子
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+// much like std::operator>>()
+istream& operator>>(istream& is, string& s);
+
+for (string s; cin >> s; ) {
+    // do something with line
+}
+#+end_src
+
+这里， ~s~ 和 ~cin~ 都是作为输入输出参数传递。以非 ~const~ 引用的方式传入
+~cin~ ，其状态可以改变。以引用传递 ~s~ 是避免重复分配内存资源。只有需要扩
+展 ~s~ 的大小时，分配新内存。这个技术叫做 “caller-allocated out” （“调用
+者分配输出”）模式。适用于 ~string~ 和 ~vector~ 等类型。
+
+对比的，如果全部值都要返回的话，要写成这样：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+pair<istream&, string> get_string(istream& is)  // not recommended
+{
+    string s;
+    is >> s;
+    return {is, s};
+}
+
+for (auto p = get_string(cin); p.first; ) {
+    // do something with p.second
+}
+#+end_src
+
+我们认为这样很不优雅，性能较差。
+
+注意：
+
+很多情况，返回一个自定义的类型比较有用，比如：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+struct Distance {
+    int value;
+    int unit = 1;   // 1 means meters
+};
+
+Distance d1 = measure(obj1);        // access d1.value and d1.unit
+auto d2 = measure(obj2);            // access d2.value and d2.unit
+auto [value, unit] = measure(obj3); // access value and unit; somewhat redundant
+                                    // to people who know measure()
+auto [x, y] = measure(obj4);        // don't; it's likely to be confusing
+#+end_src
+
+当返回值是互相独立的数据实体的时候，可以用极度泛型的 ~pair~ 和 ~tuple~ 解
+构返回值。但不要用于良好封装的抽象实体。
+
+也可以用 ~variant<T, error_code>~ 这种类型来接收返回值。
+
+强化
+- 用返回值替换输出参数。输出参数指的是：1）函数会改写；2）函数修改参数
+  的成员变量，且变量不是常量；3）以非 ~const~ 的形式传入。

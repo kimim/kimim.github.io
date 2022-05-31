@@ -11,9 +11,9 @@ tags: [CppCoreGuidelines]
 
 理由：
 
-提取共用代码，可以是代码可读性更好，更易重用，避免复杂代码导致的错误。
-如果有些操作已经明确定义了，可以将其从代码中提取出来，取一个有意义的函
-数名。
+提取公用代码，可以提高代码可读性和重用性，避免代码太复杂导致的错误。如
+果有些操作已经明确定义了，可以将其从代码中提取出来，起一个有意义的函数
+名。
 
 错误例子：
 
@@ -28,10 +28,10 @@ void read_and_print(istream& is)    // read and print an int
 }
 #+end_src
 
-~read_and_print~ 函数几乎全错了。写到固定输出流、只处理 int 类型，不可重
-用，逻辑上不相关的操作混在一起，局部变量在使用范围外。
+~read_and_print~ 函数几乎全错了。输出到一个固定的输出流、只处理 ~int~ 类型，
+不可重用，逻辑上不相关的操作混在一起，局部变量在作用域范围外使用。
 
-如果一个 lambda 在多处使用，可以给把它赋值给一个变量：
+如果一个 ~lambda~ 需要在多处使用，可以给把它赋值给一个变量：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 sort(a, b, [](T x, T y) { return x.rank() < y.rank() && x.value() < y.value();});
@@ -42,7 +42,8 @@ sort(a, b, lessT);
 find_if(a, b, lessT);
 #+end_src
 
-最短的代码，不一定是性能最好、最好维护的代码。
+最短的代码，不一定是性能最好、最易维护的代码。
+
 
 例外：
 
@@ -52,4 +53,4 @@ find_if(a, b, lessT);
 
 强化：
 - 保持代码简短
-- 标注代码中相似的 lambda，可能可以给 lambda 命名，从而可以在别处重用
+- 标注代码中相似的 lambda 函数，可能可以给 lambda 命名，从而可以在别处重用

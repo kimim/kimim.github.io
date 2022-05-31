@@ -14,7 +14,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-提取共用代码，可以是代码可读性更好，更易重用，避免复杂代码导致的错误。如果有些操作已经明确定义了，可以将其从代码中提取出来，取一个有意义的函数名。
+提取公用代码，可以提高代码可读性和重用性，避免代码太复杂导致的错误。如果有些操作已经明确定义了，可以将其从代码中提取出来，起一个有意义的函数名。
 </p>
 
 <p>
@@ -34,11 +34,11 @@ tags: [CppCoreGuidelines]
 </div>
 
 <p>
-<code>read_and_print</code> 函数几乎全错了。写到固定输出流、只处理 int 类型，不可重用，逻辑上不相关的操作混在一起，局部变量在使用范围外。
+<code>read_and_print</code> 函数几乎全错了。输出到一个固定的输出流、只处理 <code>int</code> 类型，不可重用，逻辑上不相关的操作混在一起，局部变量在作用域范围外使用。
 </p>
 
 <p>
-如果一个 lambda 在多处使用，可以给把它赋值给一个变量：
+如果一个 <code>lambda</code> 需要在多处使用，可以给把它赋值给一个变量：
 </p>
 
 <div class="org-src-container">
@@ -52,8 +52,9 @@ find_if<span style="color: #707183;">(</span>a, b, lessT<span style="color: #707
 </div>
 
 <p>
-最短的代码，不一定是性能最好、最好维护的代码。
+最短的代码，不一定是性能最好、最易维护的代码。
 </p>
+
 
 <p>
 例外：
@@ -70,5 +71,5 @@ find_if<span style="color: #707183;">(</span>a, b, lessT<span style="color: #707
 </p>
 <ul class="org-ul">
 <li>保持代码简短</li>
-<li>标注代码中相似的 lambda，可能可以给 lambda 命名，从而可以在别处重用</li>
+<li>标注代码中相似的 lambda 函数，可能可以给 lambda 命名，从而可以在别处重用</li>
 </ul>

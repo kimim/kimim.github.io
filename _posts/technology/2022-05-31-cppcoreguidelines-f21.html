@@ -1,0 +1,204 @@
+---
+layout: post
+title: CppCoreGuidelines F.21 如果要输出多个值，返回结构体或元组更好
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+用返回值，代码更容易理解。C++ 里可以返回多个值。其一是用元组（包括数值对），可能在调用处需要额外的结构绑定（C++17）；其二是结构体，成员名能提供语义解释（推荐）。不命名的元组在泛型代码中用的比较多。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: output-only parameter documented in a comment</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">input</span>, <span style="color: #3F7F5F;">/*</span><span style="color: #3F7F5F;">output only</span><span style="color: #3F7F5F;">*/</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">output_data</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">status</span> = 1;
+    output_data = input + <span style="color: #2A00FF;">" hello"</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> status;
+<span style="color: #707183;">}</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">GOOD: self-documenting</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">tuple</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">input</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">status</span> = 1;
+    <span style="color: #7F0055; font-weight: bold;">return</span> make_tuple<span style="color: #7388d6;">(</span>status, input + <span style="color: #2A00FF;">" hello"</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">ss</span> = string<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span><span style="color: #7388d6;">(</span>f1<span style="color: #909183;">(</span><span style="color: #2A00FF;">"bonjour,"</span>, ss<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; ss &lt;&lt; endl;
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">tt</span> = f2<span style="color: #7388d6;">(</span><span style="color: #2A00FF;">"bonjour,"</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span><span style="color: #7388d6;">(</span>get<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">&gt;(</span>tt<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; get<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #909183;">&gt;(</span>tt<span style="color: #909183;">)</span> &lt;&lt; endl;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+bonjour, hello
+bonjour, hello
+</pre>
+
+
+<p>
+C++98 标准库就已经在用这个方法返回值。比如下面代码中， <code>pair</code> 其实就是有两个元素的 <code>tuple</code> ：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">C++98</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">set</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">my_set</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">pair</span><span style="color: #707183;">&lt;</span><span style="color: #110099;">set</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6;">&gt;</span>::iterator, <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">result</span> = my_set.insert<span style="color: #707183;">(</span><span style="color: #2A00FF;">"Hello"</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>result.second<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout &lt;&lt; result.second &lt;&lt; endl;          <span style="color: #3F7F5F;">//</span><span style="color: #3F7F5F;">1</span>
+    cout &lt;&lt; *result.first;                  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">workaround</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+1
+Hello
+</pre>
+
+
+<p>
+在 C++11 中，可以直接把结果填入多个局部变量：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">set</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">my_set</span>;
+<span style="color: #110099;">set</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183;">&gt;</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">iterator</span> <span style="color: #000000;">iter</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">success</span>;
+
+tie<span style="color: #707183;">(</span>iter, success<span style="color: #707183;">)</span> = my_set.insert<span style="color: #707183;">(</span><span style="color: #2A00FF;">"Hello"</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>success<span style="color: #707183;">)</span> cout &lt;&lt; *iter;
+</pre>
+</div>
+
+<pre class="example">
+Hello
+</pre>
+
+
+<p>
+C++17 支持以“结构绑定”的方式直接初始化多个变量：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">set</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">my_set</span>;
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #7388d6;">[</span> iter, success <span style="color: #7388d6;">]</span> = my_set.insert<span style="color: #7388d6;">(</span><span style="color: #2A00FF;">"Hello"</span><span style="color: #7388d6;">)</span>; success<span style="color: #707183;">)</span> cout &lt;&lt; *iter;
+</pre>
+</div>
+
+<pre class="example">
+Hello
+</pre>
+
+
+
+<p>
+例外
+</p>
+
+<p>
+有时，我们要传一个对象给函数，让函数修改其状态。这时候，最好通过引用
+<code>T&amp;</code> 传递对象。通常不需要显式的传一个 in-out 参数做为返回值。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">much like std::operator&gt;&gt;()</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">&gt;&gt;</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;
+
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>; cin &gt;&gt; s; <span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">do something with line</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这里， <code>s</code> 和 <code>cin</code> 都是作为输入输出参数传递。以非 <code>const</code> 引用的方式传入
+<code>cin</code> ，其状态可以改变。以引用传递 <code>s</code> 是避免重复分配内存资源。只有需要扩展 <code>s</code> 的大小时，分配新内存。这个技术叫做 “caller-allocated out” （“调用者分配输出”）模式。适用于 <code>string</code> 和 <code>vector</code> 等类型。
+</p>
+
+<p>
+对比的，如果全部值都要返回的话，要写成这样：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">pair</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp;, <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">get_string</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #707183;">)</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">not recommended</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+    is &gt;&gt; s;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7388d6;">{</span>is, s<span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = get_string<span style="color: #7388d6;">(</span>cin<span style="color: #7388d6;">)</span>; p.first; <span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">do something with p.second</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+我们认为这样很不优雅，性能较差。
+</p>
+
+<p>
+注意：
+</p>
+
+<p>
+很多情况，返回一个自定义的类型比较有用，比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Distance</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">value</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">unit</span> = 1;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">1 means meters</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Distance</span> <span style="color: #000000;">d1</span> = measure<span style="color: #707183;">(</span>obj1<span style="color: #707183;">)</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">access d1.value and d1.unit</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">d2</span> = measure<span style="color: #707183;">(</span>obj2<span style="color: #707183;">)</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">access d2.value and d2.unit</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #707183;">[</span>value, unit<span style="color: #707183;">]</span> = measure<span style="color: #707183;">(</span>obj3<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">access value and unit; somewhat redundant</span>
+                                    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">to people who know measure()</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #707183;">[</span>x, y<span style="color: #707183;">]</span> = measure<span style="color: #707183;">(</span>obj4<span style="color: #707183;">)</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't; it's likely to be confusing</span>
+</pre>
+</div>
+
+<p>
+当返回值是互相独立的数据实体的时候，可以用极度泛型的 <code>pair</code> 和 <code>tuple</code> 解构返回值。但不要用于良好封装的抽象实体。
+</p>
+
+<p>
+也可以用 <code>variant&lt;T, error_code&gt;</code> 这种类型来接收返回值。
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>用返回值替换输出参数。输出参数指的是：1）函数会改写；2）函数修改参数的成员变量，且变量不是常量；3）以非 <code>const</code> 的形式传入。</li>
+</ul>
