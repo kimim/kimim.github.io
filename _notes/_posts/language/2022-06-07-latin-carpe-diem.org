@@ -1,0 +1,49 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：carpe diem
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+电影《死亡诗社》（Dead Poets Society）里的 Keeting 老师很喜欢说的一句
+拉丁语“Carpe Diem”，字面意思就是“抓住今天”，也就是“及时行乐”。
+
+Keating encourages the boys to lean in closer to listen for a message
+from the grave.  Standing behind them, in a quiet, ghostly voice, he
+whispers, “Carpe. Carpe diem. Seize the day, boys. Make your lives
+extraordinary.” （Lifespan why we age and why we don't have to）
+
+Carpe diem 源自古罗马诗人、批评家贺拉斯（Quintus Horatius Flaccus，前
+65—前8）在其 Odes（颂歌）中的一首诗：
+
+#+begin_quote
+Tu ne quaesieris (scire nefas) quem mihi, quem tibi
+finem di dederint, Leuconoe, nec Babylonios
+temptaris numeros. Ut melius quicquid erit pati!
+Seu pluris hiemes seu tribuit Iuppiter ultimam,
+quae nunc oppositis debilitat pumicibus mare
+Tyrrhenum, sapias, vina liques et spatio brevi
+spem longam reseces. Dum loquimur, fugerit invida
+aetas: carpe diem, quam minimum credula postero.
+#+end_quote
+
+让我们试着翻译下：
+
+#+begin_quote
+你不要探寻（这是中犯罪）天神给你给我的终点，
+Leuconoe，也不要去猜测巴比伦数字。
+不如接受命运任何的安排。
+不管 Jupiter 众神之王分配了多少个冬天，
+冬季使第勒尼安海跟石块一样，
+明智点，愿你有酒，愿你克制太长的愿望。
+在我们说话这会儿，珍贵的时间消逝：
+抓住当下，尽量不要相信还有明天。
+#+end_quote
+
+看起来很是消极。消极中，也有积极成份。抓住转瞬即逝的今天，好好利用时间，
+才不会消极后悔么。
+
+因为拉丁文有古老的气息，所以带有些神秘感。哈利波特里的咒语就是拉丁文。
+所以不少年轻人会拿 carpe diem 作为 QQ 签名，还有纹身。

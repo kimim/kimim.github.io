@@ -99,7 +99,9 @@ C++14 可以这么玩。C++11 可以用递归方式计算。
 </p>
 
 <p>
-需要在更高一层级运行时进行配置或业务逻辑的 API 不能是 <code>constexpr</code> 的。因为编译器无法优化。任何依靠这些 API 的 <code>constexpr</code> 函数最终都要重构，或去掉 <code>constexpr</code> 。
+API 如果需要在更高一层级运行时进行配置计算或业务逻辑运算的，这类 API
+不能是 <code>constexpr</code> 的。因为编译器无法优化。任何依靠这些 API 的 <code>constexpr</code>
+函数最终都要重构，或去掉 <code>constexpr</code> 。
 </p>
 
 <p>

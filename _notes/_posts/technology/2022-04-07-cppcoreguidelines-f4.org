@@ -73,9 +73,9 @@ int main()
 
 不要把所有函数的声明为 ~constexpr~ 。很多计算适合在运行时进行。
 
-需要在更高一层级运行时进行配置或业务逻辑的 API 不能是 ~constexpr~ 的。因
-为编译器无法优化。任何依靠这些 API 的 ~constexpr~ 函数最终都要重构，或去
-掉 ~constexpr~ 。
+API 如果需要在更高一层级运行时进行配置计算或业务逻辑运算的，这类 API
+不能是 ~constexpr~ 的。因为编译器无法优化。任何依靠这些 API 的 ~constexpr~
+函数最终都要重构，或去掉 ~constexpr~ 。
 
 强化：
 
