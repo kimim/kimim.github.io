@@ -1,0 +1,54 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.23 用 not_null<T> 表示“null”是无效的
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+使得代码更清晰。函数的参数是 ~not_null<T>~ 就要求函数被调用的地方确保参
+数不是空的。类似的，函数返回值是 ~not_null<T>~ 就是告诉调用者，这个函数
+的返回值不会是空指针 ~nullptr~ ，就不需要进行额外检查。
+
+例子
+
+~not_null<T*>~ 告诉使用者，指针取值的时候，不需要检测是否为空指针
+~nullptr~ 。另外，在调试的时候， ~owner<T*>~ 和 ~not_null<T>~ 可以用来确保程
+序运行正确。
+
+如下函数：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+int length(Record* p);
+#+end_src
+
+当我调用 ~length(p)~ 的时候，我首先要检查 ~p~ 是否为空指针 ~nullptr~ 。
+~length()~ 的函数的实现是否需要检查 ~p~ 是否为空指针 ~nullptr~ 呢？
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+// 调用者确保 p != nullptr
+int length(not_null<Record*> p);
+
+// 函数实现者保证 p 可以是空指针
+int length(Record* p);
+#+end_src
+
+注意
+
+用 ~not_null<T*>~ 强调这是个非空指针 ~nullptr~ ；而用 ~T*~ 则表示有可能是空
+指针。两者在内存中都以 ~T*~ 的形式表达。所以没什么额外运行时开销。
+
+注意
+
+~not_null~ 不仅可用于指针，也能用于 ~unique_ptr~ ， ~shared_ptr~ 以及其他指针类型。
+
+强化：
+- （简单）警告：函数中不进行非空判断，直接对原始指针取值的情况。建议把指
+  针声明成 ~not_null~
+- （简单）报错：原始指针有时候判断非空后取值，有时候直接取值。
+- （简单）警告：函数中对 ~not_null~ 指针进行非空测试。无此必要。
