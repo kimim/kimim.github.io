@@ -1,0 +1,62 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.22 用 T* 或 owner<T*> 表示单个对象
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+可读性好：指针的意义更清晰。可以较好地让工具支持。
+
+注意
+
+传统 C 和 C++ 代码，用到很多 ~T*~ 这样的指针：
+- 表示一个（单独）对象（不会在函数中删除）
+- 指向自由存储区分配的对象（之后会删除）
+- 一个 ~nullptr~
+- 表示一个 C 风格的字符串（空字符结尾的字符数组）
+- 表示一个数组，长度另外提供
+- 表示数组中的一个位置
+
+指针的使用场景太多，导致代码的意图越来越难理解。代码检测工具也很难提供支持。
+
+例子
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void use(int* p, int n, char* s, int* q)
+{
+    p[n - 1] = 666; // Bad: we don't know if p points to n elements;
+                    // assume it does not or use span<int>
+    cout << s;      // Bad: we don't know if that s points to a
+                    // zero-terminated array of char;
+                    // assume it does not or use zstring
+    delete q;       // Bad: we don't know if *q is allocated
+                    // on the free store;
+                    // assume it does not or use owner
+}
+#+end_src
+
+改进后：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+void use2(span<int> p, zstring s, owner<int*> q)
+{
+    p[p.size() - 1] = 666; // OK, a range error can be caught
+    cout << s; // OK
+    delete q;  // OK
+}
+#+end_src
+
+注意
+
+~owner<T*>~ 表示所有权， ~zstring~ 表示 C 风格的字符串。
+
+相关指南：[[http://kimi.im/2022-03-26-cppcoreguidelines-i13][I.13 不要以单独指针传递数组]]
+
+强化
+- （简单）（约束）任何最终结果依然是指针的指针的运算操作。警告。
