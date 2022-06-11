@@ -13,6 +13,10 @@ tags: [CppCoreGuidelines]
 
 纯函数更容易推导，更容易优化（甚至并行处理），更容易做成记忆函数（memoize）。
 
+所谓的纯函数（pure function）即在任何时候，只要输入一样的参数，它就会
+返回一样的结果。不会产生任何副作用：修改参数、调用IO输入输出流。
+
+
 例子：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
@@ -30,3 +34,61 @@ int main()
 #+RESULTS:
 : 100
 : 102.01
+
+再看看以下例子，我们把一个纯函数做成memoize之后，可以极大的提升计算速
+度：
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <chrono>
+#include <map>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+using namespace std::chrono;
+std::function<unsigned(unsigned)> fib = [](unsigned n)
+{
+    if(n<=1)
+        return n;
+    return fib(n-1)+fib(n-2);
+};
+template<typename InType, typename OutType>
+std::function<OutType(InType)> memoize(std::function<OutType(InType)> foo)
+{
+    return [foo](InType n){
+        static map<InType, OutType> memo;
+
+        OutType ret;
+        if(memo.count(n)>0) {
+            ret =memo[n];
+            return ret;
+        }
+        ret=foo(n);
+        memo[n]=ret;
+        return ret;
+    };
+}
+
+auto fib1 = memoize(fib);
+
+void calc_time(unsigned n) {
+    steady_clock::time_point begin = steady_clock::now();
+    fib1(n);
+    steady_clock::time_point end = steady_clock::now();
+    std::cout << "Time difference = "
+              << duration_cast<nanoseconds> (end - begin).count()
+              << "[ns]"
+              << std::endl;
+}
+
+int main()
+{
+    calc_time(20);
+    calc_time(20);
+}
+#+end_src
+
+#+RESULTS:
+: Time difference = 562700[ns]
+: Time difference = 200[ns]

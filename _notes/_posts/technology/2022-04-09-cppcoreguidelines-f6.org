@@ -11,8 +11,8 @@ tags: [CppCoreGuidelines]
 
 理由：
 
-如果不打算异常，程序也不打算处理异常，可以直接终止。声明一个函数为
-~noexcept~ 可优化，从而减少执行路径，加快错误时的退出速度。
+程序如果不打算抛出异常，程序也不打算处理异常，可以直接终止。声明一个函数
+为 ~noexcept~ 可优化、并减少执行路径，加快错误时的退出速度。
 
 例子：
 
@@ -21,7 +21,7 @@ tags: [CppCoreGuidelines]
 
 注意：
 
-~constexpr~ 函数在运行时计算可能会抛出异常，所以需要带条件的 ~noexcept~ 。
+~constexpr~ 函数在运行时计算可能会抛出异常，所以某些情况可以 ~noexcept~ 。
 根据条件判断是否抛出异常。
 
 例子：
@@ -73,7 +73,7 @@ int main()
 #+RESULTS:
 : 1
 
-在定义个有 ~noexcept~ 的函数：
+在定义一个有 ~noexcept~ 的函数：
 
 #+begin_src C++ :noweb yes :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 <<throw_err>>
@@ -100,7 +100,7 @@ int main()
 
 在决定是否用 ~noexcept~ 前，要评估程序的执行环境，是否有异常抛出和内存分
 配的问题。某些执行环境能处理分配异常 ~bad_alloc~ 等，标准库可以抛出异常。
-然而很多执行环境，无法正常处理异常，最直接最简单的办法就是终止程序。如
+但是很多执行环境，无法正常处理异常，最直接最简单的办法就是终止程序。如
 果代码无法处理内存分配错误，最好的办法就是给可能导致内存分配错误的函数
 添加 ~noexcept~ 。
 
