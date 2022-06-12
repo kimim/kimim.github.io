@@ -1,0 +1,97 @@
+---
+layout: post
+title: CppCoreGuidelines F.24 用 span<T> 或 span_t<T> 表示半开序列
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+不正式的/不明确的范围，容易导致错误。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>* <span style="color: #0000ff; font-weight: bold;">find</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">r</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">v</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">find v in r</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">vec</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = find<span style="color: #707183;">(</span><span style="color: #7388d6;">{</span>vec.begin<span style="color: #909183;">()</span>, vec.end<span style="color: #909183;">()</span><span style="color: #7388d6;">}</span>, X<span style="color: #7388d6;">{}</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">find X{} in vec</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+C++ 代码中，范围的使用很普遍。一般都是隐式的，很难确保正确使用。尤其是，
+<code>(p, n)</code> 表示一个数组 <code>[p:p+n)</code> ，很难理清楚是要访问 <code>*p</code> 后面有 <code>n</code> 个元素。
+<code>span&lt;T&gt;</code> 和 <code>span_p&lt;T&gt;</code> 表示一个范围 <code>[p:q)</code> ，以 <code>p</code> 开始，以预测条件为真结束。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">range traversal (guaranteed correct)</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> : s<span style="color: #7388d6;">)</span> cout &lt;&lt; x &lt;&lt; <span style="color: #2A00FF;">' '</span>;
+    cout &lt;&lt; endl;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">C-style traversal (potentially checked)</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">index</span> <span style="color: #000000;">i</span> = 0; i &lt; s.size<span style="color: #909183;">()</span>; ++i<span style="color: #7388d6;">)</span> cout &lt;&lt; s<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">' '</span>;
+    cout &lt;&lt; endl;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">random access (potentially checked)</span>
+    s<span style="color: #7388d6;">[</span>2<span style="color: #7388d6;">]</span> = 9;
+    <span style="color: #3F7F5F;">//</span><span style="color: #3F7F5F;">s[7] = 10; // terminate called without an active exception</span>
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">extract pointers (potentially checked)</span>
+    <span style="color: #110099;">std</span>::sort<span style="color: #7388d6;">(</span>&amp;s<span style="color: #909183;">[</span>0<span style="color: #909183;">]</span>, &amp;s<span style="color: #909183;">[</span>s.size<span style="color: #709870;">()</span> / 2<span style="color: #909183;">]</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> : s<span style="color: #7388d6;">)</span> cout &lt;&lt; x &lt;&lt; <span style="color: #2A00FF;">' '</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">ss</span><span style="color: #7388d6;">[]</span> = <span style="color: #7388d6;">{</span>4, 3, 2, 1, 2, 3<span style="color: #7388d6;">}</span>;
+    f<span style="color: #7388d6;">(</span>ss<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+4 3 2 1 2 3
+4 3 2 1 2 3
+3 4 9 1 2 3
+</pre>
+
+
+<p>
+注意
+</p>
+
+<p>
+<code>span&lt;T&gt;</code> 并不保留其元素值，非常轻量，所以可以以值传递。
+</p>
+
+<p>
+传递 <code>span</code> 对象的效率跟传递两个指针对，或指针+数量一样。
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>（复杂）警告：访问指针参数的时候，其范围又由另外参数指定。建议使用 <code>span</code></li>
+</ul>
