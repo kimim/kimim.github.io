@@ -1,0 +1,62 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：ad hominem
+categories: [language]
+tags: [English, Latin]
+---
+#+END_EXPORT
+
+早上看了下公众号的订阅数，已经突破 400 人了。也算是一个小小的里程碑了。
+希望分享文章对订户有用吧，也希望各位订户帮忙点赞、看一看、转一转。
+
+最近实在是迷上了拉丁语。正是因为内心总是关注，就会在看看书看文章的时候，
+不断遇到。
+
+比如今天的这个单词 ad hominem 就是在看沟通管理相关的书的时候看到的。书
+里列了几个导致无效沟通的问题，其中一个就是 ad hominem fallicy（人身攻
+击谬论）。十大谬论分别是：
+1. 人身攻击（ad hominem），通过批评其来源而反驳某立场或论证
+2. 稻草人（straw man），为了反驳对方立场，以夸大、错误表达等方式曲解其立场
+3. 以愤怒争辩（argument from outrage），以愤怒代替证据作出判断
+4. 威吓手段 （scare tactics），以威胁恐惧代替证据作出判断
+5. 以偏概全 （hasty generalization），用轶闻趣事来证明或反驳普遍的因果
+   联系
+6. 群体思维（ groupthink fallacy），任凭群体对其的忠诚来干扰对问题的判断
+7. 转移话题 （red herring），转移话题或放烟雾弹来转移注意力
+8. 一厢情愿（relativist fallacy），用自己的思维推断别人的情况
+9. 随波逐流 （ argument from popularity），以公众的一致意见代替证据
+10. 因果误导（before-after fallacy），误认为先后相继发生的事情之间就有因果联系
+
+
+很显然， ad hominem 是一个拉丁语，意思是"to the person、人身攻击、针对
+个人"。在英语里，一般用作形容词或副词。
+
+例句:
+
+This is an ad hominem response. 这是一个针对个人的回应。
+
+These points come from some of our best information sources, who
+realize they'll be attacked ad hominem. 这些观点来自我们最好的信息来源，
+他们担心他们会被人身攻击。
+
+
+ad hominem 案例：
+- 如果一个人参加辩论捍卫素食主义者的权利，但自己不是素食者，他们的对手
+  可能会使用 ad hominem fallicy 来诋毁他们的论点：“你昨晚晚餐吃肉了，
+  你怎么能为素食主义争论？”
+- During the 2016 presidential campaign, Donald Trump threw out one
+  abusive ad hominem attack after another about Hillary Clinton, such
+  as, "Now you tell me she looks presidential, folks. I look
+  presidential," as if clothing were the important issue at hand. 特朗
+  普竞选总统时，以希拉里的衣着不好看作为依据，说她不适合当总统。
+- Ad feminam: Using female stereotypes to attack a viewpoint is an ad
+  feminam fallacy, for example, calling someone's viewpoint irrational
+  because of pregnancy, menopause, or menstruation hormones. 针对女性
+  的攻击，比如认为女性因为孕期、经期激素影响，会变得非理性这样的论断就
+  是一种 ad hominem/ad feminam。
+
+
+总结一下：
+- ad hominem 针对个人的、人身攻击
+- ad feminam 针对女性的攻击
