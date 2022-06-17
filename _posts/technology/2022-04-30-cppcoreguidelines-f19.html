@@ -14,11 +14,11 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-如果一个函数不直接使用用参数，只是要把它传给其他函数，那么要有办法让这个函数不改变参数的 <code>const</code> 属性和右值属性。
+如果一个函数不直接使用参数，只是要把参数传给其他函数，那么要有办法让这个函数不改变参数的 <code>const</code> 属性和右值属性。
 </p>
 
 <p>
-当且仅当在这种情况下，要把参数设置成右值引用 <code>TP&amp;&amp;</code> ，其中 <code>TP</code> 为模板参数类型。这样就不用关心只读 <code>const</code> 属性和右值属性，也会保留这些属性。因此，任何代码使用了 <code>TP&amp;&amp;</code> 就表示其不关心且保留只读 <code>const</code> 属性和右值属性，但是它可以把这些属性完美的转发给其他代码。因为调用过程中， <code>TP&amp;&amp;</code> 参数是个只读的临时对象，所以是安全的。 <code>TP&amp;&amp;</code> 类型的参数，在函数体中，最终应该通过 <code>std::forward</code> 转发给别的函数。
+当且仅当在这种情况下，要把参数设置成右值引用 <code>TP&amp;&amp;</code> ，其中 <code>TP</code> 为模板参数类型。这样就不用关心只读 <code>const</code> 属性和右值属性，也会保留这些属性。因此，任何代码使用了 <code>TP&amp;&amp;</code> 就表示其不关心且保留只读 <code>const</code> 属性和右值属性，但是它可以把这些属性完美的转发给其他代码。因为调用过程中， <code>TP&amp;&amp;</code> 参数是一个只读的临时对象，所以是安全的。 <code>TP&amp;&amp;</code> 类型的参数，在函数体中，最终应该通过 <code>std::forward</code> 转发给别的函数。
 </p>
 
 <p>

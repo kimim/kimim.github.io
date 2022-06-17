@@ -1,0 +1,43 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.25 用 zstring 或 not_null<zstring> 表示 C 风格字符串
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+C 风格字符串很普遍。是一种惯例约定：空字符结尾的字符串数组。我们必须区
+分 C 风格字符串、指向单个字符的指针还是指向字符串数组的指针。
+
+如果不需要 ~null~ 结尾，可以用 ~string_view~
+
+例子
+
+考虑以下函数
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+int length(const char* p);
+#+end_src
+
+其他函数调用 ~length(s)~ 的时候，是否需要先检查 ~s~ 非空？还是在 ~length()~ 的函数的代码实现里会去检查确保参数非空？
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+// the implementor of length() must assume that p == nullptr is possible
+int length(zstring p);
+
+// it is the caller's job to make sure p != nullptr
+int length(not_null<zstring> p);
+#+end_src
+
+以上代码，前一个声明要求代码实现能够接受 p 是空指针的情况。第二个声明，
+则要求函数的调用方确保传进来的参数不能是空指针。
+
+
+注意
+
+~zstring~ 不带所有权信息
