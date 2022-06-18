@@ -7,52 +7,58 @@ tags: [English]
 ---
 #+END_EXPORT
 
-今天听到一个英语成语：a chip on one's shoulder，字面意思是某人肩膀上的木片。而引
-申意思是因为自卑、嫉妒或者苦恼而易怒。为什么肩膀上的木片是易怒的意思呢？待我细细说来~
+今天听到一个英语成语：a chip on one's shoulder，字面意思是某人肩膀上的
+木片。而引申意思是因为自卑、嫉妒或者苦恼而易怒。为什么肩膀上的木片是易
+怒的意思呢？待我细细说来~
 
 * 造船工人 shipwright 的权利
 
-用肩膀扛些木片回家曾经是造船工人的权利之一。大约在 1634 年的时候，英国皇家海军造船
-码头工厂有一条不成文的规矩，造船工人享有一项福利，可以把船厂的木材下脚料扛回家。
-就这样，大概过了 100 年，船厂主发现，这项福利造成的损失越来越大，工人们开始想方设
-法浪费木材，砍下下脚料带回家。于是，船厂主制定规矩，今后的木片下脚料只能用手拿回
-家，而不能用肩膀扛回家。因为手臂承重有限，拿回家的木片就少一些。这项规矩刚实施的
-时候，有一个叫 John Miller 的强壮造船工人扛着一堆木片回家，监管的人说，请把木片从
-你肩膀上拿下来。John Miller 就发火了，说，这些木片不是属于我的吗？我不放下来！然
-后一群造船工人一拥而上扛着木头就闯了出去。[fn:1]
+用肩膀扛些木片回家曾经是造船工人的权利之一。大约在 1634 年的时候，英国
+皇家海军造船码头工厂有一条不成文的规矩，造船工人享有一项福利，可以把船
+厂的木材下脚料扛回家。就这样，大概过了 100 年，船厂主发现，这项福利造
+成的损失越来越大，工人们开始想方设法浪费木材，砍下下脚料带回家。于是，
+船厂主制定规矩，今后的木片下脚料只能用手拿回家，而不能用肩膀扛回家。因
+为手臂承重有限，拿回家的木片就少一些。这项规矩刚实施的时候，有一个叫
+John Miller 的强壮造船工人扛着一堆木片回家，监管的人说，请把木片从你肩
+膀上拿下来。John Miller 就发火了，说，这些木片不是属于我的吗？我不放下
+来！然后一群造船工人一拥而上扛着木头就闯了出去。[fn:1]
 
 * 决斗的信号
 
-后来，肩膀上的木片也被用来互相挑衅。1830 年的时候，北美的粗野孩子如果想出去打一架，
-就会把木片放在肩膀上，一旦有人把它拿下来，那这一架就非打不可了：
+后来，肩膀上的木片也被用来互相挑衅。1830 年的时候，北美的粗野孩子如果
+想出去打一架，就会把木片放在肩膀上，一旦有人把它拿下来，那这一架就非打
+不可了：
 
 #+BEGIN_QUOTE
-when two churlish boys were determined to fight, a chip would be placed on the
-shoulder of one, and the other demanded to knock it off at his peril[fn:1]
+when two churlish boys were determined to fight, a chip would be
+placed on the shoulder of one, and the other demanded to knock it off
+at his peril[fn:1]
 #+END_QUOTE
 
 * 易怒
 
-现在 a chip on one's shoulder 是因为自卑、嫉妒或者牢骚而易怒的意思。我不知道最开始
-的时候，是不是因为造船工人因为福利降低了所以满腹牢骚，发起怒来。反正现在它的意思
-就有些积怨导致发怒的意思了。比如：
+现在 a chip on one's shoulder 是因为自卑、嫉妒或者牢骚而易怒的意思。我
+不知道最开始的时候，是不是因为造船工人因为福利降低了所以满腹牢骚，发起
+怒来。反正现在它的意思就有些积怨导致发怒的意思了。比如：
 
-- Why did you get so angry at the slightest criticism? You seem to have a chip
-  on your shoulder.[fn:2] 你为啥收到一点点指责就发怒呢？你看起来就好像肩膀上有木
-  片呀。
-- Fred has such a chip on his shoulder — you never know what's going to set him
-  off next. 弗雷德肩膀上似乎有木片，你永远不知道啥他下一次啥时候会发怒。
-- She won't admit it, but Kate has a chip on her shoulder when it comes to
-  discussing her career.[fn:3] 凯特肯定不会承认，但是当人们讨论她的职业时，她肩
-  膀上好像有木片。
+- Why did you get so angry at the slightest criticism? You seem to
+  have a chip on your shoulder.[fn:2] 你为啥收到一点点指责就发怒呢？你
+  看起来就好像肩膀上有木片呀。
+- Fred has such a chip on his shoulder — you never know what's going
+  to set him off next. 弗雷德肩膀上似乎有木片，你永远不知道啥他下一次
+  啥时候会发怒。
+- She won't admit it, but Kate has a chip on her shoulder when it
+  comes to discussing her career.[fn:3] 凯特肯定不会承认，但是当人们讨
+  论她的职业时，她肩膀上好像有木片。
 
-那么自卑、嫉妒的人为什么会容易发怒呢？我想大概是因为他/她内心深处是没有接纳自己
-的，他/她恨的是自己不如他人，恨自己无能，贫穷，难看，无知……所以一旦有人触碰了他/
-她内心严密保护起来的自尊心，就会随时和这个世界拼命。然而，不论如何发怒，依然会保
-持原样，于是就会陷入抑郁寡欢，蛰伏着等待下一次爆发。
+那么自卑、嫉妒的人为什么会容易发怒呢？我想大概是因为他/她内心深处是没
+有接纳自己的，他/她恨的是自己不如他人，恨自己无能，贫穷，难看，无知……
+所以一旦有人触碰了他/她内心严密保护起来的自尊心，就会随时和这个世界拼
+命。然而，不论如何发怒，依然会保持原样，于是就会陷入抑郁寡欢，蛰伏着等
+待下一次爆发。
 
-我想，唯一的解药应该是放下肩膀上的那块木片，放下心中的我执，接纳真实的自己。只有
-如此，才能在纷繁复杂的世界上，保持一颗平静的心灵。
+我想，唯一的解药应该是放下肩膀上的那块木片，放下心中的我执，接纳真实的
+自己。只有如此，才能在纷繁复杂的世界上，保持一颗平静的心灵。
 
 * Footnotes
 
