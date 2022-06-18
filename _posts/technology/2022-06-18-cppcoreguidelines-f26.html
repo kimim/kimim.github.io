@@ -1,0 +1,176 @@
+---
+layout: post
+title: CppCoreGuidelines F.26 用 unique_ptr<T> 传递指针所有权
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>unique_ptr</code> 是安全传递指针的最轻量的方法。
+</p>
+
+
+<p>
+See also: C.50 regarding when to return a <code>shared_ptr</code> from a factory.
+</p>
+
+<p>
+例子
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">sstream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+
+<span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">shape_type</span> <span style="color: #707183;">{</span> <span style="color: #000000;">kCircle</span> = 0, <span style="color: #000000;">kTriangle</span> = 1<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Shape</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>cout &lt;&lt; <span style="color: #2A00FF;">"Shape\n"</span>;<span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">Shape</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Circle</span>: <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Circle</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #7388d6;">){</span>cout&lt;&lt;<span style="color: #2A00FF;">"Circle\n"</span>;<span style="color: #7388d6;">}</span>;
+    ~<span style="color: #0000ff; font-weight: bold;">Circle</span><span style="color: #7388d6;">(){</span>cout&lt;&lt; <span style="color: #2A00FF;">"~Circle\n"</span>;<span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Triangle</span>: <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Triangle</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #7388d6;">){</span>cout&lt;&lt;<span style="color: #2A00FF;">"Triangle\n"</span>;<span style="color: #7388d6;">}</span>;
+    ~<span style="color: #0000ff; font-weight: bold;">Triangle</span><span style="color: #7388d6;">(){</span>cout&lt;&lt; <span style="color: #2A00FF;">"~Triangle\n"</span>;<span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">shape_type</span> <span style="color: #0000ff; font-weight: bold;">read_header</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">shape</span>;
+    is &gt;&gt; shape;
+    <span style="color: #7F0055; font-weight: bold;">return</span> shape_type<span style="color: #7388d6;">(</span>shape<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assemble shape from input stream</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">get_shape</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">kind</span> = read_header<span style="color: #7388d6;">(</span>is<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #7388d6;">(</span>kind<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> kCircle:
+        <span style="color: #7F0055; font-weight: bold;">return</span> make_unique<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Circle</span><span style="color: #909183;">&gt;(</span>is<span style="color: #909183;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">case</span> kTriangle:
+        <span style="color: #7F0055; font-weight: bold;">return</span> make_unique<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Triangle</span><span style="color: #909183;">&gt;(</span>is<span style="color: #909183;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">default</span>:
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">nullptr</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">stringstream</span> <span style="color: #000000;">ss1</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"0 circle"</span><span style="color: #7388d6;">}</span>;
+    get_shape<span style="color: #7388d6;">(</span>ss1<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#33258;&#21160;&#38144;&#27585; Circle</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">stringstream</span> <span style="color: #000000;">ss2</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"1 triangle"</span><span style="color: #7388d6;">}</span>;
+    get_shape<span style="color: #7388d6;">(</span>ss2<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#33258;&#21160;&#38144;&#27585; Triangle</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+Shape
+Circle
+~Circle
+Shape
+Triangle
+~Triangle
+</pre>
+
+
+<p>
+不用 <code>unique_ptr</code> 的话，就没法自动销毁两个对象，需要手动销毁：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">sstream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+
+<span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">shape_type</span> <span style="color: #707183;">{</span> <span style="color: #000000;">kCircle</span> = 0, <span style="color: #000000;">kTriangle</span> = 1<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Shape</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>cout &lt;&lt; <span style="color: #2A00FF;">"Shape\n"</span>;<span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">Shape</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Circle</span>: <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Circle</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #7388d6;">){</span>cout&lt;&lt;<span style="color: #2A00FF;">"Circle\n"</span>;<span style="color: #7388d6;">}</span>;
+    ~<span style="color: #0000ff; font-weight: bold;">Circle</span><span style="color: #7388d6;">(){</span>cout&lt;&lt; <span style="color: #2A00FF;">"~Circle\n"</span>;<span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Triangle</span>: <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Triangle</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #7388d6;">){</span>cout&lt;&lt;<span style="color: #2A00FF;">"Triangle\n"</span>;<span style="color: #7388d6;">}</span>;
+    ~<span style="color: #0000ff; font-weight: bold;">Triangle</span><span style="color: #7388d6;">(){</span>cout&lt;&lt; <span style="color: #2A00FF;">"~Triangle\n"</span>;<span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">shape_type</span> <span style="color: #0000ff; font-weight: bold;">read_header</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">shape</span>;
+    is &gt;&gt; shape;
+    <span style="color: #7F0055; font-weight: bold;">return</span> shape_type<span style="color: #7388d6;">(</span>shape<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assemble shape from input stream</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span>* <span style="color: #0000ff; font-weight: bold;">get_shape</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">kind</span> = read_header<span style="color: #7388d6;">(</span>is<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #7388d6;">(</span>kind<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> kCircle:
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Circle</span><span style="color: #909183;">(</span>is<span style="color: #909183;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">case</span> kTriangle:
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Triangle</span><span style="color: #909183;">(</span>is<span style="color: #909183;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">default</span>:
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">nullptr</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">stringstream</span> <span style="color: #000000;">ss1</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"0 circle"</span><span style="color: #7388d6;">}</span>;
+    get_shape<span style="color: #7388d6;">(</span>ss1<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#27809;&#26377;&#33258;&#21160;&#38144;&#27585; Circle</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">stringstream</span> <span style="color: #000000;">ss2</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"1 triangle"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">shape</span> = get_shape<span style="color: #7388d6;">(</span>ss2<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">delete</span> shape;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#38144;&#27585; Triangle</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+Shape
+Circle
+Shape
+Triangle
+~Triangle
+</pre>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果你要传递一个子类对象到一个父类对象，请使用指针。
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>（简单）警告：返回一个本地原始指针的情况。建议使用 <code>unique_ptr</code> 或 <code>shared_ptr</code> 。</li>
+</ul>

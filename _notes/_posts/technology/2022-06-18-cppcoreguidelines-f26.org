@@ -1,0 +1,152 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.26 用 unique_ptr<T> 传递指针所有权
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+~unique_ptr~ 是安全传递指针的最轻量的方法。
+
+
+See also: C.50 regarding when to return a ~shared_ptr~ from a factory.
+
+例子
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <sstream>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+
+enum shape_type { kCircle = 0, kTriangle = 1};
+class Shape {
+public:
+    Shape() {cout << "Shape\n";}
+    virtual ~Shape() = default;
+};
+class Circle: public Shape {
+public:
+    Circle(istream& is){cout<<"Circle\n";};
+    ~Circle(){cout<< "~Circle\n";};
+};
+class Triangle: public Shape {
+public:
+    Triangle(istream& is){cout<<"Triangle\n";};
+    ~Triangle(){cout<< "~Triangle\n";};
+};
+
+const shape_type read_header(istream& is) {
+    int shape;
+    is >> shape;
+    return shape_type(shape);
+}
+// assemble shape from input stream
+unique_ptr<Shape> get_shape(istream& is)
+{
+    auto kind = read_header(is);
+    switch (kind) {
+    case kCircle:
+        return make_unique<Circle>(is);
+    case kTriangle:
+        return make_unique<Triangle>(is);
+    default:
+        return nullptr;
+    }
+}
+int main()
+{
+    stringstream ss1{"0 circle"};
+    get_shape(ss1);
+    // 自动销毁 Circle
+    stringstream ss2{"1 triangle"};
+    get_shape(ss2);
+    // 自动销毁 Triangle
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: Shape
+: Circle
+: ~Circle
+: Shape
+: Triangle
+: ~Triangle
+
+不用 ~unique_ptr~ 的话，就没法自动销毁两个对象，需要手动销毁：
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <sstream>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+
+enum shape_type { kCircle = 0, kTriangle = 1};
+class Shape {
+public:
+    Shape() {cout << "Shape\n";}
+    virtual ~Shape() = default;
+};
+class Circle: public Shape {
+public:
+    Circle(istream& is){cout<<"Circle\n";};
+    ~Circle(){cout<< "~Circle\n";};
+};
+class Triangle: public Shape {
+public:
+    Triangle(istream& is){cout<<"Triangle\n";};
+    ~Triangle(){cout<< "~Triangle\n";};
+};
+
+const shape_type read_header(istream& is) {
+    int shape;
+    is >> shape;
+    return shape_type(shape);
+}
+// assemble shape from input stream
+Shape* get_shape(istream& is)
+{
+    auto kind = read_header(is);
+    switch (kind) {
+    case kCircle:
+        return new Circle(is);
+    case kTriangle:
+        return new Triangle(is);
+    default:
+        return nullptr;
+    }
+}
+int main()
+{
+    stringstream ss1{"0 circle"};
+    get_shape(ss1);
+    // 没有自动销毁 Circle
+    stringstream ss2{"1 triangle"};
+    auto shape = get_shape(ss2);
+    delete shape;    // 销毁 Triangle
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: Shape
+: Circle
+: Shape
+: Triangle
+: ~Triangle
+
+注意
+
+如果你要传递一个子类对象到一个父类对象，请使用指针。
+
+强化
+- （简单）警告：返回一个本地原始指针的情况。建议使用 ~unique_ptr~ 或 ~shared_ptr~ 。
