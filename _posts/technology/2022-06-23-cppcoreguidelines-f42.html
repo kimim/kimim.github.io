@@ -1,0 +1,67 @@
+---
+layout: post
+title: CppCoreGuidelines F.42 返回 T* 表示一个内存地址
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+只有返回内存地址的情况下，可以使用指针。不可以用 <code>T*</code> 返回所有权。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Node</span>* <span style="color: #0000ff; font-weight: bold;">find</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Node</span>* <span style="color: #000000;">t</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">find s in a binary tree of Nodes</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!t || t-&gt;name == s<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> t;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = find<span style="color: #709870;">(</span>t-&gt;left, s<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> p;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = find<span style="color: #709870;">(</span>t-&gt;right, s<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> p;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">nullptr</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+如果上面函数返回值不是 <code>nullptr</code> 就表示一个节点字符串是 <code>s</code> 的节点地址。重要的是，这里没有转移指针所指向的对象的所有权。
+</p>
+
+
+
+<p>
+注意
+</p>
+
+<p>
+位置信息也可以通过迭代器 <code>iterator</code> ，索引 <code>index</code> 和引用 <code>reference</code> 传递。如果不考虑 <code>nullptr</code> 或不修改对象数据，引用比指针更好。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+返回的指针不能指向函数调用方作用域范围外的对象。see F43
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记用 <code>delete</code> ， <code>std::free()</code> 操作 <code>T*</code> 的代码，只有对象所有者才能删除对象。</li>
+<li>标记 <code>new</code> 或 <code>malloc()</code> 生成的对象赋值给 <code>T*</code> 的代码，只有对象所有者负责删除对象。</li>
+</ul>

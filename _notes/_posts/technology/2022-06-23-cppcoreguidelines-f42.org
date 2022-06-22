@@ -1,0 +1,48 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.42 返回 T* 表示一个内存地址
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+只有返回内存地址的情况下，可以使用指针。不可以用 ~T*~ 返回所有权。
+
+
+例子
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+Node* find(Node* t, const string& s)  // find s in a binary tree of Nodes
+{
+    if (!t || t->name == s) return t;
+    if ((auto p = find(t->left, s))) return p;
+    if ((auto p = find(t->right, s))) return p;
+    return nullptr;
+}
+#+end_src
+
+
+如果上面函数返回值不是 ~nullptr~ 就表示一个节点字符串是 ~s~ 的节点地址。重
+要的是，这里没有转移指针所指向的对象的所有权。
+
+
+
+注意
+
+位置信息也可以通过迭代器 ~iterator~ ，索引 ~index~ 和引用 ~reference~ 传递。
+如果不考虑 ~nullptr~ 或不修改对象数据，引用比指针更好。
+
+
+注意
+
+返回的指针不能指向函数调用方作用域范围外的对象。see F43
+
+
+强化
+- 标记用 ~delete~ ， ~std::free()~ 操作 ~T*~ 的代码，只有对象所有者才能删除对象。
+- 标记 ~new~ 或 ~malloc()~ 生成的对象赋值给 ~T*~ 的代码，只有对象所有者负责删除对象。
