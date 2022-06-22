@@ -1,0 +1,71 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.27 用 shapred_ptr<T> 共享所有权
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+~std::shared_ptr~ 是共享所有权的标准操作。即指针的最后一个所有者负责删除
+对象。
+
+例子
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-expor
+#include <iostream>
+#include <thread>
+#include <memory>
+using namespace std;
+class Image {
+  public:
+    Image(const string ims) {}
+    ~Image() { cout << "~Image" << endl; }
+};
+enum direction : int {
+    top_left,
+    top_right,
+    bottom_left,
+    bottom_right,
+};
+void shade(direction d, shared_ptr<const Image> im)
+{
+    cout << "shade to " << d << endl;
+}
+int main()
+{
+    shared_ptr<const Image> im{new Image{"Image"}};
+    std::thread t0 {shade, top_left, im};
+    std::thread t1 {shade, top_right, im};
+    std::thread t2 {shade, bottom_left, im};
+    std::thread t3 {shade, bottom_right, im};
+    t0.join(); t1.join(); t2.join(); t3.join();
+}
+
+
+// detach threads
+// last thread to finish deletes the image
+#+end_src
+
+#+RESULTS:
+: shade to 0
+: shade to 1
+: shade to 2
+: shade to 3
+: ~Image
+
+注意
+
+如果只有一个所有者，使用 ~unique_ptr~ 。 ~shared_ptr~ 用于多个所有者共享所
+有权。
+
+过多使用 ~shared_ptr~ 会造成性能影响。 ~shared_ptr~ 用原子操作维护一个引用
+计数器，有一定性能开销。
+
+其他选项
+
+让单独一个对象维护共享资源，当其他使用者完成工作后，由这个对象负责销毁资源。

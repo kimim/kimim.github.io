@@ -14,7 +14,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-用返回值，代码更容易理解。C++ 里可以返回多个值。其一是用元组（包括数值对），可能在调用处需要额外的结构绑定（C++17）；其二是结构体，成员名能提供语义解释（推荐）。不命名的元组在泛型代码中用的比较多。
+函数结果通过返回值的方式返回，代码更容易理解。C++ 里可以返回多个值。其一是用元组（包括数值对），可能在调用处需要额外的结构绑定（C++17）；其二是结构体，可以通过成员名能提供语义解释（推荐）。不命名的元组在泛型代码中用的比较多。
 </p>
 
 <p>
@@ -106,7 +106,8 @@ C++17 支持以“结构绑定”的方式直接初始化多个变量：
 
 <div class="org-src-container">
 <pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">set</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">my_set</span>;
-<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #7388d6;">[</span> iter, success <span style="color: #7388d6;">]</span> = my_set.insert<span style="color: #7388d6;">(</span><span style="color: #2A00FF;">"Hello"</span><span style="color: #7388d6;">)</span>; success<span style="color: #707183;">)</span> cout &lt;&lt; *iter;
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #7388d6;">[</span> iter, success <span style="color: #7388d6;">]</span> = my_set.insert<span style="color: #7388d6;">(</span><span style="color: #2A00FF;">"Hello"</span><span style="color: #7388d6;">)</span>; success<span style="color: #707183;">)</span>
+    cout &lt;&lt; *iter;
 </pre>
 </div>
 

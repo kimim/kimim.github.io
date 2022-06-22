@@ -11,9 +11,10 @@ tags: [CppCoreGuidelines]
 
 理由
 
-用返回值，代码更容易理解。C++ 里可以返回多个值。其一是用元组（包括数值
-对），可能在调用处需要额外的结构绑定（C++17）；其二是结构体，成员名能
-提供语义解释（推荐）。不命名的元组在泛型代码中用的比较多。
+函数结果通过返回值的方式返回，代码更容易理解。C++ 里可以返回多个值。其
+一是用元组（包括数值对），可能在调用处需要额外的结构绑定（C++17）；其
+二是结构体，可以通过成员名能提供语义解释（推荐）。不命名的元组在泛型代
+码中用的比较多。
 
 例子
 
@@ -88,7 +89,8 @@ C++17 支持以“结构绑定”的方式直接初始化多个变量：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> <set> :eval no-export
 set<string> my_set;
-if (auto [ iter, success ] = my_set.insert("Hello"); success) cout << *iter;
+if (auto [ iter, success ] = my_set.insert("Hello"); success)
+    cout << *iter;
 #+end_src
 
 #+RESULTS:

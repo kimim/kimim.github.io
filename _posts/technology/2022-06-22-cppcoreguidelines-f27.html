@@ -1,0 +1,87 @@
+---
+layout: post
+title: CppCoreGuidelines F.27 用 shapred_ptr<T> 共享所有权
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>std::shared_ptr</code> 是共享所有权的标准操作。即指针的最后一个所有者负责删除对象。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">thread</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">memory</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Image</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Image</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">ims</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{}</span>
+    ~<span style="color: #0000ff; font-weight: bold;">Image</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> cout &lt;&lt; <span style="color: #2A00FF;">"~Image"</span> &lt;&lt; endl; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">direction</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000;">top_left</span>,
+    <span style="color: #000000;">top_right</span>,
+    <span style="color: #000000;">bottom_left</span>,
+    <span style="color: #000000;">bottom_right</span>,
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">shade</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">direction</span> <span style="color: #000000;">d</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Image</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">im</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    cout &lt;&lt; <span style="color: #2A00FF;">"shade to "</span> &lt;&lt; d &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Image</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">im</span><span style="color: #7388d6;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Image</span><span style="color: #909183;">{</span><span style="color: #2A00FF;">"Image"</span><span style="color: #909183;">}</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">t0</span> <span style="color: #7388d6;">{</span>shade, top_left, im<span style="color: #7388d6;">}</span>;
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">t1</span> <span style="color: #7388d6;">{</span>shade, top_right, im<span style="color: #7388d6;">}</span>;
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">t2</span> <span style="color: #7388d6;">{</span>shade, bottom_left, im<span style="color: #7388d6;">}</span>;
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">t3</span> <span style="color: #7388d6;">{</span>shade, bottom_right, im<span style="color: #7388d6;">}</span>;
+    t0.join<span style="color: #7388d6;">()</span>; t1.join<span style="color: #7388d6;">()</span>; t2.join<span style="color: #7388d6;">()</span>; t3.join<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">detach threads</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">last thread to finish deletes the image</span>
+</pre>
+</div>
+
+<pre class="example">
+shade to 0
+shade to 1
+shade to 2
+shade to 3
+~Image
+</pre>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果只有一个所有者，使用 <code>unique_ptr</code> 。 <code>shared_ptr</code> 用于多个所有者共享所有权。
+</p>
+
+<p>
+过多使用 <code>shared_ptr</code> 会造成性能影响。 <code>shared_ptr</code> 用原子操作维护一个引用计数器，有一定性能开销。
+</p>
+
+<p>
+其他选项
+</p>
+
+<p>
+让单独一个对象维护共享资源，当其他使用者完成工作后，由这个对象负责销毁资源。
+</p>
