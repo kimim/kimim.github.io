@@ -1,0 +1,208 @@
+---
+layout: post
+title: CppCoreGuidelines F.43 不要（直接或间接）返回指向局部对象的指针或引用
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+悬空指针会导致程序崩溃，数据破坏。
+</p>
+
+<p>
+坏例子
+</p>
+
+<p>
+从函数返回后，本地对象已经没了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">fx</span> = 9;
+    <span style="color: #7F0055; font-weight: bold;">return</span> &amp;fx;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">looks innocent enough</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">gx</span>;
+    cout &lt;&lt; <span style="color: #2A00FF;">"*p == "</span> &lt;&lt; *p &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    *p = 999;
+    cout &lt;&lt; <span style="color: #2A00FF;">"gx == "</span> &lt;&lt; gx &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span> = f<span style="color: #7388d6;">()</span>;
+    cout &lt;&lt; *p;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">z</span> = *p;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read from abandoned stack frame (bad)</span>
+    g<span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">)</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">pass pointer to abandoned stack frame to function (bad)</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    h<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+可能的结果：
+</p>
+
+<pre class="example" id="orga7aeb61">
+*p == 999
+gx == 999
+</pre>
+
+<p>
+可能的原因是 <code>g()</code> 重用了 <code>f()</code> 函数不用了的堆栈空间。所有 <code>*p</code> 指向了 <code>gx</code> 的堆栈空间。
+</p>
+
+<p>
+以下情况都可能发生，想象下：
+</p>
+<ul class="org-ul">
+<li><code>fx</code> 和 <code>gx</code> 不是同一类型</li>
+<li><code>fx</code> 和 <code>gx</code> 是同一类型的变体</li>
+<li>一组函数调用过程中有更多悬挂指针</li>
+<li>黑客可以利用悬挂指针做什么事情</li>
+</ul>
+
+<p>
+幸运的是，大部分现代编译器都会对简单的情况进行警告
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+引用有一样的情况
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>&amp; <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = 7;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> x;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: returns reference to object that is about to be destroyed</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    cout &lt;&lt; f<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+只针对非静态局部变量会。静态变量静态分配存储空间，指向他们的指针不会悬空。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<p>
+有些泄漏局部变量指针的情况不太明显
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">glob</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">global variables are bad in so many ways</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">steal</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    glob = x<span style="color: #7388d6;">()</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 99;
+    cout &lt;&lt; <span style="color: #2A00FF;">"address of i    = "</span> &lt;&lt; &amp;i &lt;&lt; endl;
+    steal<span style="color: #7388d6;">(</span><span style="color: #909183;">[</span>&amp;<span style="color: #909183;">]</span> <span style="color: #909183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> &amp;i; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    cout &lt;&lt; <span style="color: #2A00FF;">"address of glob = "</span> &lt;&lt; glob &lt;&lt; endl;
+    f<span style="color: #7388d6;">()</span>;
+    cout &lt;&lt; *glob &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    cout &lt;&lt; <span style="color: #2A00FF;">"address of glob = "</span> &lt;&lt; glob &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+address of glob = 0
+address of i    = 0xbdc97ffb0c
+99
+address of glob = 0xbdc97ffb0c
+</pre>
+
+
+<p>
+这里我们在函数 <code>f()</code> 中把本地变量的引用赋值给了 <code>glob</code> ，后续代码使用 <code>glob</code>
+会产生不可预测的结果。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+本地变量地址会通过返回、 <code>T&amp;</code> 输出参数、返回对象的成员、返回数组的元素等方式泄漏出来。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+内部作用域的变量，也可能通过类似方式泄漏到外层作用域。
+</p>
+
+<p>
+此问题的另一个变体是将指针放在一个容器内，此容器的生存周期比指针指向的对象生存周期长。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>编译器捕捉返回值为指向局部对象的引用和指针。</li>
+<li>静态代码分析确认用指针表示对象位置的情况。</li>
+</ul>
