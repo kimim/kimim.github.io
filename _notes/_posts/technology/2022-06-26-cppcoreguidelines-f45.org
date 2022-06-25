@@ -1,0 +1,100 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.45 不要返回 T&&
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+返回 ~T&&~ 意味着返回已经销毁的临时对象。 ~&&~ 是吸附临时对象的磁铁。
+
+
+例子
+
+返回的右值引用的作用域只在返回语句结束前。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+auto&& x = max(0, 1);   // OK, so far
+foo(x);                 // Undefined behavior
+#+end_src
+
+这种用法经常导致 bug，编译器也会报错。函数开发人员应该避免这种陷阱。
+
+安全生命周期开发要求及时发现这种问题。
+
+
+例子
+
+临时的返回的右值引用可以再次转交给调用的函数。但是不能向上返回给上一层函数内使用。对于引用或完美传递（perfect forwarding）传入参数，又要返回值的，可以用 ~auto~ 推演返回类型（不是 ~auto&&~ ）
+
+假设 ~F~ 返回值：
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+template<class F>
+auto&& wrapper(F f)
+{
+    cout << typeid(f).name(); // or whatever instrumentation
+    return f();               // BAD: returns a reference to a temporary
+}
+int func() {
+    return 100;
+}
+
+int main()
+{
+    wrapper(func);  // no way to get return value
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+
+
+好一些
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+template<class F>
+auto wrapper(F f)
+{
+    cout << typeid(f).name() << endl; // or whatever instrumentation
+    return f();          // OK
+}
+int func() {
+    return 100;
+}
+
+int main()
+{
+    cout << wrapper(func);
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: PFivE
+: 100
+
+
+例外
+
+~std::move~ 与 ~std::forward~ 返回 ~&&~ ，不过只是一次类型转换，用于在临时对
+象没有销毁前，将其引用传递出去。
+
+
+强化
+- 除了 ~std::move~ 与 ~std::forward~ 之外，返回 ~&&~ 的都要标记警告。
