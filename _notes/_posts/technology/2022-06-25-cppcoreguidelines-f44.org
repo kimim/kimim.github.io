@@ -1,0 +1,67 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.44 在不需要复制且不要返回空对象的时候返回引用 T&
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+编程语言确保 ~T&~ 指向一个对象。所以不需要测试是否为 ~nullptr~
+
+返回引用不转移所有权。
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <array>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+
+class wheel {
+    float pressure;
+public:
+    wheel(float p = 100): pressure(p){}
+    friend ostream& operator<<(ostream& o, wheel& w);
+};
+
+ostream& operator<<(ostream& o, wheel& w) {
+    o << "wheel's pressure is " << w.pressure << endl;
+}
+
+class Car
+{
+    array<wheel, 4> w;
+    // ...
+public:
+    Car(){}
+    wheel& get_wheel(int i) { Expects(i < w.size()); return w[i]; }
+    // ...
+};
+
+void use()
+{
+    Car c;
+    wheel& w0 = c.get_wheel(0); // w0 has the same lifetime as c
+    cout << w0;
+}
+
+int main()
+{
+    use();
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: wheel's pressure is 100
+
+强化
+- 注意函数返回值是引用的话，函数是不可能返回 ~nullptr~ 的
