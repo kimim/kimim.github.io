@@ -1,0 +1,66 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：hedonism
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+前几天热衷于拉丁语的时候，学到了 [[http://kimi.im/2022-06-07-latin-carpe-diem][carpe diem]]，抓住今天，及时行乐。这次
+学的词和 carpe diem 很相关：hedonism 享乐主义、快乐主义。
+
+在看管理学激励理论的时候，看到这句：
+
+Hedonism, one of the first motivation theories, assumes that people
+are motivated to satisfy mainly their own needs (seek pleasure, avoid
+pain).
+
+享乐主义激励理论认为人们为了满足他们自己的寻求快乐、避免痛苦的需求，而
+积极工作。
+
+Hedonism is a school of thought that argues that the pursuit of
+pleasure and intrinsic goods are the primary or most important goals
+of human life.
+
+享乐主义的词根 Hedone 其实是古希腊的欢愉女神的名字“赫多涅”（Ἡδονή，
+Hêdonê）。赫多涅是爱神厄洛斯（Eros）与灵魂女神普绪喀（Psyche）之女。她
+代表快乐、愉悦和享受。在罗马被叫做沃路普塔斯（Voluptas），有时候也叫沃
+路皮亚（Volupia）。
+
+所以呢，延伸开来，hedonic 享乐的， hedonist 享乐主义者，hedonistic 享
+乐主义者的。
+
+Hedonic consumption is consumption of products by individuals for
+experiencing happiness after satisfying basic needs of food, clothing
+and shelter. 享乐式消费，是指除了满足基本的衣食住行需求之外，还要追求
+幸福感的消费方式。
+
+You seem to paint a lot of the students as shallow, narcissistic
+hedonists. 你似乎把很多学生画成肤浅、自恋的享乐主义者。
+
+For Epicurus, a hedonistic life is one free from bodily and mental
+pains. 对与伊比鸠鲁（古希腊杰出唯物主义和无神论者）来说，享乐主义者的
+生活就是远离身体和精神的痛苦。
+
+Hedone 女神到了罗马，成了 Volupas 女神，似乎就变的更世俗了。所以，
+voluptuous 形容性感撩人、体态丰腴，也指松软舒适的东西。
+
+The show's creative team put her in costumes that emphasized her
+voluptuousness. 节目创意组给她穿的服装凸显了她的体态丰腴。
+
+I sank into the bed's voluptuous warmth. 我躺在温暖松软的床上。
+
+She swayed her hips voluptuously. 她摇摆着性感的臀部。
+
+
+最后，总结一下：
+- Hedone 赫多涅，古希腊的欢愉女神
+- hedonism 享乐主义
+- hedonic 享乐的
+- hedonist 享乐主义者
+- hedonistic 享乐主义者的
+- Voluptas 沃路普塔斯，古罗马的欢愉女神，也叫 Volupia
+- voluptuous 体态性感的
+- voluptuousness 丰腴的体态
+- carpe diem 及时行乐
