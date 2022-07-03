@@ -1,0 +1,67 @@
+---
+layout: post
+title: CppCoreGuidelines F.46 main() 的返回值类型是 int
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+这个是语言规则，把 <code>main</code> 声明成 <code>void</code> 可能会跟某些系统不兼容。
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span><span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, not C++</span>
+</pre>
+</div>
+
+<pre class="example">
+error: '::main' must return 'int'
+</pre>
+
+
+<p>
+返回值类型改成 <code>int</code> ，编译器就不会报错了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"This is the way to do it\n"</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+This is the way to do it
+</pre>
+
+
+
+<p>
+注意
+</p>
+
+<p>
+我们提这个规则，是因为总是有人坚持以错误的方式写代码。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>编译器会报错</li>
+<li>如果编译器不报错，让代码检查工具标记错误</li>
+</ul>
