@@ -1,0 +1,67 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.47 赋值操作符返回 T&
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+~operator=(const T&)~ 操作符重载的通常操作是先进行赋值，然后再返回一个非
+~const~ 的 ~*this~ 。这样就和标准库类型保持一致。并遵循“像 int 那样执行”的
+原则。
+
+
+注意
+
+在过去，有些指南说赋值操作符要返回 ~const T&~ 。主要是为了避免这种形式的
+代码 ~(a = b) =c~ 。不过这种代码不太常见，所以没必要因此而与标准类型不一
+致。
+
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+class Foo
+{
+public:
+    Foo() = default;
+    Foo(int v) : foo_val(v) {}
+    Foo& operator=(const Foo& rhs)
+    {
+        // Copy members.
+        foo_val = rhs.foo_val;
+        return *this;
+    }
+    int foo_val = 0;
+};
+
+int main()
+{
+    Foo rhs(10);
+    Foo n;
+    cout << n.foo_val << endl;
+    cout << (n = rhs).foo_val << endl;
+    cout << n.foo_val;
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 0
+: 10
+: 10
+
+
+强化
+
+应该用工具检查任何赋值操作符的返回值类型和数值
