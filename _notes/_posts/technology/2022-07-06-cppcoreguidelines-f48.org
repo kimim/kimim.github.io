@@ -1,0 +1,89 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.48 不要返回 std::move(local)
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+因为 C++ 有复制省略机制，在返回值的时候就不需要 ~std::move~ 了。
+
+在返回语句中，如果返回的是一个自动存储区的 non-volatile 对象；并且该对
+象不是函数参数，不是 catch 语句的参数；并且对象类型和返回值的类型一样
+（不考虑 const 和 volatile 修饰符）。那么编译器就会使用复制省略机制，
+避免复制构造一个新的对象。这种机制叫“有名称的返回值优化（Named Return
+Value Optimization，简称 NRVO）”。
+
+
+坏例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+struct S {
+    int m_i;
+    S(int i) : m_i(i) {}
+};
+ostream& operator<<(ostream &o, S s) {
+    o << s.m_i;
+    return o;
+}
+S f()
+{
+  S result{11};
+  return std::move(result);
+}
+int main()
+{
+    cout << f();
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 11
+
+好例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+struct S {
+    int m_i;
+    S(int i) : m_i(i) {}
+};
+ostream& operator<<(ostream &o, S s) {
+    o << s.m_i;
+    return o;
+}
+S f()
+{
+  S result{11};
+  return result;
+}
+int main()
+{
+    cout << f();
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: address of result: 0x381ffff70c
+: 11
+
+
+强化
+
+最好通过工具确保合理的返回表达式
