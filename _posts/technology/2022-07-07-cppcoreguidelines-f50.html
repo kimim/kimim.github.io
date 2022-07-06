@@ -1,0 +1,78 @@
+---
+layout: post
+title: CppCoreGuidelines F.50 当不能用函数实现的时候（使用局部变量，写局部函数），使用 lambda
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+函数不能捕获局部变量，也不能在局部范围。如果需要此类操作，尽可能使用
+lambda，不然就写个函数对象。不过 lambda 和函数对象不能重载。如果需要重载，还是得写个函数（lambda 重载很麻烦）。如果两种方式都可以，就用函数吧。尽量使用最简单的工具。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">writing a function that should only take an int or a string</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-- overloading is natural</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp;<span style="color: #707183;">)</span>;
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">writing a function object that needs to capture local state and appear</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">at statement or expression scope -- a lambda is natural</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">work</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span>work<span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">lots_of_work</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span>work<span style="color: #7388d6;">&gt;{</span>1,2,3,4,5,6<span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span>work<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span> = lots_of_work<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">tasknum</span> = 0; tasknum &lt; max; ++tasknum<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        pool.run<span style="color: #909183;">(</span><span style="color: #709870;">[</span>=, &amp;<span style="color: #000000;">v</span><span style="color: #709870;">]</span> <span style="color: #709870;">{</span>
+            <span style="color: #3F7F5F;">/*</span>
+<span style="color: #3F7F5F;">              ...</span>
+<span style="color: #3F7F5F;">              ... process 1 / max - th of v, the tasknum - th chunk</span>
+<span style="color: #3F7F5F;">              ...</span>
+<span style="color: #3F7F5F;">            */</span>
+        <span style="color: #709870;">}</span><span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+    pool.join<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+
+<p>
+例外
+</p>
+
+<p>
+用泛型 lambda 可以写出简洁的函数模板，所有有时候比普通函数模板编写效率更高。不过，不久以后普通函数也能有 <code>Concept</code> 参数的时候， 泛型 lambda 就无此优势了。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+在全局范围内把非泛型 lambda 赋值给变量的情况（如： <code>auto x = [](int i)
+{ ...; };)</code> 应该给予警告。这时候应该用普通函数。
+</p>
