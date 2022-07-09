@@ -1,0 +1,77 @@
+---
+layout: post
+title: CppCoreGuidelines F.51 首选默认参数，其次函数重载
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+默认参数方式，提供了简单唯一的接口，实现函数变体。为了确保重载的函数能够实现了相同的机制，我们还需要额外的精力去检查。但是，使用默认参数能够避免重复的代码出现在多个地方。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果使用函数重载的目的是为了实现一组能够接受相同参数的函数变体，那么使用默认参数就比较合理。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">format</span> <span style="color: #000000;">f</span> = <span style="color: #7388d6;">{}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+比函数重载简洁：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">use default format</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">format</span> <span style="color: #000000;">f</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+然而，当一组函数针对不同参数类型提供相同语义操作，那就没其他选择了，只能进行函数重载了。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>&amp;<span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span>zstring<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+see also: 虚函数的默认参数
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+对以下情况进行警告：一组重载函数的声明前面部分都很相似。（比如 <code>f(int),
+f(int, const string&amp;), f(int, const string&amp;, double)</code> ）
+</p>
