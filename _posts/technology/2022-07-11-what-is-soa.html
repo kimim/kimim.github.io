@@ -1,0 +1,155 @@
+---
+layout: post
+title: 什么是 SOA
+categories: [technology]
+tags: [industry, SOA]
+---
+
+<p>
+面向服务架构（SOA）是一种架构设计模式，包含多个服务，而服务之间互相配合提供一系列功能。
+</p>
+
+<p>
+服务的最基本机制就是“问/答”（Request/Response）形式。我提出问题，你给我答案。对“我”来说，“你”就是服务的提供方。SOA 应用的基本形式就是应用程序向不同的服务提出请求，得到答案，根据这些答案，组合成一个想要的结果。
+</p>
+
+<p>
+SOA的底层逻辑是为了实现松耦合（Loose Coupling）。松耦合系统中的各个模块互相独立，每个服务对于其他服务来说，就好像是一个黑盒子。使用服务的时候，只要关心提供的服务是什么，而不用关心内部的工作机制。
+</p>
+
+<p>
+在程序开发中，这种松耦合的黑盒子，最原始的实现方式就是写一个函数。把经常重复使用的代码段，封装成一个个的函数，取一个有意义的函数名，就可以在不同地方调用。
+</p>
+
+<p>
+比如，已知三角形的三条边长度，就可以通过海伦-秦九韶公式计算三角形的面积。如果不写成函数的话，就要这样算：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">cmath</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">a</span> = 10;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">b</span> = 15;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">c</span> = 18;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">p</span> = <span style="color: #7388d6;">(</span>a + b + c<span style="color: #7388d6;">)</span> / 2;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">S</span> = sqrt<span style="color: #7388d6;">(</span><span style="color: #909183;">(</span>p-a<span style="color: #909183;">)</span>*<span style="color: #909183;">(</span>p-b<span style="color: #909183;">)</span>*<span style="color: #909183;">(</span>p-c<span style="color: #909183;">)</span>*p<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; <span style="color: #2A00FF;">"&#19977;&#35282;&#24418;&#19977;&#26465;&#36793;&#20026;&#65306;"</span> &lt;&lt; a &lt;&lt; <span style="color: #2A00FF;">", "</span> &lt;&lt; b &lt;&lt; <span style="color: #2A00FF;">", "</span> &lt;&lt; c &lt;&lt; endl;
+    cout &lt;&lt; <span style="color: #2A00FF;">"&#19977;&#35282;&#24418;&#30340;&#38754;&#31215;&#20026;&#65306;"</span> &lt;&lt; S &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+三角形三条边为：10, 15, 18
+三角形的面积为：74.9996
+</pre>
+
+
+<p>
+如果把计算面积的过程写成函数，就可以多次函数，不易出错，代码更精简。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">cmath</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">area</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">b</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">c</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">p</span> = <span style="color: #7388d6;">(</span>a + b + c<span style="color: #7388d6;">)</span> / 2;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">S</span> = sqrt<span style="color: #7388d6;">(</span><span style="color: #909183;">(</span>p-a<span style="color: #909183;">)</span>*<span style="color: #909183;">(</span>p-b<span style="color: #909183;">)</span>*<span style="color: #909183;">(</span>p-c<span style="color: #909183;">)</span>*p<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; <span style="color: #2A00FF;">"&#19977;&#35282;&#24418;&#19977;&#26465;&#36793;&#20026;&#65306;"</span> &lt;&lt; a &lt;&lt; <span style="color: #2A00FF;">", "</span> &lt;&lt; b &lt;&lt; <span style="color: #2A00FF;">", "</span> &lt;&lt; c &lt;&lt; endl;
+    cout &lt;&lt; <span style="color: #2A00FF;">"&#19977;&#35282;&#24418;&#30340;&#38754;&#31215;&#20026;&#65306;"</span> &lt;&lt; S &lt;&lt; endl;
+    <span style="color: #7F0055; font-weight: bold;">return</span> S;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    area<span style="color: #7388d6;">(</span>11, 12, 13<span style="color: #7388d6;">)</span>;
+    area<span style="color: #7388d6;">(</span>11, 12, 14<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+三角形三条边为：11, 12, 13
+三角形的面积为：61.4817
+三角形三条边为：11, 12, 14
+三角形的面积为：63.7059
+</pre>
+
+
+<p>
+但是，用函数封装服务，并不灵活，如果函数逻辑修改了，所有用到的代码都得重新编译一遍。所以，人们又想出来编译模块、动态库等方法。
+</p>
+
+<p>
+然而服务和模块、程序库的区别在于服务与服务之间是互相独立的，通过网络调用的方式进行通信。不同的服务可以运行在不同平台上，用不同的开发语言开发。
+</p>
+
+<p>
+这就好像电动汽车里的动力电池。模块就好像是电池模组，服务就好像是电池
+Pack。电池模组是整个电池Pack的组成单元，无法独立运作，而电池Pack就是一个完整的产品，能够为电动汽车提供强劲动力。
+</p>
+
+<p>
+尽管服务之间是互相独立的，但是服务之间的通信方式必须统一，这种统一的通信机制，就是企业服务总线（Enterprise Service Bus，ESB）。ESB 的通信方式有 SOAP、REST、RPC 等。其中 SOAP 就是服务间通过 HTTP+XML 的形式完成数据交换，REST 就是HTTP+JSON 的形式，RPC 是基于 Socket 的形式。Apache
+CXF 框架就是 SOAP+REST 框架，Dubbo 是 RPC 框架，而 SpringCloud 是遵守
+REST 规范的微服务生态系统。
+</p>
+
+<p>
+为了找到特定的服务，SOA ESB 还需要提供服务注册和服务发现功能，新的服务通过服务注册到系统，应用程序就可以通过服务发现找到需要的服务，调用接口实现功能。
+</p>
+
+<p>
+总结下 SOA 的优势：
+</p>
+<ol class="org-ol">
+<li>重用性。服务和服务之间是松耦合的，所以每个服务可以用于不同的应用场景而不会互相干扰。</li>
+<li>多平台。服务之间松耦合，只要服务之间ESB通讯的接口明确，服务内部的实现就可以更具实际情况选择，可以是不同的操作系统，不同的开发语言。</li>
+<li>易维护。部分服务可以临时停下来维护，整个应用可以持续运行。</li>
+<li>可靠性。服务之间互相独立，某个服务出问题不会影响其他服务。</li>
+<li>易测试。每个服务可以单独进行测试，确保了整个系统有比较好的运行基础。</li>
+<li>开发快。因为很多服务可以重用，开发一个新应用只要调用已有的服务。</li>
+</ol>
+
+
+<p>
+SOA 也有一些缺点：
+</p>
+<ul class="org-ul">
+<li>因为太多的服务调用，可能带来一些性能损耗</li>
+<li>每个服务需要明确的文件定义，有些繁琐</li>
+</ul>
+
+
+<p>
+另外，既然要了解 SOA，还得过一下所谓的 SOA 宣言：
+</p>
+<ul class="org-ul">
+<li>Business value over technical strategy <br />
+业务价值高于技术策略</li>
+<li>Strategic goals over project-specific benefits <br />
+战略目标高于项目收益</li>
+<li>Intrinsic interoperability over custom integration <br />
+固有的互操作高于相应客户的集成</li>
+<li>Shared services over purpose-specific implementations <br />
+共享的服务高于非标实现</li>
+<li>Flexibility over optimization <br />
+灵活性高于性能调优</li>
+<li>Evolutionary refinement over pursuit of initial perfection <br />
+持续改进高于一开始就追求完美</li>
+</ul>
+
+<p>
+总结一下：
+</p>
+<ul class="org-ul">
+<li>SOA 是基于服务和 ESB 的应用开发架构</li>
+<li>遵循三个原则：松耦合、迟绑定和服务发现</li>
+<li>SOA有高重用性、多平台开发、易维护、高可靠、易测试、开发快等优势</li>
+<li>SOA的缺点是性能损耗、实现略复杂</li>
+</ul>

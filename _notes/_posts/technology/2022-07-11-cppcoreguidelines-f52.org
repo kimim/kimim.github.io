@@ -1,0 +1,82 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.52 在 lambda 中捕获引用，可局部使用，或传给STL算法
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+为了保障效率和正确，一般会在 ~lambda~ 中以引用的形式捕获变量，在 ~lambda~
+内局部使用。尤其是编写和调用并行算法时，因为在函数返回时会 ~join~ ，捕获
+了的变量可以在局部进行使用。
+
+
+讨论
+
+效率性方面，因为对大部分类型来说，引用传递比值传递效率高。
+
+正确性方面，因为不少函数调用会修改对象，产生一些 side effect，值传递无
+法做到。
+
+
+注意
+
+~lambda~ 不能以 ~const~ 引用的方式捕获外部变量。所以也就不能避免在 ~lambda~
+内会有 side effect。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+int main()
+{
+    int age = 10;
+    auto update = [&]() { cout << "update: " << ++age << endl; };
+    update();
+    cout << "now:    " << age << endl;
+}
+#+end_src
+
+#+RESULTS:
+: update: 11
+: now:    11
+
+
+以下我们假设 message 是一个很大的网络消息对象，传递给迭代算法，如果每
+次调用都以复制的方式传递，效率不高，且不一定可行，因为消息对象不一定提
+供复制构造函数。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+std::for_each(begin(sockets), end(sockets), [&message](auto& socket)
+{
+    socket.send(message);
+});
+#+end_src
+
+
+例子
+
+以下是一个 three-stage parallel pipeline。每个 stage 对象封装了一个工
+作线程和一个队列。其析构函数会自动等待队列为空才执行。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+void send_packets(buffers& bufs)
+{
+    stage encryptor([](buffer& b) { encrypt(b); });
+    stage compressor([&](buffer& b) { compress(b); encryptor.process(b); });
+    stage decorator([&](buffer& b) { decorate(b); compressor.process(b); });
+    for (auto& b : bufs) { decorator.process(b); }
+}  // automatically blocks waiting for pipeline to finish
+#+end_src
+
+
+强化
+
+警告：如果 lambda 捕获了外部变量的引用，但是在函数作用域外使用。

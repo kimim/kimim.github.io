@@ -1,0 +1,131 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 什么是 SOA
+categories: [technology]
+tags: [industry, SOA]
+---
+#+END_EXPORT
+
+面向服务架构（SOA）是一种架构设计模式，包含多个服务，而服务之间互相配
+合提供一系列功能。
+
+服务的最基本机制就是“问/答”（Request/Response）形式。我提出问题，你给
+我答案。对“我”来说，“你”就是服务的提供方。SOA 应用的基本形式就是应用程
+序向不同的服务提出请求，得到答案，根据这些答案，组合成一个想要的结果。
+
+SOA的底层逻辑是为了实现松耦合（Loose Coupling）。松耦合系统中的各个模
+块互相独立，每个服务对于其他服务来说，就好像是一个黑盒子。使用服务的时
+候，只要关心提供的服务是什么，而不用关心内部的工作机制。
+
+在程序开发中，这种松耦合的黑盒子，最原始的实现方式就是写一个函数。把经
+常重复使用的代码段，封装成一个个的函数，取一个有意义的函数名，就可以在
+不同地方调用。
+
+比如，已知三角形的三条边长度，就可以通过海伦-秦九韶公式计算三角形的面
+积。如果不写成函数的话，就要这样算：
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <cmath>
+using namespace std;
+int main()
+{
+    double a = 10;
+    double b = 15;
+    double c = 18;
+    double p = (a + b + c) / 2;
+    double S = sqrt((p-a)*(p-b)*(p-c)*p);
+    cout << "三角形三条边为：" << a << ", " << b << ", " << c << endl;
+    cout << "三角形的面积为：" << S << endl;
+}
+#+end_src
+
+#+RESULTS:
+: 三角形三条边为：10, 15, 18
+: 三角形的面积为：74.9996
+
+如果把计算面积的过程写成函数，就可以多次函数，不易出错，代码更精简。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <cmath>
+using namespace std;
+double area(double a, double b, double c) {
+    double p = (a + b + c) / 2;
+    double S = sqrt((p-a)*(p-b)*(p-c)*p);
+    cout << "三角形三条边为：" << a << ", " << b << ", " << c << endl;
+    cout << "三角形的面积为：" << S << endl;
+    return S;
+}
+int main()
+{
+    area(11, 12, 13);
+    area(11, 12, 14);
+}
+#+end_src
+
+#+RESULTS:
+: 三角形三条边为：11, 12, 13
+: 三角形的面积为：61.4817
+: 三角形三条边为：11, 12, 14
+: 三角形的面积为：63.7059
+
+但是，用函数封装服务，并不灵活，如果函数逻辑修改了，所有用到的代码都得
+重新编译一遍。所以，人们又想出来编译模块、动态库等方法。
+
+然而服务和模块、程序库的区别在于服务与服务之间是互相独立的，通过网络调
+用的方式进行通信。不同的服务可以运行在不同平台上，用不同的开发语言开发。
+
+这就好像电动汽车里的动力电池。模块就好像是电池模组，服务就好像是电池
+Pack。电池模组是整个电池Pack的组成单元，无法独立运作，而电池Pack就是一
+个完整的产品，能够为电动汽车提供强劲动力。
+
+尽管服务之间是互相独立的，但是服务之间的通信方式必须统一，这种统一的通
+信机制，就是企业服务总线（Enterprise Service Bus，ESB）。ESB 的通信方
+式有 SOAP、REST、RPC 等。其中 SOAP 就是服务间通过 HTTP+XML 的形式完成
+数据交换，REST 就是HTTP+JSON 的形式，RPC 是基于 Socket 的形式。Apache
+CXF 框架就是 SOAP+REST 框架，Dubbo 是 RPC 框架，而 SpringCloud 是遵守
+REST 规范的微服务生态系统。
+
+为了找到特定的服务，SOA ESB 还需要提供服务注册和服务发现功能，新的服务
+通过服务注册到系统，应用程序就可以通过服务发现找到需要的服务，调用接口
+实现功能。
+
+总结下 SOA 的优势：
+1. 重用性。服务和服务之间是松耦合的，所以每个服务可以用于不同的应用场
+   景而不会互相干扰。
+2. 多平台。服务之间松耦合，只要服务之间ESB通讯的接口明确，服务内部的实
+   现就可以更具实际情况选择，可以是不同的操作系统，不同的开发语言。
+3. 易维护。部分服务可以临时停下来维护，整个应用可以持续运行。
+4. 可靠性。服务之间互相独立，某个服务出问题不会影响其他服务。
+5. 易测试。每个服务可以单独进行测试，确保了整个系统有比较好的运行基础。
+6. 开发快。因为很多服务可以重用，开发一个新应用只要调用已有的服务。
+
+
+SOA 也有一些缺点：
+- 因为太多的服务调用，可能带来一些性能损耗
+- 每个服务需要明确的文件定义，有些繁琐
+
+
+另外，既然要了解 SOA，还得过一下所谓的 SOA 宣言：
+- Business value over technical strategy \\
+  业务价值高于技术策略
+- Strategic goals over project-specific benefits \\
+  战略目标高于项目收益
+- Intrinsic interoperability over custom integration \\
+  固有的互操作高于相应客户的集成
+- Shared services over purpose-specific implementations \\
+  共享的服务高于非标实现
+- Flexibility over optimization \\
+  灵活性高于性能调优
+- Evolutionary refinement over pursuit of initial perfection \\
+  持续改进高于一开始就追求完美
+
+总结一下：
+- SOA 是基于服务和 ESB 的应用开发架构
+- 遵循三个原则：松耦合、迟绑定和服务发现
+- SOA有高重用性、多平台开发、易维护、高可靠、易测试、开发快等优势
+- SOA的缺点是性能损耗、实现略复杂

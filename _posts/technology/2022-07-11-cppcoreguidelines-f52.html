@@ -1,0 +1,106 @@
+---
+layout: post
+title: CppCoreGuidelines F.52 在 lambda 中捕获引用，可局部使用，或传给STL算法
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+为了保障效率和正确，一般会在 <code>lambda</code> 中以引用的形式捕获变量，在 <code>lambda</code>
+内局部使用。尤其是编写和调用并行算法时，因为在函数返回时会 <code>join</code> ，捕获了的变量可以在局部进行使用。
+</p>
+
+
+<p>
+讨论
+</p>
+
+<p>
+效率性方面，因为对大部分类型来说，引用传递比值传递效率高。
+</p>
+
+<p>
+正确性方面，因为不少函数调用会修改对象，产生一些 side effect，值传递无法做到。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+<code>lambda</code> 不能以 <code>const</code> 引用的方式捕获外部变量。所以也就不能避免在 <code>lambda</code>
+内会有 side effect。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">age</span> = 10;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">update</span> = <span style="color: #7388d6;">[</span>&amp;<span style="color: #7388d6;">]()</span> <span style="color: #7388d6;">{</span> cout &lt;&lt; <span style="color: #2A00FF;">"update: "</span> &lt;&lt; ++age &lt;&lt; endl; <span style="color: #7388d6;">}</span>;
+    update<span style="color: #7388d6;">()</span>;
+    cout &lt;&lt; <span style="color: #2A00FF;">"now:    "</span> &lt;&lt; age &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+update: 11
+now:    11
+</pre>
+
+
+
+<p>
+以下我们假设 message 是一个很大的网络消息对象，传递给迭代算法，如果每次调用都以复制的方式传递，效率不高，且不一定可行，因为消息对象不一定提供复制构造函数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #110099;">std</span>::for_each<span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">begin</span><span style="color: #7388d6;">(</span><span style="color: #000000;">sockets</span><span style="color: #7388d6;">)</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">end</span><span style="color: #7388d6;">(</span><span style="color: #000000;">sockets</span><span style="color: #7388d6;">)</span>, <span style="color: #7388d6;">[</span>&amp;<span style="color: #000000;">message</span><span style="color: #7388d6;">](</span><span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">socket</span><span style="color: #7388d6;">)</span>
+<span style="color: #7388d6;">{</span>
+    socket.send<span style="color: #909183;">(</span>message<span style="color: #909183;">)</span>;
+<span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<p>
+以下是一个 three-stage parallel pipeline。每个 stage 对象封装了一个工作线程和一个队列。其析构函数会自动等待队列为空才执行。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">send_packets</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">buffers</span>&amp; <span style="color: #000000;">bufs</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">stage</span> <span style="color: #000000;">encryptor</span><span style="color: #7388d6;">(</span><span style="color: #909183;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">buffer</span>&amp; <span style="color: #000000;">b</span><span style="color: #909183;">)</span> <span style="color: #909183;">{</span> encrypt<span style="color: #709870;">(</span>b<span style="color: #709870;">)</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">stage</span> <span style="color: #000000;">compressor</span><span style="color: #7388d6;">(</span><span style="color: #909183;">[</span>&amp;<span style="color: #909183;">](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">buffer</span>&amp; <span style="color: #000000;">b</span><span style="color: #909183;">)</span> <span style="color: #909183;">{</span> compress<span style="color: #709870;">(</span>b<span style="color: #709870;">)</span>; encryptor.process<span style="color: #709870;">(</span>b<span style="color: #709870;">)</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">stage</span> <span style="color: #000000;">decorator</span><span style="color: #7388d6;">(</span><span style="color: #909183;">[</span>&amp;<span style="color: #909183;">](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">buffer</span>&amp; <span style="color: #000000;">b</span><span style="color: #909183;">)</span> <span style="color: #909183;">{</span> decorate<span style="color: #709870;">(</span>b<span style="color: #709870;">)</span>; compressor.process<span style="color: #709870;">(</span>b<span style="color: #709870;">)</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">b</span> : bufs<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> decorator.process<span style="color: #909183;">(</span>b<span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">automatically blocks waiting for pipeline to finish</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+警告：如果 lambda 捕获了外部变量的引用，但是在函数作用域外使用。
+</p>
