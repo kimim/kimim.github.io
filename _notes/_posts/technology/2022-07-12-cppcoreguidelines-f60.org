@@ -1,0 +1,63 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.60 如果参数可以是空的话， T* 比 T& 更合适
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+理由
+
+指针（T*）可以是 ~nullptr~ 而引用（T&）不可以。没有空引用这一说。有时
+~nullptr~ 是有效参数，表示“无对象”。除了这种情况，最好都用引用。因为用引
+用代码更好更简单。
+
+例子
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+#include <gsl/gsl>
+using namespace gsl;
+// zstring is a char*; that is a C-style string
+string zstring_to_string(zstring<> p)
+{
+    // p might be nullptr; remember to check
+    if (!p) return string{};
+    return string{p};
+}
+
+void print(const vector<int>& r)
+{
+    // r refers to a vector<int>; no check needed
+    for_each(begin(r), end(r), [](int x){cout << x;});
+}
+int main()
+{
+    auto ss = zstring<>("abc");
+    cout << zstring_to_string(ss) << endl;
+    print(vector<int>{});
+    print(vector<int>{1,2,3});
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: abc
+: 123
+
+注意
+
+可以在 C++ 编造出一个空指针 ~nullptr~ 的引用。这种错误很少见。
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+int* p = nullptr;
+int& pp = *p;
+cout << p;
+#+end_src
+
+#+RESULTS:
+: 0
+
+如果你更喜欢指针操作（ ~->~ 和 ~*~ ）， ~not_null<T*>~ 可以提供类似 ~T&~ 那样的保障。
