@@ -1,0 +1,58 @@
+---
+layout: post
+title: CppCoreGuidelines F.53 如果不在局部使用（返回、存在堆中、传入另一个线程），不要从 lambda 返回引用
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+&ldquo;Avoid capturing by reference in lambdas that will be used
+non-locally, including returned, stored on the heap, or passed to
+another thread&rdquo;
+</p>
+
+<p>
+理由：
+</p>
+
+<p>
+局部变量的指针和引用的生存期不能超过其作用域范围。lambda 以引用捕获的变量只是变量的一个别名，超出了变量的作用域范围，变量存储空间已经回收，这时候，它的值可能已经被别的数据覆盖了。
+</p>
+
+<p>
+错误的例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">local</span> = 42;
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Want a reference to local.</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Note, that after program exits this scope,</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">local no longer exists, therefore</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">process() call will have undefined behavior!</span>
+thread_pool.queue_work<span style="color: #707183;">(</span><span style="color: #7388d6;">[</span>&amp;<span style="color: #7388d6;">]</span> <span style="color: #7388d6;">{</span> process<span style="color: #909183;">(</span>local<span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+
+<p>
+正确的例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">local</span> = 42;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Want a copy of local.</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Since a copy of local is made, it will</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">always be available for the call.</span>
+thread_pool.queue_work<span style="color: #707183;">(</span><span style="color: #7388d6;">[</span>=<span style="color: #7388d6;">]</span> <span style="color: #7388d6;">{</span> process<span style="color: #909183;">(</span>local<span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+强化：
+</p>
+<ul class="org-ul">
+<li>（简单）如果 lambda 的变量捕获列表里有局部声明的变量，警告。</li>
+<li>（复杂）如果 lambda 的变量捕获列表里有局部声明的变量，并且 lambda 传递给了非 const 且非局部的地方。标记警告。</li>
+</ul>
