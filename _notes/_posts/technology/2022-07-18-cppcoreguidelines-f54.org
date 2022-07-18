@@ -1,0 +1,68 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.54 如果 lambda 会把 this 也捕获到，那最好写明捕获哪些变量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If you capture this, capture all variables explicitly (no default
+capture)"
+
+理由：
+
+违反此规则，会产生混乱不清的代码。在成员函数里用 ~[=]~ 捕获变量，看起来
+好像没问题。但是其实这种方式也会捕获到隐藏的 ~this~ 指针。而通过 ~this~ 指
+针是可以修改对象成员变量的。如果你通过 ~this~ 修改了对象成员变量，就相当
+于是进行了引用捕获。所以写代码的时候最好更明确一些。
+
+例子：
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+class My_class {
+    int x = 0;
+
+    void f()
+    {
+        int i = 0;
+        // ...
+
+        auto lambda = [=] { use(i, x); };
+        // BAD: "looks like" copy/value capture
+        // [&] has identical semantics and copies the this pointer
+        // under the current rules
+        // [=,this] and [&,this] are not much better, and confusing
+
+        x = 42;
+        lambda(); // calls use(0, 42);
+        x = 43;
+        lambda(); // calls use(0, 43);
+
+        // ...
+
+        auto lambda2 = [i, this] { use(i, x); };
+        // ok, most explicit and least confusing
+
+        // ...
+    }
+};
+#+end_src
+
+
+注意：
+
+这个话题在 C++ 标准会议中讨论很剧烈。未来可能设计一个新的捕获机制，或
+者调整 ~[=]~ 捕获的意义（比如， ~[=]~ 捕获不再捕获到 ~this~ 指针。
+
+
+强化：
+
+如果 ~lambda~ 用了默认捕获，且可能会捕获到 ~this~ 指针。给代码打上一个警告标记。

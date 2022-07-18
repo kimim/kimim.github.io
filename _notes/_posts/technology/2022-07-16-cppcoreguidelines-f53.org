@@ -7,6 +7,8 @@ tags: [CppCoreGuidelines]
 ---
 #+END_EXPORT
 
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
 "Avoid capturing by reference in lambdas that will be used
 non-locally, including returned, stored on the heap, or passed to
 another thread"
