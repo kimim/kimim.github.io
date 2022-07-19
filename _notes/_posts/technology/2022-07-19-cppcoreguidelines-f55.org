@@ -1,0 +1,101 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.55 规避 va_arg
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t use va_arg arguments"
+
+理由
+
+从 ~va_arg~ 读取参数的时候，我们假设实际参数类型是正确设置的。传递变长参
+数的时候，我们假定函数会正确解析参数类型。但是两种假定都不一定可靠。
+
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <gsl/gsl>
+#include <cstdarg>
+using namespace std;
+using namespace gsl;
+int sum(int cnt ...)
+{
+    int result = 0;
+    va_list list;
+    va_start(list, cnt);
+    while (cnt > 0) {
+        cnt--;
+        result += va_arg(list, int); // BAD, assumes it will be passed ints
+    }
+    va_end(list);
+    return result;
+}
+
+int main()
+{
+    cout << sum(2, 3, 2) << endl; // ok
+    cout << sum(2, 3.14159, 2.71828) << endl; // BAD, undefined
+}
+#+end_src
+
+#+RESULTS:
+: 5
+: -2050589186
+
+
+如果用 C++17 的折叠表达式（fold expression)对 ~Args~ 进行折叠展开，就比
+较灵活了：
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+#include <iostream>
+#include <gsl/gsl>
+using namespace std;
+using namespace gsl;
+template<class ...Args>
+auto sum(Args... args) // GOOD, and much more flexible
+{
+    return (... + args); // note: C++17 "fold expression"
+}
+int main()
+{
+    cout << sum(3, 2) << endl; // ok: 5
+    cout << sum(3.14159, 2.71828) << endl; // ok: ~5.85987
+    cout << sum(1, 2, 3, 4.8) << endl;
+    cout << sum(string("hello"), string(" "), string("world"));
+}
+#+end_src
+
+#+RESULTS:
+: 5
+: 5.85987
+: 10.8
+: hello world
+
+
+其他方法：
+- 重载（overloading）
+- 可变参数模板（variadic templates）
+- 变体参数（variant arguments）
+- 初始化列表（initializer_list）
+
+
+注意
+
+Declaring a ... parameter is sometimes useful for techniques that
+don’t involve actual argument passing, notably to declare
+“take-anything” functions so as to disable “everything else” in an
+overload set or express a catchall case in a template metaprogram.
+
+强化
+- 如果代码中使用了 ~va_list~, ~va_start~, ~va_arg~, 对其进行诊断。
+- 如果以 ~va_arg~ 的形式传递多个参数给函数，但是没指明什么类型，考虑是否
+  可以通过重载明确参数类型。
