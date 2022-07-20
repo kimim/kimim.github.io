@@ -1,0 +1,107 @@
+---
+layout: post
+title: CppCoreGuidelines F.56 避免不必要的嵌套条件判断
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid unnecessary condition nesting&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+浅层嵌套的代码更容易理解；代码意图更清晰。努力用尽量少的代码条件分支判断实现程序。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+利用保卫语句（guard-clause），让代码早返回或早退出。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: Deep nesting</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    ...
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        computeImportantThings<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: Still a redundant else.</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    ...
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #7388d6;">{</span>
+        computeImportantThings<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Good: Early return, no redundant else</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    ...
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!x<span style="color: #7388d6;">)</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span>;
+
+    computeImportantThings<span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: Unnecessary nesting of conditions</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    ...
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>y<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            computeImportantThings<span style="color: #709870;">(</span>x<span style="color: #709870;">)</span>;
+        <span style="color: #909183;">}</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Good: Merge conditions + return early</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    ...
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!<span style="color: #909183;">(</span>x &amp;&amp; y<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span>;
+
+    computeImportantThings<span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记多余的 else。</li>
+<li>标记函数体只是简单的通过条件语句包含了代码块。</li>
+</ul>

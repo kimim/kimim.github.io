@@ -1,0 +1,88 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines F.56 避免不必要的嵌套条件判断
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid unnecessary condition nesting"
+
+
+理由
+
+浅层嵌套的代码更容易理解；代码意图更清晰。努力用尽量少的代码条件分支判
+断实现程序。
+
+
+例子
+
+利用保卫语句（guard-clause），让代码早返回或早退出。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// Bad: Deep nesting
+void foo() {
+    ...
+    if (x) {
+        computeImportantThings(x);
+    }
+}
+
+// Bad: Still a redundant else.
+void foo() {
+    ...
+    if (!x) {
+        return;
+    }
+    else {
+        computeImportantThings(x);
+    }
+}
+#+end_src
+
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// Good: Early return, no redundant else
+void foo() {
+    ...
+    if (!x)
+        return;
+
+    computeImportantThings(x);
+}
+#+end_src
+
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// Bad: Unnecessary nesting of conditions
+void foo() {
+    ...
+    if (x) {
+        if (y) {
+            computeImportantThings(x);
+        }
+    }
+}
+#+end_src
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// Good: Merge conditions + return early
+void foo() {
+    ...
+    if (!(x && y))
+        return;
+
+    computeImportantThings(x);
+}
+#+end_src
+
+
+强化
+
+- 标记多余的 else。
+- 标记函数体只是简单的通过条件语句包含了代码块。
