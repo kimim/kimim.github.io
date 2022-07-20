@@ -1,0 +1,59 @@
+---
+layout: post
+title: CppCoreGuidelines C.1 把相关数据整理到数据结构中（struct/class）
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+&ldquo;Organize related data into structures (structs or classes)&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+
+<p>
+这样更容易理解。相关的数据，也要体现在代码中。
+</p>
+
+<p>
+比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: unnecessary implicit relationships</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x2</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y2</span><span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">from</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">to</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+没有虚函数的简单类，不会导致多余的空间和时间开销。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+从开发语言角度来看，class 和 struct 只是成员默认的可见性不一样。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+比较难。但是可以考虑那些放在一起用的数据，是否属于同一个结构？
+</p>
