@@ -1,0 +1,85 @@
+---
+layout: post
+title: CppCoreGuidelines C.2 如果数据结构里面有一些不变要素，用 class，如果成员变量可以互相独立修改，用 struct
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use class if the class has an invariant; use struct if the data
+members can vary independently&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+
+<p>
+代码更容易阅读。更容易理解。class 提醒程序员，里面用了些不变要素（invariant）。保持这种惯例，大有裨益。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+不变要素（invariant）指的是一个对象内部成员之间的一些逻辑约束。这些约束必须通过构造函数建立。公开的成员函数调用过程中，也会保持这种逻辑约束。这种不变要素可以通过注释等方式声明。也可以通过 Expects 更正式地声明。
+</p>
+
+<p>
+如果所有成员数据都可以互相独立修改，那就没有不变要素了。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Pair</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the members can vary independently</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">name</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">volume</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+然而：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">validate that {yy, mm, dd} is a valid date and initialize</span>
+    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">yy</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #000000;">mm</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">dd</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #000000;">m</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">d</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">day</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+注意：
+</p>
+
+
+<p>
+如果类里面有私有数据，用户不通过构造函数就无法完全初始化此对象。所以，类的定义者要提供构造函数。这就意味着开发者需要定义一些不变要素。
+</p>
+
+
+<p>
+强化：
+</p>
+
+<p>
+可能有问题的地方：所有成员数据是私有的 struct，或者所有成员都公开的 class
+</p>
