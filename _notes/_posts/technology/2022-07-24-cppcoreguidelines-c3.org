@@ -1,0 +1,48 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.3 用类区别接口与实现
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Represent the distinction between an interface and an implementation using a class"
+
+理由
+
+明确区分接口和实现，提升代码可读性，简化维护复杂度。
+
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class Date {
+public:
+    Date();
+    // validate that {yy, mm, dd} is a valid date and initialize
+    Date(int yy, Month mm, char dd);
+
+    int day() const;
+    Month month() const;
+    // ...
+private:
+    // ... some representation ...
+};
+#+end_src
+
+Date 类提供了初始化和数据访问接口，内部可以有不同的实现。这样，更改内
+部实现，不需要用户修改代码。（可能需要重新编译）。
+
+
+注意
+
+通过类的定义区分外部接口和内部实现不是唯一的方法。
+
+其他方法，还可以在名字空间声明一组相关的函数；抽象的基类；函数模板等。
+
+关键是把接口和实现区分开来。
+
+理想情况，接口比内部实现更稳定，不太变更。

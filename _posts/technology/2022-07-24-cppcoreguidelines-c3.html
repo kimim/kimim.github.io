@@ -1,0 +1,68 @@
+---
+layout: post
+title: CppCoreGuidelines C.3 用类区别接口与实现
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Represent the distinction between an interface and an implementation using a class&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+明确区分接口和实现，提升代码可读性，简化维护复杂度。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">validate that {yy, mm, dd} is a valid date and initialize</span>
+    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">yy</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #000000;">mm</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">dd</span><span style="color: #7388d6;">)</span>;
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">day</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #0000ff; font-weight: bold;">month</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... some representation ...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+Date 类提供了初始化和数据访问接口，内部可以有不同的实现。这样，更改内部实现，不需要用户修改代码。（可能需要重新编译）。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+通过类的定义区分外部接口和内部实现不是唯一的方法。
+</p>
+
+<p>
+其他方法，还可以在名字空间声明一组相关的函数；抽象的基类；函数模板等。
+</p>
+
+<p>
+关键是把接口和实现区分开来。
+</p>
+
+<p>
+理想情况，接口比内部实现更稳定，不太变更。
+</p>
