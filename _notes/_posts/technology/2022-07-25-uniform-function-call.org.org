@@ -1,0 +1,72 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: C++ 函数的统一调用格式
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+函数的统一调用格式（Unified Call Syntax）是 C++ 标准委员会提议的一个新
+的函数调用格式（WG21-P0251R0）[fn:1]。
+
+假设我们以这样的方式调用一个函数 ~f(x, y)~ ，而这个函数并没有定义，C++
+就会尝试以 ~x.f(y)~ 的方式调用一个成员函数。但是相反的情况不成立。即调用
+~x.f(x)~ 的时候，找不到成员函数 ~f~ ，而去调用 ~f(x, y)~ 。
+
+P0251R0 提议中的两个例子：
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+namespace N {
+struct Y {
+    void k();
+};
+void h(Y);
+};
+
+struct X {
+    void k();
+};
+
+void h(X);
+
+struct S {
+    void f(X x) {
+        g(x); // invoke S::g(X): (*this).g(x)
+        h(x); // invoke ::h(X)
+        k(x); // invoke X::k(): x.k() - 统一调用格式
+        ::k(x); // error: there is no global k
+    }
+    void g(X);
+    void f2(N::Y y) {
+            g(y); // invoke S::g(N::Y): (*this).g(y)
+            h(y); // invoke S::h(N::Y); N.h() found by ADL
+            k(y); // invoke N::Y::k(): y.k() - 统一调用格式
+            N::k(y); // error: there is no k in namespace N
+    }
+    void g(N::y);
+};
+#+end_src
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+struct A {
+    virtual void h();
+    static void k(A&);
+};
+struct B : A { };
+void f(B& b)
+{
+    b.h(); // OK (as ever)
+    h(b); // OK: b.h(); - 统一调用格式
+    b.k(); // error (as ever)
+    k(b); // error: Try b.k(), but k() requires an argument
+    A::h(b); // error: Qualified name, so no transformation to b.h()
+    // 用上限定名的时候，不进行统一调用格式转换
+    A::k(b); // OK (as ever)
+}
+#+end_src
+
+
+* Footnotes
+
+[fn:1] https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0251r0.pdf

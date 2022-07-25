@@ -1,0 +1,83 @@
+---
+layout: post
+title: C++ 函数的统一调用格式
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+函数的统一调用格式（Unified Call Syntax）是 C++ 标准委员会提议的一个新的函数调用格式（WG21-P0251R0）<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>。
+</p>
+
+<p>
+假设我们以这样的方式调用一个函数 <code>f(x, y)</code> ，而这个函数并没有定义，C++
+就会尝试以 <code>x.f(y)</code> 的方式调用一个成员函数。但是相反的情况不成立。即调用
+<code>x.f(x)</code> 的时候，找不到成员函数 <code>f</code> ，而去调用 <code>f(x, y)</code> 。
+</p>
+
+<p>
+P0251R0 提议中的两个例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">N</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Y</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">k</span><span style="color: #909183;">()</span>;
+<span style="color: #7388d6;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Y</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">k</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #707183;">)</span>;
+
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        g<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">invoke S::g(X): (*this).g(x)</span>
+        h<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">invoke ::h(X)</span>
+        k<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">invoke X::k(): x.k() - &#32479;&#19968;&#35843;&#29992;&#26684;&#24335;</span>
+        ::k<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: there is no global k</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #7388d6;">(</span><span style="color: #110099;">N</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">Y</span> <span style="color: #000000;">y</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+            g<span style="color: #909183;">(</span>y<span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">invoke S::g(N::Y): (*this).g(y)</span>
+            h<span style="color: #909183;">(</span>y<span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">invoke S::h(N::Y); N.h() found by ADL</span>
+            k<span style="color: #909183;">(</span>y<span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">invoke N::Y::k(): y.k() - &#32479;&#19968;&#35843;&#29992;&#26684;&#24335;</span>
+            <span style="color: #110099;">N</span>::k<span style="color: #909183;">(</span>y<span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: there is no k in namespace N</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #7388d6;">(</span><span style="color: #110099;">N</span>::y<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">A</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">k</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">A</span>&amp;<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">A</span> <span style="color: #707183;">{</span> <span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    b.h<span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK (as ever)</span>
+    h<span style="color: #7388d6;">(</span>b<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: b.h(); - &#32479;&#19968;&#35843;&#29992;&#26684;&#24335;</span>
+    b.k<span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error (as ever)</span>
+    k<span style="color: #7388d6;">(</span>b<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: Try b.k(), but k() requires an argument</span>
+    <span style="color: #110099;">A</span>::h<span style="color: #7388d6;">(</span>b<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: Qualified name, so no transformation to b.h()</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#29992;&#19978;&#38480;&#23450;&#21517;&#30340;&#26102;&#20505;&#65292;&#19981;&#36827;&#34892;&#32479;&#19968;&#35843;&#29992;&#26684;&#24335;&#36716;&#25442;</span>
+    <span style="color: #110099;">A</span>::k<span style="color: #7388d6;">(</span>b<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK (as ever)</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+<a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0251r0.pdf">https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0251r0.pdf</a>
+</p></div></div>
+
+
+</div>
+</div>
