@@ -1,0 +1,86 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.4 成员函数直接访问类的内部数据
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Make a function a member only if it needs direct access to the representation of a class"
+
+
+理由
+
+非成员函数比成员函数耦合度更低。修改对象内部状态的函数越少越好。对象内
+部实现变化了，需要修改的地方也越少。
+
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class Date {
+    // ... relatively small interface ...
+};
+
+// helper functions:
+Date next_weekday(Date);
+bool operator==(Date, Date);
+#+end_src
+
+
+"帮助函数"不需要访问 Date 的内部实现。
+
+
+
+注意
+
+等到 C++ 支持函数的[[http://kimi.im/2022-07-25-uniform-function-call][统一调用格式]]的时候，这里描述的规则，会变得更恰当合适。
+
+
+例外
+
+C++ 语言要求虚函数必须是成员函数。然而，并非所有虚函数都直接访问对象数
+据。尤其是抽象类的虚函数，很少会去访问成员变量。
+
+
+例外
+
+C++ 语言要求以下操作符为成员函数： ~=~, ~()~, ~[]~, ~->~
+
+
+例外
+
+
+重载的一组成员函数，不一定都会访问私有数据。比如：
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class Foobar {
+public:
+    void foo(long x) { /* manipulate private data */ }
+    void foo(double x) { foo(std::lround(x)); }
+    // ...
+private:
+    // ...
+};
+#+end_src
+
+
+例外
+
+同样的，有时候为了统一方便，一组函数链在一起使用：
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+x.scale(0.5).rotate(45).set_color(Color::red);
+#+end_src
+
+有些函数不一定访问私有数据。
+
+
+强化
+- 找到非虚函数，但是却不会直接触碰到私有数据。
+- 忽略虚函数
+- 忽略一组重载的函数，其中之一会访问私有数据
+- 忽略返回 ~this~ 指针的函数

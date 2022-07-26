@@ -1,0 +1,123 @@
+---
+layout: post
+title: CppCoreGuidelines C.4 成员函数直接访问类的内部数据
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Make a function a member only if it needs direct access to the representation of a class&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+非成员函数比成员函数耦合度更低。修改对象内部状态的函数越少越好。对象内部实现变化了，需要修改的地方也越少。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... relatively small interface ...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">helper functions:</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #0000ff; font-weight: bold;">next_weekday</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span><span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+&ldquo;帮助函数&rdquo;不需要访问 Date 的内部实现。
+</p>
+
+
+
+<p>
+注意
+</p>
+
+<p>
+等到 C++ 支持函数的<a href="http://kimi.im/2022-07-25-uniform-function-call">统一调用格式</a>的时候，这里描述的规则，会变得更恰当合适。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+C++ 语言要求虚函数必须是成员函数。然而，并非所有虚函数都直接访问对象数据。尤其是抽象类的虚函数，很少会去访问成员变量。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+C++ 语言要求以下操作符为成员函数： <code>=</code>, <code>()</code>, <code>[]</code>, <code>-&gt;</code>
+</p>
+
+
+<p>
+例外
+</p>
+
+
+<p>
+重载的一组成员函数，不一定都会访问私有数据。比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foobar</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">manipulate private data</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> foo<span style="color: #909183;">(</span><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">lround</span><span style="color: #709870;">(</span><span style="color: #000000;">x</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+例外
+</p>
+
+<p>
+同样的，有时候为了统一方便，一组函数链在一起使用：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">x.scale<span style="color: #707183;">(</span>0.5<span style="color: #707183;">)</span>.rotate<span style="color: #707183;">(</span>45<span style="color: #707183;">)</span>.set_color<span style="color: #707183;">(</span><span style="color: #110099;">Color</span>::red<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+有些函数不一定访问私有数据。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>找到非虚函数，但是却不会直接触碰到私有数据。</li>
+<li>忽略虚函数</li>
+<li>忽略一组重载的函数，其中之一会访问私有数据</li>
+<li>忽略返回 <code>this</code> 指针的函数</li>
+</ul>
