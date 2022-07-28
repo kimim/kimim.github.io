@@ -1,0 +1,52 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：belligerently
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+昨天读了美国人写的一篇文章。文章主要是说自己国家产业竞争力不断下滑的问题。其中写到这么一句：
+
+#+begin_quote
+People often blame the economic policies of "the other side" or they
+belligerently snipe at foreign competition.
+
+人们经常“另一边”的经济策略，或者挑衅性地抨击外国竞争。
+#+end_quote
+
+对我来说，这里有两个词是比较新的一个是 belligerently 还有一个是 snipe。
+
+snipe 有多个意思，作为名词，是鹬，沙锥鸟；烟屁股，香烟头；可鄙的人。作
+为动词是狙击、暗伤、诽谤、抨击的意思。
+
+本文的重点是 belligerently 这个词，意思是好战地、挑衅地。
+
+它的形容词形式是 belligerent。belli 战争 + ger 带来 + ent 具有…性质的，
+关于…的 → 带来战争 → 交战的、好战的。
+
+如果我们知道拉丁语里 bellum/belli 是战争的意思，就很好理解这些词语了：
+- bellicose
+- antebellum
+
+bellicose 的意思是好斗的，比如 bellicose nation 好斗的民族。
+
+antebellum 其实整个都是拉丁语，ante- 是之前的意思，也就是战前。尤其指
+美国内战前的历史。
+
+另外，我还想到一个词 bully 就是之前在校园霸凌新闻中常见的霸凌。如 he
+was bullied by the old boys at school. 应该和 bellum 没什么关系，但是
+意思上有那么一点相似。
+
+另外，可能跟以下几个词区分下：
+- bell 铃铛
+- belly 肚皮
+
+总结一下：
+- snipe 鹬，沙锥鸟；烟屁股，香烟头；可鄙的人；狙击、暗伤、诽谤、抨击。
+- belligerent 交战的、好战的。
+- belligerently 好战地、挑衅地。
+- bellicose 好斗的
+- antebellum 战前
+- bully 霸凌、欺凌
