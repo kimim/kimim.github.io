@@ -1,0 +1,44 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.5 类的帮助函数跟类放在相同的名字空间里
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Place helper functions in the same namespace as the class they support"
+
+
+理由
+
+帮助函数（Helper Function）不直接访问类的内部数据，但也是类的有用的接
+口。帮助函数和类放在一个名字空间里，可以强化他们的关系，查找函数的参数
+类型也更方便些。
+
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+namespace Chrono { // here we keep time-related services
+
+    class Time { /* ... */ };
+    class Date { /* ... */ };
+
+    // helper functions:
+    bool operator==(Date, Date);
+    Date next_weekday(Date);
+    // ...
+}
+#+end_src
+
+注意
+
+此规则尤其适用于重载的操作符函数。
+
+
+强化
+
+标注参数都是一个名字空间的全局函数。
