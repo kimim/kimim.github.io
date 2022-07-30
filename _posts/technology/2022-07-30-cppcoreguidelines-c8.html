@@ -1,0 +1,56 @@
+---
+layout: post
+title: CppCoreGuidelines C.8 如果有不公开的成员，请使用 class，不要用 struct
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use class rather than struct if any member is non-public&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性更好。清晰的标明某些东西是隐藏的抽象的。
+</p>
+
+<p>
+错误的例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">d</span>, <span style="color: #000000;">m</span>;
+
+    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #000000;">m</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... lots of functions ...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">year</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+此代码没有任何语法错误。但是从设计角度来看，错误多多。私有成员变量和其他变量在代码中的位置分离的很开。不同区域的数据有不同的访问级别。所有这些导致了可读性变差、维护变得复杂。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+首先把接口放在类定义靠前的位置
+</p>
+
+<p>
+标记警告：声明为 struct 的类如果有 private 或 protected 成员
+</p>

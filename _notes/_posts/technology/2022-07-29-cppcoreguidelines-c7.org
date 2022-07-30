@@ -1,0 +1,37 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.7 不要定义类和枚举的同时声明变量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don't define a class or enum and declare a variable of its type in the same statement"
+
+
+理由
+
+类型的定义和变量的声明放在一起容易令人费解。这种处理也没什么必要性。
+
+错误的例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+struct Data { /*...*/ } data{ /*...*/ };
+#+end_src
+
+
+正确的例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+struct Data { /*...*/ };
+Data data{ /*...*/ };
+#+end_src
+
+
+强化
+
+- 标记警告：类和枚举定义结尾处的 ~}~ 后面不是 ~;~
+- 标记警告：类和枚举定义结尾处的 ~}~ 后面的 ~;~ 忘写了
