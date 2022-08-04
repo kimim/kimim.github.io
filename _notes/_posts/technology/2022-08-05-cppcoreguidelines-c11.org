@@ -1,0 +1,55 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.11 编写常规的具体类型
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Make concrete types regular"
+
+
+理由
+
+常规类型更易理解和推导。
+
+C++ 内置类型为常规类型，包括标准库里的类，比如 string，vector，map。可
+以定义没有赋值和相等操作的具体类，但是不常见。
+
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+struct Bundle {
+    string name;
+    vector<Record> vr;
+};
+
+bool operator==(const Bundle& a, const Bundle& b)
+{
+    return a.name == b.name && a.vr == b.vr;
+}
+
+Bundle b1 { "my bundle", {r1, r2, r3}};
+Bundle b2 = b1;
+if (!(b1 == b2)) error("impossible!");
+b2.name = "the other bundle";
+if (b1 == b2) error("No!");
+#+end_src
+
+如果具体类型是可复制的，最好为其添加相等比较操作符。这样确保 a = b 操作之后， a == b 为真。
+
+
+注意
+
+如果某些结构体打算和 C 代码共享，那添加 operator== 函数似乎就不太合适了。
+
+
+注意
+
+
+某些资源的句柄（handle）通常不能克隆，比如互斥锁的 ~scoped_lock~ ，虽然
+是具体类，但是通常不能复制。所以就不属于常规类型。这种类型往往只能移动。

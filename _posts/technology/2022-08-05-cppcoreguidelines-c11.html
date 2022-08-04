@@ -1,0 +1,74 @@
+---
+layout: post
+title: CppCoreGuidelines C.11 编写常规的具体类型
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Make concrete types regular&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+常规类型更易理解和推导。
+</p>
+
+<p>
+C++ 内置类型为常规类型，包括标准库里的类，比如 string，vector，map。可以定义没有赋值和相等操作的具体类，但是不常见。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bundle</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">name</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span>Record<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">vr</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bundle</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bundle</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> a.name == b.name &amp;&amp; a.vr == b.vr;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Bundle</span> <span style="color: #000000;">b1</span> <span style="color: #707183;">{</span> <span style="color: #2A00FF;">"my bundle"</span>, <span style="color: #7388d6;">{</span>r1, r2, r3<span style="color: #7388d6;">}</span><span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Bundle</span> <span style="color: #000000;">b2</span> = b1;
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>!<span style="color: #7388d6;">(</span>b1 == b2<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span> error<span style="color: #707183;">(</span><span style="color: #2A00FF;">"impossible!"</span><span style="color: #707183;">)</span>;
+b2.name = <span style="color: #2A00FF;">"the other bundle"</span>;
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>b1 == b2<span style="color: #707183;">)</span> error<span style="color: #707183;">(</span><span style="color: #2A00FF;">"No!"</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+如果具体类型是可复制的，最好为其添加相等比较操作符。这样确保 a = b 操作之后， a == b 为真。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果某些结构体打算和 C 代码共享，那添加 operator== 函数似乎就不太合适了。
+</p>
+
+
+<p>
+注意
+</p>
+
+
+<p>
+某些资源的句柄（handle）通常不能克隆，比如互斥锁的 <code>scoped_lock</code> ，虽然是具体类，但是通常不能复制。所以就不属于常规类型。这种类型往往只能移动。
+</p>
