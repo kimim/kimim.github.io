@@ -1,0 +1,56 @@
+---
+layout: post
+title: CppCoreGuidelines C.12 类的成员数据不可为 const 或引用
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don&rsquo;t make data members const or references&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+这样做没啥用。导致该类型很难使用：不能复制，或因为种种原因，部分不能复制。
+</p>
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">bad</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+const 和 &amp; 的成员数据导致这个类只能部分复制，即可以复制构造，不能复制赋值。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果你需要让成员指向某些东西，不要用引用，可以用指针（原始指针；智能指针；如果不能为空，可以是 <code>gsl::not_null</code> ）。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记出有 const、&amp; 或 &amp;&amp; 修饰的成员数据。
+</p>

@@ -1,0 +1,39 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.12 类的成员数据不可为 const 或引用
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don't make data members const or references"
+
+理由
+
+这样做没啥用。导致该类型很难使用：不能复制，或因为种种原因，部分不能复制。
+
+错误例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class bad {
+    const int i;    // bad
+    string& s;      // bad
+    // ...
+};
+#+end_src
+
+const 和 & 的成员数据导致这个类只能部分复制，即可以复制构造，不能复制
+赋值。
+
+
+注意
+
+如果你需要让成员指向某些东西，不要用引用，可以用指针（原始指针；智能指
+针；如果不能为空，可以是 ~gsl::not_null~ ）。
+
+强化
+
+标记出有 const、& 或 && 修饰的成员数据。
