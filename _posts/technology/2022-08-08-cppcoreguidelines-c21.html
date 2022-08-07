@@ -1,0 +1,174 @@
+---
+layout: post
+title: CppCoreGuidelines C.21 复制、移动和析构函数要同时定义或同时删除
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If you define or delete any copy, move, or destructor function, define or delete them all&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+移动、复制、析构函数紧密相关，所以定义了其中任何一个，就要考虑其他函数。
+</p>
+
+<p>
+声明任何一个移动、复制、析构函数，就阻止生成隐含的移动构造、移动赋值操作。即使是把其中一个函数声明成 <code>= default</code> 或 <code>= delete</code> ，也会产生一样的效果。
+</p>
+
+<p>
+声明移动构造或移动赋值函数，就会隐含地导致复制构造函数或复制赋值函数定义为删除状态。所以，声明了其中任意一个函数，就要同时定义其他函数，以确保不会产生不想要的效果，比如把本可以移动的变成复制（开销更大）；使得一个类变成只能进行移动操作。
+</p>
+
+
+<p>
+错误的例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">M2</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: incomplete set of copy/move/destructor operations</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no copy or move operations ...</span>
+    ~<span style="color: #0000ff; font-weight: bold;">M2</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">delete</span><span style="color: #909183;">[]</span> rep; <span style="color: #7388d6;">}</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">pair</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>* <span style="color: #000000;">rep</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">zero-terminated set of pairs</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">M2</span> <span style="color: #000000;">x</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">M2</span> <span style="color: #000000;">y</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    x = y;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the default assignment</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+在析构函数里，有一些额外操作，即删除成员指针指向的数据。这会导致默认复制和移动赋值操作出错（指针删除两次）。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+此规则又叫“五”规则。即五个相关的函数要一起定义，或全都默认。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果你想要某个函数为默认实现，请在函数后面写上 <code>= default</code> ，标明你的目的。如果你不想要自动生成的默认函数，请添加 <code>= delete</code> 。
+</p>
+
+
+<p>
+正确的例子
+</p>
+
+<p>
+如果需要声明一个构造函数，可以将它标记为 virtual，可以设置为默认定义的。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">AbstractBase</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">AbstractBase</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+为避免多态类被切块，数据不统一，请将复制和移动操作设置为 protected 或
+<code>= delete</code> ，并增加一个 clone 函数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ClonableBase</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ClonableBase</span><span style="color: #7388d6;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">clone</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">ClonableBase</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    CloneableBase<span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #0000ff; font-weight: bold;">ClonableBase</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ClonableBase</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">ClonableBase</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ClonableBase</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>;
+    <span style="color: #0000ff; font-weight: bold;">ClonableBase</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ClonableBase</span>&amp;&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">ClonableBase</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ClonableBase</span>&amp;&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... other constructors and functions ...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+如果只定义移动操作或只定义复制操作，也可以实现一样的效果。但是最好还是按照以上例子，把代码写得清晰一些。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+编译器通常会强化此规则，更理想的是能够针对违规提出警告。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+针对只有一个构造函数的类，不建议使用隐式生成的复制操作。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+编写以下函数很容易出错。注意他们的参数类型：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">destructor (virtual if X is meant to be a base class)</span>
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy constructor</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy assignment</span>
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;                  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">move constructor</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">move assignment</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+一个小错误（比如拼写错误、忘记写 const、使用 &amp; 的地方用了 &amp;&amp;、忘记写某个特殊函数）都会导致错误和报警。为避免此类繁琐且易出错的工作，请考虑遵循“最小化原则”。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>（简单）一个类要么定义了所有五个特殊函数（复制构造/复制赋值/移动构造
+/移动赋值/析构），哪怕其中有标记为 <code>= delete</code> 的；要么一个也不声明，由编译器隐式生成。</li>
+</ul>
