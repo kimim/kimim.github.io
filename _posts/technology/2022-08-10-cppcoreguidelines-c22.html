@@ -1,0 +1,58 @@
+---
+layout: post
+title: CppCoreGuidelines C.22 保持默认操作一致性
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Make default operations consistent&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+默认操作，是一组概念上匹配的操作集。其语义是相关联的。如果 copy/move
+构造函数、 copy/move 赋值函数的逻辑行为不一致，会让用户很抓狂。如果构造和析构函数对资源的操作不一致，用户会觉得很惊讶。如果复制和移动操作和构造和析构操作不对应，用户也会很惊讶。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Silly</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: Inconsistent copy operations</span>
+    <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Impl</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Impl</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Silly</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Silly</span>&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> : p<span style="color: #7388d6;">(</span>make_shared<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Impl</span><span style="color: #909183;">&gt;()</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> *p = *a.p; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">deep copy</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Silly</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Silly</span>&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> p = a.p; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">shallow copy</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+以上，构造函数和复制构造函数的操作不一致，一个是深复制，一个是浅复制。这会导致误解，产生bug。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>（复杂）复制/移动构造函数与对应的复制/移动赋值函数要在成员变量的同一层级进行读写操作。</li>
+<li>（复杂）任何在复制/移动构造函数中改写的成员变量要在其他构造函数中初始化。</li>
+<li>（复杂）如果复制/移动构造函数对一个成员变量进行深复制，析构函数也应该修改此成员变量。</li>
+<li>（复杂）如果析构函数要修改一个成员变量，这个变量必须是在其他复制/移动构造或赋值函数中修改过。</li>
+</ul>
