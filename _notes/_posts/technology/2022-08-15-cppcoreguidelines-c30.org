@@ -1,0 +1,93 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.30 如果某个类需要特定的对象析构，请定义析构函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Define a destructor if a class needs an explicit action at object destruction"
+
+
+理由
+
+在对象生命周期结束的时候，会隐式地调用析构函数。如果默认析构函数够用了，
+就用默认的。如果类的析构函数还会处理一些不在其成员的析构函数中处理的逻
+辑，才需要手工定义一个析构函数。
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+#include <iostream>
+using namespace std;
+template<typename A>
+struct final_action {   // slightly simplified
+    A act;
+    final_action(A a) : act{a} {}
+    ~final_action() { act(); }
+};
+
+template<typename A>
+final_action<A> finally(A act)   // deduce action type
+{
+    return final_action<A>{act};
+}
+
+void test()
+{
+    auto act = finally([] { cout << "Exit test\n"; });
+    // establish exit action
+    cout << "testing..." << endl;
+    if (true) return; // act done here
+} // act done here
+
+int main()
+{
+    test();
+}
+#+end_src
+
+#+RESULTS:
+: testing...
+: Exit test
+
+~final_action~ 的主要目的就是在对象析构的时候，执行一个 lambda 函数。
+
+
+注意
+
+一般有2中类需要自定义的析构函数
+1. 类中有不能用带析构函数的类表示的资源，如 vector、transaction 类等。
+2. 类的主要目的是在析构的时候执行某些动作，如一个 tracer（追踪类）、以
+   及以上例子的 ~final_action~ 类。
+
+错误例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class Foo {   // bad; use the default destructor
+public:
+    // ...
+    ~Foo() { s = ""; i = 0; vi.clear(); }  // clean up
+private:
+    string s;
+    int i;
+    vector<int> vi;
+};
+#+end_src
+
+以上代码中，成员对象的默认析构已经够用了，无需再手工析构。这样效率低、且容易出错。
+
+
+注意
+
+如果需要默认析构，但是被抑制了（当定义了移动构造函数，就不会隐式生成默认析构函数）。这时候，可以用 ~= default~ 。
+
+
+强化
+
+找到含有可能隐式资源（implicit resource）的类。隐式资源如指针、引用。
+
+找到定义了析构函数（多余的）的类，而其成员数据都有析构函数。
