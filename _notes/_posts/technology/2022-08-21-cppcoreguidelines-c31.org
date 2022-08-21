@@ -1,0 +1,74 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.31 类获取的资源必须在析构函数中释放
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"All resources acquired by a class must be released by the class's destructor"
+
+理由
+
+防止资源泄漏（尤其是错误情况下）
+
+
+注意
+
+对于有默认操作类，资源可以自动申请释放。
+
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class X {
+    ifstream f;   // might own a file
+    // ... no default operations defined or =deleted ...
+};
+#+end_src
+
+类 X 的输入流 ifstream 会在 X 的析构过程中，隐式地关闭其打开的文件。
+
+
+错误例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class X2 {     // bad
+    FILE* f;   // might own a file
+    // ... no default operations defined or =deleted ...
+};
+#+end_src
+
+X2 可能会导致一个文件句柄（file handle）内存泄漏。
+
+
+注意
+
+如果套接字不能关闭怎么办？析构函数、关闭、清理操作不可以失败。但是如果
+失败了会怎么样？析构函数的开发者不知道何时会调用该函数，不能抛出异常。
+而且很多关闭/释放操作不能重试。目前来说，没有一般的解决方案。如果可行，
+可以认为关闭/清理失败是设计错误，直接结束程序。
+
+
+注意
+
+类里面可以有指向不为其所管理的指针或引用。很明显，这些对象不能在类的析
+构函数中释放。比如：
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+Preprocessor pp { /* ... */ };
+Parser p { pp, /* ... */ };
+Type_checker tc { p, /* ... */ };
+#+end_src
+
+这里，p 指向的 pp 不是 p 管理的对象。
+
+
+强化
+- （简单）如果类中的指针或引用指向的变量属于这个类，那么类的析构函数中
+  也要释放这些资源。
+- （复杂）如果类中有显式的所有权描述语句（比如在构造函数中），那么指针
+  和引用成员变量属于此类。
