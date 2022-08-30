@@ -1,0 +1,43 @@
+---
+layout: post
+title: CppCoreGuidelines C.32 考虑类是否可以拥有其成员原始指针和引用
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If a class has a raw pointer (T*) or reference (T&amp;), consider whether it might be owning&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+
+<p>
+很多代码里的所有权信息是不明确的。
+</p>
+
+
+<p>
+注意
+</p>
+
+
+<p>
+如果类可以拥有 T* 或 T&amp;，将其改成类所有的。如果不能拥有 T*，考虑改为 ptr。从而避免额外的辅助文档和分析。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+查看原始成员指针和成员引用，是否初始化的时候分配了内存。
+</p>
