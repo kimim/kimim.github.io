@@ -1,0 +1,51 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.37 把析构函数标注为 noexcept
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Make destructors noexcept"
+
+
+理由
+
+析构函数不能运行失败。析构函数如果要尝试抛出异常的时候，是设计上的一种
+错误。这时候最好直接终止程序。
+
+
+注意
+
+如果类的所以成员的析构函数都是 noexcept，那么该类的析构函数（用户定义
+或编译器生成）也隐式地声明为 noexcept。通过把析构函数标记为 noexcept，
+就可以避免析构函数隐式的编程不是 noexcept。因为如果类的成员的析构函数
+不是 noexcept，就会导致该类的析构函数不再是 noexcept。
+
+
+例子
+
+并非所有的析构函数都是默认 noexcept 的。类的某个成员的析构函数会抛出异
+常，就会影响整个类层级。
+
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+struct X {
+    Details x;  // happens to have a throwing destructor
+    // ...
+    ~X() { }    // implicitly noexcept(false); aka can throw
+};
+#+end_src
+
+因此，如果不确定，就把析构函数声明为 noexcept。
+
+
+注意
+
+为何不把所有析构函数都声明为 noexcept？因为这样会看起来很杂乱。也就是
+说，能默认就默认，不要添加多余的代码。
+
+（简单）将析构函数标记为 noexcept，如果函数可能会抛出异常。

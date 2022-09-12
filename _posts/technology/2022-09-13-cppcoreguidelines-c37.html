@@ -1,0 +1,68 @@
+---
+layout: post
+title: CppCoreGuidelines C.37 把析构函数标注为 noexcept
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Make destructors noexcept&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+析构函数不能运行失败。析构函数如果要尝试抛出异常的时候，是设计上的一种错误。这时候最好直接终止程序。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果类的所以成员的析构函数都是 noexcept，那么该类的析构函数（用户定义或编译器生成）也隐式地声明为 noexcept。通过把析构函数标记为 noexcept，就可以避免析构函数隐式的编程不是 noexcept。因为如果类的成员的析构函数不是 noexcept，就会导致该类的析构函数不再是 noexcept。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+并非所有的析构函数都是默认 noexcept 的。类的某个成员的析构函数会抛出异常，就会影响整个类层级。
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Details</span> <span style="color: #000000;">x</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">happens to have a throwing destructor</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    ~<span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">implicitly noexcept(false); aka can throw</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+因此，如果不确定，就把析构函数声明为 noexcept。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+为何不把所有析构函数都声明为 noexcept？因为这样会看起来很杂乱。也就是说，能默认就默认，不要添加多余的代码。
+</p>
+
+<p>
+（简单）将析构函数标记为 noexcept，如果函数可能会抛出异常。
+</p>
