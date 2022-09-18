@@ -1,0 +1,130 @@
+---
+layout: post
+title: CppCoreGuidelines C.42 如果构造函数不能构造一个有效对象，抛出一个例外
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If a constructor cannot construct a valid object, throw an exception&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+放任无效对象会导致麻烦的问题。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">FILE</span>* <span style="color: #000000;">f</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">X2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">name</span><span style="color: #7388d6;">)</span>
+        :f<span style="color: #7388d6;">{</span>fopen<span style="color: #909183;">(</span>name.c_str<span style="color: #709870;">()</span>, <span style="color: #2A00FF;">"r"</span><span style="color: #909183;">)</span><span style="color: #7388d6;">}</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>!f<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> runtime_error<span style="color: #909183;">{</span><span style="color: #2A00FF;">"could not open"</span> + name<span style="color: #909183;">}</span>;
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">read</span><span style="color: #7388d6;">()</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read from f</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #000000;">file</span> <span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"Zeno"</span><span style="color: #7388d6;">}</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">throws if file isn't open</span>
+    file.read<span style="color: #7388d6;">()</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">fine</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X3</span> <span style="color: #707183;">{</span>     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: the constructor leaves a non-valid object behind</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">FILE</span>* <span style="color: #000000;">f</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">call is_valid() before any other function</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #000000;">valid</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">X3</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">name</span><span style="color: #7388d6;">)</span>
+        :f<span style="color: #7388d6;">{</span>fopen<span style="color: #909183;">(</span>name.c_str<span style="color: #709870;">()</span>, <span style="color: #2A00FF;">"r"</span><span style="color: #909183;">)</span><span style="color: #7388d6;">}</span>, valid<span style="color: #7388d6;">{</span><span style="color: #110099;">false</span><span style="color: #7388d6;">}</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>f<span style="color: #909183;">)</span> valid = <span style="color: #110099;">true</span>;
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #0000ff; font-weight: bold;">is_valid</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> valid; <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">read</span><span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read from f</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X3</span> <span style="color: #000000;">file</span> <span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"Heraclides"</span><span style="color: #7388d6;">}</span>;
+    file.read<span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">crash or bad read!</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>file.is_valid<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        file.read<span style="color: #909183;">()</span>;
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... handle error ...</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+对于变量来说，不管是在栈上的还是某个对象的成员，都没法直接通过函数调用获取错误信息。如果有无效的对象，然后要倚靠用户使用前自己去调用
+is<sub>invalid</sub>() 这样的函数进行有效性检查，很麻烦、容易出错、效率不高。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+在某些领域，比如飞机控制等硬实时系统中，为了实时性，异常出错没有额外的工具支持，所以就必须使用 is<sub>valid</sub>() 这样的技巧。这种情况下，及时的调用
+is<sub>valid</sub>() 来模拟 RAII。
+</p>
+
+
+<p>
+其他情况
+</p>
+
+<p>
+如果你有想法使用“构造后初始化”或“两级初始化”方法，请赶紧抹杀掉。如果你真的要这么做，请试试工厂函数方法。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+有人为了避免代码重复，用 init() 函数，而不在构造函数中进行初始化。把构造过程交给成员的默认初始化会更好。还有人觉得应该延迟到对象使用的时候再初始化，这种情况的解决办法是不要声明变量，指导要用的时候再声明并初始化。
+</p>
