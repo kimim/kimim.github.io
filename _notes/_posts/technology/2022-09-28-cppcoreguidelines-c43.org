@@ -1,0 +1,194 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.43 确保可复制类有默认构造函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Ensure that a copyable class has a default constructor"
+
+
+理由
+
+可复制类有默认构造函数就能保证：如果一个具体类是可复制的，它也就满足其
+他的“半正则”条件。
+
+很多语言和库工具依赖默认构造函数初始化其元素。比如 ~T a[10]~ 和
+~std::vector<T> v(10)~ 。如果类是可复制的，默认构造函数经常能把定义移动
+状态的任务进行简化。
+
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class Date { // BAD: no default constructor
+public:
+    Date(int dd, int mm, int yyyy);
+    // ...
+};
+
+vector<Date> vd1(1000);   // default Date needed here
+vector<Date> vd2(1000, Date{Month::October, 7, 1885});   // alternative
+#+end_src
+
+
+只在用户自定义的构造函数不存在时，编译器才会自动生成一个默认构造函数。
+所以以上代码中， vector vd1 是无法初始化的，因为 Date 中已经定义了一个
+构造函数，编译器就不会生成默认构造函数。没有默认构造函数代码写起来容易
+变得复杂。如果可以，尽量保持默认构造函数。
+
+对于日期类来说，定义一个顺其自然的默认日期比较困难。宇宙大爆炸对于大部
+分人来说太久远了。而 0 年 0 月 0 日，在大部分的日历系统中又是不存在的。
+这就好像把浮点数设置成 NaN 一样。
+
+不过，大部分的日期类都有某个“起始日期”。比如最流行的 1970年1月1日。所
+以把这个日期作为默认日期就很容易了。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class Date {
+public:
+    Date(int dd, int mm, int yyyy);
+    Date() = default; // [See also](#Rc-default)
+    // ...
+private:
+    int dd = 1;
+    int mm = 1;
+    int yyyy = 1970;
+    // ...
+};
+
+vector<Date> vd1(1000);
+#+end_src
+
+
+注意
+
+一个类里所有的成员都有默认构造函数，这个类也隐式地获得了一个构造函数。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+struct X {
+    string s;
+    vector<int> v;
+};
+
+X x; // means X{{}, {}}; that is the empty string and the empty vector
+#+end_src
+
+注意，内置类型没有默认构造函数，其初始值不一定有用。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+#include <iostream>
+#include <string>
+using namespace std;
+struct X {
+    string s;
+    int i;
+};
+
+void f()
+{
+    X x;    // x.s is initialized to the empty string; x.i is uninitialized
+
+    cout << x.s << ' ' << x.i << '\n';
+    ++x.i;
+}
+int main()
+{
+    f();
+}
+#+end_src
+
+#+RESULTS:
+: -901376320
+
+以上代码中，x.s 初始化为空 string。而 x.i 则是未初始化的一个数值。
+
+静态分配的内置类型对象的陌生人值是 0，而局部的内置变量则不初始化。注意，
+你的编译器可能会给局部内置变量设定一个初始值。但是当你进行优化编译的时
+候，就不设置了。所以，以上代码看起来可以工作，但是是基于不可靠的未定义
+行为。假设你需要进行初始化，那么请明确定义初始化过程。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+#include <iostream>
+#include <string>
+using namespace std;
+struct X {
+    string s;
+    int i {};   // default initialize (to 0)
+};
+void f()
+{
+    X x;    // x.s is initialized to the empty string; x.i is uninitialized
+
+    cout << x.s << ' ' << x.i << '\n';
+    ++x.i;
+}
+int main()
+{
+    f();
+
+}
+#+end_src
+
+#+RESULTS:
+: 0
+
+
+注意
+
+没有合理的默认构造函数的类，通常也不能复制，因此，这些类不在本指南建议
+范围内。
+
+比如，一个基类如果不能复制的话，那么就不需要一个默认构造函数。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// Shape is an abstract base class, not a copyable type.
+// It might or might not need a default constructor.
+struct Shape {
+    virtual void draw() = 0;
+    virtual void rotate(int) = 0;
+    // =delete copy/move functions
+    // ...
+};
+#+end_src
+
+
+一个类如果在构建的过程中，需要接受一个调用者提供的资源的话，一般不能有
+默认构造函数。但是这种类，不在本指南建议范围，因为这些类通常不可复制。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// std::lock_guard is not a copyable type.
+// It does not have a default constructor.
+lock_guard g {mx};  // guard the mutex mx
+lock_guard g2;      // error: guarding nothing
+#+end_src
+
+
+一个类如果有某个“特殊状态”，就必须单独由某个成员函数，或额外过程来处理
+状态变化。不管是否能复制，这种类型很自然的会用某个特殊状态作为默认构造
+值。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// std::ofstream is not a copyable type.
+// It does happen to have a default constructor
+// that goes along with a special "not open" state.
+ofstream out {"Foobar"};
+// ...
+out << log(time, transaction);
+#+end_src
+
+
+类似的，特殊状态类型是可复制的。比如可复制的智能指针就有个特殊状态
+"==nullptr"，必须用这个特殊状态作为其默认构造值。
+
+不管怎么样，最好有一个默认构造函数，将类的默认值初始化为一些有意义的状
+态，如 ~std::string~ 的 ~""~ ， ~std::vector~ 的 ~{}~
+
+
+强化
+- 标注用 ~=~ 的可复制类，却没有默认构造函数
+- 标注用 ~==~ 可比较的类，却不能复制

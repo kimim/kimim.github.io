@@ -1,0 +1,234 @@
+---
+layout: post
+title: CppCoreGuidelines C.43 确保可复制类有默认构造函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Ensure that a copyable class has a default constructor&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+可复制类有默认构造函数就能保证：如果一个具体类是可复制的，它也就满足其他的“半正则”条件。
+</p>
+
+<p>
+很多语言和库工具依赖默认构造函数初始化其元素。比如 <code>T a[10]</code> 和
+<code>std::vector&lt;T&gt; v(10)</code> 。如果类是可复制的，默认构造函数经常能把定义移动状态的任务进行简化。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: no default constructor</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">dd</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">mm</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">yyyy</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">vd1</span><span style="color: #707183;">(</span>1000<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">default Date needed here</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">vd2</span><span style="color: #707183;">(</span>1000, Date<span style="color: #7388d6;">{</span><span style="color: #110099;">Month</span>::October, 7, 1885<span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">alternative</span>
+</pre>
+</div>
+
+
+<p>
+只在用户自定义的构造函数不存在时，编译器才会自动生成一个默认构造函数。所以以上代码中， vector vd1 是无法初始化的，因为 Date 中已经定义了一个构造函数，编译器就不会生成默认构造函数。没有默认构造函数代码写起来容易变得复杂。如果可以，尽量保持默认构造函数。
+</p>
+
+<p>
+对于日期类来说，定义一个顺其自然的默认日期比较困难。宇宙大爆炸对于大部分人来说太久远了。而 0 年 0 月 0 日，在大部分的日历系统中又是不存在的。这就好像把浮点数设置成 NaN 一样。
+</p>
+
+<p>
+不过，大部分的日期类都有某个“起始日期”。比如最流行的 1970年1月1日。所以把这个日期作为默认日期就很容易了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">dd</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">mm</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">yyyy</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">[See also](#Rc-default)</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">dd</span> = 1;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">mm</span> = 1;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">yyyy</span> = 1970;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">vd1</span><span style="color: #707183;">(</span>1000<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+一个类里所有的成员都有默认构造函数，这个类也隐式地获得了一个构造函数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">x</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">means X{{}, {}}; that is the empty string and the empty vector</span>
+</pre>
+</div>
+
+<p>
+注意，内置类型没有默认构造函数，其初始值不一定有用。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">string</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">x</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">x.s is initialized to the empty string; x.i is uninitialized</span>
+
+    cout &lt;&lt; x.s &lt;&lt; <span style="color: #2A00FF;">' '</span> &lt;&lt; x.i &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    ++x.i;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+-901376320
+</pre>
+
+
+<p>
+以上代码中，x.s 初始化为空 string。而 x.i 则是未初始化的一个数值。
+</p>
+
+<p>
+静态分配的内置类型对象的陌生人值是 0，而局部的内置变量则不初始化。注意，你的编译器可能会给局部内置变量设定一个初始值。但是当你进行优化编译的时候，就不设置了。所以，以上代码看起来可以工作，但是是基于不可靠的未定义行为。假设你需要进行初始化，那么请明确定义初始化过程。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">string</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> <span style="color: #7388d6;">{}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">default initialize (to 0)</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">x</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">x.s is initialized to the empty string; x.i is uninitialized</span>
+
+    cout &lt;&lt; x.s &lt;&lt; <span style="color: #2A00FF;">' '</span> &lt;&lt; x.i &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    ++x.i;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f<span style="color: #7388d6;">()</span>;
+
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+0
+</pre>
+
+
+
+<p>
+注意
+</p>
+
+<p>
+没有合理的默认构造函数的类，通常也不能复制，因此，这些类不在本指南建议范围内。
+</p>
+
+<p>
+比如，一个基类如果不能复制的话，那么就不需要一个默认构造函数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Shape is an abstract base class, not a copyable type.</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">It might or might not need a default constructor.</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #7388d6;">()</span> = 0;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">rotate</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span> = 0;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">=delete copy/move functions</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+一个类如果在构建的过程中，需要接受一个调用者提供的资源的话，一般不能有默认构造函数。但是这种类，不在本指南建议范围，因为这些类通常不可复制。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">std::lock_guard is not a copyable type.</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">It does not have a default constructor.</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span> <span style="color: #000000;">g</span> <span style="color: #707183;">{</span>mx<span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">guard the mutex mx</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span> <span style="color: #000000;">g2</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: guarding nothing</span>
+</pre>
+</div>
+
+
+<p>
+一个类如果有某个“特殊状态”，就必须单独由某个成员函数，或额外过程来处理状态变化。不管是否能复制，这种类型很自然的会用某个特殊状态作为默认构造值。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">std::ofstream is not a copyable type.</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">It does happen to have a default constructor</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">that goes along with a special "not open" state.</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">ofstream</span> <span style="color: #000000;">out</span> <span style="color: #707183;">{</span><span style="color: #2A00FF;">"Foobar"</span><span style="color: #707183;">}</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+out &lt;&lt; log<span style="color: #707183;">(</span>time, transaction<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+类似的，特殊状态类型是可复制的。比如可复制的智能指针就有个特殊状态
+&ldquo;==nullptr&rdquo;，必须用这个特殊状态作为其默认构造值。
+</p>
+
+<p>
+不管怎么样，最好有一个默认构造函数，将类的默认值初始化为一些有意义的状态，如 <code>std::string</code> 的 <code>""</code> ， <code>std::vector</code> 的 <code>{}</code>
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标注用 <code>=</code> 的可复制类，却没有默认构造函数</li>
+<li>标注用 <code>==</code> 可比较的类，却不能复制</li>
+</ul>
