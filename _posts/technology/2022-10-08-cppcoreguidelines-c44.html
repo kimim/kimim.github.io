@@ -1,0 +1,79 @@
+---
+layout: post
+title: CppCoreGuidelines C.44 默认构造函数尽量简单且不要抛出异常
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer default constructors to be simple and non-throwing&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+无需额外的、会报错的操作，就能设定默认值，可以简化错误处理的过程和移动操作的推演。
+</p>
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">elem points to space-elem element allocated using new</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector0</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Vector0</span><span style="color: #7388d6;">()</span> :Vector0<span style="color: #7388d6;">{</span>0<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #0000ff; font-weight: bold;">Vector0</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #7388d6;">)</span> :elem<span style="color: #7388d6;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #909183;">[</span>n<span style="color: #909183;">]</span><span style="color: #7388d6;">}</span>, space<span style="color: #7388d6;">{</span>elem + n<span style="color: #7388d6;">}</span>, last<span style="color: #7388d6;">{</span>elem<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">own</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>*<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">elem</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">space</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">last</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+这个类定义看起来挺不错，但是给 Vector0 设定空值的时候，也可能由于内存分配出错。另外，用 {new T[0], 0, 0} 这样的方式来表示默认 Vector 看起来很浪费。比如， Vector0&lt;int&gt; v[100] 会导致 100 次内存分配。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">elem is nullptr or elem points to space-elem element allocated using new</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector1</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">sets the representation to {nullptr, nullptr, nullptr}; doesn't throw</span>
+    Vector1<span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #0000ff; font-weight: bold;">Vector1</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #7388d6;">)</span> :elem<span style="color: #7388d6;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #909183;">[</span>n<span style="color: #909183;">]</span><span style="color: #7388d6;">}</span>, space<span style="color: #7388d6;">{</span>elem + n<span style="color: #7388d6;">}</span>, last<span style="color: #7388d6;">{</span>elem<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">own</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>*<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">elem</span> <span style="color: #7388d6;">{}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">space</span> <span style="color: #7388d6;">{}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">last</span> <span style="color: #7388d6;">{}</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+用 {nullptr, nullptr, nullptr} 表示 Vector1{} 更节省资源，而且这种特殊情况意味着运行时检查，防止出错。如果检测到错误，把 Vector1 设定为空比较简单。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记会抛出异常的构造函数</li>
+</ul>
