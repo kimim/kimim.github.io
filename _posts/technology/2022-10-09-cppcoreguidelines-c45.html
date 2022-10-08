@@ -1,0 +1,61 @@
+---
+layout: post
+title: CppCoreGuidelines C.45 如果只是初始化数据成员变量，不需要定义默认构造函数，用类内成员初始式即可
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don&rsquo;t define a default constructor that only initializes data
+members; use in-class member initializers instead&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+使用类内成员初始式（member initializer）可以让编译器自动生成函数。编译器生成的函数效率更好。
+</p>
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X1</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: doesn't use member initializers</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">X1</span><span style="color: #7388d6;">()</span> :s<span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"default"</span><span style="color: #7388d6;">}</span>, i<span style="color: #7388d6;">{</span>1<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span> <span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"default"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> <span style="color: #7388d6;">{</span>1<span style="color: #7388d6;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">use compiler-generated default constructor</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>（简单）默认构造函数不只是用常量初始化成员变量</li>
+</ul>
