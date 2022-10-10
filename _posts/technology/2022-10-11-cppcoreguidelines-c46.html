@@ -1,0 +1,79 @@
+---
+layout: post
+title: CppCoreGuidelines C.46 默认的，声明单参数构造函数为显式的
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;By default, declare single-argument constructors explicit&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+避免无意的转换。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">String</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">String</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">String</span> <span style="color: #000000;">s</span> = 10;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">surprise: string of size 10</span>
+</pre>
+</div>
+
+<p>
+从 int 型转成 String，这种隐式转换很奇怪。
+</p>
+
+<p>
+例外
+</p>
+
+<p>
+如果确实需要隐式的将构造函数参数类型转换成类类型，避免显式转换。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Complex</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Complex</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span><span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: we want a conversion from d to {d, 0}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Complex</span> <span style="color: #000000;">z</span> = 10.7;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">unsurprising conversion</span>
+</pre>
+</div>
+
+<p>
+从 double 转成复数就比较合理。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+复制和移动构造函数不能是显式的那种强硬的类型转换。复制和移动构造函数进行显式强硬的类型转换会导致值的传入和返回变得很复杂。
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>（简单）单参数构造函数要声明成显式的。大多数情况下，非显式的单参数构造函数不太写的好。所以如果单参数构造函数不在白名单中，就进行警告。</li>
+</ul>

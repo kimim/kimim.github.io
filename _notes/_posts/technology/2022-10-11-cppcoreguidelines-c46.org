@@ -1,0 +1,55 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.46 默认的，声明单参数构造函数为显式的
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"By default, declare single-argument constructors explicit"
+
+理由
+
+避免无意的转换。
+
+坏例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class String {
+public:
+    String(int);   // BAD
+    // ...
+};
+
+String s = 10;   // surprise: string of size 10
+#+end_src
+
+从 int 型转成 String，这种隐式转换很奇怪。
+
+例外
+
+如果确实需要隐式的将构造函数参数类型转换成类类型，避免显式转换。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class Complex {
+public:
+    Complex(double d);   // OK: we want a conversion from d to {d, 0}
+    // ...
+};
+
+Complex z = 10.7;   // unsurprising conversion
+#+end_src
+
+从 double 转成复数就比较合理。
+
+注意
+
+复制和移动构造函数不能是显式的那种强硬的类型转换。复制和移动构造函数进
+行显式强硬的类型转换会导致值的传入和返回变得很复杂。
+
+强化
+- （简单）单参数构造函数要声明成显式的。大多数情况下，非显式的单参数构
+  造函数不太写的好。所以如果单参数构造函数不在白名单中，就进行警告。
