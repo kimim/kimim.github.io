@@ -1,0 +1,51 @@
+---
+layout: post
+title: CppCoreGuidelines C.47 按照成员变量的声明顺序进行初始化
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Define and initialize member variables in the order of member declaration&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+减少混乱和错误。不管你按什么顺序初始化成员变量，最终的初始化顺序都是按照声明顺序进行的。
+</p>
+
+<p>
+错误例子
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m1</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m2</span>;
+    <span style="color: #0000ff; font-weight: bold;">Foo</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> :m2<span style="color: #7388d6;">{</span>x<span style="color: #7388d6;">}</span>, m1<span style="color: #7388d6;">{</span>++x<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: misleading initializer order</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #000000;">x</span><span style="color: #707183;">(</span>1<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">surprise: x.m1 == x.m2 == 2</span>
+<span style="color: #110099;">std</span>::cout &lt;&lt; x.m1 &lt;&lt; <span style="color: #2A00FF;">" "</span> &lt;&lt; x.m2;
+</pre>
+</div>
+
+<pre class="example">
+2 2
+</pre>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>（简单）成员初始化列表要和成员声明的顺序相同</li>
+</ul>
