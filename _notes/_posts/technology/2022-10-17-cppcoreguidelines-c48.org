@@ -1,0 +1,89 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.48 对于初始化为常量的成员，用类内成员初始化方法
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer in-class initializers to member initializers in constructors for constant initializers"
+
+理由
+
+这样可以明确所有构造函数中都用一样的值初始化成员变量。避免重复，减少维护问题。代码更短更高效。
+
+错误例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results raw
+class X {   // BAD
+public:
+    int i;
+    string s;
+    int j;
+    X() :i{666}, s{"qqq"} { }   // j is uninitialized
+    X(int ii) :i{ii} {}         // s is "" and j is uninitialized
+    // ...
+};
+X x1{};
+cout << x1.i << "\t" << x1.s << "\t" << x1.j << endl;
+X x2{11};
+cout << x2.i << "\t" << x2.s << "\t" << x2.j << endl;
+#+end_src
+
+#+RESULTS:
+666	qqq	66
+11		24
+
+后期维护代码的人怎么会知道你是故意不初始化 j 还是因为其他什么原因？是
+有意赋值给 s 一个默认的空字符串吗？那 qqq 是不是一个 bug？像 j 这样的
+没初始化的变量往往是后期修改代码的时候增加了变量，却漏掉添加到初始化列
+表里。
+
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results raw
+class X2 {
+public:
+    int i {666};
+    string s {"qqq"};
+    int j {0};
+    X2() = default;        // all members are initialized to their defaults
+    X2(int ii) :i{ii} {}   // s and j initialized to their defaults
+    // ...
+};
+X2 x{111};
+cout << x.i << ", " << x.s << ", " << x.j;
+#+end_src
+
+#+RESULTS:
+111, qqq, 0
+
+
+另外，我们也可以通过设定构造函数的默认参数的地方那个是来指定默认初始值。
+这在老代码中比较常见。但是这样会导致传递的参数比较多，而且如果要增加一
+个构造函数，还要重复这些参数列表。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class X3 {   // BAD: inexplicit, argument passing overhead
+public:
+    int i;
+    string s;
+    int j;
+//public:
+    X3(int ii = 666, const string& ss = "qqq", int jj = 0)
+        :i{ii}, s{ss}, j{jj} { }   // all members are initialized to their defaults
+    // ...
+};
+X3 x{};
+cout << x.i;
+#+end_src
+
+#+RESULTS:
+: 666
+
+强化
+- （简单）每个构造函数都要能够初始化所有的成员变量，通过执行构造函数体
+  或者默认构造函数。
+- （简单）类内的成员变量初始化比构造函数的默认参数更好。

@@ -1,0 +1,106 @@
+---
+layout: post
+title: CppCoreGuidelines C.48 对于初始化为常量的成员，用类内成员初始化方法
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer in-class initializers to member initializers in constructors for constant initializers&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+这样可以明确所有构造函数中都用一样的值初始化成员变量。避免重复，减少维护问题。代码更短更高效。
+</p>
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">j</span>;
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">()</span> :i<span style="color: #7388d6;">{</span>666<span style="color: #7388d6;">}</span>, s<span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"qqq"</span><span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">j is uninitialized</span>
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">ii</span><span style="color: #7388d6;">)</span> :i<span style="color: #7388d6;">{</span>ii<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">s is "" and j is uninitialized</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">x1</span><span style="color: #707183;">{}</span>;
+cout &lt;&lt; x1.i &lt;&lt; <span style="color: #2A00FF;">"\t"</span> &lt;&lt; x1.s &lt;&lt; <span style="color: #2A00FF;">"\t"</span> &lt;&lt; x1.j &lt;&lt; endl;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">x2</span><span style="color: #707183;">{</span>11<span style="color: #707183;">}</span>;
+cout &lt;&lt; x2.i &lt;&lt; <span style="color: #2A00FF;">"\t"</span> &lt;&lt; x2.s &lt;&lt; <span style="color: #2A00FF;">"\t"</span> &lt;&lt; x2.j &lt;&lt; endl;
+</pre>
+</div>
+
+<p>
+666	qqq	66
+11		24
+</p>
+
+<p>
+后期维护代码的人怎么会知道你是故意不初始化 j 还是因为其他什么原因？是有意赋值给 s 一个默认的空字符串吗？那 qqq 是不是一个 bug？像 j 这样的没初始化的变量往往是后期修改代码的时候增加了变量，却漏掉添加到初始化列表里。
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> <span style="color: #7388d6;">{</span>666<span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span> <span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"qqq"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">j</span> <span style="color: #7388d6;">{</span>0<span style="color: #7388d6;">}</span>;
+    <span style="color: #0000ff; font-weight: bold;">X2</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">all members are initialized to their defaults</span>
+    <span style="color: #0000ff; font-weight: bold;">X2</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">ii</span><span style="color: #7388d6;">)</span> :i<span style="color: #7388d6;">{</span>ii<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">s and j initialized to their defaults</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #000000;">x</span><span style="color: #707183;">{</span>111<span style="color: #707183;">}</span>;
+cout &lt;&lt; x.i &lt;&lt; <span style="color: #2A00FF;">", "</span> &lt;&lt; x.s &lt;&lt; <span style="color: #2A00FF;">", "</span> &lt;&lt; x.j;
+</pre>
+</div>
+
+<p>
+111, qqq, 0
+</p>
+
+
+<p>
+另外，我们也可以通过设定构造函数的默认参数的地方那个是来指定默认初始值。这在老代码中比较常见。但是这样会导致传递的参数比较多，而且如果要增加一个构造函数，还要重复这些参数列表。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X3</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: inexplicit, argument passing overhead</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">j</span>;
+<span style="color: #3F7F5F;">//</span><span style="color: #3F7F5F;">public:</span>
+    <span style="color: #0000ff; font-weight: bold;">X3</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">ii</span> = 666, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">ss</span> = <span style="color: #2A00FF;">"qqq"</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">jj</span> = 0<span style="color: #7388d6;">)</span>
+        :i<span style="color: #7388d6;">{</span>ii<span style="color: #7388d6;">}</span>, s<span style="color: #7388d6;">{</span>ss<span style="color: #7388d6;">}</span>, j<span style="color: #7388d6;">{</span>jj<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">all members are initialized to their defaults</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X3</span> <span style="color: #000000;">x</span><span style="color: #707183;">{}</span>;
+cout &lt;&lt; x.i;
+</pre>
+</div>
+
+<pre class="example">
+666
+</pre>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>（简单）每个构造函数都要能够初始化所有的成员变量，通过执行构造函数体或者默认构造函数。</li>
+<li>（简单）类内的成员变量初始化比构造函数的默认参数更好。</li>
+</ul>
