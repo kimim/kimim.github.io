@@ -1,0 +1,111 @@
+---
+layout: post
+title: CppCoreGuidelines C.50 如果初始化阶段需要一些虚行为，可以用工厂函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use a factory function if you need “virtual behavior” during initialization&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+如果基类对象的某些状态依赖于继承它的子类对象，我们需要定义虚函数，从而减少误用没有完全构造的对象的机会窗口。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+工厂函数的返回类型一般默认是 <code>unique_ptr</code> ，如果某些使用的地方是共享的，函数调用方可以把 <code>unique_ptr</code> 移动为 <code>shared_ptr</code> 。不过，如果编写工厂函数的人明确所有的使用都是共享使用，那也可以返回 <code>shared_ptr</code> 并且用在函数中用 <code>make_shared</code> 保留内存。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">()</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span>
+        f<span style="color: #909183;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: C.82: Don't call virtual functions in constructors and destructors</span>
+        <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span>
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">()</span> = 0;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">protected</span>:
+    <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Token</span> <span style="color: #7388d6;">{}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">explicit</span> <span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Token</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">create an imperfectly initialized object</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">()</span> = 0;
+
+    <span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">create</span><span style="color: #7388d6;">()</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">interface for creating shared objects</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = make_shared<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #909183;">&gt;(</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #110099;">T</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">Token</span><span style="color: #709870;">{}</span><span style="color: #909183;">)</span>;
+        p-&gt;post_initialize<span style="color: #909183;">()</span>;
+        <span style="color: #7F0055; font-weight: bold;">return</span> p;
+    <span style="color: #7388d6;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">protected</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">post_initialize</span><span style="color: #7388d6;">()</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">called right after construction</span>
+        <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> f<span style="color: #909183;">()</span>; <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">GOOD: virtual dispatch is safe</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>                 <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">some derived class</span>
+<span style="color: #7F0055; font-weight: bold;">protected</span>:
+    <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Token</span> <span style="color: #7388d6;">{}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">explicit</span> <span style="color: #0000ff; font-weight: bold;">D</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Token</span><span style="color: #7388d6;">)</span> : B<span style="color: #7388d6;">{</span> <span style="color: #110099;">B</span>::Token<span style="color: #909183;">{}</span> <span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;">  */</span> <span style="color: #7388d6;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">protected</span>:
+    <span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">friend</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span> <span style="color: #110099;">B</span>::<span style="color: #0000ff; font-weight: bold;">create</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">p</span> = <span style="color: #110099;">D</span>::create<span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #707183;">&gt;()</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">creating a D object</span>
+</pre>
+</div>
+
+
+<p>
+<code>make_shared</code> 要求构造函数必须是 <code>public</code> 的。因为需要一个 <code>protected</code> 的
+<code>Token</code> ，构造函数不能公开调用，所以我们能避免不完全构建的对象。通过提供工厂函数 <code>create()</code> 我们可以很方便的在自由存储区中构建对象。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+按照惯例，工厂函数在自由存储区中分配对象，而不是在栈或上层对象内分配内存。
+</p>

@@ -1,0 +1,94 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.50 如果初始化阶段需要一些虚行为，可以用工厂函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use a factory function if you need “virtual behavior” during initialization"
+
+
+理由
+
+如果基类对象的某些状态依赖于继承它的子类对象，我们需要定义虚函数，从而
+减少误用没有完全构造的对象的机会窗口。
+
+
+注意
+
+工厂函数的返回类型一般默认是 ~unique_ptr~ ，如果某些使用的地方是共享的，
+函数调用方可以把 ~unique_ptr~ 移动为 ~shared_ptr~ 。不过，如果编写工厂函数
+的人明确所有的使用都是共享使用，那也可以返回 ~shared_ptr~ 并且用在函数中
+用 ~make_shared~ 保留内存。
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class B {
+public:
+    B()
+    {
+        /* ... */
+        f(); // BAD: C.82: Don't call virtual functions in constructors and destructors
+        /* ... */
+    }
+
+    virtual void f() = 0;
+};
+#+end_src
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class B {
+protected:
+    class Token {};
+
+public:
+    explicit B(Token) { /* ... */ }  // create an imperfectly initialized object
+    virtual void f() = 0;
+
+    template<class T>
+    static shared_ptr<T> create()    // interface for creating shared objects
+    {
+        auto p = make_shared<T>(typename T::Token{});
+        p->post_initialize();
+        return p;
+    }
+
+protected:
+    virtual void post_initialize()   // called right after construction
+        { /* ... */ f(); /* ... */ } // GOOD: virtual dispatch is safe
+};
+
+class D : public B {                 // some derived class
+protected:
+    class Token {};
+
+public:
+    explicit D(Token) : B{ B::Token{} } {}
+    void f() override { /* ...  */ };
+
+protected:
+    template<class T>
+    friend shared_ptr<T> B::create();
+};
+
+shared_ptr<D> p = D::create<D>();  // creating a D object
+#+end_src
+
+
+~make_shared~ 要求构造函数必须是 ~public~ 的。因为需要一个 ~protected~ 的
+~Token~ ，构造函数不能公开调用，所以我们能避免不完全构建的对象。通过提供
+工厂函数 ~create()~ 我们可以很方便的在自由存储区中构建对象。
+
+
+注意
+
+按照惯例，工厂函数在自由存储区中分配对象，而不是在栈或上层对象内分配内存。
