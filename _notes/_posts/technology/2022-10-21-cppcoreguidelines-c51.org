@@ -1,0 +1,64 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.51 把类里通用的构造部分放到一个共用构造函数里
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use delegating constructors to represent common actions for all constructors of a class"
+
+理由
+
+避免重复和无意导致的差异。
+
+坏例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class Date {   // BAD: repetitive
+    int d;
+    Month m;
+    int y;
+public:
+    Date(int dd, Month mm, year yy)
+        :d{dd}, m{mm}, y{yy}
+        { if (!valid(d, m, y)) throw Bad_date{}; }
+
+    Date(int dd, Month mm)
+        :d{dd}, m{mm} y{current_year()}
+        { if (!valid(d, m, y)) throw Bad_date{}; }
+    // ...
+};
+#+end_src
+
+重复相同的动作繁琐又容易出错。
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class Date2 {
+    int d;
+    Month m;
+    int y;
+public:
+    Date2(int dd, Month mm, year yy)
+        :d{dd}, m{mm}, y{yy}
+        { if (!valid(d, m, y)) throw Bad_date{}; }
+
+    Date2(int dd, Month mm)
+        :Date2{dd, mm, current_year()} {}
+    // ...
+};
+#+end_src
+
+Data2 中第二个构造函数调用第一个构造函数做一些共用的初始化过程。
+
+
+See also: 如果重复动作只是简单的初始化，可以考虑类中的成员初始化。
+
+
+强化
+- 查找构造函数体内相似的部分

@@ -1,0 +1,86 @@
+---
+layout: post
+title: CppCoreGuidelines C.51 把类里通用的构造部分放到一个共用构造函数里
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use delegating constructors to represent common actions for all constructors of a class&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+避免重复和无意导致的差异。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: repetitive</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">d</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #000000;">m</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">dd</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #000000;">mm</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">year</span> <span style="color: #000000;">yy</span><span style="color: #7388d6;">)</span>
+        :d<span style="color: #7388d6;">{</span>dd<span style="color: #7388d6;">}</span>, m<span style="color: #7388d6;">{</span>mm<span style="color: #7388d6;">}</span>, y<span style="color: #7388d6;">{</span>yy<span style="color: #7388d6;">}</span>
+        <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>!valid<span style="color: #709870;">(</span>d, m, y<span style="color: #709870;">)</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad_date<span style="color: #909183;">{}</span>; <span style="color: #7388d6;">}</span>
+
+    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">dd</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #000000;">mm</span><span style="color: #7388d6;">)</span>
+        :d<span style="color: #7388d6;">{</span>dd<span style="color: #7388d6;">}</span>, m<span style="color: #7388d6;">{</span>mm<span style="color: #7388d6;">}</span> y<span style="color: #7388d6;">{</span>current_year<span style="color: #909183;">()</span><span style="color: #7388d6;">}</span>
+        <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>!valid<span style="color: #709870;">(</span>d, m, y<span style="color: #709870;">)</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad_date<span style="color: #909183;">{}</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+重复相同的动作繁琐又容易出错。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date2</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">d</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #000000;">m</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Date2</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">dd</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #000000;">mm</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">year</span> <span style="color: #000000;">yy</span><span style="color: #7388d6;">)</span>
+        :d<span style="color: #7388d6;">{</span>dd<span style="color: #7388d6;">}</span>, m<span style="color: #7388d6;">{</span>mm<span style="color: #7388d6;">}</span>, y<span style="color: #7388d6;">{</span>yy<span style="color: #7388d6;">}</span>
+        <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>!valid<span style="color: #709870;">(</span>d, m, y<span style="color: #709870;">)</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad_date<span style="color: #909183;">{}</span>; <span style="color: #7388d6;">}</span>
+
+    <span style="color: #0000ff; font-weight: bold;">Date2</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">dd</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #000000;">mm</span><span style="color: #7388d6;">)</span>
+        :Date2<span style="color: #7388d6;">{</span>dd, mm, current_year<span style="color: #909183;">()</span><span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+Data2 中第二个构造函数调用第一个构造函数做一些共用的初始化过程。
+</p>
+
+
+<p>
+See also: 如果重复动作只是简单的初始化，可以考虑类中的成员初始化。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>查找构造函数体内相似的部分</li>
+</ul>
