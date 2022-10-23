@@ -1,0 +1,52 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.52 用继承的构造函数为子类导入构造函数，从而无需重复初始化成员变量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use inheriting constructors to import constructors into a derived class that does not need further explicit initialization"
+
+
+理由
+
+如果在继承类中需要用到基类的构造函数，重新实现这些构造函数会比较繁琐、容易出错。
+
+
+例子
+
+~std::vector~ 有一堆诡异的构造函数，所以，如果我要继承一个自己的向量类，
+我不需要重新实现这些构造函数。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class Rec {
+    // ... data and lots of nice constructors ...
+};
+
+class Oper : public Rec {
+    using Rec::Rec;
+    // ... no data members ...
+    // ... lots of nice utility functions ...
+};
+#+end_src
+
+
+坏例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+struct Rec2 : public Rec {
+    int x;
+    using Rec::Rec;
+};
+
+Rec2 r {"foo", 7};
+int val = r.x;   // uninitialized
+#+end_src
+
+
+强化
+- 确保继承类中的每个成员都初始化过。
