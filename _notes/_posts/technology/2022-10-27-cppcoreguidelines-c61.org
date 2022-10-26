@@ -1,0 +1,99 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.61 赋值拷贝操作须拷贝
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"A copy operation should copy"
+
+
+理由
+
+这条指南讲的是一般人们使用时所假定的语义。在进行 ~x = y~ 操作后，我们得
+到结果 ~x == y~
+
+在赋值拷贝操作之后， ~x~ 和 ~y~ 应该是独立的对象（数值语义，非指针的内置类
+型和标准库类型的工作方式），或者， ~x~ 和 ~y~ 指向一个共享的对象（指针语义，
+指针的工作方式）。
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+using T = int;
+using Bad = int;
+class X {   // OK: value semantics
+  public:
+    X() {};
+    X(const X&);     // copy X
+    void copy(const T* src, const T* src_end, const T* dst) {};
+    void modify() {};   // change the value of X
+    // ...
+    ~X() { delete[] p; };
+    friend bool operator==(const X& a, const X& b);
+  private:
+    T* p{};
+    int sz{};
+};
+bool equal(const T* a0, const T* a1, const T* b0, const T* b1) {
+    return true;
+}
+
+
+bool operator==(const X& a, const X& b)
+{
+    return a.sz == b.sz && equal(a.p, a.p + a.sz, b.p, b.p + b.sz);
+}
+
+X::X(const X& a)
+    :p{new T[a.sz]}, sz{a.sz}
+{
+    copy(a.p, a.p + sz, p);
+}
+
+int main()
+{
+    X x;
+    X y = x;
+    if (x != y) throw Bad{};
+    x.modify();
+    if (x == y) throw Bad{};   // assume value semantics
+}
+#+end_src
+
+
+例子
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class X2 {  // OK: pointer semantics
+public:
+    X2();
+    X2(const X2&) = default; // shallow copy
+    ~X2() = default;
+    void modify();          // change the pointed-to value
+    // ...
+private:
+    T* p;
+    int sz;
+};
+
+bool operator==(const X2& a, const X2& b)
+{
+    return a.sz == b.sz && a.p == b.p;
+}
+
+X2 x;
+X2 y = x;
+if (x != y) throw Bad{};
+x.modify();
+if (x != y) throw Bad{};  // assume pointer semantics
+#+end_src
+
+
+注意
+- 尽量选择数值语义，除非你要实现智能指针类型。数值语义更简单，更容易分
+  析，标准库也主要接收数值语义类型的数据。
