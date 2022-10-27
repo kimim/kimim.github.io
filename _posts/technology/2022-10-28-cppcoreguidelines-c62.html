@@ -1,0 +1,125 @@
+---
+layout: post
+title: CppCoreGuidelines C.62 自拷贝应当安全可行
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Make copy assignment safe for self-assignment&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+如果 <code>x = x</code> 这样的操作会改变 <code>x</code> 的值，那么人们会感到惊讶，也可能发生大的错误，比如内存泄漏。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+标准库的容器能够优雅高效的处理自赋值情况：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v</span> = <span style="color: #707183;">{</span>3, 1, 4, 1, 5, 9<span style="color: #707183;">}</span>;
+v = v;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the value of v is still {3, 1, 4, 1, 5, 9}</span>
+cout &lt;&lt; <span style="color: #707183;">(</span>v == v<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<pre class="example">
+1
+</pre>
+
+
+
+<p>
+注意
+</p>
+
+<p>
+默认赋值操作的正确执行是基于其成员能够正确处理字符值情况。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">pair</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">&gt;</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">map</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">m</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span> <span style="color: #000000;">b</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+b = b;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">correct and efficient</span>
+cout &lt;&lt; b.v.size<span style="color: #707183;">()</span>;
+</pre>
+</div>
+
+<pre class="example">
+0
+</pre>
+
+
+
+<p>
+注意
+</p>
+
+<p>
+你可以显式地测试自赋值情况，但是更快更优雅的方式是免去测试是否自赋值的情况。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #110099;">Foo</span>::<span style="color: #7F0055; font-weight: bold;">operator</span>=<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #000000;">a</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, but there is a cost</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">this</span> == &amp;a<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+    s = a.s;
+    i = a.i;
+    <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+以上做法很安全，且看起来很高效。但是如果我们进行几百万次的自赋值操作会怎么样？以上例子中的判断是不是对象自己这个操作会重复几百万次。尽管编译器可能会根据实际情况进行优化。可以考虑用以下方式实现：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #110099;">Foo</span>::<span style="color: #7F0055; font-weight: bold;">operator</span>=<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #000000;">a</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">simpler, and probably much better</span>
+<span style="color: #707183;">{</span>
+    s = a.s;
+    i = a.i;
+    <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+<code>std::string</code> 像 <code>int</code> 类型一样，可以安全应对自赋值操作。
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>（简单）自赋值操作的实现中不需要有 <code>if (this == &amp;a) return *this</code> 这样的操作。</li>
+</ul>

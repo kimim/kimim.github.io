@@ -1,0 +1,95 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.62 自拷贝应当安全可行
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Make copy assignment safe for self-assignment"
+
+理由
+
+如果 ~x = x~ 这样的操作会改变 ~x~ 的值，那么人们会感到惊讶，也可能发生大的
+错误，比如内存泄漏。
+
+
+例子
+
+标准库的容器能够优雅高效的处理自赋值情况：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+std::vector<int> v = {3, 1, 4, 1, 5, 9};
+v = v;
+// the value of v is still {3, 1, 4, 1, 5, 9}
+cout << (v == v);
+#+end_src
+
+#+RESULTS:
+: 1
+
+
+注意
+
+默认赋值操作的正确执行是基于其成员能够正确处理字符值情况。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> <map> :eval no-export
+struct Bar {
+    vector<pair<int, int>> v;
+    map<string, int> m;
+    string s;
+};
+
+Bar b;
+// ...
+b = b;   // correct and efficient
+cout << b.v.size();
+#+end_src
+
+#+RESULTS:
+: 0
+
+
+注意
+
+你可以显式地测试自赋值情况，但是更快更优雅的方式是免去测试是否自赋值的情况。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Foo {
+    string s;
+    int i;
+public:
+    Foo& operator=(const Foo& a);
+    // ...
+};
+
+Foo& Foo::operator=(const Foo& a)   // OK, but there is a cost
+{
+    if (this == &a) return *this;
+    s = a.s;
+    i = a.i;
+    return *this;
+}
+#+end_src
+
+以上做法很安全，且看起来很高效。但是如果我们进行几百万次的自赋值操作会
+怎么样？以上例子中的判断是不是对象自己这个操作会重复几百万次。尽管编译
+器可能会根据实际情况进行优化。可以考虑用以下方式实现：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+Foo& Foo::operator=(const Foo& a)   // simpler, and probably much better
+{
+    s = a.s;
+    i = a.i;
+    return *this;
+}
+#+end_src
+
+~std::string~ 像 ~int~ 类型一样，可以安全应对自赋值操作。
+
+强化
+- （简单）自赋值操作的实现中不需要有 ~if (this == &a) return *this~ 这样
+  的操作。
