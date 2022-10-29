@@ -1,0 +1,36 @@
+---
+layout: post
+title: CppCoreGuidelines C.63 移动赋值操做不能是虚的，接收 && 参数，返回非常量引用&
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Make move assignment non-virtual, take the parameter by &amp;&amp;, and return by non-const&amp;&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+简单又高效。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+这样操作就和拷贝赋值操作一样对对齐了。
+</p>
+<ul class="org-ul">
+<li>（简单）赋值操作不能是虚的，此处有恶龙！</li>
+<li>（简单）赋值操作应该返回 T&amp;，从而可以串联起来调用。不要返回 const T&amp;，这样的话，串联操作、把对象放入容器的操作就会收到影响。</li>
+<li>（中等难度）移动操作应该（隐式或显式）地调用其基类和成员变量的移动操作。</li>
+</ul>
