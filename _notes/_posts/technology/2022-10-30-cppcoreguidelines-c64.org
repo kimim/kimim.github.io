@@ -1,0 +1,72 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.64 移动操作应该移动，并确保移动的源数据状态有效
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"A move operation should move and leave its source in a valid state"
+
+
+理由
+
+把一个对象移动出去之后，这个数据源对象的状态肯定要保证是有意义某种清空
+的状态。这是人们想当然的、合乎常理的语义。在 ~y = std::move(x)~ 操作后，
+y 的值应该变成 x 的值，x 应该保持一个有效的状态。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class X {   // OK: value semantics
+public:
+    X();
+    X(X&& a) noexcept;  // move X
+    X& operator=(X&& a) noexcept; // move-assign X
+    void modify();     // change the value of X
+    // ...
+    ~X() { delete[] p; }
+private:
+    T* p;
+    int sz;
+};
+
+X::X(X&& a) noexcept
+    :p{a.p}, sz{a.sz}  // steal representation
+{
+    a.p = nullptr;     // set to "empty"
+    a.sz = 0;
+}
+
+void use()
+{
+    X x{};
+    // ...
+    X y = std::move(x);
+    x = X{};   // OK
+} // OK: x can be destroyed
+#+end_src
+
+
+注意
+
+理想情况下，被数据移动掉的对象，它的值应该是默认数据值。除非妳有其他有
+更好特殊理由不这么做。但是，并不是所有类型都有一个默认值，而且有些类型
+恢复默认值的系统开销会比较高。所以，标准要求销毁被移动的对象。通常，我
+们如果想做的更好，也很容易很轻松：标准库还假设，我们可以继续给被移动掉
+的对象赋值。请确保，被移动掉的对象保持一个有效的状态。
+
+
+注意
+
+请确保可以这么操作： ~x = std::move(y); y = z;~ 除非有很强烈的特殊理由违
+反本指南。
+
+
+强化
+- 检查对成员赋值的移动操作。如果有默认的构造函数，请比较成员赋值与默认
+  构造函数中的初始化。

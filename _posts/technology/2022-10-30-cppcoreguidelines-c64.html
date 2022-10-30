@@ -1,0 +1,86 @@
+---
+layout: post
+title: CppCoreGuidelines C.64 移动操作应该移动，并确保移动的源数据状态有效
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;A move operation should move and leave its source in a valid state&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+把一个对象移动出去之后，这个数据源对象的状态肯定要保证是有意义某种清空的状态。这是人们想当然的、合乎常理的语义。在 <code>y = std::move(x)</code> 操作后，
+y 的值应该变成 x 的值，x 应该保持一个有效的状态。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: value semantics</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">move X</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">move-assign X</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">modify</span><span style="color: #7388d6;">()</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">change the value of X</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    ~<span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">delete</span><span style="color: #909183;">[]</span> p; <span style="color: #7388d6;">}</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">p</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sz</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #110099;">X</span>::<span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>
+    :p<span style="color: #707183;">{</span>a.p<span style="color: #707183;">}</span>, sz<span style="color: #707183;">{</span>a.sz<span style="color: #707183;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">steal representation</span>
+<span style="color: #707183;">{</span>
+    a.p = <span style="color: #110099;">nullptr</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">set to "empty"</span>
+    a.sz = 0;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">{}</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">y</span> = <span style="color: #110099;">std</span>::move<span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
+    x = X<span style="color: #7388d6;">{}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: x can be destroyed</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+理想情况下，被数据移动掉的对象，它的值应该是默认数据值。除非妳有其他有更好特殊理由不这么做。但是，并不是所有类型都有一个默认值，而且有些类型恢复默认值的系统开销会比较高。所以，标准要求销毁被移动的对象。通常，我们如果想做的更好，也很容易很轻松：标准库还假设，我们可以继续给被移动掉的对象赋值。请确保，被移动掉的对象保持一个有效的状态。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+请确保可以这么操作： <code>x = std::move(y); y = z;</code> 除非有很强烈的特殊理由违反本指南。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>检查对成员赋值的移动操作。如果有默认的构造函数，请比较成员赋值与默认构造函数中的初始化。</li>
+</ul>
