@@ -1,0 +1,90 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.80 如果要明确使用默认机制，请添加 =default
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use =default if you have to be explicit about using the default semantics"
+
+理由
+
+编译器通常可以很好的生产默认机制，一般比自己实现效果要好。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results pp
+class Tracer {
+    string message;
+public:
+    Tracer(const string& m)
+        : message{m} {
+        cout << "entering " << message << '\n';
+    }
+    ~Tracer() {
+        cout << "exiting " << message << '\n';
+    }
+
+    Tracer(const Tracer&) = default;
+    Tracer& operator=(const Tracer&) = default;
+    Tracer(Tracer&&) = default;
+    Tracer& operator=(Tracer&&) = default;
+};
+int main()
+{
+    Tracer t{"hi"};
+}
+#+end_src
+
+#+RESULTS:
+: entering hi
+: exiting hi
+
+因为我们定义了析构函数，所以我们必须定义复制和移动操作。用上 ~= default~
+是最好最简单的办法。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results pp
+class Tracer2 {
+    string message;
+public:
+    Tracer2(const string& m)
+        : message{m} {
+        cout << "entering " << message << '\n';
+    }
+    ~Tracer2() {
+        cout << "exiting " << message << '\n';
+    }
+    Tracer2(const Tracer2& a) : message{a.message} {}
+    Tracer2& operator=(const Tracer2& a) {
+        message = a.message;
+        return *this;
+    }
+    Tracer2(Tracer2&& a) :message{a.message} {}
+    Tracer2& operator=(Tracer2&& a) {
+        message = a.message;
+        return *this;
+    }
+};
+int main()
+{
+    Tracer2 t2{"bonjour"};
+}
+#+end_src
+
+#+RESULTS:
+: entering bonjour
+: exiting bonjour
+
+
+编写复制、移动操作繁琐、麻烦、并且容易出错。编译器会做的更好。
+
+
+强化
+- （一般）自己编写的这些特殊操作不要跟编译器生产的版本的访问度或语义一
+  致，这是多余的。

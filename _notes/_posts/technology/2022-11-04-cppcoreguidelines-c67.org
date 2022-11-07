@@ -1,0 +1,115 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.67 一个多态类应该隐藏公开的赋值和移动操作
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"A polymorphic class should suppress public copy/move"
+
+
+理由
+
+多态类定义或继承至少一个虚函数。多态类很可能被当成基类用。这样基类就可
+以代表多个多态子类，从而实现多态行为。如果不小心以值传递，编译器会隐式
+地调用拷贝构造函数和赋值操作。我们可能会遇到类切片（slicing）的风险：
+继承对象的部分数据当作基类的数据使用。于是，多态行为就失效了。
+
+如果类中没有数据，请将拷贝和移动函数设置为 ~= delete~ 。不然将他们设置为
+~protected~ 。
+
+错误例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results pp
+class B { // BAD: polymorphic base class doesn't suppress copying
+  public:
+    virtual char m() { return 'B'; }
+    // ... nothing about copy operations, so uses default ...
+};
+
+class D : public B {
+  public:
+    char m() override { return 'D'; }
+    // ...
+};
+
+void f(B& b)
+{
+    auto b2 = b; // oops, slices the object; b2.m() will return 'B'
+    cout << "b2.m() = " << b2.m() << "\n";
+}
+
+int main()
+{
+    D d;
+    cout << "d.m() = " << d.m() << "\n";
+    f(d);
+}
+#+end_src
+
+#+RESULTS:
+: d.m() = D
+: b2.m() = B
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class B { // GOOD: polymorphic class suppresses copying
+public:
+    B() = default;
+    B(const B&) = delete;
+    B& operator=(const B&) = delete;
+    virtual char m() { return 'B'; }
+    // ...
+};
+
+class D : public B {
+public:
+    char m() override { return 'D'; }
+    // ...
+};
+
+void f(B& b)
+{
+    auto b2 = b; // ok, compiler will detect inadvertent copying, and protest
+    cout << "b2.m() = " << b2.m() << "\n";
+}
+
+int main()
+{
+    D d;
+    cout << "d.m() = " << d.m() << "\n";
+    f(d);
+}
+#+end_src
+
+#+RESULTS:
+#+begin_example
+C-src-s0pxn3.cpp: In function 'void f(B&)':
+C-src-s0pxn3.cpp:27:15: error: use of deleted function 'B::B(const B&)'
+   27 |     auto b2 = b; // ok, compiler will detect inadvertent copying, and protest
+      |               ^
+C-src-s0pxn3.cpp:13:5: note: declared here
+   13 |     B(const B&) = delete;
+      |     ^
+
+#+end_example
+
+
+注意
+
+如果你需要多态对象的深度副本，请使用 ~clone()~ 函数。
+
+
+例外
+
+表示异常的对象的类既要多态，又要能够赋值拷贝构造。
+
+强化
+- 标记有公开拷贝操作的多态类
+- 标记有赋值操作的多态类

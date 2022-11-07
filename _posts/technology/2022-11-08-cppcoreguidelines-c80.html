@@ -1,0 +1,113 @@
+---
+layout: post
+title: CppCoreGuidelines C.80 如果要明确使用默认机制，请添加 =default
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use =default if you have to be explicit about using the default semantics&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+编译器通常可以很好的生产默认机制，一般比自己实现效果要好。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">message</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Tracer</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">m</span><span style="color: #7388d6;">)</span>
+        : message<span style="color: #7388d6;">{</span>m<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"entering "</span> &lt;&lt; message &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #7388d6;">}</span>
+    ~<span style="color: #0000ff; font-weight: bold;">Tracer</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"exiting "</span> &lt;&lt; message &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #0000ff; font-weight: bold;">Tracer</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #0000ff; font-weight: bold;">Tracer</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span>&amp;&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span>&amp;&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span> <span style="color: #000000;">t</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"hi"</span><span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+entering hi
+exiting hi
+</pre>
+
+
+<p>
+因为我们定义了析构函数，所以我们必须定义复制和移动操作。用上 <code>= default</code>
+是最好最简单的办法。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">message</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Tracer2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">m</span><span style="color: #7388d6;">)</span>
+        : message<span style="color: #7388d6;">{</span>m<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"entering "</span> &lt;&lt; message &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #7388d6;">}</span>
+    ~<span style="color: #0000ff; font-weight: bold;">Tracer2</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"exiting "</span> &lt;&lt; message &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #0000ff; font-weight: bold;">Tracer2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span>&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> : message<span style="color: #7388d6;">{</span>a.message<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span>&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        message = a.message;
+        <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #0000ff; font-weight: bold;">Tracer2</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> :message<span style="color: #7388d6;">{</span>a.message<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        message = a.message;
+        <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span> <span style="color: #000000;">t2</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"bonjour"</span><span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+entering bonjour
+exiting bonjour
+</pre>
+
+
+
+<p>
+编写复制、移动操作繁琐、麻烦、并且容易出错。编译器会做的更好。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>（一般）自己编写的这些特殊操作不要跟编译器生产的版本的访问度或语义一致，这是多余的。</li>
+</ul>

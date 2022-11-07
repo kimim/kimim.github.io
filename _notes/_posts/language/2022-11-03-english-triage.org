@@ -1,0 +1,41 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：triage
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+最近的工作重点是工业信息安全，所以呢，大量阅读安全相关的标准文献是免不
+了的。工业控制系统方面最主要的安全标准是 IEC 62443 Security for
+industrial automation and control systems。在2-4分册介绍安全破坏分类分
+级：
+
+*Triage* activities are often used by asset owners to evaluate security
+compromises and identify those that are significant enough to be
+considered incidents.
+
+翻译：资产拥有者经常使用破坏损坏鉴定活动来评估安全损害程度，鉴别哪些损
+坏属于安全事故。
+
+这里用到个词 triage “伤残鉴定”，一般，我们看到 age 结尾的动词，就可以
+想当然的认为是法语里来的。发音规则跟英语就会很不一样，这个词的发音是
+[ˈtriːɑːʒ]。还有个词 arbitrage [ˈɑːbɪtrɑːʒ] “套利”也是法语里来的。
+
+triage 是法语动词 trier [trije] (特里爷) 的名词化，而 trier 的意思是
+to sort out, to select，挑选，选择。
+
+比如 trier des lentilles 挑选扁豆
+
+trier sur le volet 精心挑选，字面意思是通过百叶窗挑选，也就是层层选择
+咯。
+
+trier les candidats 挑选候选人，选拔候选人。
+
+triage 最早在第一次世界大战的时候用在评估战场伤员的受伤级别的。所以在
+安全标准中引伸了来表示评估信息安全破坏级别。
+
+似乎，法语里来的不少词语都是更战斗相关的。比如 materiel 是 material 的
+法语形式，表示战略物资、军备。personnel 是 personnel 是 person 的法语
+形式，表示军队全员。
