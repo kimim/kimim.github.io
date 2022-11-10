@@ -75,7 +75,7 @@ struct X {
     vector<int> v;
 };
 
-X x; // means X{{}, {}}; that is the empty string and the empty vector
+X x; // means the empty string and the empty vector
 #+end_src
 
 注意，内置类型没有默认构造函数，其初始值不一定有用。
