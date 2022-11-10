@@ -1,0 +1,105 @@
+---
+layout: post
+title: CppCoreGuidelines C.81 如果不想要默认行为，请添加 =delete
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use =delete when you want to disable default behavior (without wanting an alternative)&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+某些情况，不需要默认操作：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Immortal</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    ~<span style="color: #0000ff; font-weight: bold;">Immortal</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">do not allow destruction</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Immortal</span> <span style="color: #000000;">ugh</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: ugh cannot be destroyed</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Immortal</span>* <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Immortal</span><span style="color: #7388d6;">{}</span>;
+    <span style="color: #7F0055; font-weight: bold;">delete</span> p;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: cannot destroy *p</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    use<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example" id="orgcdcc7ce">
+C-src-xCgZfR.cpp: In function 'void use()':
+C-src-xCgZfR.cpp:18:14: error: use of deleted function 'Immortal::~Immortal()'
+   18 |     Immortal ugh;   // error: ugh cannot be destroyed
+      |              ^~~
+C-src-xCgZfR.cpp:12:5: note: declared here
+   12 |     ~Immortal() = delete;   // do not allow destruction
+      |     ^
+C-src-xCgZfR.cpp:20:12: error: use of deleted function 'Immortal::~Immortal()'
+   20 |     delete p;       // error: cannot destroy *p
+      |            ^
+C-src-xCgZfR.cpp:12:5: note: declared here
+   12 |     ~Immortal() = delete;   // do not allow destruction
+      |     ^
+</pre>
+
+
+<p>
+例子
+</p>
+
+<p>
+你可以移动 <code>unique_ptr</code> 但不能复制它。要实现这种要求，可以将复制操作删掉。
+A unique<sub>ptr</sub> can be moved, but not copied. To achieve that its copy operations are deleted. To avoid copying it is necessary to =delete its copy operations from lvalues:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">default_delete</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span><span style="color: #707183;">&gt;</span> <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #0000ff; font-weight: bold;">unique_ptr</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>;
+    <span style="color: #7F0055; font-weight: bold;">explicit</span> <span style="color: #0000ff; font-weight: bold;">unique_ptr</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">pointer</span> <span style="color: #000000;">p</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #0000ff; font-weight: bold;">unique_ptr</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span>&amp;&amp; <span style="color: #000000;">u</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">move constructor</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #0000ff; font-weight: bold;">unique_ptr</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">disable copy from lvalue</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">make</span><span style="color: #707183;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">make "something" and return it by moving</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">pi</span> <span style="color: #7388d6;">{}</span>;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">pi2</span> <span style="color: #7388d6;">{</span>pi<span style="color: #7388d6;">}</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: no move constructor from lvalue</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">pi3</span> <span style="color: #7388d6;">{</span>make<span style="color: #909183;">()</span><span style="color: #7388d6;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, move: the result of make() is an rvalue</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意：删除的函数须是 public
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+去除默认操作须是基于特定的目的。可以假设这些类有问题，但是针对已经确定语义正确的类维护一个白名单。
+</p>

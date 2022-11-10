@@ -1,0 +1,89 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.81 如果不想要默认行为，请添加 =delete
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use =delete when you want to disable default behavior (without wanting an alternative)"
+
+理由
+
+某些情况，不需要默认操作：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Immortal {
+public:
+    ~Immortal() = delete;   // do not allow destruction
+    // ...
+};
+
+void use()
+{
+    Immortal ugh;   // error: ugh cannot be destroyed
+    Immortal* p = new Immortal{};
+    delete p;       // error: cannot destroy *p
+}
+int main()
+{
+    use();
+}
+#+end_src
+
+#+RESULTS:
+#+begin_example
+C-src-xCgZfR.cpp: In function 'void use()':
+C-src-xCgZfR.cpp:18:14: error: use of deleted function 'Immortal::~Immortal()'
+   18 |     Immortal ugh;   // error: ugh cannot be destroyed
+      |              ^~~
+C-src-xCgZfR.cpp:12:5: note: declared here
+   12 |     ~Immortal() = delete;   // do not allow destruction
+      |     ^
+C-src-xCgZfR.cpp:20:12: error: use of deleted function 'Immortal::~Immortal()'
+   20 |     delete p;       // error: cannot destroy *p
+      |            ^
+C-src-xCgZfR.cpp:12:5: note: declared here
+   12 |     ~Immortal() = delete;   // do not allow destruction
+      |     ^
+#+end_example
+
+
+例子
+
+你可以移动 ~unique_ptr~ 但不能复制它。要实现这种要求，可以将复制操作删掉。
+A unique_ptr can be moved, but not copied. To achieve that its copy operations are deleted. To avoid copying it is necessary to =delete its copy operations from lvalues:
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+template<class T, class D = default_delete<T>> class unique_ptr {
+public:
+    // ...
+    constexpr unique_ptr() noexcept;
+    explicit unique_ptr(pointer p) noexcept;
+    // ...
+    unique_ptr(unique_ptr&& u) noexcept;   // move constructor
+    // ...
+    unique_ptr(const unique_ptr&) = delete; // disable copy from lvalue
+    // ...
+};
+
+unique_ptr<int> make();   // make "something" and return it by moving
+
+void f()
+{
+    unique_ptr<int> pi {};
+    auto pi2 {pi};      // error: no move constructor from lvalue
+    auto pi3 {make()};  // OK, move: the result of make() is an rvalue
+}
+#+end_src
+
+注意：删除的函数须是 public
+
+
+强化
+
+去除默认操作须是基于特定的目的。可以假设这些类有问题，但是针对已经确定
+语义正确的类维护一个白名单。
