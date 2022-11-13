@@ -1,0 +1,66 @@
+---
+layout: post
+title: CppCoreGuidelines C.83 对于值类型，考虑提供 noexcept 的 swap 函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;For value-like types, consider providing a noexcept swap function&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+swap 可用来方便的实现多种常用功能，比如流畅地移动对象，实现赋值操作，能够确保确定的功能，减少代码调用错误。
+</p>
+
+<p>
+考虑使用 swap 是在拷贝构造函数中实现复制拷贝操作。
+</p>
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">swap</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #000000;">rhs</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>
+    <span style="color: #7388d6;">{</span>
+        m1.swap<span style="color: #909183;">(</span>rhs.m1<span style="color: #909183;">)</span>;
+        <span style="color: #110099;">std</span>::swap<span style="color: #909183;">(</span>m2, rhs.m2<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span> <span style="color: #000000;">m1</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m2</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+在你自定义类的名字空间下实现一个非成员的 swap 函数可以方便函数调用使用。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">swap</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    a.swap<span style="color: #7388d6;">(</span>b<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>可拷贝类型须提供一个 swap 成员函数或外部的 swap 函数重载</li>
+<li>（简单）当一个类有 swap 成员函数时，应该声明为 noexcept</li>
+</ul>

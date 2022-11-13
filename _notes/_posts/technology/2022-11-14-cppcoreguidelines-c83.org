@@ -1,0 +1,49 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.83 对于值类型，考虑提供 noexcept 的 swap 函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"For value-like types, consider providing a noexcept swap function"
+
+
+理由
+
+swap 可用来方便的实现多种常用功能，比如流畅地移动对象，实现赋值操作，
+能够确保确定的功能，减少代码调用错误。
+
+考虑使用 swap 是在拷贝构造函数中实现复制拷贝操作。
+
+好例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Foo {
+public:
+    void swap(Foo& rhs) noexcept
+    {
+        m1.swap(rhs.m1);
+        std::swap(m2, rhs.m2);
+    }
+private:
+    Bar m1;
+    int m2;
+};
+#+end_src
+
+在你自定义类的名字空间下实现一个非成员的 swap 函数可以方便函数调用使用。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void swap(Foo& a, Foo& b)
+{
+    a.swap(b);
+}
+#+end_src
+
+强化
+- 可拷贝类型须提供一个 swap 成员函数或外部的 swap 函数重载
+- （简单）当一个类有 swap 成员函数时，应该声明为 noexcept
