@@ -1,0 +1,71 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.82 不要在构造/析构函数中调用虚函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don't call virtual functions in constructors and destructors"
+
+
+理由
+
+构造函数和析构函数中调用的函数应该是当前构造的对象的函数，而不应该是继
+承类中重载的函数。不然会很难理解。更差的情况，在构造或析构函数中，直接
+或间接调用还没实现的纯虚函数会产生未定义的行为。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Base {
+public:
+    virtual void f() = 0;   // not implemented
+    virtual void g();       // implemented with Base version
+    virtual void h();       // implemented with Base version
+    virtual ~Base();        // implemented with Base version
+};
+
+class Derived : public Base {
+public:
+    void g() override;   // provide Derived implementation
+    void h() final;      // provide Derived implementation
+
+    Derived()
+    {
+        // BAD: attempt to call an unimplemented virtual function
+        f();
+
+        // BAD: will call Derived::g, not dispatch further virtually
+        g();
+
+        // GOOD: explicitly state intent to call only the visible version
+        Derived::g();
+
+        // ok, no qualification needed, h is final
+        h();
+    }
+};
+#+end_src
+
+
+注意
+
+调用一个明确限定的函数，就算是个虚函数，也不是虚调用。
+
+
+请查看 C.50 工厂函数，如何实现调用继承类的函数而不会导致未定义行为结果。
+
+
+注意
+
+在构造函数和析构函数中调用虚函数没有什么内在错误。语义上来说这种调用是
+类型安全的。但是，经验表明这种调用不太需要、容易混淆维护者、成为信手的
+错误之源。
+
+
+强化
+- 标记在构造和析构函数中调用虚函数的情况

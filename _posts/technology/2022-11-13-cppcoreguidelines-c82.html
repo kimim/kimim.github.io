@@ -1,0 +1,90 @@
+---
+layout: post
+title: CppCoreGuidelines C.82 不要在构造/析构函数中调用虚函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don&rsquo;t call virtual functions in constructors and destructors&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+构造函数和析构函数中调用的函数应该是当前构造的对象的函数，而不应该是继承类中重载的函数。不然会很难理解。更差的情况，在构造或析构函数中，直接或间接调用还没实现的纯虚函数会产生未定义的行为。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">()</span> = 0;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">not implemented</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #7388d6;">()</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">implemented with Base version</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #7388d6;">()</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">implemented with Base version</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">Base</span><span style="color: #7388d6;">()</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">implemented with Base version</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">override</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">provide Derived implementation</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">final</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">provide Derived implementation</span>
+
+    <span style="color: #0000ff; font-weight: bold;">Derived</span><span style="color: #7388d6;">()</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: attempt to call an unimplemented virtual function</span>
+        f<span style="color: #909183;">()</span>;
+
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: will call Derived::g, not dispatch further virtually</span>
+        g<span style="color: #909183;">()</span>;
+
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">GOOD: explicitly state intent to call only the visible version</span>
+        <span style="color: #110099;">Derived</span>::g<span style="color: #909183;">()</span>;
+
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok, no qualification needed, h is final</span>
+        h<span style="color: #909183;">()</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+调用一个明确限定的函数，就算是个虚函数，也不是虚调用。
+</p>
+
+
+<p>
+请查看 C.50 工厂函数，如何实现调用继承类的函数而不会导致未定义行为结果。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+在构造函数和析构函数中调用虚函数没有什么内在错误。语义上来说这种调用是类型安全的。但是，经验表明这种调用不太需要、容易混淆维护者、成为信手的错误之源。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记在构造和析构函数中调用虚函数的情况</li>
+</ul>
