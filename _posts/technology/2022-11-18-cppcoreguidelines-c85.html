@@ -1,0 +1,30 @@
+---
+layout: post
+title: CppCoreGuidelines C.85 swap 函数应是 noexcept 的
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Make swap noexcept&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+swap 函数不能运行失败。swap 如以异常情况推出，是一种错误的设计，程序最好应该直接终止。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>（简单）当一个类有 swap 成员函数，该函数应该声明为 noexcept</li>
+</ul>
