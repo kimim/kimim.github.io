@@ -1,0 +1,88 @@
+---
+layout: post
+title: CppCoreGuidelines C.86 == 操作应该是对称的，且 noexcept
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Make == symmetric with respect to operand types and noexcept&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+非对称地对待相同类型的计算对象，是一种令人惊讶的操作，也容易引起错误，有可能有类型转换。 <code>==</code> 操作是基础的操作，程序员使用过程中应该不用担心会出现错误。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">name</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">number</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> a.name == b.name &amp;&amp; a.number == b.number;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">name</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">number</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> name == a.name &amp;&amp; number == a.number;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+B 的比较操作符接受的第二个计算对象可能会进行类型转换，但是 B 本身不会。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果一个类有异常值，比如 double 类型的 NaN，有的人会让这种与异常值比较的操作抛出异常。另外一种办法是让异常值的比较结果为相等，而任何其他值与异常值比较的结果为不相等。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+此规则可以应用与所有通常的比较操作符： <code>!=</code> , <code>&lt;</code> , <code>&lt;=</code> , <code>&gt;</code> 和 <code>&gt;=</code> 。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记计算对象类型不同的 <code>operator==()</code> 操作符。其他的也一样： <code>!=</code> , <code>&lt;</code> ,
+<code>&lt;=</code> , <code>&gt;</code> 和 <code>&gt;=</code> 。</li>
+<li>标记是成员函数的 <code>operator==()</code> 操作，其他也一样。</li>
+</ul>

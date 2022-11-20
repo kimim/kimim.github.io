@@ -1,0 +1,64 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.86 == 操作应该是对称的，且 noexcept
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Make == symmetric with respect to operand types and noexcept"
+
+理由
+
+非对称地对待相同类型的计算对象，是一种令人惊讶的操作，也容易引起错误，有可能有类型转换。 ~==~ 操作是基础的操作，程序员使用过程中应该不用担心会出现错误。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+struct X {
+    string name;
+    int number;
+};
+
+bool operator==(const X& a, const X& b) noexcept {
+    return a.name == b.name && a.number == b.number;
+}
+#+end_src
+
+
+错误例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class B {
+    string name;
+    int number;
+    bool operator==(const B& a) const {
+        return name == a.name && number == a.number;
+    }
+    // ...
+};
+#+end_src
+
+
+B 的比较操作符接受的第二个计算对象可能会进行类型转换，但是 B 本身不会。
+
+
+注意
+
+如果一个类有异常值，比如 double 类型的 NaN，有的人会让这种与异常值比较
+的操作抛出异常。另外一种办法是让异常值的比较结果为相等，而任何其他值与
+异常值比较的结果为不相等。
+
+
+注意
+
+此规则可以应用与所有通常的比较操作符： ~!=~ , ~<~ , ~<=~ , ~>~ 和 ~>=~ 。
+
+
+强化
+- 标记计算对象类型不同的 ~operator==()~ 操作符。其他的也一样： ~!=~ , ~<~ ,
+  ~<=~ , ~>~ 和 ~>=~ 。
+- 标记是成员函数的 ~operator==()~ 操作，其他也一样。
