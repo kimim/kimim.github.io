@@ -1,0 +1,118 @@
+---
+layout: post
+title: CppCoreGuidelines C.87 注意基类的 == 操作
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Beware of == on base classes&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+在类层级情况下，很难写出万无一失的有用的 <code>==</code> 操作。
+</p>
+
+<p>
+坏例子
+</p>
+<div class="org-src-container">
+<pre class="src src-C++" id="org3996a15"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">name</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">number</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+    <span style="color: #7388d6;">{</span>
+         <span style="color: #7F0055; font-weight: bold;">return</span> name == a.name &amp;&amp; number == a.number;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+B 的比较操作会接受第二个参数的类型转换，但是其自身不做类型转换。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">name</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">number</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+    <span style="color: #7388d6;">{</span>
+         <span style="color: #7F0055; font-weight: bold;">return</span> name == a.name &amp;&amp; number == a.number;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">character</span>;
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+        <span style="color: #7388d6;">{</span>
+            <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">B</span>::<span style="color: #7F0055; font-weight: bold;">operator</span>==<span style="color: #909183;">(</span>a<span style="color: #909183;">)</span> &amp;&amp; character == a.character;
+        <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #000000;">b</span> = B<span style="color: #7388d6;">()</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #000000;">d</span> = D<span style="color: #7388d6;">()</span>;
+    cout &lt;&lt; <span style="color: #7388d6;">(</span>b == d<span style="color: #7388d6;">)</span> &lt;&lt; endl;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">return b.name == d.name &amp;&amp; b.number == d.number;</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">compares name and number, ignores d's character</span>
+    cout &lt;&lt; <span style="color: #7388d6;">(</span>d == b<span style="color: #7388d6;">)</span> &lt;&lt; endl;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">return d.name == b.name &amp;&amp; d.number == b.number;</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">compares name and number, ignores d's character</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #000000;">d2</span>;
+    cout &lt;&lt; <span style="color: #7388d6;">(</span>d == d2<span style="color: #7388d6;">)</span> &lt;&lt; endl;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">return d.name == d2.name &amp;&amp; d.number == d2.number</span>
+    <span style="color: #3F7F5F;">//        </span><span style="color: #3F7F5F;">&amp;&amp; d.character == d2.character</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">compares name, number, and character</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp; <span style="color: #000000;">b2</span> = d2;
+    cout &lt;&lt; <span style="color: #7388d6;">(</span>b2 == d<span style="color: #7388d6;">)</span> &lt;&lt; endl;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">return b2.name == d.name &amp;&amp; d2.number == d.number;</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">compares name and number, ignores d2's and d's character</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+1
+1
+0
+0
+</pre>
+
+
+
+<p>
+当然也有办法可以让 <code>==</code> 在类层级中工作，但是不太具有扩展性。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+此规则应用与其他各种比较操作。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记 <code>virtual operator==()</code> 以及其他各种比较操作符。 <code>!=</code>, <code>&lt;</code>  <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;=&gt;</code>.
+</p>

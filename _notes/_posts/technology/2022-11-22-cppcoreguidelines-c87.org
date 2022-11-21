@@ -1,0 +1,86 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.87 注意基类的 == 操作
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Beware of == on base classes"
+
+理由
+
+在类层级情况下，很难写出万无一失的有用的 ~==~ 操作。
+
+坏例子
+#+NAME: classb
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class B {
+    string name;
+    int number;
+public:
+    virtual bool operator==(const B& a) const
+    {
+         return name == a.name && number == a.number;
+    }
+    // ...
+};
+#+end_src
+
+B 的比较操作会接受第二个参数的类型转换，但是其自身不做类型转换。
+
+#+begin_src C++ :noweb yes :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results pp
+<<classb>>
+class D : public B {
+    char character;
+  public:
+    virtual bool operator==(const D& a) const
+        {
+            return B::operator==(a) && character == a.character;
+        }
+    // ...
+};
+
+int main()
+{
+    B b = B();
+    D d = D();
+    cout << (b == d) << endl;
+    // return b.name == d.name && b.number == d.number;
+    // compares name and number, ignores d's character
+    cout << (d == b) << endl;
+    // return d.name == b.name && d.number == b.number;
+    // compares name and number, ignores d's character
+    D d2;
+    cout << (d == d2) << endl;
+    // return d.name == d2.name && d.number == d2.number
+    //        && d.character == d2.character
+    // compares name, number, and character
+    B& b2 = d2;
+    cout << (b2 == d) << endl;
+    // return b2.name == d.name && d2.number == d.number;
+    // compares name and number, ignores d2's and d's character
+}
+#+end_src
+
+#+RESULTS:
+: 1
+: 1
+: 0
+: 0
+
+
+当然也有办法可以让 ~==~ 在类层级中工作，但是不太具有扩展性。
+
+
+注意
+
+此规则应用与其他各种比较操作。
+
+
+强化
+
+标记 ~virtual operator==()~ 以及其他各种比较操作符。 ~!=~, ~<~  ~<=~, ~>~, ~>=~, ~<=>~.
