@@ -1,0 +1,52 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.89 Hash 函数不可抛出异常
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Make a hash noexcept"
+
+理由
+
+以哈希索引的容器类会间接用到hash函数，一般的设计不会考虑如此简单的操作
+会抛出异常。这也是标准库所要求的。
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+template<>
+struct hash<My_type> {  // thoroughly bad hash specialization
+    using result_type = size_t;
+    using argument_type = My_type;
+
+    size_t operator()(const My_type & x) const
+    {
+        size_t xs = x.s.size();
+        if (xs < 4) throw Bad_My_type{};
+        // "Nobody expects the Spanish inquisition!"
+        return hash<size_t>()(x.s.size()) ^ trim(x.s);
+    }
+};
+
+
+int main()
+{
+    unordered_map<My_type, int> m;
+    My_type mt{ "asdfg" };
+    m[mt] = 7;
+    cout << m[My_type{ "asdfg" }] << '\n';
+}
+#+end_src
+
+如果你必须要定义hash函数，可以简单的将标准库的hash 异或某些数据。这比
+假专家的小聪明方法效果更好。
+
+
+强化
+- 标记抛出异常的 hash
