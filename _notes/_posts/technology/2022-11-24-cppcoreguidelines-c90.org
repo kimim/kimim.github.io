@@ -1,0 +1,62 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.90 用构造函数和赋值函数，不要用 memset 和 memcpy
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Rely on constructors and assignment operators, not memset and memcpy"
+
+
+理由
+
+创建一个实例的标准 C++ 机制是调用实例类的构造函数。参考 C.41 构造函数
+应该创建一个完全初始化的对象。不需要额外的初始化工作如 memcpy 等。一个
+类型还会提供复制构造函数和/或复制赋值函数，实现类型的复制，保留类型的
+不变形式。使用 memcpy 复制可复制的复杂类型会导致未定义的行为。经常会导
+致类切片（slicing），数据损坏（data corruption）。
+
+好例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+struct base {
+    virtual void update() = 0;
+    std::shared_ptr<int> sp;
+};
+
+struct derived : public base {
+    void update() override {}
+};
+#+end_src
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void init(derived& a)
+{
+    memset(&a, 0, sizeof(derived));
+}
+#+end_src
+
+这种初始化方式会导致类型不安全，覆盖 vtable。
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void copy(derived& a, derived& b)
+{
+    memcpy(&a, &b, sizeof(derived));
+}
+#+end_src
+
+以上操作也是会导致类型不安全，覆盖 vtable。
+
+
+强化
+- 标记传递复杂类型给 memset 或 memcpy 的操作
