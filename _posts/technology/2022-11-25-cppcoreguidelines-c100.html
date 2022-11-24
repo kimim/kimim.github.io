@@ -1,0 +1,82 @@
+---
+layout: post
+title: CppCoreGuidelines C.100 参考 STL 实现容器类
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Follow the STL when defining a container&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+大部分 C++ 程序员熟悉 STL 容器。STL 容器的定义很周全。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+当然也有其他非常完美的设计风格，偶尔也有充足理由不遵循标准库设计风格。但是如果没有做过充分的分析，最简单最容易的方法还是遵循标准库的设计风格。
+</p>
+
+
+<p>
+尤其是 std::vector 和 std::map 提供相对简单有用的模型。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">simplified (e.g., no allocators):</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">value_type</span> = T;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... iterator types ...</span>
+
+    <span style="color: #0000ff; font-weight: bold;">Sorted_vector</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #0000ff; font-weight: bold;">Sorted_vector</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">initializer_list</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #909183;">&gt;</span><span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">initializer-list constructor: sort and store</span>
+    <span style="color: #0000ff; font-weight: bold;">Sorted_vector</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #0000ff; font-weight: bold;">Sorted_vector</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span>&amp;&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy assignment</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span>&amp;&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">move assignment</span>
+    ~<span style="color: #0000ff; font-weight: bold;">Sorted_vector</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+
+    <span style="color: #0000ff; font-weight: bold;">Sorted_vector</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #909183;">&gt;</span>&amp; <span style="color: #000000;">v</span><span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">store and sort</span>
+    <span style="color: #0000ff; font-weight: bold;">Sorted_vector</span><span style="color: #7388d6;">(</span><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #909183;">&gt;</span>&amp;&amp; <span style="color: #000000;">v</span><span style="color: #7388d6;">)</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">sort and "steal representation"</span>
+
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #7388d6; font-weight: bold;">[]</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> rep<span style="color: #909183;">[</span>i<span style="color: #909183;">]</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">no non-const direct access to preserve order</span>
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">push_back</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp;<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">insert in the right place (not necessarily at back)</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">push_back</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp;&amp;<span style="color: #7388d6;">)</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">insert in the right place (not necessarily at back)</span>
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... cbegin(), cend() ...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">rep</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">use a std::vector to hold elements</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>&amp;, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>&amp;<span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">!=</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>&amp;, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>&amp;<span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+</pre>
+</div>
+
+<p>
+这里遵循的 STL 的风格，但是没有实现所有的接口。一般来说，对于特定容器提供足够的功能接口就可以了。关键是要定义约定俗成的构造、复制、析构、迭代器函数，并遵循特定容器的工作机制。以此为基础，这个容器也可以根据需要扩展。此处，添加了 std::vector 的一个特殊构造函数。
+</p>

@@ -1,0 +1,69 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.100 参考 STL 实现容器类
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Follow the STL when defining a container"
+
+
+理由
+
+大部分 C++ 程序员熟悉 STL 容器。STL 容器的定义很周全。
+
+
+注意
+
+当然也有其他非常完美的设计风格，偶尔也有充足理由不遵循标准库设计风格。
+但是如果没有做过充分的分析，最简单最容易的方法还是遵循标准库的设计风格。
+
+
+尤其是 std::vector 和 std::map 提供相对简单有用的模型。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+// simplified (e.g., no allocators):
+
+template<typename T>
+class Sorted_vector {
+    using value_type = T;
+    // ... iterator types ...
+
+    Sorted_vector() = default;
+    Sorted_vector(initializer_list<T>);    // initializer-list constructor: sort and store
+    Sorted_vector(const Sorted_vector&) = default;
+    Sorted_vector(Sorted_vector&&) = default;
+    Sorted_vector& operator=(const Sorted_vector&) = default;   // copy assignment
+    Sorted_vector& operator=(Sorted_vector&&) = default;        // move assignment
+    ~Sorted_vector() = default;
+
+    Sorted_vector(const std::vector<T>& v);   // store and sort
+    Sorted_vector(std::vector<T>&& v);        // sort and "steal representation"
+
+    const T& operator[](int i) const { return rep[i]; }
+    // no non-const direct access to preserve order
+
+    void push_back(const T&);   // insert in the right place (not necessarily at back)
+    void push_back(T&&);        // insert in the right place (not necessarily at back)
+
+    // ... cbegin(), cend() ...
+private:
+    std::vector<T> rep;  // use a std::vector to hold elements
+};
+
+template<typename T> bool operator==(const Sorted_vector<T>&, const Sorted_vector<T>&);
+template<typename T> bool operator!=(const Sorted_vector<T>&, const Sorted_vector<T>&);
+// ...
+#+end_src
+
+这里遵循的 STL 的风格，但是没有实现所有的接口。一般来说，对于特定容器
+提供足够的功能接口就可以了。关键是要定义约定俗成的构造、复制、析构、迭
+代器函数，并遵循特定容器的工作机制。以此为基础，这个容器也可以根据需要
+扩展。此处，添加了 std::vector 的一个特殊构造函数。
