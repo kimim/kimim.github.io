@@ -1,0 +1,37 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：streamline
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+今天介绍一个商业热词 streamline。
+
+我是在 TÜV SÜD 的一份解析工业控制系统安全标准的白皮书中看到的：
+
+#+begin_quote
+Today's so-called smart factories are actively leveraging the
+potential of interconnected systems to *streamline* production, increase
+output and reduce waste, while also increasing production flexibility.
+#+end_quote
+
+目前，所谓的智能工厂就是不断的提升互联系统的潜力，优化生产、提高产量、
+减少浪费，同时提高生产的灵活性。
+
+
+这个例子中， streamline 的意思是：“精简（工商企业、组织、流程等）使效
+率更高”，是作为动词使用的。
+
+实际上，这个词的本来的意思是液体流动产生的顺畅的线条。
+
+作为动词就是设计出类似液体流动的线条，从而看起来更优美，流体动力学更高
+效。比如 streamline furniture， 涉及出有顺畅线条的家居。streamline a
+car's design，设计出流线型的汽车，从而减少空气阻力。正因为这种流线设计
+可以减少阻力，所以就进一步引伸到企业、组织和流程，就是调整业务流程，从
+而使业务流转效率更高。这也就是前面例子介绍的 streamline production。
+
+当然，streamline 也能做形容词，意思是顺畅的，流畅的，流线型的。
+
+今天你 streamline 了你的学习方法吗？
