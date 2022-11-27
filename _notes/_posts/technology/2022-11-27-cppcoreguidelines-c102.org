@@ -1,0 +1,35 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.102 赋予容器移动操作
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Give a container move operations"
+
+
+理由
+
+容器很容易变得很大，如果没有移动构造函数和复制构造函数，容器对象的移动
+会变得很耗资源。因此，人们倾向于使用指针操作容器，就会遇到内存管理的问
+题。
+
+
+例子
+
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+Sorted_vector<int> read_sorted(istream& is)
+{
+    vector<int> v;
+    cin >> v;   // assume we have a read operation for vectors
+    Sorted_vector<int> sv = v;  // sorts
+    return sv;
+}
+#+end_src
+
+返回一个符合标准的容器应该很节省资源。

@@ -1,0 +1,44 @@
+---
+layout: post
+title: CppCoreGuidelines C.102 赋予容器移动操作
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Give a container move operations&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+容器很容易变得很大，如果没有移动构造函数和复制构造函数，容器对象的移动会变得很耗资源。因此，人们倾向于使用指针操作容器，就会遇到内存管理的问题。
+</p>
+
+
+<p>
+例子
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">read_sorted</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span>;
+    cin &gt;&gt; v;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assume we have a read operation for vectors</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">sv</span> = v;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">sorts</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> sv;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+返回一个符合标准的容器应该很节省资源。
+</p>
