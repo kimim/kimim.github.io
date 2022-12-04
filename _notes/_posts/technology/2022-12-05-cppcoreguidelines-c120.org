@@ -1,0 +1,80 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.120 用类层级表示层级继承结构的概念
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use class hierarchies to represent concepts with inherent hierarchical structure (only)"
+
+
+理由
+
+在代码中直接表达这种思想，更容易理解和维护。请确保基类所表达的思想，在继承类中保持一致，并且无法用其他更好的方式表达这种紧耦合的继承。
+
+如果数据成员可以实现相同的目的，就不要使用继承。这种情况下，通常在继承类中会重载基类虚函数或需要访问保护成员数据。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class DrawableUIElement {
+public:
+    virtual void render() const = 0;
+    // ...
+};
+
+class AbstractButton : public DrawableUIElement {
+public:
+    virtual void onClick() = 0;
+    // ...
+};
+
+class PushButton : public AbstractButton {
+    void render() const override;
+    void onClick() override;
+    // ...
+};
+
+class Checkbox : public AbstractButton {
+// ...
+};
+#+end_src
+
+
+坏例子
+
+不要用类继承层级来表达非层级领域的概念。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+template<typename T>
+class Container {
+public:
+    // list operations:
+    virtual T& get() = 0;
+    virtual void put(T&) = 0;
+    virtual void insert(Position) = 0;
+    // ...
+    // vector operations:
+    virtual T& operator[](int) = 0;
+    virtual void sort() = 0;
+    // ...
+    // tree operations:
+    virtual void balance() = 0;
+    // ...
+};
+#+end_src
+
+此处，大部分继承的类无法实现结构要求的函数。因此基类成了实现过程的负担。
+更进一步， Container 的用户无法倚靠成员函数高效地执行某些操作。还可能
+会抛出异常。因此用户要倚靠运行时检查或者不用这些通用的接口，而是通过运
+行时类型查询调用特定的接口（dynamic_cast）。
+
+
+强化
+- 如果类有很多成员，并且这些成员函数什么也不做，只是抛出异常。
+- 标记非公开的基类 B 的子类 D 没有重载 B 中的虚函数或者会访问 B 中的保护成员。并且 B 不是以下类型：空类，D 的模板参数，D 的模板实例化。
