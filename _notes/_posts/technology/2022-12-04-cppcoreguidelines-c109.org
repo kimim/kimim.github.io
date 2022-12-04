@@ -1,0 +1,16 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.109 如何一个资源句柄有指针的语义，提供 * 和 -> 操作
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If a resource handle has pointer semantics, provide * and ->"
+
+理由
+
+这些操作是指针应该提供的。符合用户熟悉的习惯。
