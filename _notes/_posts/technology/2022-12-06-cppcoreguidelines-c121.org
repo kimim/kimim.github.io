@@ -1,0 +1,57 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.121 如果基类用来表示接口，请将其设为纯抽象类
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If a base class is used as an interface, make it a pure abstract class"
+
+
+理由
+
+一个类如果不含有数据，会更加稳定。接口一般应该由公开的纯虚函数+一个默认/空的虚析构函数组成。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class My_interface {
+public:
+    // ...only pure virtual functions here ...
+    virtual ~My_interface() {}   // or =default
+};
+#+end_src
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Goof {
+public:
+    // ...only pure virtual functions here ...
+    // no virtual destructor
+};
+
+class Derived : public Goof {
+    string s;
+    // ...
+};
+
+void use()
+{
+    unique_ptr<Goof> p {new Derived{"here we go"}};
+    f(p.get()); // use Derived through the Goof interface
+    g(p.get()); // use Derived through the Goof interface
+} // leak
+#+end_src
+
+Derived 对象通过 Goof 接口删除，因此它的字符串内存泄漏。如果 Goof 有一个虚析构函数，就可以确保 Derived 的析构正常。
+
+
+强化
+- （警告）如果某个类中有成员数据，又有一个从基类继承的可重载的虚函数
+  （非final）
