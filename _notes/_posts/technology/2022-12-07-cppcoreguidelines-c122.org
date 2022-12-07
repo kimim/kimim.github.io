@@ -1,0 +1,45 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.122 如果接口和实现要彻底分开，请使用抽象类作为接口
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use abstract classes as interfaces when complete separation of interface and implementation is needed"
+
+
+理由
+
+表达一种应用二进制接口。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+struct Device {
+    virtual ~Device() = default;
+    virtual void write(span<const char> outbuf) = 0;
+    virtual void read(span<char> inbuf) = 0;
+};
+
+class D1 : public Device {
+    // ... data ...
+
+    void write(span<const char> outbuf) override;
+    void read(span<char> inbuf) override;
+};
+
+class D2 : public Device {
+    // ... different data ...
+
+    void write(span<const char> outbuf) override;
+    void read(span<char> inbuf) override;
+};
+#+end_src
+
+
+用户可以通过 Device 的接口无差别的使用 D1 或 D2。进一步，如果我们更新了 D1 和 D2，变得二进制不兼容，我们依然可以确保使用 Device 访问所有接口。
