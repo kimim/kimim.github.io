@@ -1,0 +1,48 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.126 抽象类一般不需要用户提供一个构造函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"An abstract class typically doesn't need a user-written constructor"
+
+
+理由
+
+抽象类没有数据需要构造函数进行初始化。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Shape {
+public:
+    // no user-written constructor needed in abstract base class
+    virtual Point center() const = 0;    // pure virtual
+    virtual void move(Point to) = 0;
+    // ... more pure virtual functions...
+    virtual ~Shape() {}                 // destructor
+};
+
+class Circle : public Shape {
+public:
+    Circle(Point p, int rad);           // constructor in derived class
+    Point center() const override { return x; }
+};
+#+end_src
+
+
+例外
+
+某些情况下，基类的构造函数可能会有用，比如注册一个对象到某个地方，可能需要用到构造函数。
+
+极其少见的情况：抽象类要保留一些数据，给继承类共享（统计数据、debug信息等）。这种类一般会有构造函数。但是请注意，这种类也倾向与要求虚继承。
+
+
+强化
+- 标记有构造函数的抽象类。
