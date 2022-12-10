@@ -1,0 +1,41 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：vandalism
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+最近从事信息安全相关的工作，所以时不时的，要参考下相关标准。安全，相对
+的就是破坏行为了。比如通信系统安全标准 IEC 52351-1 中写道：
+
+#+begin_quote
+In particular, although access measures which permit only authorized
+personnel into substations have been implemented primarily for safety
+reasons, electronic monitoring of these safety measures can also help
+to prevent some deliberate attacks, such as *vandalism* and theft.
+
+虽然主要是因为安全的原因，发电厂会设置访问控制措施确保只有有权限的相
+关人员才可以进入。这些电子监控安全设施也能组织一些蓄意攻击时间，比如
+故意破坏和偷盗。
+#+end_quote
+
+这里有一个词 vandalism，意思是故意破坏财产的行为。
+
+故事要从 1500 多年前说起。那时候日耳曼民族有个叫汪达尔（Vandal）的部落。
+公元 455 年，在他们的国王根塞里克（Genseric）的率领下，攻占了洗劫了罗
+马城。基于这一历史事件，vandal 就和破坏行为联系在了一起。18 世纪一名叫
+Henry Gregoire 的法国主教根据 vandal 创造了 vandalisme 一词表示破坏行
+为。英语 vandalism 就是从法语 vandalisme 转变过来的。
+
+其实还有比 Vandal 人更强的部族，那就是匈奴人，就是被我们汉朝驱赶掉的匈
+奴人，跑到欧洲北部，把 Vandal 人驱赶到了迦太基（Carthage），也就是现在
+北非的突尼斯（Tunisia）。所以其实 Vandal 这个词在词源上就有 wanderer
+漫游者的意思。 不过根据史学家介绍 Vandal 人是跟教皇利奥一世协商过，只
+是打劫财富，并没有破坏罗马城建筑。
+
+Vandal 人的报复很快就到来。在 Ganseric 国王死后不久的 533 年，罗马人占
+领北非，夺回被抢走的财富，驱逐的 Vandal 人。
+
+还有一个动词派生词 vandalize，就是肆意毁坏的意思。
