@@ -1,0 +1,146 @@
+---
+layout: post
+title: Zip Slip 漏洞
+categories: [technology]
+tags: [cybersecurity]
+---
+
+<p>
+zip、7zip、winrar 之类工具应该是 PC 时代，人人都需要的装机软件了。他们的主要功能就是把一堆文件，打包成一个文件包，然后共享给别人，别人用一个反向的过程把文件包里的文件提取出来使用。程序在打包的同时会通过压缩算法，减少文件数据大小。而且因为压缩成了一个文件，传送也更方便，速度也更快。
+</p>
+
+<p>
+但是，就是这么一个简单的小小的压缩解压过程，也有大漏洞。其中一个就是
+Zip Slip。我试着翻译为“压缩脱落”。
+</p>
+
+<p>
+其实 Zip Slip 漏洞已经发现好多年了，是 Snyk Security 团队最早在2018年6
+月5日公布的。而且这个漏洞在各大开发语言项目中都有存在，包括 JavaScript、
+Java、Ruby、.NET、Go 等。
+</p>
+
+<p>
+Zip Slip 是 Directory Traversal（路径遍历）漏洞的一种形式。黑客通过这个漏洞把一个可执行文件保存到被攻击机器的任意位置，然后通过远程执行，或者让用户不小心执行这个文件，破坏系统、获取控制权、访问系统数据。
+</p>
+
+<p>
+黑客利用 Zip Slip 漏洞，分三步开展攻击：
+</p>
+<ol class="org-ol">
+<li>利用特殊工具，篡改压缩包，添加一个特殊解压路径的恶意程序</li>
+<li>利用压缩包接收方的含有漏洞的加压程序/代码，把恶意程序解压到特定的系统路径</li>
+<li>执行恶意程序：自动执行、定时任务执行、或者远程执行</li>
+</ol>
+
+
+<p>
+一般来说，我们创建压缩包的时候，都是把某个文件夹里的文件打包在一起。比如以下文件内容：
+</p>
+
+<pre class="example" id="orgbb16b44">
+-rw-r--r-- 1 Aug 20 22:32 Makefile
+-rw-r--r-- 1 Aug 20 21:15 Makefile.in
+drwxr-xr-x 1 Jun  9 20:47 modules
+drwxr-xr-x 1 Aug 20 21:15 msdos
+drwxr-xr-x 1 Aug 20 22:39 native-lisp
+drwxr-xr-x 1 Aug 20 22:32 nextstep
+drwxr-xr-x 1 Aug 20 22:33 nt
+drwxr-xr-x 1 Aug 20 22:32 oldXMenu
+-rw-r--r-- 1 Jun  9 20:47 README
+drwxr-xr-x 1 Aug 21 06:48 src
+drwxr-xr-x 1 Aug 20 22:32 test
+</pre>
+
+<p>
+但是，黑客可以利用工具把解压到特定路径的恶意程序放进压缩包里，比如：
+</p>
+
+<pre class="example" id="org6de4304">
+-rw-r--r-- 1 Aug 20 22:31 ../../../../../../../../tmp/evil.sh
+-rw-r--r-- 1 Aug 20 22:32 Makefile
+-rw-r--r-- 1 Aug 20 21:15 Makefile.in
+drwxr-xr-x 1 Jun  9 20:47 modules
+drwxr-xr-x 1 Aug 20 21:15 msdos
+drwxr-xr-x 1 Aug 20 22:39 native-lisp
+drwxr-xr-x 1 Aug 20 22:32 nextstep
+drwxr-xr-x 1 Aug 20 22:33 nt
+drwxr-xr-x 1 Aug 20 22:32 oldXMenu
+-rw-r--r-- 1 Jun  9 20:47 README
+drwxr-xr-x 1 Aug 21 06:48 src
+drwxr-xr-x 1 Aug 20 22:32 test
+</pre>
+
+<p>
+在漏洞发现之前，大部分解压程序都是不检查压缩包里文件名是否合法。这样，解压的过程，就会把 evil.sh 解压缩到这个地方：
+<code>/../../../../../../../../tmp/evil.sh</code> 根据路径访问规则， <code>..</code> 表示上层文件夹，如果上层文件夹是根文件夹，就保持在根文件夹。这样，这个恶意程序就被解压到了 <code>/tmp/evil.sh</code>
+</p>
+
+<p>
+这样，黑客就在系统中安装了恶意代码，等着触发执行了。
+</p>
+
+<p>
+下面来看看各种语言中的漏洞代码：
+</p>
+
+<p>
+JAVA：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span style="color: #000000; font-style: italic; text-decoration: underline;">Enumeration</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ZipEntry</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">entries</span> &#8203;=&#8203; zip&#8203;.&#8203;getEntries<span style="color: #707183;">()</span>;
+<span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #707183;">(</span>entries&#8203;.&#8203;hasMoreElements<span style="color: #7388d6;">()</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">ZipEntry</span> <span style="color: #000000;">e</span> &#8203;=&#8203; entries.nextElement<span style="color: #7388d6;">()</span>;
+&#8680;  File f = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">File</span><span style="color: #7388d6;">(</span>destinationDir, e.getName<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">InputStream</span> <span style="color: #000000;">input</span> &#8203;=&#8203; zip&#8203;.&#8203;getInputStream<span style="color: #7388d6;">(</span>e<span style="color: #7388d6;">)</span>;
+    IOUtils&#8203;.&#8203;copy<span style="color: #7388d6;">(</span>input, write<span style="color: #909183;">(</span>f<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+JavaScript
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript">&#8203;self.on<span style="color: #707183;">(</span><span style="color: #2A00FF;">'entry'</span>, <span style="color: #7F0055; font-weight: bold;">function</span><span style="color: #7388d6;">(</span><span style="color: #000000;">entry</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    &#8203;entry.pipe<span style="color: #909183;">(</span>Writer<span style="color: #709870;">(</span><span style="color: #907373;">{</span>
+&#8680;      path: path.join<span style="color: #6276ba;">(</span>opts.path,entry.path<span style="color: #6276ba;">)</span>
+    &#8203;<span style="color: #907373;">}</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
+</pre>
+</div>
+
+<p>
+.NET
+</p>
+
+<div class="org-src-container">
+<pre class="src src-csharp"><span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">WriteToDirectory</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">IArchiveEntry</span> <span style="color: #000000;">entry</span>,
+                                    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">destDirectory</span>,
+                                    <span style="color: #000000; font-style: italic; text-decoration: underline;">ExtractionOptions</span> <span style="color: #000000;">options</span><span style="color: #707183;">){</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">file</span> = Path.<span style="color: #0000ff; font-weight: bold;">GetFileName</span><span style="color: #7388d6;">(</span>entry.Key<span style="color: #7388d6;">)</span>;
+&#8680;  <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> destFileName = Path.<span style="color: #0000ff; font-weight: bold;">Combine</span><span style="color: #7388d6;">(</span>destDirectory, file<span style="color: #7388d6;">)</span>;
+    entry.<span style="color: #0000ff; font-weight: bold;">WriteToFile</span><span style="color: #7388d6;">(</span>destFileName, options<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+GO
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #7F0055; font-weight: bold;">func</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">rarFormat</span><span style="color: #707183;">)</span> <span style="color: #0000ff; font-weight: bold;">Read</span><span style="color: #707183;">(</span><span style="color: #000000;">input</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">io.Reader</span>, <span style="color: #000000;">dest</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000;">rr</span> := rardecode.<span style="color: #0000ff; font-weight: bold;">NewReader</span><span style="color: #7388d6;">(</span>input, <span style="color: #2A00FF;">""</span><span style="color: #7388d6;">)</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000;">header</span> := rr.<span style="color: #0000ff; font-weight: bold;">Next</span><span style="color: #909183;">()</span>
+&#8680;          <span style="color: #000000; font-style: italic; text-decoration: underline;">writeNewFile</span><span style="color: #909183;">(</span>filepath.<span style="color: #0000ff; font-weight: bold;">Join</span><span style="color: #709870;">(</span>dest, &#8203;header.Name&#8203;<span style="color: #709870;">)</span>, rr, header.<span style="color: #0000ff; font-weight: bold;">Mode</span><span style="color: #709870;">()</span><span style="color: #909183;">)</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+要修复漏洞，其实也很简单，就是在拼接文件路径的时候，检查一下路径是否合法。具体代码就不一一介绍了。
+</p>

@@ -1,0 +1,122 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Zip Slip 漏洞
+categories: [technology]
+tags: [cybersecurity]
+---
+#+END_EXPORT
+
+zip、7zip、winrar 之类工具应该是 PC 时代，人人都需要的装机软件了。他们
+的主要功能就是把一堆文件，打包成一个文件包，然后共享给别人，别人用一个
+反向的过程把文件包里的文件提取出来使用。程序在打包的同时会通过压缩算法，
+减少文件数据大小。而且因为压缩成了一个文件，传送也更方便，速度也更快。
+
+但是，就是这么一个简单的小小的压缩解压过程，也有大漏洞。其中一个就是
+Zip Slip。我试着翻译为“压缩脱落”。
+
+其实 Zip Slip 漏洞已经发现好多年了，是 Snyk Security 团队最早在2018年6
+月5日公布的。而且这个漏洞在各大开发语言项目中都有存在，包括 JavaScript、
+Java、Ruby、.NET、Go 等。
+
+Zip Slip 是 Directory Traversal（路径遍历）漏洞的一种形式。黑客通过这
+个漏洞把一个可执行文件保存到被攻击机器的任意位置，然后通过远程执行，或
+者让用户不小心执行这个文件，破坏系统、获取控制权、访问系统数据。
+
+黑客利用 Zip Slip 漏洞，分三步开展攻击：
+1. 利用特殊工具，篡改压缩包，添加一个特殊解压路径的恶意程序
+2. 利用压缩包接收方的含有漏洞的加压程序/代码，把恶意程序解压到特定的系统路径
+3. 执行恶意程序：自动执行、定时任务执行、或者远程执行
+
+
+一般来说，我们创建压缩包的时候，都是把某个文件夹里的文件打包在一起。比
+如以下文件内容：
+
+#+begin_example
+-rw-r--r-- 1 Aug 20 22:32 Makefile
+-rw-r--r-- 1 Aug 20 21:15 Makefile.in
+drwxr-xr-x 1 Jun  9 20:47 modules
+drwxr-xr-x 1 Aug 20 21:15 msdos
+drwxr-xr-x 1 Aug 20 22:39 native-lisp
+drwxr-xr-x 1 Aug 20 22:32 nextstep
+drwxr-xr-x 1 Aug 20 22:33 nt
+drwxr-xr-x 1 Aug 20 22:32 oldXMenu
+-rw-r--r-- 1 Jun  9 20:47 README
+drwxr-xr-x 1 Aug 21 06:48 src
+drwxr-xr-x 1 Aug 20 22:32 test
+#+end_example
+
+但是，黑客可以利用工具把解压到特定路径的恶意程序放进压缩包里，比如：
+
+#+begin_example
+-rw-r--r-- 1 Aug 20 22:31 ../../../../../../../../tmp/evil.sh
+-rw-r--r-- 1 Aug 20 22:32 Makefile
+-rw-r--r-- 1 Aug 20 21:15 Makefile.in
+drwxr-xr-x 1 Jun  9 20:47 modules
+drwxr-xr-x 1 Aug 20 21:15 msdos
+drwxr-xr-x 1 Aug 20 22:39 native-lisp
+drwxr-xr-x 1 Aug 20 22:32 nextstep
+drwxr-xr-x 1 Aug 20 22:33 nt
+drwxr-xr-x 1 Aug 20 22:32 oldXMenu
+-rw-r--r-- 1 Jun  9 20:47 README
+drwxr-xr-x 1 Aug 21 06:48 src
+drwxr-xr-x 1 Aug 20 22:32 test
+#+end_example
+
+在漏洞发现之前，大部分解压程序都是不检查压缩包里文件名是否合法。这样，
+解压的过程，就会把 evil.sh 解压缩到这个地方：
+~/../../../../../../../../tmp/evil.sh~ 根据路径访问规则， ~..~ 表示上层文
+件夹，如果上层文件夹是根文件夹，就保持在根文件夹。这样，这个恶意程序就
+被解压到了 ~/tmp/evil.sh~
+
+这样，黑客就在系统中安装了恶意代码，等着触发执行了。
+
+下面来看看各种语言中的漏洞代码：
+
+JAVA：
+
+#+begin_src java
+Enumeration<ZipEntry> entries ​=​ zip​.​getEntries();
+while (entries​.​hasMoreElements()) {
+    ZipEntry e ​=​ entries.nextElement();
+⇨  File f = new File(destinationDir, e.getName());
+    InputStream input ​=​ zip​.​getInputStream(e);
+    IOUtils​.​copy(input, write(f));
+}
+#+end_src
+
+JavaScript
+
+#+begin_src javascript
+​self.on('entry', function(entry) {
+    ​entry.pipe(Writer({
+⇨      path: path.join(opts.path,entry.path)
+    ​}))
+#+end_src
+
+.NET
+
+#+begin_src csharp
+public static void WriteToDirectory(IArchiveEntry entry,
+                                    string destDirectory,
+                                    ExtractionOptions options){
+    string file = Path.GetFileName(entry.Key);
+⇨  string destFileName = Path.Combine(destDirectory, file);
+    entry.WriteToFile(destFileName, options);
+}
+#+end_src
+
+GO
+
+#+begin_src go
+func (rarFormat) Read(input io.Reader, dest string) {
+	rr := rardecode.NewReader(input, "")
+	for {
+		header := rr.Next()
+⇨          writeNewFile(filepath.Join(dest, ​header.Name​), rr, header.Mode())
+	}
+}
+#+end_src
+
+要修复漏洞，其实也很简单，就是在拼接文件路径的时候，检查一下路径是否合
+法。具体代码就不一一介绍了。
