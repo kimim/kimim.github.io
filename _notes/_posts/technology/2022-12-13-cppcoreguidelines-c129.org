@@ -1,0 +1,261 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.129 设计类层级时，请区分实现继承与接口继承
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"When designing a class hierarchy, distinguish between implementation inheritance and interface inheritance"
+
+
+理由
+
+接口的实现细节导致接口更脆弱。脆弱意味着每次修改实现，都需要重新编译。基类中的数据导致基类的实现变得复杂、代码重复。
+
+注意
+
+
+定义：
+- 接口继承指的是利用继承的方法，分离接口的实现，允许增加继承类，而不影
+  响使用基类的用户。
+- 实现继承指的是利用继承的方法，简化实现新功能的过程，通过使用已经实现
+  的有用的操作，创建相关的新操作。（有时候称之为 “programming by
+  difference”，差异化编程）。
+
+一个纯接口类就是一组纯虚函数。详见 [[http://kimi.im/2022-03-31-cppcoreguidelines-i25][I.25]]
+
+早期的OOP（1980、1990年代），习惯不太好，实现继承和接口继承经常混在一
+起。现在在老的代码、老风格培训材料中，这种混淆也很常见。
+
+随着以下维度的增长，确保实现继承和接口继承清晰分开变得越来越重要：
+- 继承层级的增长（比如大量的继承类）
+- 继承层级使用的时间增长（数十年）
+- 使用继承层级的组织数量增长（往往很难发布基类的实现更新）
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Shape {   // BAD, mixed interface and implementation
+public:
+    Shape();
+    Shape(Point ce = {0, 0}, Color co = none): cent{ce}, col {co} { /* ... */}
+
+    Point center() const { return cent; }
+    Color color() const { return col; }
+
+    virtual void rotate(int) = 0;
+    virtual void move(Point p) { cent = p; redraw(); }
+
+    virtual void redraw();
+
+    // ...
+private:
+    Point cent;
+    Color col;
+};
+
+class Circle : public Shape {
+public:
+    Circle(Point c, int r) : Shape{c}, rad{r} { /* ... */ }
+
+    // ...
+private:
+    int rad;
+};
+
+class Triangle : public Shape {
+public:
+    Triangle(Point p1, Point p2, Point p3); // calculate center
+    // ...
+};
+#+end_src
+
+存在的问题：
+- 随着继承层级增长，Shape 上会添加越来越多的数据，构造函数变得越来越难编写和维护
+- 为什么要计算三角形的中心？我们可能永远也不会用到。
+- 在 Shape 中添加新的数据成员（绘制风格或 canvas 绘图板），所有从
+  Shape 继承的类，所有使用了 Shape 的代码都要重新评审，修改或重编译。
+
+~Shape::move()~ 的实现实现继承的一个例子。我们定义 ~move()~ 一次，然后所有
+继承类都能使用。在基类的这种成员函数中，数据越多，共享越多，实现越轻松，
+但是继承层级就越不稳定。
+
+
+例子
+
+Shape 的继承层级可以通过接口继承重写：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Shape {  // pure interface
+public:
+    virtual Point center() const = 0;
+    virtual Color color() const = 0;
+
+    virtual void rotate(int) = 0;
+    virtual void move(Point p) = 0;
+
+    virtual void redraw() = 0;
+
+    // ...
+};
+#+end_src
+
+注意，纯接口通常不需要构造函数，因为没有东西需要构造。
+
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Circle : public Shape {
+public:
+    Circle(Point c, int r, Color c) : cent{c}, rad{r}, col{c} { /* ... */ }
+
+    Point center() const override { return cent; }
+    Color color() const override { return col; }
+
+    // ...
+private:
+    Point cent;
+    int rad;
+    Color col;
+};
+#+end_src
+
+这样，接口变得更稳定。但是成员函数的实现工作就更多了。比如每一个继承类
+都要实现一个 center 函数。
+
+
+例子，双重继承
+
+我们如何从继承层级中获得稳定性，同时又获得可重用性呢？一个流行的方法是
+双重层级。可以通过多种方法实现。这里，我们使用多继承实现。
+
+首先，我们设计一个接口类层级：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Shape {   // pure interface
+public:
+    virtual Point center() const = 0;
+    virtual Color color() const = 0;
+
+    virtual void rotate(int) = 0;
+    virtual void move(Point p) = 0;
+
+    virtual void redraw() = 0;
+
+    // ...
+};
+
+class Circle : public virtual Shape {   // pure interface
+public:
+    virtual int radius() = 0;
+    // ...
+};
+#+end_src
+
+要利用接口，我们必须提供实现类（此处，用 Impl 名字空间的同名类）：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Impl::Shape : public virtual ::Shape { // implementation
+public:
+    // constructors, destructor
+    // ...
+    Point center() const override { /* ... */ }
+    Color color() const override { /* ... */ }
+
+    void rotate(int) override { /* ... */ }
+    void move(Point p) override { /* ... */ }
+
+    void redraw() override { /* ... */ }
+
+    // ...
+};
+#+end_src
+
+这里 Shape 这个例子不太好实现，但是只是作为一个简单的例子，作为展示。
+
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Impl::Circle : public virtual ::Circle, public Impl::Shape {
+// implementation
+public:
+    // constructors, destructor
+
+    int radius() override { /* ... */ }
+    // ...
+};
+#+end_src
+
+现在，我们可以扩展继承层级，添加一个 Smiley 类 （:-))：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Smiley : public virtual Circle { // pure interface
+public:
+    // ...
+};
+
+class Impl::Smiley : public virtual ::Smiley, public Impl::Circle {   // implementation
+public:
+    // constructors, destructor
+    // ...
+}
+#+end_src
+
+这里有两个层级：
+
+#+begin_src
+    interface: Smiley -> Circle -> Shape
+    implementation: Impl::Smiley -> Impl::Circle -> Impl::Shape
+#+end_src
+
+因为每个实现都继承了接口又继承了实现基类，所以我们的到了一个晶格（DAG）：
+
+#+begin_src
+Smiley     ->         Circle     ->  Shape
+  ^                     ^               ^
+  |                     |               |
+Impl::Smiley -> Impl::Circle -> Impl::Shape
+#+end_src
+
+如前所述，这只是构建双重层级的一个方法。
+
+
+然后，我们就可以直接使用实现的层级了，而不用通过抽象接口。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void work_with_shape(Shape&);
+
+int user()
+{
+    Impl::Smiley my_smiley{ /* args */ };   // create concrete shape
+    // ...
+    my_smiley.some_member();        // use implementation class directly
+    // ...
+    work_with_shape(my_smiley);     // use implementation through abstract interface
+    // ...
+}
+#+end_src
+
+这个方法的好处是，当实现的类中有抽象接口所不提供的成员时，或直接使用成
+员能够提供更好的优化时（如果实现的成员函数为final），比较有用。
+
+
+注意
+
+另一个相关的技术是接口和实现的分离，即 [[http://kimi.im/2022-04-02-cppcoreguidelines-i27][Pimpl]]。
+
+
+注意
+
+提供共用功能的方法有两种：作为基类函数实现，作为自由函数在名字空间实现。
+
+在基类中实现的话，相对来说，代码更精简，更容易访问共享数据。成本则是只
+有继承层级的类可以调用。
+
+
+强化
+- 标注将继承类类型转换为基类，而且基类有数据和虚函数的地方。（除了在继
+  承类中调用基类函数的地方）
