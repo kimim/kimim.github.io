@@ -1,0 +1,51 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.130 多态类的深拷贝，建议使用虚clone函数，而不要用公开的拷贝构造赋值函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"For making deep copies of polymorphic classes prefer a virtual clone function instead of public copy construction/assignment"
+
+
+理由
+
+不建议进行多态类的拷贝，因为会导致切片问题（slicing problem），参考
+[[http://kimi.im/2022-11-04-cppcoreguidelines-c67][C.67]]。如果你确实需要拷贝语义，请进行深拷贝：提供一个虚的clone函数，实
+际拷贝继承类型，并返回一个指向新对象的所有权指针（owing pointer），并
+且在继承类返回共变式（covariant）继承类型。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class B {
+public:
+    B() = default;
+    virtual ~B() = default;
+    virtual gsl::owner<B*> clone() const = 0;
+protected:
+     B(const B&) = default;
+     B& operator=(const B&) = default;
+     B(B&&) = default;
+     B& operator=(B&&) = default;
+    // ...
+};
+
+class D : public B {
+public:
+    gsl::owner<D*> clone() const override
+    {
+        return new D{*this};
+    };
+};
+#+end_src
+
+一般来说，建议使用智能指针表示所有权（参考 R.20）。但是，根据语言规则，
+共变式（covariant）返回类型不能是智能指针： 当 ~B::clone~ 返回
+~unique_ptr<B>~ 的时候 ~D::clone~ 不能返回 ~unique_ptr<D>~ 。因此，要么你在
+所有的重载函数中，始终如一地返回 ~unique_ptr<B>~ ，要么使用 Guidelines
+Support Library 中的 ~owner<>~ 工具。

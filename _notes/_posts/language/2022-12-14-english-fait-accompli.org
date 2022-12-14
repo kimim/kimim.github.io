@@ -1,0 +1,58 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：fait accompli
+categories: [language]
+tags: [Français, English]
+---
+#+END_EXPORT
+
+昨天看基础设施安全相关的书，提到工业控制系统比普通企业系统的信息安全落
+后很久，写道：
+
+#+begin_quote
+These systems are extremely vulnerable, and can be considered a decade
+or more behind typical enterprise systems in terms of cyber security
+maturity. This means that, once breached, the result is most likely a
+*fait accompli*.
+
+这些系统非常脆弱，从信息安全成熟度来说，已经落后企业系统好几代了。这意
+味着，一旦被入侵，结果极可能就是一个既成事实。
+#+end_quote
+
+这里有一个词组 fait accompli，其实是从法语里面来的，fait 是行动的意思，
+accompli，就是 accomplished，完成了。合在一起表示已经完成的实事，就是
+实事一定、既成事实的意思，就是 a decision that has already been made
+or something that has already been accomplished or completed.
+
+再看看几个例子：
+
+The decision by the CEO to close 50 of the company's stores came as a
+fait accompli to the rest of the management team, who were powerless
+to stop it. 对管理层来说，公司 CEO 决定关闭 50 个店铺已经是不可挽回的
+既成事实。
+
+Failing this class is not a fait accompli — you have the ability to
+study and bring up your grade! 这次考试失败并不是实事已定，你还可以继
+续努力学习，提升你的成绩！
+
+
+再看看几个法语例子：
+
+Tout à coup, ils viennent d'accepter au fond le fait accompli. 突然，
+他们接受了即成实事的好处。
+
+Le fait accompli a une puissance irrésistible. 既成的事实有不可否认的
+效力。
+
+
+德语好像没有从法语里学过去这个 fait accompli，所以德语表达为
+vollendete Tatsachen 完成的实事，比如：
+
+Im Gegenteil, sie haben uns viele Male belogen, Entscheidungen hinter
+unserem Rücken getroffen und stellten uns vor vollendete Tatsachen. 相
+反的，他们多次欺骗我们，在我们背后达成决定，仅仅展示既成事实给我们。
+
+Das Fatale an diesem Projektstart war, dass sowohl der Projektleiter
+als auch der Auftraggeber vor vollendete Tatsachen gestellt wurden. 此
+项目的启动的致命问题是项目经理与客户都面临了一些既成事实。

@@ -1,0 +1,58 @@
+---
+layout: post
+title: CppCoreGuidelines C.130 多态类的深拷贝，建议使用虚clone函数，而不要用公开的拷贝构造赋值函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;For making deep copies of polymorphic classes prefer a virtual clone function instead of public copy construction/assignment&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+不建议进行多态类的拷贝，因为会导致切片问题（slicing problem），参考
+<a href="http://kimi.im/2022-11-04-cppcoreguidelines-c67">C.67</a>。如果你确实需要拷贝语义，请进行深拷贝：提供一个虚的clone函数，实际拷贝继承类型，并返回一个指向新对象的所有权指针（owing pointer），并且在继承类返回共变式（covariant）继承类型。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>*<span style="color: #7388d6;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">clone</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> = 0;
+<span style="color: #7F0055; font-weight: bold;">protected</span>:
+     <span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+     <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+     <span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp;&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+     <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp;&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>*<span style="color: #7388d6;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">clone</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">override</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #909183;">{</span>*<span style="color: #7F0055; font-weight: bold;">this</span><span style="color: #909183;">}</span>;
+    <span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+一般来说，建议使用智能指针表示所有权（参考 R.20）。但是，根据语言规则，共变式（covariant）返回类型不能是智能指针： 当 <code>B::clone</code> 返回
+<code>unique_ptr&lt;B&gt;</code> 的时候 <code>D::clone</code> 不能返回 <code>unique_ptr&lt;D&gt;</code> 。因此，要么你在所有的重载函数中，始终如一地返回 <code>unique_ptr&lt;B&gt;</code> ，要么使用 Guidelines
+Support Library 中的 <code>owner&lt;&gt;</code> 工具。
+</p>
