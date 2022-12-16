@@ -1,0 +1,46 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：mercenary
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+在看关键基础设施的网络攻击方面的书，看到：
+
+#+begin_quote
+Cyber Crime and Cyber Terrorism are no longer isolated to organized
+syndicates and terrorist groups, but are now services available for
+hire. A fully weaponized attack against critical infrastructures at
+any level no longer needs to be military, because it can be
+*mercenary* - bought as a service, online.
+
+网络犯罪和网络恐怖主义，已经不局限于某些有组织的财团和恐怖组织了，现在
+已经是某种可以雇佣的服务。一次针对关键基础设施的完全武装网络攻击，已经
+不再是军事行动，也可能是雇佣军 - 通过在线购买的服务。
+#+end_quote
+
+这里有一个词 mercenary，意思是雇佣军，唯利是图的。
+
+有没有觉得和 mercury 很像？mercury 是水银的意思，就是那个剧毒的汞。
+
+但是其实水银是难得的常温液态的金属，所以又意味着很灵活。mercury 的形容
+词形式 mercurial 除了“水银的”之外，还有“雄辩机智的；活泼善变的”意思。
+正所谓智者乐水，液态的金属，不就是高级的智者么。
+
+其实，追根溯源，mercury 源自拉丁语 Mercurius，就是畜牧、小偷、商业、交
+通、旅游和体育之神墨丘利。罗马的神和世俗其实是紧密联系的。mercatus 就
+是交易、买卖的意思，市场 market 就是从 marcatus 演变来的。法语为
+marché，德语为 Markt。
+
+水星也来源于罗马神话墨丘利（Mercŭrĭus)。他行走敏捷，精力充沛，多才多艺，
+在奥林匹斯山上担任诸神的使者和传译，作为沟通之神的他拥有过人的智慧和交
+流能力，所以也被称为商业之神。由于水星在天上运行的速度很快，所以用了他
+的名字而命名。他在希腊神话中有另外一个名字，叫做赫尔墨斯，也就是那个很
+贵很贵很贵的箱包品牌爱马仕，Hermès，因为 H 在法语里不发音，所以就音译
+为爱玛仕。
+
+Mercure, première planète du système solaire, la plus proche du
+Soleil. Merkur ist innerster Planet des Sonnensystems, nach dem
+römischen Gott benannt.

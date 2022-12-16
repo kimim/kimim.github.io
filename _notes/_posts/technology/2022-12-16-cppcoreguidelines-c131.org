@@ -1,0 +1,59 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.131 避免使用细枝末节的 getter 和 setter
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid trivial getters and setters"
+
+
+理由
+
+繁琐细枝末节的 getter 和 setter 不增加语义价值；数据要么就直接 public 就好了。
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Point {   // Bad: verbose
+    int x;
+    int y;
+public:
+    Point(int xx, int yy) : x{xx}, y{yy} { }
+    int get_x() const { return x; }
+    void set_x(int xx) { x = xx; }
+    int get_y() const { return y; }
+    void set_y(int yy) { y = yy; }
+    // no behavioral member functions
+};
+#+end_src
+
+考虑将这个类改成 struct，这样，就成了没有行为的一组变量，所有数据都公
+开，没有成员函数。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+struct Point {
+    int x {0};
+    int y {0};
+};
+#+end_src
+
+
+注意，我们可以在成员变量上添加默认初始值。[[http://kimi.im/2022-10-18-cppcoreguidelines-c49][C.49]] 在构造函数中进行初始化
+操作，不要进行赋。
+
+
+注意
+
+此规则的关键是 getter/setter 的语义是否重要。虽然很难定义是否重要，但
+是可以考虑如果将 getter/setter 改成公开的数据是否导致任何语法上的差异。
+不重要的语义就是如果转换内部类型和接口类型，依然能保持类的不变式，那就
+是语义不重要。
+
+强化
+- 标注有多个 get 和 set 成员函数只是访问成员数据，而不增加语义的类。
