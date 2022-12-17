@@ -1,0 +1,38 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.132 不要不明所以的将一个函数设置为虚的
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t make a function virtual without reason"
+
+理由
+
+多余的虚函数，会增加运行时间和对象内存大小。虚函数能够被重载，所以在继
+承类中打开了一个导致错误的大门。虚函数确保在模板化的层级中代码可复用。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+template<class T>
+class Vector {
+public:
+    // ...
+    virtual int size() const { return sz; }   // bad: what good could a derived class do?
+private:
+    T* elem;   // the elements
+    int sz;    // number of elements
+};
+#+end_src
+
+你根本不会通过某个基类使用这种 “vector”。
+
+
+强化
+- 标记某个类有虚函数，却不会有继承类
+- 标记某个类的所有成员函数都是虚的，并有对应的实现。
