@@ -1,0 +1,71 @@
+---
+layout: post
+title: CppCoreGuidelines C.133 避免使用 protected 数据
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid protected data&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+protected 数据是复杂和错误的源泉。protected 数据把类的不变式弄得更复杂。
+protected 数据违反了“不要把数据放在基类”的指南，往往会导致需要处理虚继承关系。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... interface functions ...</span>
+<span style="color: #7F0055; font-weight: bold;">protected</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">data for use in derived classes:</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Color</span> <span style="color: #000000;">fill_color</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Color</span> <span style="color: #000000;">edge_color</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Style</span> <span style="color: #000000;">st</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+这样，就要求每个 Shape 的派生类都要能正确处理保护的数据。尽管这种做法很流行，但是会导致维护的问题。在大的类层级结构中，一致性的维护使用
+protected 数据很困难，因为在大量的类中隐藏这大量的代码要修改。能够接触这些数据的类也是开放的：任何人都可以继承一个心累，开始操作这些
+protected 数据。往往很难检查所有的类，所以修改这些类变得很困难。没有任何不变式约束这些 protected 数据，更像是一组全局变量。protected 数据事实上成了很大一片代码的全局变量。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+protected 数据经常看起来能够通过派生提供很多优化。然而，事实上，你经常得到的是无原则的修改和错误。请使用 private 私有数据，并强化不变式。另一个更好的改进方法，就是使用接口，不要添加数据。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+protected 成员函数没问题。
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标注使用了 protected 数据的类</li>
+</ul>
