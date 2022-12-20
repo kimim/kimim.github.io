@@ -1,0 +1,39 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.135 使用多重继承来表达多重不同的接口
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use multiple inheritance to represent multiple distinct interfaces"
+
+
+理由
+
+并非所有的类要支持所有的接口。也并非所有的调用处都必须处理所有的操作。
+因此，可以通过派生类将一组庞大的接口拆分成不同的行为侧面。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class iostream : public istream, public ostream {   // very simplified
+    // ...
+};
+#+end_src
+
+
+istream 提供输入操作的接口，ostream 提供输出操作的接口。iostream 提供
+istream 和 ostream 操作的合集，以及输入输出需要的同步操作。
+
+
+注意
+
+这是经常用到继承的地方，因为某个实现需要多个不同的接口，而这些接口又很
+难通过单一根节点的继承层级来实现。
+
+这些接口通常都是抽象类。
