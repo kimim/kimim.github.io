@@ -1,0 +1,59 @@
+---
+layout: post
+title: CppCoreGuidelines C.136 使用多重继承来表示实现属性的集合
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use multiple inheritance to represent the union of implementation attributes&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+某些形式的混合类有状态，并且基于这些状态操作运行。如果这些操作是虚的，则需要使用继承。如果不是虚的，则使用继承能够避免样板代码和forwarding。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">iostream</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>, <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">very simplified</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+istream 提供输入操作接口（以及一些数据），ostream 提供输出操作接口（以及一些数据）。iostream 提供 istream 和 ostream 接口的集合以及输入输出之间的同步。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+这是很少使用的方法，因为实现的时候也会组织成单根节点的继承层级。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+有时候，一个“实现属性”更像一个混合类（mixin），通过注入成员来确定实现的某些行为，来确定需要实现的某些策略。比如
+std::enable<sub>shared</sub><sub>from</sub><sub>this</sub> 或基于 boost.intrusive 的 list<sub>base</sub><sub>hook</sub>
+以及 intrusive<sub>ref</sub><sub>counter</sub>。
+</p>
