@@ -1,0 +1,87 @@
+---
+layout: post
+title: CppCoreGuidelines C.137 使用虚的基类，避免过度通用的基类
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use virtual bases to avoid overly general base classes&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+实现共享数据和接口的分离。避免把所有共享数据放进一个最基础的基类。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Interface</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no data here ...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Utility</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">with data</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">utility1</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">utility2</span><span style="color: #7388d6;">()</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">customization point</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Derive1</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Interface</span>, <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">protected</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Utility</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">override Interface functions</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Maybe override Utility virtual functions</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Derive2</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Interface</span>, <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">protected</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Utility</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">override Interface functions</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Maybe override Utility virtual functions</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+如果很多派生类共享某些明显的实现细节，可以抽取处 Utility。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+显然，这个例子太理论化了。但是很难找到更小的现实例子。 Interface 是接口层级的根节点，Utility 是实现层级的根节点。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+线性化的继承层级经常会是更好的解决方案。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标注混合了接口和实现继承层级的地方</li>
+</ul>

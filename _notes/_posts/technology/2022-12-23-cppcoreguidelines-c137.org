@@ -1,0 +1,65 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.137 使用虚的基类，避免过度通用的基类
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use virtual bases to avoid overly general base classes"
+
+
+理由
+
+实现共享数据和接口的分离。避免把所有共享数据放进一个最基础的基类。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+struct Interface {
+    virtual void f();
+    virtual int g();
+    // ... no data here ...
+};
+
+class Utility {  // with data
+    void utility1();
+    virtual void utility2();    // customization point
+public:
+    int x;
+    int y;
+};
+
+class Derive1 : public Interface, virtual protected Utility {
+    // override Interface functions
+    // Maybe override Utility virtual functions
+    // ...
+};
+
+class Derive2 : public Interface, virtual protected Utility {
+    // override Interface functions
+    // Maybe override Utility virtual functions
+    // ...
+};
+#+end_src
+
+如果很多派生类共享某些明显的实现细节，可以抽取处 Utility。
+
+
+注意
+
+显然，这个例子太理论化了。但是很难找到更小的现实例子。 Interface 是接
+口层级的根节点，Utility 是实现层级的根节点。
+
+
+注意
+
+线性化的继承层级经常会是更好的解决方案。
+
+
+强化
+- 标注混合了接口和实现继承层级的地方

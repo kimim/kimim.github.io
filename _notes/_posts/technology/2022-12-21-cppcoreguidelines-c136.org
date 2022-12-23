@@ -25,9 +25,9 @@ class iostream : public istream, public ostream {   // very simplified
 };
 #+end_src
 
-istream 提供输入操作接口（以及一些数据），ostream 提供输出操作接口（以
-及一些数据）。iostream 提供 istream 和 ostream 接口的集合以及输入输出
-之间的同步。
+~istream~ 提供输入操作接口（以及一些数据）， ~ostream~ 提供输出操作接口
+（以及一些数据）。 ~iostream~ 提供 ~istream~ 和 ~ostream~ 接口的集合以及输入
+输出之间的同步。
 
 
 注意
@@ -39,5 +39,5 @@ istream 提供输入操作接口（以及一些数据），ostream 提供输出�
 
 有时候，一个“实现属性”更像一个混合类（mixin），通过注入成员来确定实现
 的某些行为，来确定需要实现的某些策略。比如
-std::enable_shared_from_this 或基于 boost.intrusive 的 list_base_hook
-以及 intrusive_ref_counter。
+~std::enable_shared_from_this~ 或基于 ~boost.intrusive~ 的 ~list_base_hook~
+以及 ~intrusive_ref_counter~ 。
