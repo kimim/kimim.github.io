@@ -1,0 +1,84 @@
+---
+layout: post
+title: CppCoreGuidelines C.139 少用 final
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use final on classes sparingly&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+通过 final 类限制继承层级没有什么太多逻辑上的理由，还会破坏继承层级的可扩展性。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Widget</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">nobody will ever want to improve My_widget (or so you thought)</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_widget</span> <span style="color: #7F0055; font-weight: bold;">final</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Widget</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_improved_widget</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_widget</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: can't do that</span>
+</pre>
+</div>
+
+<pre class="example" id="org0a504f1">
+error: cannot derive from 'final' base 'main()::My_widget' in derived type 'main()::My_improved_widget'
+   16 | class My_improved_widget : public My_widget { /* ... */ };
+      |       ^~~~~~~~~~~~~~~~~~
+</pre>
+
+<p>
+一开始你可能觉得不需要扩展优化 My<sub>widget</sub>，但是等到后来需要扩展的时候，就会报错。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+并非所有的类都用来做基类。比如大部分的标准库的类。如 std::vector,
+std::string 就不是用来派生子类的。这条规则也适用于那些有虚函数，用来做接口的类层级。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+把单个的虚函数限制为 final 也容易出错，因为人们很容易忽视 final 的存在，然后发现出错了。当然，编译器可以捕捉这类错误，所以你也不能在派生类中重新什么或重新打开一个 final 成员函数。
+</p>
+
+<p>
+号称 final 能提升性能也缺少根据。通常是基于其他编程语言的经验推导出来的。
+</p>
+
+<p>
+当然有时候使用 final 也有逻辑上和性能上的重要原因。一个例子是对编译器和分析语言工具来说性能关键的 AST 继承层级。不可以是不是的添加新的派生类，只能通过库的实现者来添加。然后，误用 final 的例子还是会更多一些。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标注用了 final 的类</li>
+</ul>

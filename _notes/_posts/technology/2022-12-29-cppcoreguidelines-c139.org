@@ -1,0 +1,65 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.139 少用 final
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use final on classes sparingly"
+
+
+理由
+
+通过 final 类限制继承层级没有什么太多逻辑上的理由，还会破坏继承层级的
+可扩展性。
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+class Widget { /* ... */ };
+
+// nobody will ever want to improve My_widget (or so you thought)
+class My_widget final : public Widget { /* ... */ };
+
+class My_improved_widget : public My_widget { /* ... */ };
+// error: can't do that
+#+end_src
+
+#+RESULTS:
+#+begin_example
+error: cannot derive from 'final' base 'main()::My_widget' in derived type 'main()::My_improved_widget'
+   16 | class My_improved_widget : public My_widget { /* ... */ };
+      |       ^~~~~~~~~~~~~~~~~~
+#+end_example
+
+一开始你可能觉得不需要扩展优化 My_widget，但是等到后来需要扩展的时候，
+就会报错。
+
+
+注意
+
+并非所有的类都用来做基类。比如大部分的标准库的类。如 std::vector,
+std::string 就不是用来派生子类的。这条规则也适用于那些有虚函数，用来做
+接口的类层级。
+
+
+注意
+
+把单个的虚函数限制为 final 也容易出错，因为人们很容易忽视 final 的存在，
+然后发现出错了。当然，编译器可以捕捉这类错误，所以你也不能在派生类中重
+新什么或重新打开一个 final 成员函数。
+
+号称 final 能提升性能也缺少根据。通常是基于其他编程语言的经验推导出来的。
+
+当然有时候使用 final 也有逻辑上和性能上的重要原因。一个例子是对编译器
+和分析语言工具来说性能关键的 AST 继承层级。不可以是不是的添加新的派生
+类，只能通过库的实现者来添加。然后，误用 final 的例子还是会更多一些。
+
+
+强化
+- 标注用了 final 的类
