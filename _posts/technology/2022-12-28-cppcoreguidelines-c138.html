@@ -1,0 +1,142 @@
+---
+layout: post
+title: CppCoreGuidelines C.138 通过 using 在派生类重载基类的函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Create an overload set for a derived class and its bases with using&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+不使用 using 的话，派生类的成员函数会覆盖从基类继承的所有重载函数。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"f(int): "</span>; <span style="color: #7F0055; font-weight: bold;">return</span> i; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"f(double): "</span>; <span style="color: #7F0055; font-weight: bold;">return</span> d; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>: <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span> <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"f(int): "</span>; <span style="color: #7F0055; font-weight: bold;">return</span> i + 1; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #000000;">d</span>;
+    <span style="color: #110099;">std</span>::cout &lt;&lt; d.f<span style="color: #7388d6;">(</span>2<span style="color: #7388d6;">)</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">prints "f(int): 3"</span>
+    <span style="color: #110099;">std</span>::cout &lt;&lt; d.f<span style="color: #7388d6;">(</span>2.3<span style="color: #7388d6;">)</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">prints "f(int): 3"</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+f(int): 3
+f(int): 3
+</pre>
+
+
+
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"f(int): "</span>; <span style="color: #7F0055; font-weight: bold;">return</span> i; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"f(double): "</span>; <span style="color: #7F0055; font-weight: bold;">return</span> d; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>: <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span> <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"f(int): "</span>; <span style="color: #7F0055; font-weight: bold;">return</span> i + 1; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #110099;">B</span>::f; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">exposes f(double)</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #000000;">d</span>;
+    <span style="color: #110099;">std</span>::cout &lt;&lt; d.f<span style="color: #7388d6;">(</span>2<span style="color: #7388d6;">)</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">prints "f(int): 3"</span>
+    <span style="color: #110099;">std</span>::cout &lt;&lt; d.f<span style="color: #7388d6;">(</span>2.3<span style="color: #7388d6;">)</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">prints "f(double): 3"</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+f(int): 3
+f(double): 2.3
+</pre>
+
+
+
+<p>
+注意
+</p>
+
+
+<p>
+这个问题会影响到虚的以及非虚的成员函数。
+</p>
+
+<p>
+对于变参数模板类， C++17 提供了一个带可变参数形式的 using 声明：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #7388d6; font-weight: bold;">()</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"B( "</span> &lt;&lt; x &lt;&lt; <span style="color: #2A00FF;">" )"</span> &lt;&lt; <span style="color: #110099;">std</span>::endl;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span>... <span style="color: #000000; font-style: italic; text-decoration: underline;">Ts</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Overloader</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">Ts</span>... <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #110099;">Ts</span>::<span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #7388d6;">()</span>...; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">exposes operator() from every base</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #7388d6; font-weight: bold;">()</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"Overloader()\n"</span>; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Overloader</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">d</span>;
+    d<span style="color: #7388d6;">(</span>42<span style="color: #7388d6;">)</span>;
+    d<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+B( 42 )
+Overloader()
+</pre>
+
+
+
+<p>
+强化
+</p>
+
+<p>
+诊断名字隐藏的情况
+</p>
