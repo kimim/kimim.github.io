@@ -1,0 +1,35 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：anaphora
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+在看一个演讲技术的书，其中提到：
+
+Martin Luther King, Jr. used a public-speaking device called anaphora,
+repeating the same word or words at the beginning of successive
+clauses or sentences. "I have a dream..." is repeated in eight
+successive sentences.
+
+马丁路德金使用一种重复的修辞手法，首语重复 anaphora: the repetition of
+a word or phrase at the beginning of successive clauses.
+
+就是在每一个句子前，重复前面用过的词语或句子，达到感情强调、气势磅礴、
+声音和谐的目的。
+
+希腊语里 ana- 前缀是向后的意思，-phora 是传递的意思。合起来就是向后传
+递，向后延伸。也就是前面的句子词语在后面重复。
+
+再比如丘吉尔的演讲。不断重复出现 we shall，就是一种 anaphora 首语重复
+修辞：
+
+/We shall/ go on to the end, /we shall/ fight in France, /we shall/ fight on
+the seas and oceans, /we shall/ fight with growing confidence and
+growing strength in the air, /we shall/ defend on the beaches, /we shall/
+fight on the landing grounds, /we shall/ fight in the fields and in the
+streets, /we shall/ fight in the hills.
+
+在上面这个例子里，we shall 就是一个 anaphor（首语重复词）。
