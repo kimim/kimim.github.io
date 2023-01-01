@@ -1,0 +1,65 @@
+---
+layout: post
+title: CppCoreGuidelines C.140 不要提供给虚函数和重写的函数不同的默认参数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Do not provide different default arguments for a virtual function and an overrider&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+容易引起误解：一个重写（override）的函数没有继承默认参数。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">multiply</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">value</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">factor</span> = 2<span style="color: #7388d6;">)</span> = 0;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">Base</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">multiply</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">value</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">factor</span> = 10<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span><span style="color: #7F0055; font-weight: bold;">return</span> value * factor; <span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span> <span style="color: #000000;">d</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span>&amp; <span style="color: #000000;">b</span> = d;
+
+    cout &lt;&lt; b.multiply<span style="color: #7388d6;">(</span>10<span style="color: #7388d6;">)</span> &lt;&lt; endl;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">these two calls will call the same function but</span>
+    cout &lt;&lt; d.multiply<span style="color: #7388d6;">(</span>10<span style="color: #7388d6;">)</span> &lt;&lt; endl;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">with different arguments and so different results</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+20
+100
+</pre>
+
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标注基类和派生类声明的虚函数的默认参数不同的情况</li>
+</ul>

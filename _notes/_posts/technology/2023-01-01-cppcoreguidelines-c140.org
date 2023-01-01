@@ -1,0 +1,50 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.140 不要提供给虚函数和重写的函数不同的默认参数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Do not provide different default arguments for a virtual function and an overrider"
+
+
+理由
+
+容易引起误解：一个重写（override）的函数没有继承默认参数。
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class Base {
+  public:
+    virtual int multiply(int value, int factor = 2) = 0;
+    virtual ~Base() = default;
+};
+
+class Derived : public Base {
+  public:
+    int multiply(int value, int factor = 10) override {return value * factor; };
+};
+
+int main()
+{
+    Derived d;
+    Base& b = d;
+
+    cout << b.multiply(10) << endl;  // these two calls will call the same function but
+    cout << d.multiply(10) << endl;  // with different arguments and so different results
+}
+#+end_src
+
+#+RESULTS:
+: 20
+: 100
+
+
+强化
+- 标注基类和派生类声明的虚函数的默认参数不同的情况
