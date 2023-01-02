@@ -1,0 +1,57 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.145 通过指针或引用访问多态对象
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Access polymorphic objects through pointers and references"
+
+
+理由
+
+如果你有一个提供虚函数的类，你一般不知道哪个派生类提供这个函数。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+struct B { int a; virtual int f(); virtual ~B() = default };
+struct D : B { int b; int f() override; };
+
+void use(B b)
+{
+    D d;
+    B b2 = d;   // slice
+    B b3 = b;
+}
+
+void use2()
+{
+    D d;
+    use(d);   // slice
+}
+#+end_src
+
+上面例子，d 都被切片（slice）了。
+
+
+例外
+
+你也可以定义范围内安全的访问有变量名的多态对象。这种操作没有切片。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void use3()
+{
+    D d;
+    d.f();   // OK
+}
+#+end_src
+
+
+强化
+- 标注所有存在切片（slicing）的情况。

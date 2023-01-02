@@ -1,0 +1,77 @@
+---
+layout: post
+title: CppCoreGuidelines C.145 通过指针或引用访问多态对象
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Access polymorphic objects through pointers and references&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+如果你有一个提供虚函数的类，你一般不知道哪个派生类提供这个函数。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span>; <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">()</span>; <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span> <span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">b</span>; <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">override</span>; <span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #000000;">d</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #000000;">b2</span> = d;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">slice</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #000000;">b3</span> = b;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use2</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #000000;">d</span>;
+    use<span style="color: #7388d6;">(</span>d<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">slice</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+上面例子，d 都被切片（slice）了。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+你也可以定义范围内安全的访问有变量名的多态对象。这种操作没有切片。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use3</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #000000;">d</span>;
+    d.f<span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标注所有存在切片（slicing）的情况。</li>
+</ul>
