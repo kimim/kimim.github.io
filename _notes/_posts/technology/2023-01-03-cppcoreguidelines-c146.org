@@ -1,0 +1,197 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.146 当在类的继承层级之间切换不可避免的时候，使用 dynamic_cast
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~dynamic_cast~ where class hierarchy navigation is unavoidable"
+
+
+理由
+
+运行时会检查 ~dynamic_cast~
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+struct B {   // an interface
+    virtual void f() {cout << "B::f()\n"; }
+    virtual void g() {cout << "B::g()\n"; }
+    virtual ~B() {}
+};
+
+struct D : B {   // a wider interface
+    void f() override {cout << "D::f()\n"; }
+    virtual void h() { cout << "D::h()\n"; }
+};
+
+void user(B* pb)
+{
+    if (D* pd = dynamic_cast<D*>(pb)) {
+        // ... use D's interface ...
+        pd->f();
+        pd->h();
+    }
+    else {
+        // ... make do with B's interface ...
+        pb->f();
+        pb->g();
+    }
+}
+
+int main()
+{
+    B b;
+    user(&b);
+    D d;
+    user(&d);
+}
+#+end_src
+
+#+RESULTS:
+: B::f()
+: B::g()
+: D::f()
+: D::h()
+
+
+使用其他的类型转换方法会违反类型安全要求，导致程序访问 Z 的一个变量的
+时候，实际上访问了 X 的变量。
+
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void user2(B* pb)   // bad
+{
+    D* pd = static_cast<D*>(pb);
+    // I know that pb really points to a D; trust me
+    // ... use D's interface ...
+}
+
+void user3(B* pb)    // unsafe
+{
+    if (some_condition) {
+        D* pd = static_cast<D*>(pb);
+        // I know that pb really points to a D; trust me
+        // ... use D's interface ...
+    }
+    else {
+        // ... make do with B's interface ...
+    }
+}
+
+void f()
+{
+    B b;
+    user(&b);   // OK
+    user2(&b);  // bad error
+    user3(&b);  // OK *if* the programmer got the some_condition check right
+}
+#+end_src
+
+
+注意
+
+
+像其他的类型转换方法一样，人们也过度使用了 ~dynamic_cast~ 。建议首先考虑
+是否可以用虚函数实现。建议尽可能的利用类型层级的静态多态方法，没有运行
+时额外开销，且相对方便。
+
+
+注意
+
+有些地方使用 ~typeid~ 可能比 ~dynamyc_cast~ 更恰当。 ~dynamic_cast~ 为 “是某
+一类” 这种操作，用来发现一个对象的最佳接口；而 ~typeid~ 是 “给我这个类的
+确切类型” 这样的操作，用来发现一个对象的实际类型。后者是更简单的操作，
+速度应该更快。并且也更容易实现。而前者则较难正确实现。
+
+
+考虑以下情况：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+struct B {
+    const char* name {"B"};
+    // if pb1->id() == pb2->id() *pb1 is the same type as *pb2
+    virtual const char* id() const { return name; }
+    // ...
+};
+
+struct D : B {
+    const char* name {"D"};
+    const char* id() const override { return name; }
+    // ...
+};
+
+void use()
+{
+    B* pb1 = new B;
+    B* pb2 = new D;
+
+    cout << pb1->id(); // "B"
+    cout << pb2->id(); // "D"
+
+    if (pb1->id() == "D") {         // looks innocent
+        D* pd = static_cast<D*>(pb1);
+        // ...
+    }
+    // ...
+}
+
+int main()
+{
+    use();
+}
+#+end_src
+
+#+RESULTS:
+: BD
+
+
+pb2->id() 的返回值实际上不同的实现可能有不同的结果。我们添加这个函数是
+为了警告自己设计 RTTI 的危险。这段代码可能能按照预期正确执行很多年，但
+是在新的机器、新的编译器或新的连接器上运行失败。
+
+如果你自己实现 RTTI，请小心！
+
+
+
+例外
+
+如果在你的实现中发现 ~dynamic_cast~ 运行非常慢，你可能要用一个变通的方案
+了。不过任何无法静态的处理的变通方案都会引入显式的类型转换，导致错误。
+你实际上是构建了自己的一个特殊的 ~dynamic_cast~ 。所以，首先确保你的
+~dynamic_cast~ 是不是像你想的那么慢（有很多关于 ~dynamic_cast~ 速度慢传言）；
+再者你使用 ~dynamic_cast~ 的地方性能是否很关键。
+
+我们也认为目前 ~dynamic_cast~ 的实现有些慢。比如在某些条件下，其实是可以
+以更快的时间执行的。然而，因为兼容性的考虑，即使大家都认为值得优化一下，
+也很难修改。
+
+在极少的情况下，如果你发现 ~dynamic_cast~ 的运行开销很明显，你可以通过静
+态方法确保成功地向下类型转换（比如小心使用 CRTP - Curiously Recurring
+Template Pattern。从模板类继承一个新类，以继承类作为基类的模板参数）。
+因为没有使用虚继承，可以策略性的考虑使用 ~static_cast~ （请提供清晰的注
+释和声明，确保有人会注意，因为类型系统无法验证正确性）。尽管如此，在我
+们的经验里，这种“我知道我在做什么”的情况仍然是大部分 bug 的源头。
+
+
+例外
+
+考虑：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+template<typename B>
+class Dx : B {
+    // ...
+};
+#+end_src
+
+
+强化
+- 标注所有使用 ~static_cast~ 进行向下类型转换的情况，包括 C 风格的静态转换。
+- 此规则是类型安全的注意事项。

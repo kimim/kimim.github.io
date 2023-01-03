@@ -1,0 +1,193 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Curiously Recurring Template Pattern
+categories: [technology]
+tags: [cpp]
+---
+#+END_EXPORT
+
+之前，读到 CPP Core Guideline C.146，提到，如果觉得使用动态类型转换
+~dynamic_cast~ 的开销太大，可以使用 CRTP 通过静态方法确保成功地向下进行
+类型转换。
+
+所谓的 CRTP 就是 Curiously Recurring Template Pattern 的缩写，即“奇怪
+的递归模板模式”。这个模式是 [[https://dl.acm.org/doi/10.5555/229227.229229][James O. Coplien 在 1995 年提出来的]]。
+
+简单来说，CRTP 由两个要素组成：
+1. 从一个模板类继承
+2. 使用派生的类本身它基类的模板参数
+
+像这样：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+template <typename T>
+class Flower
+{
+};
+
+class Rosemary : public Flower<Rosemary>
+{
+};
+#+end_src
+
+这样一来，在基类 Flower 中，就可以把对象类型静态转换成 Rosemary 或
+Lilac 来使用了。使用 CRTP 可以通过基类静态地提供接口：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template <typename T>
+class Flower
+{
+  public:
+    void blossom() {
+        T& derived = static_cast<T&>(*this);
+        derived.blossom();
+    }
+};
+class Rosemary : public Flower<Rosemary>
+{
+  public:
+    void blossom() {
+        cout << "---purple flowers\n";
+    }
+};
+
+class Lilac : public Flower<Lilac>
+{
+  public:
+    void blossom() {
+        cout << "---white flowers\n";
+    }
+};
+
+template <typename T>
+void grow_flower(Flower<T>& flower) {
+    flower.blossom();
+}
+
+int main()
+{
+    Rosemary r;
+    Lilac l;
+    grow_flower(r);
+    grow_flower(l);
+}
+#+end_src
+
+#+RESULTS:
+: ---purple flowers
+: ---white flowers
+
+注意，这里我们用了静态类型转换（ ~static_cast~ ），没有用到动态类型转换，
+因为派生类的类型已经在继承基类的时候作为模板参数提供了，编译器已经静态
+地生成了相应的基类。所以静态类型转换就够了。
+
+
+但是，CRTP 使用不当也会产生错误。比如，一些代码中，我们不小心在写
+Lilac 类的时候，给基类 Flower 的模板参数写成 Rosemary 了。这时候，就不
+能正确输出结果了。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> <string> :eval no-export :results output
+template <typename T>
+class Flower
+{
+  public:
+    void blossom() {
+        T& derived = static_cast<T&>(*this);
+        derived.blossom();
+    }
+};
+class Rosemary : public Flower<Rosemary>
+{
+  public:
+    void blossom() {
+        cout << "---" << m_color <<" flowers\n";
+    }
+  private:
+    string m_color{"purple"};
+};
+
+class Lilac : public Flower<Rosemary> // <-- BUG
+{
+  public:
+    void blossom() {
+        cout << "---white flowers\n";
+    }
+};
+
+template <typename T>
+void grow_flower(Flower<T>& flower) {
+    flower.blossom();
+}
+
+int main()
+{
+    Rosemary r;
+    Lilac l;
+    grow_flower(r);
+    grow_flower(l);
+}
+#+end_src
+
+如果我们把基类的构造函数设置成 private，并把子类声明成 friend，就可以
+让编译器捕捉到错误。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> <string> :eval no-export :results output
+template <typename T>
+class Flower
+{
+  public:
+    void blossom() {
+        T& derived = static_cast<T&>(*this);
+        derived.blossom();
+    }
+  private:          // add this
+    Flower(){}      // add this
+    friend T;       // add this
+};
+
+class Rosemary : public Flower<Rosemary>
+{
+  public:
+    void blossom() {
+        cout << "---" << m_color <<" flowers\n";
+    }
+  private:
+    string m_color{"purple"};
+};
+
+class Lilac : public Flower<Rosemary> // <-- BUG
+{
+  public:
+    void blossom() {
+        cout << "---white flowers\n";
+    }
+};
+
+template <typename T>
+void grow_flower(Flower<T>& flower) {
+    flower.blossom();
+}
+
+int main()
+{
+    Rosemary r;
+    Lilac l;
+    grow_flower(r);
+    grow_flower(l);
+}
+#+end_src
+
+#+RESULTS:
+#+begin_example
+C-src-kKkt1f.cpp:50:11: error: use of deleted function 'Lilac::Lilac()'
+   50 |     Lilac l;
+      |           ^
+C-src-kKkt1f.cpp:34:7: note: 'Lilac::Lilac()' is implicitly deleted because the default definition would be ill-formed:
+   34 | class Lilac : public Flower<Rosemary> // <-- BUG
+      |       ^~~~~
+C-src-kKkt1f.cpp:34:7: error: 'Flower<T>::Flower() [with T = Rosemary]' is private within this context
+C-src-kKkt1f.cpp:20:5: note: declared private here
+   20 |     Flower(){}
+      |     ^~~~~~
+#+end_example

@@ -1,0 +1,208 @@
+---
+layout: post
+title: Curiously Recurring Template Pattern
+categories: [technology]
+tags: [cpp]
+---
+
+<p>
+之前，读到 CPP Core Guideline C.146，提到，如果觉得使用动态类型转换
+<code>dynamic_cast</code> 的开销太大，可以使用 CRTP 通过静态方法确保成功地向下进行类型转换。
+</p>
+
+<p>
+所谓的 CRTP 就是 Curiously Recurring Template Pattern 的缩写，即“奇怪的递归模板模式”。这个模式是 <a href="https://dl.acm.org/doi/10.5555/229227.229229">James O. Coplien 在 1995 年提出来的</a>。
+</p>
+
+<p>
+简单来说，CRTP 由两个要素组成：
+</p>
+<ol class="org-ol">
+<li>从一个模板类继承</li>
+<li>使用派生的类本身它基类的模板参数</li>
+</ol>
+
+<p>
+像这样：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span> <span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span>
+<span style="color: #707183;">{</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span><span style="color: #707183;">&gt;</span>
+<span style="color: #707183;">{</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+这样一来，在基类 Flower 中，就可以把对象类型静态转换成 Rosemary 或
+Lilac 来使用了。使用 CRTP 可以通过基类静态地提供接口：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span> <span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">blossom</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp; <span style="color: #000000;">derived</span> = <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp;<span style="color: #909183;">&gt;(</span>*<span style="color: #7F0055; font-weight: bold;">this</span><span style="color: #909183;">)</span>;
+        derived.blossom<span style="color: #909183;">()</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span><span style="color: #707183;">&gt;</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">blossom</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"---purple flowers\n"</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Lilac</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Lilac</span><span style="color: #707183;">&gt;</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">blossom</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"---white flowers\n"</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span> <span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">grow_flower</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">flower</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    flower.blossom<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span> <span style="color: #000000;">r</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Lilac</span> <span style="color: #000000;">l</span>;
+    grow_flower<span style="color: #7388d6;">(</span>r<span style="color: #7388d6;">)</span>;
+    grow_flower<span style="color: #7388d6;">(</span>l<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+---purple flowers
+---white flowers
+</pre>
+
+
+<p>
+注意，这里我们用了静态类型转换（ <code>static_cast</code> ），没有用到动态类型转换，因为派生类的类型已经在继承基类的时候作为模板参数提供了，编译器已经静态地生成了相应的基类。所以静态类型转换就够了。
+</p>
+
+
+<p>
+但是，CRTP 使用不当也会产生错误。比如，一些代码中，我们不小心在写
+Lilac 类的时候，给基类 Flower 的模板参数写成 Rosemary 了。这时候，就不能正确输出结果了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span> <span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">blossom</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp; <span style="color: #000000;">derived</span> = <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp;<span style="color: #909183;">&gt;(</span>*<span style="color: #7F0055; font-weight: bold;">this</span><span style="color: #909183;">)</span>;
+        derived.blossom<span style="color: #909183;">()</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span><span style="color: #707183;">&gt;</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">blossom</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"---"</span> &lt;&lt; m_color &lt;&lt;<span style="color: #2A00FF;">" flowers\n"</span>;
+    <span style="color: #7388d6;">}</span>
+  <span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">m_color</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"purple"</span><span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Lilac</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span><span style="color: #707183;">&gt;</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&lt;-- BUG</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">blossom</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"---white flowers\n"</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span> <span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">grow_flower</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">flower</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    flower.blossom<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span> <span style="color: #000000;">r</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Lilac</span> <span style="color: #000000;">l</span>;
+    grow_flower<span style="color: #7388d6;">(</span>r<span style="color: #7388d6;">)</span>;
+    grow_flower<span style="color: #7388d6;">(</span>l<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果我们把基类的构造函数设置成 private，并把子类声明成 friend，就可以让编译器捕捉到错误。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span> <span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">blossom</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp; <span style="color: #000000;">derived</span> = <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp;<span style="color: #909183;">&gt;(</span>*<span style="color: #7F0055; font-weight: bold;">this</span><span style="color: #909183;">)</span>;
+        derived.blossom<span style="color: #909183;">()</span>;
+    <span style="color: #7388d6;">}</span>
+  <span style="color: #7F0055; font-weight: bold;">private</span>:          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">add this</span>
+    <span style="color: #0000ff; font-weight: bold;">Flower</span><span style="color: #7388d6;">(){}</span>      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">add this</span>
+    <span style="color: #7F0055; font-weight: bold;">friend</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">add this</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span><span style="color: #707183;">&gt;</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">blossom</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"---"</span> &lt;&lt; m_color &lt;&lt;<span style="color: #2A00FF;">" flowers\n"</span>;
+    <span style="color: #7388d6;">}</span>
+  <span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">m_color</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"purple"</span><span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Lilac</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span><span style="color: #707183;">&gt;</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&lt;-- BUG</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">blossom</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"---white flowers\n"</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span> <span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">grow_flower</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">flower</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    flower.blossom<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Rosemary</span> <span style="color: #000000;">r</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Lilac</span> <span style="color: #000000;">l</span>;
+    grow_flower<span style="color: #7388d6;">(</span>r<span style="color: #7388d6;">)</span>;
+    grow_flower<span style="color: #7388d6;">(</span>l<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example" id="org7575b3e">
+C-src-kKkt1f.cpp:50:11: error: use of deleted function 'Lilac::Lilac()'
+   50 |     Lilac l;
+      |           ^
+C-src-kKkt1f.cpp:34:7: note: 'Lilac::Lilac()' is implicitly deleted because the default definition would be ill-formed:
+   34 | class Lilac : public Flower&lt;Rosemary&gt; // &lt;-- BUG
+      |       ^~~~~
+C-src-kKkt1f.cpp:34:7: error: 'Flower&lt;T&gt;::Flower() [with T = Rosemary]' is private within this context
+C-src-kKkt1f.cpp:20:5: note: declared private here
+   20 |     Flower(){}
+      |     ^~~~~~
+</pre>
