@@ -1,0 +1,57 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.148 使用 dynamic_cast 转换成指针类型的时候，无法找到要转换的类型时，不会抛出异常，可以用来进行进行分支判断
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~dynamic_cast~ to a pointer type when failure to find the required class is considered a valid alternative"
+
+
+理由
+
+~dynamic_cast~ 允许对转换结果的指针进行测试，是否指向有效的多态对象。因
+为无法找到合适的类型只会返回一个空值，所以可以在运行时进行测试判断。这
+样就能在写代码的时候进行判断，根据结果选择不同的执行路径。
+
+这里与 C.147 不同。C.147 会抛出异常，无法进行条件判断。
+
+
+例子
+
+以下例子 add 函数会把形状放到形状保管器里。不同形状还会添加到形状视图
+中。先对形状进行动态类型转换，根据转换结果装入不同的视图。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void add(Shape* const item)
+{
+    // Ownership is always taken
+    owned_shapes.emplace_back(item);
+
+    // Check the Geometric_attributes and add the shape to none/one/some/all of the views
+
+    if (auto even = dynamic_cast<Even_sided*>(item))
+    {
+        view_of_evens.emplace_back(even);
+    }
+
+    if (auto trisym = dynamic_cast<Trilaterally_symmetrical*>(item))
+    {
+        view_of_trisyms.emplace_back(trisym);
+    }
+}
+#+end_src
+
+注意
+
+进行动态类型转换的时候，如果无法找到对应的类型，就会返回一个空值，如果
+对空值进行取值访问就会导致未定义行为。所以必须考虑空值的情况，进行判断
+测试。
+
+
+强化
+- （复杂）只有对动态类型转换的结果进行空值判断后才能取值，不然抛出警告。
