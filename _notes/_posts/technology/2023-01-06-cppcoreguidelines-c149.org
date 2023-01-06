@@ -1,0 +1,72 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.149 用 new 创建对象的时候，使用 unique_ptr 或 shared_ptr，避免忘记删除对象
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~unique_ptr~ or ~shared_ptr~ to avoid forgetting to delete objects created using new"
+
+
+理由
+
+避免资源泄漏。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void use(int i)
+{
+    auto p = new int {7};           // bad: initialize local pointers with new
+    auto q = make_unique<int>(9);   // ok: guarantee the release of the memory-allocated for 9
+    if (0 < i) return;              // maybe return and leak
+    delete p;                       // too late
+}
+#+end_src
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> <memory> :eval no-export :results output
+class Flower {
+  public:
+    Flower(int id):m_id{id} { cout << "new flower " << m_id << "\n"; }
+    ~Flower() { cout << "delete flower " << m_id << "\n"; }
+  private:
+    int m_id{0};
+};
+
+void use(int i)
+{
+    auto p = new Flower {7};
+    // bad: initialize local pointers with new
+    auto q = make_unique<Flower>(9);
+    // ok: guarantee the release of the memory-allocated for 9
+    if (0 < i) return;              // maybe return and leak
+    delete p;                       // too late
+}
+
+int main()
+{
+    use(0);
+    use(42);
+}
+#+end_src
+
+#+RESULTS:
+: new flower 7
+: new flower 9
+: delete flower 7
+: delete flower 9
+: new flower 7
+: new flower 9
+: delete flower 9
+
+以上代码，如果提前return了， flower 7 就没有被删除，内存泄漏！
+
+
+强化
+- 标记使用原始指针接受 new 返回的结果
+- 标记对局部变量进行 delete 的操作

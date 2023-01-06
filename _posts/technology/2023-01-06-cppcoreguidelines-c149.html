@@ -1,0 +1,90 @@
+---
+layout: post
+title: CppCoreGuidelines C.149 用 new 创建对象的时候，使用 unique_ptr 或 shared_ptr，避免忘记删除对象
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>unique_ptr</code> or <code>shared_ptr</code> to avoid forgetting to delete objects created using new&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+避免资源泄漏。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #7388d6;">{</span>7<span style="color: #7388d6;">}</span>;           <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: initialize local pointers with new</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">q</span> = make_unique<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;(</span>9<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok: guarantee the release of the memory-allocated for 9</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>0 &lt; i<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;              <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">maybe return and leak</span>
+    <span style="color: #7F0055; font-weight: bold;">delete</span> p;                       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">too late</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Flower</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">id</span><span style="color: #7388d6;">)</span>:m_id<span style="color: #7388d6;">{</span>id<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span> cout &lt;&lt; <span style="color: #2A00FF;">"new flower "</span> &lt;&lt; m_id &lt;&lt; <span style="color: #2A00FF;">"\n"</span>; <span style="color: #7388d6;">}</span>
+    ~<span style="color: #0000ff; font-weight: bold;">Flower</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> cout &lt;&lt; <span style="color: #2A00FF;">"delete flower "</span> &lt;&lt; m_id &lt;&lt; <span style="color: #2A00FF;">"\n"</span>; <span style="color: #7388d6;">}</span>
+  <span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m_id</span><span style="color: #7388d6;">{</span>0<span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span> <span style="color: #7388d6;">{</span>7<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: initialize local pointers with new</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">q</span> = make_unique<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Flower</span><span style="color: #7388d6;">&gt;(</span>9<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok: guarantee the release of the memory-allocated for 9</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>0 &lt; i<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;              <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">maybe return and leak</span>
+    <span style="color: #7F0055; font-weight: bold;">delete</span> p;                       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">too late</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    use<span style="color: #7388d6;">(</span>0<span style="color: #7388d6;">)</span>;
+    use<span style="color: #7388d6;">(</span>42<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+new flower 7
+new flower 9
+delete flower 7
+delete flower 9
+new flower 7
+new flower 9
+delete flower 9
+</pre>
+
+
+<p>
+以上代码，如果提前return了， flower 7 就没有被删除，内存泄漏！
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记使用原始指针接受 new 返回的结果</li>
+<li>标记对局部变量进行 delete 的操作</li>
+</ul>
