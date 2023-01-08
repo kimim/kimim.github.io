@@ -1,0 +1,76 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：arbitrage
+categories: [language]
+tags: [Français, English]
+---
+#+END_EXPORT
+
+英国社会活动家 Erica Stanford 写的一本书叫做："Crypto Wars Faked
+Deaths, Missing Billions and Industry Disruption"，里面写道：
+
+#+begin_quote
+PlusToken’s organizers attracted people fascinated by the new
+buzzwords associated with cryptocurrencies, like "decentralized" and
+"blockchain," to lavish conferences. The organizers stated that they
+had developed an AI bot designed for "*arbitrage* trading" that would
+make money from price fluctuations in Bitcoin and various other
+cryptocurrencies.
+#+end_quote
+
+2018 年的加密货币很火的时候，有个叫 PlusToken 的组织，号称可以通过人工
+智能进行套利交易，以6%到18%的月收益率，吸引了无数加密货币投资者。结果
+在 2019 年，背后的组织者卷款跑路，留下一句：sorry we have run.
+
+好在，最后犯罪集团被抓捕归案了：
+
+#+begin_quote
+该案系公安机关侦破的首起以比特币等数字货币为交易媒介的网络传销案，涉及
+参与人员200余万人，层级关系多达3000余层，涉案数字货币总值逾400亿元。
+#+end_quote
+
+回到本文重点！我们今天学习 arbitrage。这个词呢，跟之前学过的 [[./2022-11-03-english-triage][triage]]，
+[[./2023-01-07-english-sabotage][sabotage]] 一样，都是从法语里来的。意思是“套利”。
+
+#+begin_quote
+套利，也叫价差交易，套利指的是在买入或卖出某种电子交易合约的同时，卖出
+或买入相关的另一种合约。套利交易是指利用相关市场或相关电子合同之间的价
+差变化，在相关市场或相关电子合同上进行交易方向相反的交易，以期望价差发
+生变化而获利的交易行为。
+#+end_quote
+
+这个词是从法语里引入的，本意是仲裁、裁判、公断的意思。其动词为
+arbitrer，比如arbitrer un litige 仲裁诉讼，arbitrer un match 给比赛做
+裁判。大概因为仲裁、裁判都涉及到快速的做出决策，所以 arbitrage 到了英
+语里就成了快速地作出决定，从而利用价差交易套利。
+
+做套利交易的人就是 arbitrageur，即套利交易获利者，比如：
+
+The arbitrageur has no interest in the long-term future of the
+company. 套利交易获利者对公司未来的长期利益不感兴趣。
+
+法语里的动词 arbitrer 对应的英文其实是 arbitrate，即仲裁，例如：
+
+I've been asked to arbitrate between the opposing sides. 他们让我给对
+抗双方做仲裁。
+
+作出仲裁的人就是 arbitrator，即仲裁者：
+
+The independent arbitrator has the approval of both sides in the
+dispute. 仲裁者获得了争端双方的一致认可。
+
+仲裁这个行为，由 arbitrate 派生来，即 arbitration 仲裁。
+
+但是，如果仲裁者胡乱仲裁，就成了 arbitrary 任意的、武断的、专横的、专
+制的。如：
+
+Did you have a reason for choosing your destination or was it
+arbitrary? 你的选择有理由吗？还是随意作出的决定？
+
+arbitrary 的名词形式是 arbitrariness，比如：
+
+There is nothing we can do about the arbitrariness of illness. 面对疾
+病的肆虐，我们无能为力！
+
+好了，最后，希望新冠的强弩之末，大家都要好好的。
