@@ -1,0 +1,19 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.153 首选虚函数，而非类型转换
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer virtual function to casting"
+
+
+理由
+
+虚函数更安全，类型转换容易出错。虚函数调用能达到最深层次的派生类的函数，
+而类型转换只能到达转换到的类型，而且会给出错误结果，（尤其是当继承层级
+在代码维护的时候修改过了时候）。
