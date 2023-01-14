@@ -1,0 +1,72 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：ostracism
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+上周，脑神经科学家 Friederike Fabritius 的书 《The Brain-Friendly
+Workplace》，讲到要提升 oxytocin 创建和谐工作环境的时候讲到：
+
+#+begin_quote
+Maslow's famous hierarchy of needs gets it wrong: The human need for
+belonging should sit at the base of the pyramid, even before food,
+shelter and physical safety. People think about their relationships
+constantly, and they fear *ostracism* more than almost anything else.
+
+马斯洛的需求层级理论是有问题的：人类的归属需求是需求金字塔的最基础。人
+们会一直考虑自己与他人的关系，最害怕的就是被人驱逐。
+#+end_quote
+
+这里提到一个词 ostracism，它的意思是“放逐”，“流放”的意思。
+
+故事要从古希腊讲起，公元前594年有个叫庇西特拉图（Peisistratus）的人，
+通过政治联盟，成为僭主，大权在握。之后是通过，雅典执政官克里斯提尼
+（Cleisthenes）的领导，推翻了庇西特拉图的统治。他为了避免同样的事情再
+次发生，于是发明了所谓的陶片投票驱逐方法（Ostracism）。大概就是每年召
+集6000个人，分别在陶片上协商自己认为有太大影响力、可能破坏联邦稳定的人
+士，通过投票计票，选出那个人，将他驱逐出境，10年后才能回来。但是这个驱
+逐跟流放（excile）还是有一些区别。被放逐的人依然拥有自己在老家的财产，
+社会地位也不影响，只是让他去外面消停一阵。
+
+当时投票用的陶片叫做 ostrakon，意思是陶片或贝壳，所以有些人称这个
+ostracism 为陶片驱逐法，或贝壳驱逐法。但是根据考古发现，投票用的还是以
+陶片为主。
+
+驱逐的动词形式是 ostracize，比如：
+
+she was declared a witch and ostracized by the villagers. 村民认为她是
+巫婆，把她驱逐出去。
+
+另外，oyster 牡蛎这个词应该也是 ostrakon 转变过来的。其他牡蛎相关的词还有：
+- ostraceous 牡蛎味的，比如：An ostraceous aroma drifted into the room
+  from the kitchen. 牡蛎的香味从厨房飘进房间。
+- ostraconophobia, 之前介绍过 [[./2021-04-27-english-Kakorrhaphiophobia.html][Kakorrhaphiophobia 失败恐惧症]]，phobia 往
+  往是一种心理恐惧症。所以，ostraconophobia 是牡蛎贝壳恐惧症。
+  Ostraconophobia is the irrational fear of shellfish. Someone
+  experiencing this disorder may experience a great deal of anxiety
+  when in the presence of a shellfish.
+- ostreiculture, 牡蛎养殖。ostreiculturist, 牡蛎养殖户。
+- ostreophagist, 以牡蛎为食的人。因为 phagia，phagist 在希腊语是吃的意
+  思吧。比如 zoophagy 食肉者、xylophagy 木食者。
+- ostreotoxism, 牡蛎中毒。toxin 是毒素的意思。ostreotoxism 指的是吃了
+  受污染的牡蛎而中毒。
+
+最后，我们回到Friederike Fabritius 的书 《The Brain-Friendly
+Workplace》，她还提到，我们的行为习惯会收到四种激素的影响，比如：
+- 多巴胺（dopamine）会使人寻求刺激、有能量和好奇心、讨厌琐碎细节、容易厌烦。
+- 血清素（Serotonin）主导的时候，会让人喜欢细节、喜欢结构、寻求安全、
+  舒适、寻求习以为常的方式、更可靠、更忠诚。
+- 睾酮素（Testosterone）主导人们的神经的时候，人们会做一些有风险的挑战、
+  系统化思考、直言不讳、需求强烈，希望按照规则一步一步解决问题。
+- 雌性激素或催产素（Estrogen/oxytocin）主导的时候，会更注重感觉，关系，
+  信任，包容，会多角度思考、多方位考量问题。
+
+不同人在不同的地点不同的时间，会有不同的激素主导自己，所以，作者提出，
+在工作环境中要努力营造一种具有包容性的环境，兼顾不同人的激素情况，就是
+一种对大脑友好的工作环境（brain-friendly workplace）。
+
+最后，希望新的一年，大家都能找到一个 brain-friendly workplace，发挥自
+己的特长，获得成功的喜悦。

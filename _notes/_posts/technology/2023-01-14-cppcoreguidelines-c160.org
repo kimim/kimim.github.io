@@ -1,0 +1,46 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.160 操作符函数要模仿习惯用法
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Define operators primarily to mimic conventional usage"
+
+
+理由
+
+不会感到奇怪。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class X {
+public:
+    // ...
+    X& operator=(const X&); // member function defining assignment
+    friend bool operator==(const X&, const X&); // == needs access to representation
+                                                // after a = b we have a == b
+    // ...
+};
+#+end_src
+
+此处，我们维护了习惯语义：复制之后，进行比较，结果相等。
+
+
+坏例子：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+X operator+(X a, X b) { return a.v - b.v; }   // bad: makes + subtract
+#+end_src
+
+
+注意
+
+非成员的操作符要么是 friend，要么与操作对象一起定义在相同的名字空间。
+二元操作符应当将操作对象同等对待。
