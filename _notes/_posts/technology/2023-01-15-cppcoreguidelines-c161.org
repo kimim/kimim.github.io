@@ -1,0 +1,28 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.161 对称操作符用非成员函数实现
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use non-member functions for symmetric operators"
+
+
+理由
+
+如果你使用成员函数，就得定义两个。用了非成员函数，对于 ==， a = b，b = a 这类操作，就只要定义一次就好了。
+
+
+例如
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+bool operator==(Point a, Point b) { return a.x == b.x && a.y == b.y; }
+#+end_src
+
+
+强化：
+- 标记成员操作符函数
