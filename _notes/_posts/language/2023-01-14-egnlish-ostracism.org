@@ -43,11 +43,11 @@ she was declared a witch and ostracized by the villagers. 村民认为她是
 另外，oyster 牡蛎这个词应该也是 ostrakon 转变过来的。其他牡蛎相关的词还有：
 - ostraceous 牡蛎味的，比如：An ostraceous aroma drifted into the room
   from the kitchen. 牡蛎的香味从厨房飘进房间。
-- ostraconophobia, 之前介绍过 [[./2021-04-27-english-Kakorrhaphiophobia.html][Kakorrhaphiophobia 失败恐惧症]]，[[./2016-09-05-english-onion.html][Alliumphobia 大蒜恐惧症]] phobia 往
-  往是一种心理恐惧症。所以，ostraconophobia 是牡蛎贝壳恐惧症。
-  Ostraconophobia is the irrational fear of shellfish. Someone
-  experiencing this disorder may experience a great deal of anxiety
-  when in the presence of a shellfish.
+- ostraconophobia, 之前介绍过 [[./2021-04-27-english-Kakorrhaphiophobia.html][Kakorrhaphiophobia 失败恐惧症]]，
+  [[./2016-09-05-english-onion.html][Alliumphobia 大蒜恐惧症]] phobia 往往是一种心理恐惧症。所以，
+  ostraconophobia 是牡蛎贝壳恐惧症。Ostraconophobia is the irrational
+  fear of shellfish. Someone experiencing this disorder may experience
+  a great deal of anxiety when in the presence of a shellfish.
 - ostreiculture, 牡蛎养殖。ostreiculturist, 牡蛎养殖户。
 - ostreophagist, 以牡蛎为食的人。因为 phagia，phagist 在希腊语是吃的意
   思吧。比如 zoophagy 食肉者、xylophagy 木食者。
