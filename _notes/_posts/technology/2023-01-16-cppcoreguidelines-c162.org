@@ -1,0 +1,42 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.162 重载大致相似的操作符
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Overload operations that are roughly equivalent"
+
+
+理由
+
+逻辑上相似的操作函数，使用不同的参数类型，却用了不同的名字，容易让人费
+解。导致在函数名上编码参数类型，无法实现泛型编程。
+
+
+例子
+
+考虑：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void print(int a);
+void print(int a, int base);
+void print(const string&);
+#+end_src
+
+这几个函数的作用都是打印出提供给它的参数。
+
+相反的：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void print_int(int a);
+void print_based(int a, int base);
+void print_string(const string&);
+#+end_src
+
+这几个函数也是打印出参数，但是在函数名上硬编码了参数类型，就无法支持泛
+型代码。
