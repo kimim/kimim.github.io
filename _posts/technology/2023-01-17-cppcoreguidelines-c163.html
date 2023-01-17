@@ -1,0 +1,64 @@
+---
+layout: post
+title: CppCoreGuidelines C.163 只重载大体相似的操作符
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Overload only for operations that are roughly equivalent&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+逻辑上相似的操作函数，使用不同的参数类型，却用了不同的名字，容易让人费解。在使用泛型编程的时候，容易出错。
+</p>
+
+<p>
+例子
+</p>
+
+<p>
+考虑：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">open_gate</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Gate</span>&amp; <span style="color: #000000;">g</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">remove obstacle from garage exit lane</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">fopen</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">name</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">mode</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">open file</span>
+</pre>
+</div>
+
+<p>
+这两个函数完全不同且不相关，所以名字也不一样。
+</p>
+
+<p>
+相反的：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">open</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Gate</span>&amp; <span style="color: #000000;">g</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">remove obstacle from garage exit lane</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">open</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">name</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">mode</span> =<span style="color: #2A00FF;">"r"</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">open file</span>
+</pre>
+</div>
+
+<p>
+这两个函数也是完全不同不想管的，但是名字却取的一样，这样很容易令人误解。好在类型系统会捕捉相关的错误。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+一定要小心一些常用的名字，比如 open, move, +, ==。
+</p>
