@@ -1,0 +1,119 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.164 避免隐式的转换操作
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid implicit conversion operators"
+
+
+理由
+
+隐式转换有时候是必不可少的（如 double 转成 int），但是经常导致意想不到
+的结果（如 String 转成 C 风格的 string）。
+
+
+注意
+
+尽量使用显示的类型转换，除非特殊情况使用隐式转换。不要因为方便而选择隐
+式转换。
+
+
+例子
+
+#+NAME: s1-and-s2
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+struct S1 {
+    string s{"S1"};
+    // ...
+    operator char*() { return s.data(); }  // BAD, likely to cause surprises
+};
+
+struct S2 {
+    string s{"S2"};
+    // ...
+    explicit operator char*() { return s.data(); }
+};
+#+end_src
+
+#+begin_src C++ :noweb yes :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+$$s1-and-s2$$
+void f(S1 s1, S2 s2)
+{
+    char* x1 = s1;     // OK, but can cause surprises in many contexts
+    cout << x1 << endl;
+    //char* x2 = s2;     // error (and that's usually a good thing)
+    char* x3 = static_cast<char*>(s2); // we can be explicit (on your head be it)
+    cout << x3 << endl;
+}
+int main()
+{
+    S1 s1;
+    S2 s2;
+    f(s1, s2);
+}
+#+end_src
+
+#+RESULTS:
+: S1
+: S2
+
+因为转换操作符添加了 explicit，所以需要进行显式的转换。
+
+#+begin_src C++ :noweb yes :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+$$s1-and-s2$$
+void f(S1 s1, S2 s2)
+{
+    char* x2 = s2;     // error (and that's usually a good thing)
+}
+int main()
+{
+    S1 s1;
+    S2 s2;
+    f(s1, s2);
+}
+#+end_src
+
+#+RESULTS:
+#+begin_example
+C-src-gvvjq1.cpp: In function 'void f(S1, S2)':
+C-src-gvvjq1.cpp:23:16: error: cannot convert 'S2' to 'char*' in initialization
+   23 |     char* x2 = s2;
+      |                ^~
+      |                |
+      |                S2
+#+end_example
+
+不然编译器就会报错，说无法进行转换。
+
+
+隐式类型转换会引起意想不到的结果，和潜在的破坏。而且还很难发现。
+
+比如
+
+#+begin_src C++ :noweb yes :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+S1 ff() {};
+
+char* g()
+{
+    return ff();
+}
+#+end_src
+
+ff() 返回的字符串在使用内部指针之前可能就已经被销毁。
+
+
+强化
+- 标注使用非显式转换的操作。
+
+#+begin_comment
+Local variables:
+org-babel-noweb-wrap-start: "$$"
+org-babel-noweb-wrap-end: "$$"
+End:
+#+end_comment
