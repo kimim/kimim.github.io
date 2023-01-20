@@ -344,7 +344,8 @@ clj -A:bench:test
 
 * Sean Corfield 的 clj-new
 
-大神 Sean Corfield 扩展了很多 clj 的功能。
+大神 Sean Corfield 扩展了很多 clj 的功能：
+https://github.com/seancorfield/clj-new
 
 添加以下 ~alias~ ，就可以运行模块内的 ~-main~ 函数、特定函数、测试、编译打包。
 

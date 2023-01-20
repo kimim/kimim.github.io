@@ -70,7 +70,7 @@ Use clj -h for help
 让后我们可以用 <code>clj -h</code> 打印出一堆帮助信息：
 </p>
 
-<pre class="example" id="org744fcc8">
+<pre class="example" id="org43a156b">
 # clj -h
 Version: 1.11.1.1208
 
@@ -227,7 +227,7 @@ user=&gt; (str (t/instant))
 下载到的程序库，一般保存 <code>~/.m2</code> 或 <code>~/.gitlibs</code> ，比如刚才的库就在这里：
 </p>
 
-<pre class="example" id="org26f5078">
+<pre class="example" id="orga7881f5">
 # ls ~/.m2/repository/clojure/java-time/clojure.java-time/1.2.0/
 -rw-r--r-- 1 63991 Jan 20 10:19 clojure.java-time-1.2.0.jar
 -rw-r--r-- 1    40 Jan 20 10:19 clojure.java-time-1.2.0.jar.sha1
@@ -344,7 +344,7 @@ Hello world, the time is 10:28 AM
 运行效果一样：
 </p>
 
-<pre class="example" id="org94441b6">
+<pre class="example" id="orga805411">
 # clj -X hello/run
 Hello world, the time is 10:58 AM
 </pre>
@@ -362,7 +362,7 @@ Hello world, the time is 10:58 AM
 创建tag，查看日志：
 </p>
 
-<pre class="example" id="org5cc9468">
+<pre class="example" id="orgd2de2eb">
 # git tag -a '0.0.1' -m 'initial release'
 
 # git push --tags
@@ -387,7 +387,7 @@ To github.com:kimim/time-lib.git
 运行效果如下，clj 会去 clone github 库：
 </p>
 
-<pre class="example" id="orgc45ee31">
+<pre class="example" id="orgfd7c599">
 # clj -X hello/run
 Checking out: https://github.com/kimim/time-lib.git at 6514c1022a78ace8548552b3db64f6efa58448e2
 Downloading: clojure/java-time/clojure.java-time/1.2.0/clojure.java-time-1.2.0.pom from clojars
@@ -428,7 +428,8 @@ clj 可以用 <code>-A</code> 选项添加 <code>deps.edn</code> 中 <code>:alia
 <h2 id="org848f1c8"><span class="section-number-2">7.</span> Sean Corfield 的 clj-new</h2>
 <div class="outline-text-2" id="text-7">
 <p>
-大神 Sean Corfield 扩展了很多 clj 的功能。
+大神 Sean Corfield 扩展了很多 clj 的功能：
+<a href="https://github.com/seancorfield/clj-new">https://github.com/seancorfield/clj-new</a>
 </p>
 
 <p>
@@ -562,7 +563,7 @@ Hello, Clojure!
 测试
 </p>
 
-<pre class="example" id="org3f531fb">
+<pre class="example" id="orgc2ae592">
 clj -T:build test
 Checking out: https://github.com/seancorfield/build-clj.git at 0ffdb4c0f2cd7ef484458502b926fbe63efe540b
 Checking out: https://github.com/clojure/tools.build.git at ba1a2bf421838802e7bdefc541b41f57582e53b6
