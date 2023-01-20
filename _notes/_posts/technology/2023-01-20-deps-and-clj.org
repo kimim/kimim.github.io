@@ -1,0 +1,489 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Clojure deps & clj guide
+categories: [technology]
+tags: [Clojure]
+---
+#+END_EXPORT
+
+Clojure 命令行工具非常有用，但是一直没有仔细了解其功能，每次用的时候，
+就会手忙脚乱。现在参考 Clojure 官网的 ‘Deps and CLI Guide’ 系统学习学
+习。
+
+Clojure 命令行的作用：
+1. 运行 REPL
+2. 运行 Clojure 程序
+3. 解析执行 Clojure 语句
+
+所有这些操作，都可能会用到 Clojure 或 Java 的程序库，可以用 ~deps.edn~
+文件来指定程序库的来源和版本，从而可以让 Clojure 自动的下载程序库、添
+加到 JVM classpath。
+
+* 安装 Clojure 命令行
+
+这个网页 https://clojure.org/guides/install_clojure 介绍了命令行下的安
+装方法：
+
+#+begin_src shell
+curl -O https://download.clojure.org/install/linux-install-1.11.1.1208.sh
+chmod +x linux-install-1.11.1.1208.sh
+./linux-install-1.11.1.1208.sh
+#+end_src
+
+运行结果如下：
+
+（这里，我的命令行提示符是 # 符号）
+
+#+begin_src example
+# curl -O https://download.clojure.org/install/linux-install-1.11.1.1208.sh
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1828  100  1828    0     0    858      0  0:00:02  0:00:02 --:--:--   858
+
+# chmod +x linux-install-1.11.1.1208.sh
+
+# ./linux-install-1.11.1.1208.sh
+Downloading and expanding tar
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 17.1M  100 17.1M    0     0  2471k      0  0:00:07  0:00:07 --:--:-- 3630k
+Installing libs into /usr/local/lib/clojure
+Installing clojure and clj into /usr/local/bin
+Installing man pages into /usr/local/share/man/man1
+Removing download
+Use clj -h for help
+#+end_src
+
+让后我们可以用 ~clj -h~ 打印出一堆帮助信息：
+
+#+begin_example
+# clj -h
+Version: 1.11.1.1208
+
+You use the Clojure tools ('clj' or 'clojure') to run Clojure programs
+on the JVM, e.g. to start a REPL or invoke a specific function with data.
+The Clojure tools will configure the JVM process by defining a classpath
+(of desired libraries), an execution environment (JVM options) and
+specifying a main class and args.
+
+Using a deps.edn file (or files), you tell Clojure where your source code
+resides and what libraries you need. Clojure will then calculate the full
+set of required libraries and a classpath, caching expensive parts of this
+process for better performance.
+
+The internal steps of the Clojure tools, as well as the Clojure functions
+you intend to run, are parameterized by data structures, often maps. Shell
+command lines are not optimized for passing nested data, so instead you
+will put the data structures in your deps.edn file and refer to them on the
+command line via 'aliases' - keywords that name data structures.
+
+'clj' and 'clojure' differ in that 'clj' has extra support for use as a REPL
+in a terminal, and should be preferred unless you don't want that support,
+then use 'clojure'.
+
+Usage:
+  Start a REPL  clj     [clj-opt*] [-Aaliases] [init-opt*]
+  Exec fn(s)    clojure [clj-opt*] -X[aliases] a/fn? [kpath v]* kv-map?
+  Run tool      clojure [clj-opt*] -T[name|aliases] a/fn [kpath v] kv-map?
+  Run main      clojure [clj-opt*] -M[aliases] [init-opt*] [main-opt] [arg*]
+  Prepare       clojure [clj-opt*] -P [other exec opts]
+
+exec-opts:
+ -Aaliases      Use concatenated aliases to modify classpath
+ -X[aliases]    Use concatenated aliases to modify classpath or supply exec fn/args
+ -T[toolname|aliases]  Invoke tool by name or via aliases ala -X
+ -M[aliases]    Use concatenated aliases to modify classpath or supply main opts
+ -P             Prepare deps - download libs, cache classpath, but don't exec
+
+clj-opts:
+ -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
+ -Sdeps EDN     Deps data to use as the last deps file to be merged
+ -Spath         Compute classpath and echo to stdout only
+ -Spom          Generate (or update) pom.xml with deps and paths
+ -Stree         Print dependency tree
+ -Scp CP        Do NOT compute or cache classpath, use this one instead
+ -Srepro        Ignore the ~/.clojure/deps.edn config file
+ -Sforce        Force recomputation of the classpath (don't use the cache)
+ -Sverbose      Print important path info to console
+ -Sdescribe     Print environment and command parsing info as data
+ -Sthreads      Set specific number of download threads
+ -Strace        Write a trace.edn file that traces deps expansion
+ --             Stop parsing dep options and pass remaining arguments to clojure.main
+ --version      Print the version to stdout and exit
+ -version       Print the version to stderr and exit
+
+init-opt:
+ -i, --init path     Load a file or resource
+ -e, --eval string   Eval exprs in string; print non-nil values
+ --report target     Report uncaught exception to "file" (default), "stderr", or "none"
+
+main-opt:
+ -m, --main ns-name  Call the -main function from namespace w/args
+ -r, --repl          Run a repl
+ path                Run a script from a file or resource
+ -                   Run a script from standard input
+ -h, -?, --help      Print this help message and exit
+
+Programs provided by :deps alias:
+ -X:deps list              List full transitive deps set and licenses
+ -X:deps tree              Print deps tree
+ -X:deps find-versions     Find available versions of a library
+ -X:deps find-versions     Find available versions of a library
+ -X:deps prep              Prepare all unprepped libs in the dep tree
+ -X:deps mvn-install       Install a maven jar to the local repository cache
+ -X:deps git-resolve-tags  Resolve git coord tags to shas and update deps.edn
+
+For more info, see:
+ https://clojure.org/guides/deps_and_cli
+ https://clojure.org/reference/repl_and_main
+#+end_example
+
+* 运行 REPL
+
+#+begin_src example
+# clj
+Clojure 1.11.1
+user=> (+ 2 3)
+5
+user=>
+#+end_src
+
+创建 ~deps.edn~ 添加程序库，比如 ~clojure.java-time~ 用来处理时间对象。
+
+#+begin_src clojure
+{:deps
+ {clojure.java-time/clojure.java-time {:mvn/version "1.1.0"}}}
+#+end_src
+
+命令行中，也可以查询程序库的版本：
+
+#+begin_src example
+# clj -X:deps find-versions :lib clojure.java-time/clojure.java-time
+{:mvn/version "0.3.0"}
+{:mvn/version "0.3.1"}
+{:mvn/version "0.3.2"}
+{:mvn/version "0.3.3"}
+{:mvn/version "1.0.0-SNAPSHOT"}
+{:mvn/version "1.0.0"}
+{:mvn/version "1.1.0"}
+{:mvn/version "1.2.0"}
+#+end_src
+
+既然，有新版本，那么，我们修改一下 ~deps.edn~
+
+#+begin_src clojure
+{:deps
+ {clojure.java-time/clojure.java-time {:mvn/version "1.2.0"}}}
+#+end_src
+
+再一次在 ~deps.edn~ 所在的文件夹运行 clj：
+
+#+begin_src example
+# clj
+Downloading: clojure/java-time/clojure.java-time/1.2.0/clojure.java-time-1.2.0.pom from clojars
+Downloading: clojure/java-time/clojure.java-time/1.2.0/clojure.java-time-1.2.0.jar from clojars
+Clojure 1.11.1
+user=> (require '[java-time.api :as t])
+nil
+user=> (str (t/instant))
+"2023-01-20T02:19:56.912808900Z"
+#+end_src
+
+我们就能在 REPL 中 ~require~ 所 ~deps.edn~ 指定的程序库啦。因为 ~clj~ 会在后
+台下载程序库，并把程序库加载到 ~classpath~ 中供我们调用。
+
+下载到的程序库，一般保存 ~~/.m2~ 或 ~~/.gitlibs~ ，比如刚才的库就在这里：
+
+#+begin_example
+# ls ~/.m2/repository/clojure/java-time/clojure.java-time/1.2.0/
+-rw-r--r-- 1 63991 Jan 20 10:19 clojure.java-time-1.2.0.jar
+-rw-r--r-- 1    40 Jan 20 10:19 clojure.java-time-1.2.0.jar.sha1
+-rw-r--r-- 1  3546 Jan 20 10:19 clojure.java-time-1.2.0.pom
+-rw-r--r-- 1    40 Jan 20 10:19 clojure.java-time-1.2.0.pom.sha1
+-rw-r--r-- 1   218 Jan 20 10:19 _remote.repositories
+#+end_example
+
+* 写程序
+
+接下来，官方指南教我们怎么写程序。
+
+在 ~deps.edn~ 同一级文件夹下，创建一个 ~src~ 文件夹，添加 ~hello.clj~
+
+#+begin_src clojure
+(ns hello
+  (:require [java-time.api :as t]))
+
+(defn time-str
+  "Returns a string representation of a datetime in the local time zone."
+  [instant]
+  (t/format
+   (t/with-zone (t/formatter "hh:mm a") (t/zone-id))
+   instant))
+
+(defn run [opts]
+  (println "Hello world, the time is" (time-str (t/instant))))
+
+(defn -main[]
+  (run {:name "Clojure"}))
+#+end_src
+
+然后，运行：
+
+#+begin_src example
+# clj -X hello/run
+Hello world, the time is 10:28 AM
+#+end_src
+
+* 使用本地代码库
+
+我们也可以提取 ~time-str~ 这个函数到另一个工程。这样可以重复使用共用代码。
+
+在上面那个工程文件夹同一级，创建 ~time-lib~ 文件夹，添加一样的 ~deps.edn~
+，然后在 ~src~ 下添加 ~hello-time.clj~ 文件：
+
+#+begin_src clojure
+(ns hello-time
+  (:require [java-time.api :as t]))
+
+(defn now
+  "Returns the current datetime"
+  []
+  (t/instant))
+
+(defn time-str
+  "Returns a string representation of a datetime in the local time zone."
+  [instant]
+  (t/format
+   (t/with-zone (t/formatter "hh:mm a") (t/zone-id))
+   instant))
+#+end_src
+
+修改 ~hello-world~ 项目的 ~deps.edn~
+
+#+begin_src clojure
+{:deps
+ {time-lib/time-lib {:local/root "../time-lib"}}
+#+end_src
+
+意思 ~time-lib/time-lib~ 程序库在本文件夹的上一级文件夹下的 ~time-lib~
+
+~hello.clj~ 就可以简化如下：
+
+#+begin_src clojure
+(ns hello
+  (:require [hello-time :as ht]))
+
+(defn run [opts]
+  (println "Hello world, the time is" (ht/time-str (ht/now))))
+
+(defn -main[]
+  (run {:name "Clojure"}))
+#+end_src
+
+运行效果一样：
+
+#+begin_example
+# clj -X hello/run
+Hello world, the time is 10:58 AM
+#+end_example
+
+* 使用 Github 库
+
+接着，把刚才创建的 ~time-lib~ 文件夹内容 push 到 github：https://github.com/kimim/time-lib
+
+创建tag，查看日志：
+
+#+begin_example
+# git tag -a '0.0.1' -m 'initial release'
+
+# git push --tags
+Enumerating objects: 1, done.
+Counting objects: 100% (1/1), done.
+Writing objects: 100% (1/1), 160 bytes | 80.00 KiB/s, done.
+Total 1 (delta 0), reused 0 (delta 0), pack-reused 0
+To github.com:kimim/time-lib.git
+ * [new tag]         0.0.1 -> 0.0.1
+
+# git rev-parse --short 0.0.1^{commit}
+6514c10
+#+end_example
+
+#+begin_src clojure
+{:deps
+ {io.github.kimim/time-lib {:git/tag "0.0.1" :git/sha "6514c10"}}}
+#+end_src
+
+运行效果如下，clj 会去 clone github 库：
+
+#+begin_example
+# clj -X hello/run
+Checking out: https://github.com/kimim/time-lib.git at 6514c1022a78ace8548552b3db64f6efa58448e2
+Downloading: clojure/java-time/clojure.java-time/1.2.0/clojure.java-time-1.2.0.pom from clojars
+Downloading: clojure/java-time/clojure.java-time/1.2.0/clojure.java-time-1.2.0.jar from clojars
+Hello world, the time is 03:23 AM
+#+end_example
+
+* 添加额外的 classpath
+
+clj 可以用 ~-A~ 选项添加 ~deps.edn~ 中 ~:alias~ 指定的库，比如：
+
+#+begin_src clojure
+{:deps
+ {io.github.kimim/time-lib {:git/tag "0.0.1" :git/sha "6514c10"}}
+ :aliases
+ {:test {:extra-paths ["test"]}
+  :bench {:extra-deps {criterium/criterium {:mvn/version "0.4.4"}}}}}
+#+end_src
+
+通过一下命令行参数，就可以在 classpath 中添加 test 文件夹，criterium 库：
+
+#+begin_src shell
+clj -A:bench:test
+#+end_src
+
+* Sean Corfield 的 clj-new
+
+大神 Sean Corfield 扩展了很多 clj 的功能。
+
+添加以下 ~alias~ ，就可以运行模块内的 ~-main~ 函数、特定函数、测试、编译打包。
+
+#+begin_src clojure
+ :aliases
+ {:run-m {:main-opts ["-m" "hello"]}
+  :run-x {:ns-default hello
+          :exec-fn run
+          :exec-args {:name "Clojure"}}
+  :build {:deps {io.github.seancorfield/build-clj
+                 {:git/tag "v0.4.0" :git/sha "54e39ae"}}
+          :ns-default build}
+  :test {:extra-paths ["test"]
+         :extra-deps {org.clojure/test.check {:mvn/version "1.1.0"}
+                      io.github.cognitect-labs/test-runner
+                      {:git/tag "v0.5.0" :git/sha "48c3c67"}}}}
+#+end_src
+
+#+begin_src example
+# clj -M:run-m
+Hello world, the time is 03:50 AM
+
+# clj -X:run-x
+Hello world, the time is 03:50 AM
+
+# clj -T:build test
+
+Running task for: test
+
+Running tests in #{"test"}
+
+Testing user
+
+Ran 0 tests containing 0 assertions.
+0 failures, 0 errors.
+
+# clj -T:build ci
+
+Running task for: test
+
+Running tests in #{"test"}
+
+Testing user
+
+Ran 0 tests containing 0 assertions.
+0 failures, 0 errors.
+
+Cleaning target...
+
+Writing pom.xml...
+Skipping coordinate: {:git/tag 0.0.1, :git/sha 6514c1022a78ace8548552b3db64f6efa58448e2, :git/url https://github.com/kimim/time-lib.git, :deps/manifest :deps, :deps/root /home/learn/.gitlibs/libs/io.github.kimim/time-lib/6514c1022a78ace8548552b3db64f6efa58448e2, :parents #{[]}, :paths [/home/learn/.gitlibs/libs/io.github.kimim/time-lib/6514c1022a78ace8548552b3db64f6efa58448e2/src]}
+Copying src, resources...
+Compiling hello...
+Building uberjar target/hello-0.1.0-SNAPSHOT.jar...
+#+end_src
+
+当然，为了使用 ~build~ ，还需要在 ~deps.edn~ 同一层级添加一个 ~build.clj~ 文件：
+
+#+begin_src clojure
+(ns build
+  (:refer-clojure :exclude [test])
+  (:require [org.corfield.build :as bb]))
+
+(def lib 'net.clojars.kimim/hello)
+(def version "0.1.0-SNAPSHOT")
+(def main 'hello)
+
+(defn test "Run the tests." [opts]
+  (bb/run-tests opts))
+
+(defn ci "Run the CI pipeline of tests (and build the uberjar)." [opts]
+  (-> opts
+      (assoc :lib lib :version version :main main)
+      (bb/run-tests)
+      (bb/clean)
+      (bb/uber)))
+#+end_src
+
+大神也开发了 ~clj-new~ 可以直接从模板生成工程文件：
+
+安装 ~clj-new~
+
+#+begin_src example
+# clojure -Ttools install com.github.seancorfield/clj-new '{:git/tag "v1.2.399"}' :as clj-new
+Cloning: https://github.com/clojure/tools.tools.git
+...
+#+end_src
+
+从模板生成 app
+
+#+begin_src example
+clojure -Tclj-new app :name myname/myapp
+Downloading: org/clojure/tools.deps.alpha/0.12.1109/tools.deps.alpha-0.12.1109.pom from central
+...
+#+end_src
+
+运行：
+
+#+begin_src example
+cd myapp/
+# ls
+CHANGELOG.md  LICENSE  README.md  build.clj  deps.edn  doc  pom.xml  resources  src  test
+
+# clj -M:run-m
+Hello, World!
+
+# clj -X:run-x
+Hello, Clojure!
+#+end_src
+
+测试
+
+#+begin_example
+clj -T:build test
+Checking out: https://github.com/seancorfield/build-clj.git at 0ffdb4c0f2cd7ef484458502b926fbe63efe540b
+Checking out: https://github.com/clojure/tools.build.git at ba1a2bf421838802e7bdefc541b41f57582e53b6
+Checking out: https://github.com/seancorfield/build-uber-log4j2-handler.git at 55fb6f63ea3cc5344e67e87d2322570d4dddd3d5
+Downloading: org/clojure/tools.deps.alpha/0.14.1178/tools.deps.alpha-0.14.1178.pom from central
+Downloading: org/clojure/tools.namespace/1.3.0/tools.namespace-1.3.0.pom from central
+...
+
+Running task for: test
+Downloading: org/clojure/test.check/1.1.1/test.check-1.1.1.pom from central
+Downloading: org/clojure/test.check/1.1.1/test.check-1.1.1.jar from central
+
+Running tests in #{"test"}
+
+Testing myname.myapp-test
+
+FAIL in (a-test) (myapp_test.clj:7)
+FIXME, I fail.
+expected: (= 0 1)
+  actual: (not (= 0 1))
+
+Ran 1 tests containing 1 assertions.
+1 failures, 0 errors.
+Execution error (ExceptionInfo) at org.corfield.build/run-task (build.clj:324).
+Task failed for: test
+
+Full report at:
+/tmp/clojure-12133550799243732811.edn
+#+end_example

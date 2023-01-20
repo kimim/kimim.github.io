@@ -1,0 +1,596 @@
+---
+layout: post
+title: Clojure deps & clj guide
+categories: [technology]
+tags: [Clojure]
+---
+
+<p>
+Clojure 命令行工具非常有用，但是一直没有仔细了解其功能，每次用的时候，就会手忙脚乱。现在参考 Clojure 官网的 ‘Deps and CLI Guide’ 系统学习学习。
+</p>
+
+<p>
+Clojure 命令行的作用：
+</p>
+<ol class="org-ol">
+<li>运行 REPL</li>
+<li>运行 Clojure 程序</li>
+<li>解析执行 Clojure 语句</li>
+</ol>
+
+<p>
+所有这些操作，都可能会用到 Clojure 或 Java 的程序库，可以用 <code>deps.edn</code>
+文件来指定程序库的来源和版本，从而可以让 Clojure 自动的下载程序库、添加到 JVM classpath。
+</p>
+
+<div id="outline-container-orgb410825" class="outline-2">
+<h2 id="orgb410825"><span class="section-number-2">1.</span> 安装 Clojure 命令行</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+这个网页 <a href="https://clojure.org/guides/install_clojure">https://clojure.org/guides/install_clojure</a> 介绍了命令行下的安装方法：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">curl -O https://download.clojure.org/install/linux-install-1.11.1.1208.sh
+chmod +x linux-install-1.11.1.1208.sh
+./linux-install-1.11.1.1208.sh
+</pre>
+</div>
+
+<p>
+运行结果如下：
+</p>
+
+<p>
+（这里，我的命令行提示符是 # 符号）
+</p>
+
+<div class="org-src-container">
+<pre class="src src-example"># curl -O https://download.clojure.org/install/linux-install-1.11.1.1208.sh
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1828  100  1828    0     0    858      0  0:00:02  0:00:02 --:--:--   858
+
+# chmod +x linux-install-1.11.1.1208.sh
+
+# ./linux-install-1.11.1.1208.sh
+Downloading and expanding tar
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 17.1M  100 17.1M    0     0  2471k      0  0:00:07  0:00:07 --:--:-- 3630k
+Installing libs into /usr/local/lib/clojure
+Installing clojure and clj into /usr/local/bin
+Installing man pages into /usr/local/share/man/man1
+Removing download
+Use clj -h for help
+</pre>
+</div>
+
+<p>
+让后我们可以用 <code>clj -h</code> 打印出一堆帮助信息：
+</p>
+
+<pre class="example" id="org744fcc8">
+# clj -h
+Version: 1.11.1.1208
+
+You use the Clojure tools ('clj' or 'clojure') to run Clojure programs
+on the JVM, e.g. to start a REPL or invoke a specific function with data.
+The Clojure tools will configure the JVM process by defining a classpath
+(of desired libraries), an execution environment (JVM options) and
+specifying a main class and args.
+
+Using a deps.edn file (or files), you tell Clojure where your source code
+resides and what libraries you need. Clojure will then calculate the full
+set of required libraries and a classpath, caching expensive parts of this
+process for better performance.
+
+The internal steps of the Clojure tools, as well as the Clojure functions
+you intend to run, are parameterized by data structures, often maps. Shell
+command lines are not optimized for passing nested data, so instead you
+will put the data structures in your deps.edn file and refer to them on the
+command line via 'aliases' - keywords that name data structures.
+
+'clj' and 'clojure' differ in that 'clj' has extra support for use as a REPL
+in a terminal, and should be preferred unless you don't want that support,
+then use 'clojure'.
+
+Usage:
+  Start a REPL  clj     [clj-opt*] [-Aaliases] [init-opt*]
+  Exec fn(s)    clojure [clj-opt*] -X[aliases] a/fn? [kpath v]* kv-map?
+  Run tool      clojure [clj-opt*] -T[name|aliases] a/fn [kpath v] kv-map?
+  Run main      clojure [clj-opt*] -M[aliases] [init-opt*] [main-opt] [arg*]
+  Prepare       clojure [clj-opt*] -P [other exec opts]
+
+exec-opts:
+ -Aaliases      Use concatenated aliases to modify classpath
+ -X[aliases]    Use concatenated aliases to modify classpath or supply exec fn/args
+ -T[toolname|aliases]  Invoke tool by name or via aliases ala -X
+ -M[aliases]    Use concatenated aliases to modify classpath or supply main opts
+ -P             Prepare deps - download libs, cache classpath, but don't exec
+
+clj-opts:
+ -Jopt          Pass opt through in java_opts, ex: -J-Xmx512m
+ -Sdeps EDN     Deps data to use as the last deps file to be merged
+ -Spath         Compute classpath and echo to stdout only
+ -Spom          Generate (or update) pom.xml with deps and paths
+ -Stree         Print dependency tree
+ -Scp CP        Do NOT compute or cache classpath, use this one instead
+ -Srepro        Ignore the ~/.clojure/deps.edn config file
+ -Sforce        Force recomputation of the classpath (don't use the cache)
+ -Sverbose      Print important path info to console
+ -Sdescribe     Print environment and command parsing info as data
+ -Sthreads      Set specific number of download threads
+ -Strace        Write a trace.edn file that traces deps expansion
+ --             Stop parsing dep options and pass remaining arguments to clojure.main
+ --version      Print the version to stdout and exit
+ -version       Print the version to stderr and exit
+
+init-opt:
+ -i, --init path     Load a file or resource
+ -e, --eval string   Eval exprs in string; print non-nil values
+ --report target     Report uncaught exception to "file" (default), "stderr", or "none"
+
+main-opt:
+ -m, --main ns-name  Call the -main function from namespace w/args
+ -r, --repl          Run a repl
+ path                Run a script from a file or resource
+ -                   Run a script from standard input
+ -h, -?, --help      Print this help message and exit
+
+Programs provided by :deps alias:
+ -X:deps list              List full transitive deps set and licenses
+ -X:deps tree              Print deps tree
+ -X:deps find-versions     Find available versions of a library
+ -X:deps find-versions     Find available versions of a library
+ -X:deps prep              Prepare all unprepped libs in the dep tree
+ -X:deps mvn-install       Install a maven jar to the local repository cache
+ -X:deps git-resolve-tags  Resolve git coord tags to shas and update deps.edn
+
+For more info, see:
+ https://clojure.org/guides/deps_and_cli
+ https://clojure.org/reference/repl_and_main
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgee69cec" class="outline-2">
+<h2 id="orgee69cec"><span class="section-number-2">2.</span> 运行 REPL</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-example"># clj
+Clojure 1.11.1
+user=&gt; (+ 2 3)
+5
+user=&gt;
+</pre>
+</div>
+
+<p>
+创建 <code>deps.edn</code> 添加程序库，比如 <code>clojure.java-time</code> 用来处理时间对象。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">{</span><span style="color: #110099;">:deps</span>
+ <span style="color: #7388d6;">{</span><span style="color: #000000; font-style: italic; text-decoration: underline;">clojure.java-time</span>/clojure.java-time <span style="color: #909183;">{</span><span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mvn</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">version</span> <span style="color: #2A00FF;">"1.1.0"</span><span style="color: #909183;">}</span><span style="color: #7388d6;">}</span><span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+命令行中，也可以查询程序库的版本：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-example"># clj -X:deps find-versions :lib clojure.java-time/clojure.java-time
+{:mvn/version "0.3.0"}
+{:mvn/version "0.3.1"}
+{:mvn/version "0.3.2"}
+{:mvn/version "0.3.3"}
+{:mvn/version "1.0.0-SNAPSHOT"}
+{:mvn/version "1.0.0"}
+{:mvn/version "1.1.0"}
+{:mvn/version "1.2.0"}
+</pre>
+</div>
+
+<p>
+既然，有新版本，那么，我们修改一下 <code>deps.edn</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">{</span><span style="color: #110099;">:deps</span>
+ <span style="color: #7388d6;">{</span><span style="color: #000000; font-style: italic; text-decoration: underline;">clojure.java-time</span>/clojure.java-time <span style="color: #909183;">{</span><span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mvn</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">version</span> <span style="color: #2A00FF;">"1.2.0"</span><span style="color: #909183;">}</span><span style="color: #7388d6;">}</span><span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+再一次在 <code>deps.edn</code> 所在的文件夹运行 clj：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-example"># clj
+Downloading: clojure/java-time/clojure.java-time/1.2.0/clojure.java-time-1.2.0.pom from clojars
+Downloading: clojure/java-time/clojure.java-time/1.2.0/clojure.java-time-1.2.0.jar from clojars
+Clojure 1.11.1
+user=&gt; (require '[java-time.api :as t])
+nil
+user=&gt; (str (t/instant))
+"2023-01-20T02:19:56.912808900Z"
+</pre>
+</div>
+
+<p>
+我们就能在 REPL 中 <code>require</code> 所 <code>deps.edn</code> 指定的程序库啦。因为 <code>clj</code> 会在后台下载程序库，并把程序库加载到 <code>classpath</code> 中供我们调用。
+</p>
+
+<p>
+下载到的程序库，一般保存 <code>~/.m2</code> 或 <code>~/.gitlibs</code> ，比如刚才的库就在这里：
+</p>
+
+<pre class="example" id="org26f5078">
+# ls ~/.m2/repository/clojure/java-time/clojure.java-time/1.2.0/
+-rw-r--r-- 1 63991 Jan 20 10:19 clojure.java-time-1.2.0.jar
+-rw-r--r-- 1    40 Jan 20 10:19 clojure.java-time-1.2.0.jar.sha1
+-rw-r--r-- 1  3546 Jan 20 10:19 clojure.java-time-1.2.0.pom
+-rw-r--r-- 1    40 Jan 20 10:19 clojure.java-time-1.2.0.pom.sha1
+-rw-r--r-- 1   218 Jan 20 10:19 _remote.repositories
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgc5f23af" class="outline-2">
+<h2 id="orgc5f23af"><span class="section-number-2">3.</span> 写程序</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+接下来，官方指南教我们怎么写程序。
+</p>
+
+<p>
+在 <code>deps.edn</code> 同一级文件夹下，创建一个 <code>src</code> 文件夹，添加 <code>hello.clj</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">ns</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">hello</span>
+  <span style="color: #7388d6;">(</span><span style="color: #110099;">:require</span> <span style="color: #909183;">[</span>java-time.api <span style="color: #110099;">:as</span> t<span style="color: #909183;">]</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">time-str</span>
+  <span style="color: #2A00FF;">"Returns a string representation of a datetime in the local time zone."</span>
+  <span style="color: #7388d6;">[</span>instant<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">t</span>/<span style="color: #7F0055; font-weight: bold;">format</span>
+   <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">t</span>/with-zone <span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">t</span>/formatter <span style="color: #2A00FF;">"hh:mm a"</span><span style="color: #709870;">)</span> <span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">t</span>/zone-id<span style="color: #709870;">)</span><span style="color: #909183;">)</span>
+   instant<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">run</span> <span style="color: #7388d6;">[</span>opts<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">println</span> <span style="color: #2A00FF;">"Hello world, the time is"</span> <span style="color: #909183;">(</span>time-str <span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">t</span>/instant<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">-main</span><span style="color: #7388d6;">[]</span>
+  <span style="color: #7388d6;">(</span>run <span style="color: #909183;">{</span><span style="color: #110099;">:name</span> <span style="color: #2A00FF;">"Clojure"</span><span style="color: #909183;">}</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<p>
+然后，运行：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-example"># clj -X hello/run
+Hello world, the time is 10:28 AM
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4856731" class="outline-2">
+<h2 id="org4856731"><span class="section-number-2">4.</span> 使用本地代码库</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+我们也可以提取 <code>time-str</code> 这个函数到另一个工程。这样可以重复使用共用代码。
+</p>
+
+<p>
+在上面那个工程文件夹同一级，创建 <code>time-lib</code> 文件夹，添加一样的 <code>deps.edn</code>
+，然后在 <code>src</code> 下添加 <code>hello-time.clj</code> 文件：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">ns</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">hello-time</span>
+  <span style="color: #7388d6;">(</span><span style="color: #110099;">:require</span> <span style="color: #909183;">[</span>java-time.api <span style="color: #110099;">:as</span> t<span style="color: #909183;">]</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">now</span>
+  <span style="color: #2A00FF;">"Returns the current datetime"</span>
+  <span style="color: #7388d6;">[]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">t</span>/instant<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">time-str</span>
+  <span style="color: #2A00FF;">"Returns a string representation of a datetime in the local time zone."</span>
+  <span style="color: #7388d6;">[</span>instant<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">t</span>/<span style="color: #7F0055; font-weight: bold;">format</span>
+   <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">t</span>/with-zone <span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">t</span>/formatter <span style="color: #2A00FF;">"hh:mm a"</span><span style="color: #709870;">)</span> <span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">t</span>/zone-id<span style="color: #709870;">)</span><span style="color: #909183;">)</span>
+   instant<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<p>
+修改 <code>hello-world</code> 项目的 <code>deps.edn</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">{</span><span style="color: #110099;">:deps</span>
+ <span style="color: #7388d6;">{</span><span style="color: #000000; font-style: italic; text-decoration: underline;">time-lib</span>/time-lib <span style="color: #909183;">{</span><span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">local</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">root</span> <span style="color: #2A00FF;">"../time-lib"</span><span style="color: #909183;">}</span><span style="color: #7388d6;">}</span>
+</pre>
+</div>
+
+<p>
+意思 <code>time-lib/time-lib</code> 程序库在本文件夹的上一级文件夹下的 <code>time-lib</code>
+</p>
+
+<p>
+<code>hello.clj</code> 就可以简化如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">ns</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">hello</span>
+  <span style="color: #7388d6;">(</span><span style="color: #110099;">:require</span> <span style="color: #909183;">[</span>hello-time <span style="color: #110099;">:as</span> ht<span style="color: #909183;">]</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">run</span> <span style="color: #7388d6;">[</span>opts<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">println</span> <span style="color: #2A00FF;">"Hello world, the time is"</span> <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ht</span>/time-str <span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ht</span>/now<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">-main</span><span style="color: #7388d6;">[]</span>
+  <span style="color: #7388d6;">(</span>run <span style="color: #909183;">{</span><span style="color: #110099;">:name</span> <span style="color: #2A00FF;">"Clojure"</span><span style="color: #909183;">}</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<p>
+运行效果一样：
+</p>
+
+<pre class="example" id="org94441b6">
+# clj -X hello/run
+Hello world, the time is 10:58 AM
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orge0aa866" class="outline-2">
+<h2 id="orge0aa866"><span class="section-number-2">5.</span> 使用 Github 库</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+接着，把刚才创建的 <code>time-lib</code> 文件夹内容 push 到 github：<a href="https://github.com/kimim/time-lib">https://github.com/kimim/time-lib</a>
+</p>
+
+<p>
+创建tag，查看日志：
+</p>
+
+<pre class="example" id="org5cc9468">
+# git tag -a '0.0.1' -m 'initial release'
+
+# git push --tags
+Enumerating objects: 1, done.
+Counting objects: 100% (1/1), done.
+Writing objects: 100% (1/1), 160 bytes | 80.00 KiB/s, done.
+Total 1 (delta 0), reused 0 (delta 0), pack-reused 0
+To github.com:kimim/time-lib.git
+ * [new tag]         0.0.1 -&gt; 0.0.1
+
+# git rev-parse --short 0.0.1^{commit}
+6514c10
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">{</span><span style="color: #110099;">:deps</span>
+ <span style="color: #7388d6;">{</span><span style="color: #000000; font-style: italic; text-decoration: underline;">io.github.kimim</span>/time-lib <span style="color: #909183;">{</span><span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">git</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">tag</span> <span style="color: #2A00FF;">"0.0.1"</span> <span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">git</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">sha</span> <span style="color: #2A00FF;">"6514c10"</span><span style="color: #909183;">}</span><span style="color: #7388d6;">}</span><span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+运行效果如下，clj 会去 clone github 库：
+</p>
+
+<pre class="example" id="orgc45ee31">
+# clj -X hello/run
+Checking out: https://github.com/kimim/time-lib.git at 6514c1022a78ace8548552b3db64f6efa58448e2
+Downloading: clojure/java-time/clojure.java-time/1.2.0/clojure.java-time-1.2.0.pom from clojars
+Downloading: clojure/java-time/clojure.java-time/1.2.0/clojure.java-time-1.2.0.jar from clojars
+Hello world, the time is 03:23 AM
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org6f30566" class="outline-2">
+<h2 id="org6f30566"><span class="section-number-2">6.</span> 添加额外的 classpath</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+clj 可以用 <code>-A</code> 选项添加 <code>deps.edn</code> 中 <code>:alias</code> 指定的库，比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">{</span><span style="color: #110099;">:deps</span>
+ <span style="color: #7388d6;">{</span><span style="color: #000000; font-style: italic; text-decoration: underline;">io.github.kimim</span>/time-lib <span style="color: #909183;">{</span><span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">git</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">tag</span> <span style="color: #2A00FF;">"0.0.1"</span> <span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">git</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">sha</span> <span style="color: #2A00FF;">"6514c10"</span><span style="color: #909183;">}</span><span style="color: #7388d6;">}</span>
+ <span style="color: #110099;">:aliases</span>
+ <span style="color: #7388d6;">{</span><span style="color: #110099;">:test</span> <span style="color: #909183;">{</span><span style="color: #110099;">:extra-paths</span> <span style="color: #709870;">[</span><span style="color: #2A00FF;">"test"</span><span style="color: #709870;">]</span><span style="color: #909183;">}</span>
+  <span style="color: #110099;">:bench</span> <span style="color: #909183;">{</span><span style="color: #110099;">:extra-deps</span> <span style="color: #709870;">{</span><span style="color: #000000; font-style: italic; text-decoration: underline;">criterium</span>/criterium <span style="color: #907373;">{</span><span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mvn</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">version</span> <span style="color: #2A00FF;">"0.4.4"</span><span style="color: #907373;">}</span><span style="color: #709870;">}</span><span style="color: #909183;">}</span><span style="color: #7388d6;">}</span><span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+通过一下命令行参数，就可以在 classpath 中添加 test 文件夹，criterium 库：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">clj -A:bench:test
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org848f1c8" class="outline-2">
+<h2 id="org848f1c8"><span class="section-number-2">7.</span> Sean Corfield 的 clj-new</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+大神 Sean Corfield 扩展了很多 clj 的功能。
+</p>
+
+<p>
+添加以下 <code>alias</code> ，就可以运行模块内的 <code>-main</code> 函数、特定函数、测试、编译打包。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"> <span style="color: #110099;">:aliases</span>
+ <span style="color: #707183;">{</span><span style="color: #110099;">:run-m</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">:main-opts</span> <span style="color: #909183;">[</span><span style="color: #2A00FF;">"-m"</span> <span style="color: #2A00FF;">"hello"</span><span style="color: #909183;">]</span><span style="color: #7388d6;">}</span>
+  <span style="color: #110099;">:run-x</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">:ns-default</span> hello
+          <span style="color: #110099;">:exec-fn</span> run
+          <span style="color: #110099;">:exec-args</span> <span style="color: #909183;">{</span><span style="color: #110099;">:name</span> <span style="color: #2A00FF;">"Clojure"</span><span style="color: #909183;">}</span><span style="color: #7388d6;">}</span>
+  <span style="color: #110099;">:build</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">:deps</span> <span style="color: #909183;">{</span><span style="color: #000000; font-style: italic; text-decoration: underline;">io.github.seancorfield</span>/build-clj
+                 <span style="color: #709870;">{</span><span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">git</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">tag</span> <span style="color: #2A00FF;">"v0.4.0"</span> <span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">git</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">sha</span> <span style="color: #2A00FF;">"54e39ae"</span><span style="color: #709870;">}</span><span style="color: #909183;">}</span>
+          <span style="color: #110099;">:ns-default</span> build<span style="color: #7388d6;">}</span>
+  <span style="color: #110099;">:test</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">:extra-paths</span> <span style="color: #909183;">[</span><span style="color: #2A00FF;">"test"</span><span style="color: #909183;">]</span>
+         <span style="color: #110099;">:extra-deps</span> <span style="color: #909183;">{</span><span style="color: #000000; font-style: italic; text-decoration: underline;">org.clojure</span>/test.check <span style="color: #709870;">{</span><span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mvn</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">version</span> <span style="color: #2A00FF;">"1.1.0"</span><span style="color: #709870;">}</span>
+                      <span style="color: #000000; font-style: italic; text-decoration: underline;">io.github.cognitect-labs</span>/test-runner
+                      <span style="color: #709870;">{</span><span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">git</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">tag</span> <span style="color: #2A00FF;">"v0.5.0"</span> <span style="color: #110099;">:</span><span style="color: #000000; font-style: italic; text-decoration: underline;">git</span><span style="color: #000000; background-color: #f8f8f8;">/</span><span style="color: #110099;">sha</span> <span style="color: #2A00FF;">"48c3c67"</span><span style="color: #709870;">}</span><span style="color: #909183;">}</span><span style="color: #7388d6;">}</span><span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-example"># clj -M:run-m
+Hello world, the time is 03:50 AM
+
+# clj -X:run-x
+Hello world, the time is 03:50 AM
+
+# clj -T:build test
+
+Running task for: test
+
+Running tests in #{"test"}
+
+Testing user
+
+Ran 0 tests containing 0 assertions.
+0 failures, 0 errors.
+
+# clj -T:build ci
+
+Running task for: test
+
+Running tests in #{"test"}
+
+Testing user
+
+Ran 0 tests containing 0 assertions.
+0 failures, 0 errors.
+
+Cleaning target...
+
+Writing pom.xml...
+Skipping coordinate: {:git/tag 0.0.1, :git/sha 6514c1022a78ace8548552b3db64f6efa58448e2, :git/url https://github.com/kimim/time-lib.git, :deps/manifest :deps, :deps/root /home/learn/.gitlibs/libs/io.github.kimim/time-lib/6514c1022a78ace8548552b3db64f6efa58448e2, :parents #{[]}, :paths [/home/learn/.gitlibs/libs/io.github.kimim/time-lib/6514c1022a78ace8548552b3db64f6efa58448e2/src]}
+Copying src, resources...
+Compiling hello...
+Building uberjar target/hello-0.1.0-SNAPSHOT.jar...
+</pre>
+</div>
+
+<p>
+当然，为了使用 <code>build</code> ，还需要在 <code>deps.edn</code> 同一层级添加一个 <code>build.clj</code> 文件：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">ns</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">build</span>
+  <span style="color: #7388d6;">(</span><span style="color: #110099;">:refer-clojure</span> <span style="color: #110099;">:exclude</span> <span style="color: #909183;">[</span>test<span style="color: #909183;">]</span><span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #110099;">:require</span> <span style="color: #909183;">[</span>org.corfield.build <span style="color: #110099;">:as</span> bb<span style="color: #909183;">]</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">lib</span> '<span style="color: #000000; font-style: italic; text-decoration: underline;">net.clojars.kimim</span>/hello<span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">version</span> <span style="color: #2A00FF;">"0.1.0-SNAPSHOT"</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">main</span> 'hello<span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">test</span> <span style="color: #2A00FF;">"Run the tests."</span> <span style="color: #7388d6;">[</span>opts<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">bb</span>/<span style="color: #7F0055; font-weight: bold;">run-tests</span> opts<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">ci</span> <span style="color: #2A00FF;">"Run the CI pipeline of tests (and build the uberjar)."</span> <span style="color: #7388d6;">[</span>opts<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;</span> opts
+      <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">assoc</span> <span style="color: #110099;">:lib</span> lib <span style="color: #110099;">:version</span> version <span style="color: #110099;">:main</span> main<span style="color: #909183;">)</span>
+      <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">bb</span>/<span style="color: #7F0055; font-weight: bold;">run-tests</span><span style="color: #909183;">)</span>
+      <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">bb</span>/clean<span style="color: #909183;">)</span>
+      <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">bb</span>/uber<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<p>
+大神也开发了 <code>clj-new</code> 可以直接从模板生成工程文件：
+</p>
+
+<p>
+安装 <code>clj-new</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-example"># clojure -Ttools install com.github.seancorfield/clj-new '{:git/tag "v1.2.399"}' :as clj-new
+Cloning: https://github.com/clojure/tools.tools.git
+...
+</pre>
+</div>
+
+<p>
+从模板生成 app
+</p>
+
+<div class="org-src-container">
+<pre class="src src-example">clojure -Tclj-new app :name myname/myapp
+Downloading: org/clojure/tools.deps.alpha/0.12.1109/tools.deps.alpha-0.12.1109.pom from central
+...
+</pre>
+</div>
+
+<p>
+运行：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-example">cd myapp/
+# ls
+CHANGELOG.md  LICENSE  README.md  build.clj  deps.edn  doc  pom.xml  resources  src  test
+
+# clj -M:run-m
+Hello, World!
+
+# clj -X:run-x
+Hello, Clojure!
+</pre>
+</div>
+
+<p>
+测试
+</p>
+
+<pre class="example" id="org3f531fb">
+clj -T:build test
+Checking out: https://github.com/seancorfield/build-clj.git at 0ffdb4c0f2cd7ef484458502b926fbe63efe540b
+Checking out: https://github.com/clojure/tools.build.git at ba1a2bf421838802e7bdefc541b41f57582e53b6
+Checking out: https://github.com/seancorfield/build-uber-log4j2-handler.git at 55fb6f63ea3cc5344e67e87d2322570d4dddd3d5
+Downloading: org/clojure/tools.deps.alpha/0.14.1178/tools.deps.alpha-0.14.1178.pom from central
+Downloading: org/clojure/tools.namespace/1.3.0/tools.namespace-1.3.0.pom from central
+...
+
+Running task for: test
+Downloading: org/clojure/test.check/1.1.1/test.check-1.1.1.pom from central
+Downloading: org/clojure/test.check/1.1.1/test.check-1.1.1.jar from central
+
+Running tests in #{"test"}
+
+Testing myname.myapp-test
+
+FAIL in (a-test) (myapp_test.clj:7)
+FIXME, I fail.
+expected: (= 0 1)
+  actual: (not (= 0 1))
+
+Ran 1 tests containing 1 assertions.
+1 failures, 0 errors.
+Execution error (ExceptionInfo) at org.corfield.build/run-task (build.clj:324).
+Task failed for: test
+
+Full report at:
+/tmp/clojure-12133550799243732811.edn
+</pre>
+</div>
+</div>
