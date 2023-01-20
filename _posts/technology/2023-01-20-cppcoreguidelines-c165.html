@@ -1,0 +1,178 @@
+---
+layout: post
+title: CppCoreGuidelines C.165 在客制化处使用 using
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use using for customization points&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+使用别处名字空间的函数对象和函数来客制化一个通用的函数。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+考虑 swap 函数。在标准库中是一个通用函数，能够交换任何类型的对象。然而，我们可能想要定义一个特别的 swap 函数。比如在交换两个 vector 时，通用
+swap 函数会把 vector 的元素都复制一遍，这里，如果我们想要一个不复制元素的 swap 函数，就需要客制化一个 swap。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++" id="orgd68c890"><span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">N</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m_x</span> <span style="color: #909183;">{</span>0<span style="color: #909183;">}</span>;
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #909183;">)</span> : m_x<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span> <span style="color: #909183;">{}</span>;
+<span style="color: #7388d6;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">swap</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">x1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">x2</span><span style="color: #7388d6;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">optimized swap for N::X</span>
+<span style="color: #7388d6;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">temp</span>;
+    temp = x1.m_x + 1;
+    x1.m_x = x2.m_x + 1;
+    x2.m_x = temp;
+<span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">N</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m_x</span> <span style="color: #909183;">{</span>0<span style="color: #909183;">}</span>;
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #909183;">)</span> : m_x<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span> <span style="color: #909183;">{}</span>;
+<span style="color: #7388d6;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">swap</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">x1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">x2</span><span style="color: #7388d6;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">optimized swap for N::X</span>
+<span style="color: #7388d6;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">temp</span>;
+    temp = x1.m_x + 1;
+    x1.m_x = x2.m_x + 1;
+    x2.m_x = temp;
+<span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #110099;">N</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #110099;">N</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">std</span>::swap<span style="color: #7388d6;">(</span>a, b<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">probably not what we wanted: calls std::swap()</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">N</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">{</span>1<span style="color: #7388d6;">}</span>, <span style="color: #000000;">b</span><span style="color: #7388d6;">{</span>100<span style="color: #7388d6;">}</span>;
+    f1<span style="color: #7388d6;">(</span>a, b<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; a.m_x &lt;&lt; endl &lt;&lt; b.m_x;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+100
+1
+</pre>
+
+
+
+<p>
+在 <code>f1()</code> 中，我们调用了 <code>std::swap()</code> ，然而这个 swap 是 std 名字空间的标准函数。很遗憾，这个不是我们想要的函数，如何才能考虑 N::X 的情况呢？
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">N</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m_x</span> <span style="color: #909183;">{</span>0<span style="color: #909183;">}</span>;
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #909183;">)</span> : m_x<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span> <span style="color: #909183;">{}</span>;
+<span style="color: #7388d6;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">swap</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">x1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">x2</span><span style="color: #7388d6;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">optimized swap for N::X</span>
+<span style="color: #7388d6;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">temp</span>;
+    temp = x1.m_x + 1;
+    x1.m_x = x2.m_x + 1;
+    x2.m_x = temp;
+<span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #110099;">N</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #110099;">N</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    swap<span style="color: #7388d6;">(</span>a, b<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">calls N::swap</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">N</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">{</span>1<span style="color: #7388d6;">}</span>, <span style="color: #000000;">b</span><span style="color: #7388d6;">{</span>100<span style="color: #7388d6;">}</span>;
+    f1<span style="color: #7388d6;">(</span>a, b<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; a.m_x &lt;&lt; endl &lt;&lt; b.m_x;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+101
+2
+</pre>
+
+
+
+<p>
+但是，以上可能并不是我们希望要的泛型代码。这里，我们可能希望是这样：如果有自定义的函数，我们就用自定义函数，如果没有，则用通用函数。为了实现这个想法，我们就要把通用函数包含进来。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">N</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m_x</span> <span style="color: #909183;">{</span>0<span style="color: #909183;">}</span>;
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #909183;">)</span> : m_x<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span> <span style="color: #909183;">{}</span>;
+<span style="color: #7388d6;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">swap</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">x1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">x2</span><span style="color: #7388d6;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">optimized swap for N::X</span>
+<span style="color: #7388d6;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">temp</span>;
+    temp = x1.m_x + 1;
+    x1.m_x = x2.m_x + 1;
+    x2.m_x = temp;
+<span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #110099;">N</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #110099;">N</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #110099;">std</span>::<span style="color: #110099;">swap</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">make std::swap available</span>
+    swap<span style="color: #7388d6;">(</span>a, b<span style="color: #7388d6;">)</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">calls N::swap if it exists, otherwise std::swap</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">N</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">{</span>1<span style="color: #7388d6;">}</span>, <span style="color: #000000;">b</span><span style="color: #7388d6;">{</span>100<span style="color: #7388d6;">}</span>;
+    f1<span style="color: #7388d6;">(</span>a, b<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; a.m_x &lt;&lt; endl &lt;&lt; b.m_x;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+101
+2
+</pre>
+
+
+
+<p>
+以上代码，我们使得 std 中的 swap 函数可以被查询调用。如果没有客制化的
+swap，我们就调用了 std 中的 swap 函数。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+很难说，除了一些已知的客制化点，比如 swap 的情况。
+</p>

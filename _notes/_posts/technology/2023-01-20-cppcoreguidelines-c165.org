@@ -1,0 +1,125 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.165 在客制化处使用 using
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use using for customization points"
+
+
+理由
+
+使用别处名字空间的函数对象和函数来客制化一个通用的函数。
+
+
+例子
+
+考虑 swap 函数。在标准库中是一个通用函数，能够交换任何类型的对象。然而，
+我们可能想要定义一个特别的 swap 函数。比如在交换两个 vector 时，通用
+swap 函数会把 vector 的元素都复制一遍，这里，如果我们想要一个不复制元
+素的 swap 函数，就需要客制化一个 swap。
+
+#+NAME: mytype
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+namespace N {
+struct X {
+    int m_x {0};
+    X(int x) : m_x(x) {};
+};
+void swap(X& x1, X& x2)   // optimized swap for N::X
+{
+    int temp;
+    temp = x1.m_x + 1;
+    x1.m_x = x2.m_x + 1;
+    x2.m_x = temp;
+}
+}
+#+end_src
+
+#+begin_src C++ :noweb yes :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+$$mytype$$
+void f1(N::X& a, N::X& b)
+{
+    std::swap(a, b);   // probably not what we wanted: calls std::swap()
+}
+
+int main()
+{
+    N::X a{1}, b{100};
+    f1(a, b);
+    cout << a.m_x << endl << b.m_x;
+}
+#+end_src
+
+#+RESULTS:
+: 100
+: 1
+
+
+在 ~f1()~ 中，我们调用了 ~std::swap()~ ，然而这个 swap 是 std 名字空间的标
+准函数。很遗憾，这个不是我们想要的函数，如何才能考虑 N::X 的情况呢？
+
+#+begin_src C++ :noweb yes :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+$$mytype$$
+void f1(N::X& a, N::X& b)
+{
+    swap(a, b);   // calls N::swap
+}
+
+int main()
+{
+    N::X a{1}, b{100};
+    f1(a, b);
+    cout << a.m_x << endl << b.m_x;
+}
+#+end_src
+
+#+RESULTS:
+: 101
+: 2
+
+
+但是，以上可能并不是我们希望要的泛型代码。这里，我们可能希望是这样：如
+果有自定义的函数，我们就用自定义函数，如果没有，则用通用函数。为了实现
+这个想法，我们就要把通用函数包含进来。
+
+#+begin_src C++ :noweb yes :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+$$mytype$$
+void f1(N::X& a, N::X& b)
+{
+    using std::swap;  // make std::swap available
+    swap(a, b);        // calls N::swap if it exists, otherwise std::swap
+}
+
+int main()
+{
+    N::X a{1}, b{100};
+    f1(a, b);
+    cout << a.m_x << endl << b.m_x;
+}
+#+end_src
+
+#+RESULTS:
+: 101
+: 2
+
+
+以上代码，我们使得 std 中的 swap 函数可以被查询调用。如果没有客制化的
+swap，我们就调用了 std 中的 swap 函数。
+
+
+强化
+
+很难说，除了一些已知的客制化点，比如 swap 的情况。
+
+#+begin_comment
+Local variables:
+org-babel-noweb-wrap-start: "$$"
+org-babel-noweb-wrap-end: "$$"
+End:
+#+end_comment
