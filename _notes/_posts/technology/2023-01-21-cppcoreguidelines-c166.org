@@ -1,0 +1,55 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.166 只有作为智能指针和引用的系统部分的时候重载一元操作符 &
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Overload unary & only as part of a system of smart pointers and references"
+
+
+理由
+
+& 操作符在 C++ 中是很基础的操作符。大部分 C++ 语义都假定了 & 操作符的默认行为。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class Ptr { // a somewhat smart pointer
+    Ptr(X* pp) : p(pp) { /* check */ }
+    X* operator->() { /* check */ return p; }
+    X operator[](int i);
+    X operator*();
+private:
+    T* p;
+};
+
+class X {
+    Ptr operator&() { return Ptr{this}; }
+    // ...
+};
+#+end_src
+
+
+注意
+
+对于 & 操作符，如果你遇到麻烦了，请确保 ->， []，* 和 . 等操作有确定的意义。
+
+
+注意
+
+目前不能重载 . 操作符。
+
+注意
+
+~std::addressof()~ 总是会产生一个内置指针。
+
+
+强化
+
+警告：如果 & 是自定义的，却没有定义 ->

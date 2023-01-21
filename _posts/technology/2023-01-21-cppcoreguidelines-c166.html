@@ -1,0 +1,80 @@
+---
+layout: post
+title: CppCoreGuidelines C.166 只有作为智能指针和引用的系统部分的时候重载一元操作符 &
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Overload unary &amp; only as part of a system of smart pointers and references&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+&amp; 操作符在 C++ 中是很基础的操作符。大部分 C++ 语义都假定了 &amp; 操作符的默认行为。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Ptr</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">a somewhat smart pointer</span>
+    <span style="color: #0000ff; font-weight: bold;">Ptr</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>* <span style="color: #000000;">pp</span><span style="color: #7388d6;">)</span> : p<span style="color: #7388d6;">(</span>pp<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">check</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>* <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">-&gt;</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">check</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7F0055; font-weight: bold;">return</span> p; <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #7388d6; font-weight: bold;">[]</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">*</span><span style="color: #7388d6;">()</span>;
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">p</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Ptr</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">&amp;</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> Ptr<span style="color: #909183;">{</span><span style="color: #7F0055; font-weight: bold;">this</span><span style="color: #909183;">}</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+对于 &amp; 操作符，如果你遇到麻烦了，请确保 -&gt;， []，* 和 . 等操作有确定的意义。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+目前不能重载 . 操作符。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+<code>std::addressof()</code> 总是会产生一个内置指针。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+警告：如果 &amp; 是自定义的，却没有定义 -&gt;
+</p>
