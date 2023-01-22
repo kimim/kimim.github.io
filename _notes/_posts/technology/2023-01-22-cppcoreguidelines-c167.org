@@ -1,0 +1,57 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.167 按照约定习俗使用操作符
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use an operator for an operation with its conventional meaning"
+
+
+理由
+
+可读性，约定习俗，可重用。支持泛型代码。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void cout_my_class(const My_class& c) // confusing, not conventional, not generic
+{
+    std::cout << /* class members here */;
+}
+
+std::ostream& operator<<(std::ostream& os, const my_class& c) // OK
+{
+    return os << /* class members here */;
+}
+#+end_src
+
+
+~cout_my_class~ 本身是没问题的，但是如果我们要跟其他依赖于 ~<<~ 操作的代码在一起使用，就有问题了。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+My_class var { /* ... */ };
+// ...
+cout << "var = " << var << '\n';
+#+end_src
+
+
+注意
+
+大部分操作符有很强很严格的使用习俗约定，比如：
+- 比较 (==, !=, <, <=, >, >=, <=>),
+- 运算符 (+, -, *, /, %)
+- 访问操作 (., ->, unary *, [])
+- 赋值 (=)
+
+
+不要自己定义一种行为，也不要为这些操作发明新的名字。
+
+
+强化
+- 需要语义理解

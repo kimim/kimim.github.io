@@ -1,0 +1,81 @@
+---
+layout: post
+title: CppCoreGuidelines C.167 按照约定习俗使用操作符
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use an operator for an operation with its conventional meaning&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+可读性，约定习俗，可重用。支持泛型代码。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">cout_my_class</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_class</span>&amp; <span style="color: #000000;">c</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">confusing, not conventional, not generic</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">class members here</span><span style="color: #3F7F5F;"> */</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">&lt;&lt;</span><span style="color: #707183;">(</span><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #000000;">os</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">my_class</span>&amp; <span style="color: #000000;">c</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> os &lt;&lt; <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">class members here</span><span style="color: #3F7F5F;"> */</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+<code>cout_my_class</code> 本身是没问题的，但是如果我们要跟其他依赖于 <code>&lt;&lt;</code> 操作的代码在一起使用，就有问题了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">My_class</span> <span style="color: #000000;">var</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+cout &lt;&lt; <span style="color: #2A00FF;">"var = "</span> &lt;&lt; var &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+大部分操作符有很强很严格的使用习俗约定，比如：
+</p>
+<ul class="org-ul">
+<li>比较 (<code>=, !</code>, &lt;, &lt;=, &gt;, &gt;=, &lt;=&gt;),</li>
+<li>运算符 (+, -, *, /, %)</li>
+<li>访问操作 (., -&gt;, unary *, [])</li>
+<li>赋值 (=)</li>
+</ul>
+
+
+<p>
+不要自己定义一种行为，也不要为这些操作发明新的名字。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>需要语义理解</li>
+</ul>
