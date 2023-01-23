@@ -1,0 +1,81 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.168 在操作对象的名字空间中定义重载的操作符
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Define overloaded operators in the namespace of their operands"
+
+
+理由
+
+更好的可读性。可以使用 ADL 查找操作符。避免在不同名字空间中定义的不一致。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+struct S { };
+S operator+(S, S);   // OK: in the same namespace as S, and even next to S
+S s;
+
+S r = s + s;
+#+end_src
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+namespace N {
+    struct S { };
+    S operator+(S, S);   // OK: in the same namespace as S, and even next to S
+}
+
+N::S s;
+
+S r = s + s;  // finds N::operator+() by ADL
+#+end_src
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+struct S { };
+S s;
+
+namespace N {
+    bool operator!(S a) { return true; }
+    bool not_s = !s;
+}
+
+namespace M {
+    bool operator!(S a) { return false; }
+    bool not_s = !s;
+}
+#+end_src
+
+此处， !s 的意思在名字空间 N 和 M 中不一样。这样会导致很大的困惑。
+
+
+
+注意
+
+如果操作数是在不同的名字空间里的两个不同的对象，那就无法遵循这条规则了。
+
+
+比如
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+Vec::Vector operator*(const Vec::Vector&, const Mat::Matrix&);
+#+end_src
+
+不过这种情况最好还是避免发生。
+
+
+强化
+- 标注和操作数不在一个名字空间的操作符。

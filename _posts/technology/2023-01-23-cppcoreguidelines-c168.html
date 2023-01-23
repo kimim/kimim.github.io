@@ -1,0 +1,111 @@
+---
+layout: post
+title: CppCoreGuidelines C.168 在操作对象的名字空间中定义重载的操作符
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Define overloaded operators in the namespace of their operands&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+更好的可读性。可以使用 ADL 查找操作符。避免在不同名字空间中定义的不一致。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #707183;">{</span> <span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">+</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">S</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: in the same namespace as S, and even next to S</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">s</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">r</span> = s + s;
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">N</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">+</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">S</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span><span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: in the same namespace as S, and even next to S</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #110099;">N</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">s</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">r</span> = s + s;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">finds N::operator+() by ADL</span>
+</pre>
+</div>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #707183;">{</span> <span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">s</span>;
+
+<span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">N</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span>!<span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">true</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #000000;">not_s</span> = !s;
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">M</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span>!<span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">false</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #000000;">not_s</span> = !s;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+此处， !s 的意思在名字空间 N 和 M 中不一样。这样会导致很大的困惑。
+</p>
+
+
+
+<p>
+注意
+</p>
+
+<p>
+如果操作数是在不同的名字空间里的两个不同的对象，那就无法遵循这条规则了。
+</p>
+
+
+<p>
+比如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #110099;">Vec</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">*</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #110099;">Vec</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span>&amp;, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #110099;">Mat</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">Matrix</span>&amp;<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+不过这种情况最好还是避免发生。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标注和操作数不在一个名字空间的操作符。</li>
+</ul>
