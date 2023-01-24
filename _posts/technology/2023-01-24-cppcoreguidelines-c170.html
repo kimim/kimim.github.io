@@ -1,0 +1,48 @@
+---
+layout: post
+title: CppCoreGuidelines C.170 如果你想要重载一个 lambda，请使用泛型 lambda
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If you feel like overloading a lambda, use a generic lambda&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+你无法用相同的名字重载定义不同的 lambda
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">f</span> = <span style="color: #707183;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: cannot overload variable and function</span>
+
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">g</span> = <span style="color: #707183;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">g</span> = <span style="color: #707183;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: cannot overload variables</span>
+
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">h</span> = <span style="color: #707183;">[](</span><span style="color: #7F0055; font-weight: bold;">auto</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>编译器会捕捉到重载 lambda 的情况</li>
+</ul>

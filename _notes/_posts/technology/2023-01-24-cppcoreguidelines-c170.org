@@ -1,0 +1,35 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.170 如果你想要重载一个 lambda，请使用泛型 lambda
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If you feel like overloading a lambda, use a generic lambda"
+
+
+理由
+
+你无法用相同的名字重载定义不同的 lambda
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f(int);
+void f(double);
+auto f = [](char);   // error: cannot overload variable and function
+
+auto g = [](int) { /* ... */ };
+auto g = [](double) { /* ... */ };   // error: cannot overload variables
+
+auto h = [](auto) { /* ... */ };   // OK
+#+end_src
+
+
+强化
+- 编译器会捕捉到重载 lambda 的情况
