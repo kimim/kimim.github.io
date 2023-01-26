@@ -1,0 +1,112 @@
+---
+layout: post
+title: CppCoreGuidelines C.180 用 union 节省内存
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use unions to save memory&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+Union（联合体，也有叫共用体）可以在不同时候于同一块内存中保存不同类型的数据。这样，如果我们有多个对象，不会同时使用的话，就可以通过 union
+节省内存。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">union</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span> <span style="color: #000000;">v</span> = <span style="color: #707183;">{</span> 123 <span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">now v holds an int</span>
+cout &lt;&lt; v.x &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">write 123</span>
+v.d = 987.654;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">now v holds a double</span>
+cout &lt;&lt; v.d &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">write 987.654</span>
+</pre>
+</div>
+
+<pre class="example">
+123
+987.654
+</pre>
+
+
+
+<p>
+但是请注意：避免“裸露”的 union
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Short-string optimization</span>
+
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #000000;">buffer_size</span> = 16; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Slightly larger than the size of a pointer</span>
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Immutable_string</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Immutable_string</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">str</span><span style="color: #7388d6;">)</span> :
+        size<span style="color: #7388d6;">(</span>strlen<span style="color: #909183;">(</span>str<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>size &lt; buffer_size<span style="color: #909183;">)</span>
+            strcpy_s<span style="color: #909183;">(</span>string_buffer, buffer_size, str<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #909183;">{</span>
+            string_ptr = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span><span style="color: #709870;">[</span>size + 1<span style="color: #709870;">]</span>;
+            strcpy_s<span style="color: #709870;">(</span>string_ptr, size + 1, str<span style="color: #709870;">)</span>;
+        <span style="color: #909183;">}</span>
+    <span style="color: #7388d6;">}</span>
+
+    ~<span style="color: #0000ff; font-weight: bold;">Immutable_string</span><span style="color: #7388d6;">()</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>size &gt;= buffer_size<span style="color: #909183;">)</span>
+            <span style="color: #7F0055; font-weight: bold;">delete</span><span style="color: #909183;">[]</span> string_ptr;
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #0000ff; font-weight: bold;">get_str</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #909183;">(</span>size &lt; buffer_size<span style="color: #909183;">)</span> ? string_buffer : string_ptr;
+    <span style="color: #7388d6;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">If the string is short enough, we store the string itself</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">instead of a pointer to the string.</span>
+    <span style="color: #7F0055; font-weight: bold;">union</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">string_ptr</span>;
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">string_buffer</span><span style="color: #909183;">[</span>buffer_size<span style="color: #909183;">]</span>;
+    <span style="color: #7388d6;">}</span>;
+
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #000000;">size</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Immutable_string</span> <span style="color: #000000;">s1</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"1234567890"</span><span style="color: #7388d6;">}</span>;
+    cout &lt;&lt; s1.get_str<span style="color: #7388d6;">()</span> &lt;&lt; endl;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Immutable_string</span> <span style="color: #000000;">s2</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"12345678901234567890"</span><span style="color: #7388d6;">}</span>;
+    cout &lt;&lt; s2.get_str<span style="color: #7388d6;">()</span> &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+1234567890
+12345678901234567890
+</pre>

@@ -1,0 +1,96 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.180 用 union 节省内存
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use unions to save memory"
+
+
+理由
+
+Union（联合体，也有叫共用体）可以在不同时候于同一块内存中保存不同类型
+的数据。这样，如果我们有多个对象，不会同时使用的话，就可以通过 union
+节省内存。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+union Value {
+    int x;
+    double d;
+};
+
+Value v = { 123 };  // now v holds an int
+cout << v.x << '\n';    // write 123
+v.d = 987.654;  // now v holds a double
+cout << v.d << '\n';    // write 987.654
+#+end_src
+
+#+RESULTS:
+: 123
+: 987.654
+
+
+但是请注意：避免“裸露”的 union
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> <cstring> :eval no-export :results output
+// Short-string optimization
+
+constexpr size_t buffer_size = 16; // Slightly larger than the size of a pointer
+
+class Immutable_string {
+public:
+    Immutable_string(const char* str) :
+        size(strlen(str))
+    {
+        if (size < buffer_size)
+            strcpy_s(string_buffer, buffer_size, str);
+        else {
+            string_ptr = new char[size + 1];
+            strcpy_s(string_ptr, size + 1, str);
+        }
+    }
+
+    ~Immutable_string()
+    {
+        if (size >= buffer_size)
+            delete[] string_ptr;
+    }
+
+    const char* get_str() const
+    {
+        return (size < buffer_size) ? string_buffer : string_ptr;
+    }
+
+private:
+    // If the string is short enough, we store the string itself
+    // instead of a pointer to the string.
+    union {
+        char* string_ptr;
+        char string_buffer[buffer_size];
+    };
+
+    const size_t size;
+};
+
+int main()
+{
+    Immutable_string s1{"1234567890"};
+    cout << s1.get_str() << endl;
+    Immutable_string s2{"12345678901234567890"};
+    cout << s2.get_str() << endl;
+}
+#+end_src
+
+#+RESULTS:
+: 1234567890
+: 12345678901234567890
