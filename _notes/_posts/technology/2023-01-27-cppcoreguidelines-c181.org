@@ -29,7 +29,7 @@ union Value {
 Value v;
 #+end_src
 
-#+begin_src :noweb yes C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+#+begin_src C++ :noweb yes :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
 $$c181-union$$
 v.d = 987.654;  // v holds a double
 cout << v.d;
