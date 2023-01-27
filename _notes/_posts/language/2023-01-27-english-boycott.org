@@ -1,0 +1,42 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单词本：boycott
+categories: [language]
+tags: [English]
+---
+#+END_EXPORT
+
+在读管理学原理的时候，读到关于应急计划这一段：
+
+A contingency plan allows management to act immediately if an
+unplanned occurrence, such as a strike, boycott, natural disaster, or
+major economic shift, renders existing plans inoperable or
+inappropriate.
+
+应急计划可以确保在遇到一些计划外的事件时，如罢工、抵制、自然灾害或重大
+经济转变，能够及时作出响应。
+
+这里有一个词 boycott 是联合抵制的意思，据说有人还创造了一个新词
+girlcott 联合的妇女抵制运动。实际上来说，boycott 中的 boy 并不是男孩的
+意思。其实 boycott 是一个英国人的姓。
+
+故事要从 1870 年说起。
+
+英国人 Charles Cunningham Boycott (March 12, 1832 – June 19, 1897) 本
+来是不列颠的一位军人，退伍后在 1870 年代移居爱尔兰，成为了爱尔兰大地主
+Lord Erne（俄内伯爵）的地产经纪人。
+
+在当时的爱尔兰，农民为了反抗地主的盘剥和压迫，纷纷组织各种形式的反抗运
+动。其中有个反抗组织叫“土地联盟”。“土地联盟”提出 3F (fair rent, fixity
+of tenure, and free sale) 的要求。Boycott 拒绝降低地租，驱逐参加运动的
+佃农，激起了爱尔兰人的公愤。土地联盟和当地社区对 Boycott 实施了“道德流
+放”，也就是之前介绍过的 [[http://kimi.im/2023-01-14-egnlish-ostracism][ostracism]] ，他们断绝和他的来往、拒绝为他提供任
+何服务。过不了多久，Boycott 只能狼狈的离开了爱尔兰。
+
+后来，这个事件在报纸杂志上传播开来，Boycott 就和联合抵制关联在了一起。
+也就是说，对抗联合抵制的 Charles Cunninghan Boycott 的姓氏成了联合抵制
+本身。 boycotter 成了名词“联合抵制者”。这也是挺讽刺的。
+
+boycott 也可以做动词： We boycotted companies that were polluting the
+environment. 他们联合抵制污染环境的企业。
