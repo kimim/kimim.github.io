@@ -1,0 +1,140 @@
+---
+layout: post
+title: CppCoreGuidelines C.181 避免裸露的 union
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid “naked” union&rsquo;s&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+“裸露” union 指的是那种无从知晓其保存的到底是什么类型的数据。所以，程序员得自己进行记录。裸露 union 容易导致错误。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++" id="org78f10da"><span style="color: #7F0055; font-weight: bold;">union</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span> <span style="color: #000000;">v</span>;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-:noweb">$$c181-union$$
+v.d = 987.654;  // v holds a double
+cout &lt;&lt; v.d;
+</pre>
+</div>
+
+<pre class="example">
+987.654
+</pre>
+
+
+<p>
+目前，暂时没什么问题，但是很容易误用：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">union</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span> <span style="color: #000000;">v</span>;
+cout &lt;&lt; v.x &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, undefined behavior: v holds a double, but we read it as an int</span>
+</pre>
+</div>
+
+<pre class="example">
+-564582640
+</pre>
+
+
+<p>
+注意，这里没有任何显示的类型转换。最后打印出的数据是 -564582640，这个数据是 987.654 这个浮点数据的bit位的整型表示。这里的类型错误是不可见的，很容易被忽略。
+</p>
+
+
+<p>
+以下代码把整型 123 的bit位数据以浮点型输出：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">union</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span> <span style="color: #000000;">v</span>;
+v.x = 123;
+cout &lt;&lt; v.d &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: undefined behavior</span>
+</pre>
+</div>
+
+<pre class="example">
+1.06312e-311
+</pre>
+
+
+
+<p>
+替代方案
+</p>
+
+<p>
+把 union 封装到有类型信息的类中。
+</p>
+
+
+<p>
+使用 C++17 variant 类型 （在 &lt;variant&gt; 中定义的）
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">variant</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v</span>;
+v = 123;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">v holds an int</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = get<span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;(</span>v<span style="color: #707183;">)</span>;
+v = 123.456;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">v holds a double</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">w</span> = get<span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">&gt;(</span>v<span style="color: #707183;">)</span>;
+cout &lt;&lt; w;
+</pre>
+</div>
+
+<pre class="example">
+123.456
+</pre>
+
+
+<p>
+如果你存进了 int， 但是想得到一个 double 就会出错：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">variant</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v</span>;
+v = 123;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">v holds an int</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">w</span> = get<span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">&gt;(</span>v<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<pre class="example" id="org0dabe55">
+terminate called after throwing an instance of 'std::bad_variant_access'
+  what():  std::get: wrong index for variant
+</pre>
