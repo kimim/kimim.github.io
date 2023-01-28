@@ -1,0 +1,116 @@
+---
+layout: post
+title: CppCoreGuidelines C.182 使用匿名 union 实现带标签的 union
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use anonymous unions to implement tagged unions&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+精良设计的带标签的 union 就会类型安全。匿名 union 简化类的设计。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+以下代码处理用于定义的赋值和析构函数比较巧妙。为了节省程序员的时间，这种操作已经在标准库的 variant 中实现了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">two alternative representations represented as a union</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tag</span> <span style="color: #7388d6;">{</span> <span style="color: #000000;">number</span>, <span style="color: #000000;">text</span> <span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tag</span> <span style="color: #000000;">type</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">discriminant</span>
+
+    <span style="color: #7F0055; font-weight: bold;">union</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">representation (note: anonymous union)</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>;
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">string has default constructor, copy operations, and destructor</span>
+    <span style="color: #7388d6;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bad_entry</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">used for exceptions</span>
+
+    ~<span style="color: #0000ff; font-weight: bold;">Value</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span>&amp;<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">necessary because of the string variant</span>
+    <span style="color: #0000ff; font-weight: bold;">Value</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span>&amp;<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">number</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">text</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">set_number</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">set_text</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp;<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #110099;">Value</span>::<span style="color: #0000ff; font-weight: bold;">number</span><span style="color: #707183;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>type != <span style="color: #110099;">Tag</span>::number<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad_entry<span style="color: #7388d6;">{}</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> i;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #110099;">Value</span>::<span style="color: #0000ff; font-weight: bold;">text</span><span style="color: #707183;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>type != <span style="color: #110099;">Tag</span>::text<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad_entry<span style="color: #7388d6;">{}</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> s;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #110099;">Value</span>::<span style="color: #0000ff; font-weight: bold;">set_number</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>type == <span style="color: #110099;">Tag</span>::text<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        s.~string<span style="color: #909183;">()</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">explicitly destroy string</span>
+        type = <span style="color: #110099;">Tag</span>::number;
+    <span style="color: #7388d6;">}</span>
+    i = n;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #110099;">Value</span>::<span style="color: #0000ff; font-weight: bold;">set_text</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">ss</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>type == <span style="color: #110099;">Tag</span>::text<span style="color: #7388d6;">)</span>
+        s = ss;
+    <span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">new</span><span style="color: #909183;">(</span>&amp;s<span style="color: #909183;">)</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #909183;">{</span>ss<span style="color: #909183;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">placement new: explicitly construct string</span>
+        type = <span style="color: #110099;">Tag</span>::text;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span>&amp; <span style="color: #110099;">Value</span>::<span style="color: #7F0055; font-weight: bold;">operator</span>=<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span>&amp; <span style="color: #000000;">e</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">necessary because of the string variant</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>type == <span style="color: #110099;">Tag</span>::text &amp;&amp; e.type == <span style="color: #110099;">Tag</span>::text<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        s = e.s;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">usual string assignment</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>type == <span style="color: #110099;">Tag</span>::text<span style="color: #7388d6;">)</span> s.~string<span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">explicit destroy</span>
+
+    <span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #7388d6;">(</span>e.type<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #110099;">Tag</span>::number:
+        i = e.i;
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #110099;">Tag</span>::text:
+        <span style="color: #7F0055; font-weight: bold;">new</span><span style="color: #909183;">(</span>&amp;s<span style="color: #909183;">)</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #909183;">(</span>e.s<span style="color: #909183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">placement new: explicit construct</span>
+    <span style="color: #7388d6;">}</span>
+
+    type = e.type;
+    <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #110099;">Value</span>::~<span style="color: #0000ff; font-weight: bold;">Value</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>type == <span style="color: #110099;">Tag</span>::text<span style="color: #7388d6;">)</span> s.~string<span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">explicit destroy</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>

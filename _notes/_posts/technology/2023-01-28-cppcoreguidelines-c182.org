@@ -1,0 +1,106 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.182 使用匿名 union 实现带标签的 union
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use anonymous unions to implement tagged unions"
+
+
+理由
+
+精良设计的带标签的 union 就会类型安全。匿名 union 简化类的设计。
+
+
+例子
+
+以下代码处理用于定义的赋值和析构函数比较巧妙。为了节省程序员的时间，这
+种操作已经在标准库的 variant 中实现了。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class Value { // two alternative representations represented as a union
+private:
+    enum class Tag { number, text };
+    Tag type; // discriminant
+
+    union { // representation (note: anonymous union)
+        int i;
+        string s; // string has default constructor, copy operations, and destructor
+    };
+public:
+    struct Bad_entry { }; // used for exceptions
+
+    ~Value();
+    Value& operator=(const Value&);   // necessary because of the string variant
+    Value(const Value&);
+    // ...
+    int number() const;
+    string text() const;
+
+    void set_number(int n);
+    void set_text(const string&);
+    // ...
+};
+
+int Value::number() const
+{
+    if (type != Tag::number) throw Bad_entry{};
+    return i;
+}
+
+string Value::text() const
+{
+    if (type != Tag::text) throw Bad_entry{};
+    return s;
+}
+
+void Value::set_number(int n)
+{
+    if (type == Tag::text) {
+        s.~string();      // explicitly destroy string
+        type = Tag::number;
+    }
+    i = n;
+}
+
+void Value::set_text(const string& ss)
+{
+    if (type == Tag::text)
+        s = ss;
+    else {
+        new(&s) string{ss};   // placement new: explicitly construct string
+        type = Tag::text;
+    }
+}
+
+Value& Value::operator=(const Value& e)   // necessary because of the string variant
+{
+    if (type == Tag::text && e.type == Tag::text) {
+        s = e.s;    // usual string assignment
+        return *this;
+    }
+
+    if (type == Tag::text) s.~string(); // explicit destroy
+
+    switch (e.type) {
+    case Tag::number:
+        i = e.i;
+        break;
+    case Tag::text:
+        new(&s) string(e.s);   // placement new: explicit construct
+    }
+
+    type = e.type;
+    return *this;
+}
+
+Value::~Value()
+{
+    if (type == Tag::text) s.~string(); // explicit destroy
+}
+#+end_src
