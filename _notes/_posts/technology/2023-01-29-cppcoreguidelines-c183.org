@@ -1,0 +1,72 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines C.183 不要使用 union 实现类型双关
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t use a union for type punning"
+
+
+理由
+
+从一个 union 中读取非写入的类型成员是未定义的。使用 union 来读取某个类
+型数据的bit位数值的另外一种类型表示，是很容易导致错误的行为。
+
+
+
+错误例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+union Pun {
+    int x;
+    unsigned char c[sizeof(int)];
+};
+
+void bad(Pun& u)
+{
+    u.x = 'x';
+    cout << u.c[0] << '\n';     // undefined behavior
+}
+int main()
+{
+    Pun u;
+    bad(u);
+}
+#+end_src
+
+#+RESULTS:
+: x
+
+
+如果你要查看 int 的字节表示，可以使用类型转换：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> <cstddef> <bitset> :eval no-export :results output
+std::ostream& operator<< (std::ostream& os, std::byte b) {
+    return os << std::bitset<8>(std::to_integer<int>(b));
+}
+
+void if_you_must_pun(int& x)
+{
+    auto p = reinterpret_cast<std::byte*>(&x);
+    cout << p[0] << '\n';     // OK; better
+    // ...
+}
+int main()
+{
+    int x = 100;
+    if_you_must_pun(x);
+}
+#+end_src
+
+#+RESULTS:
+: 01100100
+
+通过 ~reinterpret_cast~ 把一个对象转换成 ~char*~ , ~unsigned char*~ 或 ~std::byte*~ 是可以得到确定性的数据的。（不过我们不建议这种操作）。
+
+C++17 引入了 ~std::byte~ 来处理对象的原始字节表示。尽量避免使用 ~unsinged
+char~ 或 ~char~

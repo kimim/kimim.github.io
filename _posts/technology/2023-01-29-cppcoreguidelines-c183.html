@@ -1,0 +1,91 @@
+---
+layout: post
+title: CppCoreGuidelines C.183 不要使用 union 实现类型双关
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t use a union for type punning&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+从一个 union 中读取非写入的类型成员是未定义的。使用 union 来读取某个类型数据的bit位数值的另外一种类型表示，是很容易导致错误的行为。
+</p>
+
+
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">union</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Pun</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">c</span><span style="color: #7388d6;">[</span><span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">)</span><span style="color: #7388d6;">]</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">bad</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Pun</span>&amp; <span style="color: #000000;">u</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    u.x = <span style="color: #2A00FF;">'x'</span>;
+    cout &lt;&lt; u.c<span style="color: #7388d6;">[</span>0<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">undefined behavior</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Pun</span> <span style="color: #000000;">u</span>;
+    bad<span style="color: #7388d6;">(</span>u<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+x
+</pre>
+
+
+
+<p>
+如果你要查看 int 的字节表示，可以使用类型转换：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">&lt;&lt;</span> <span style="color: #707183;">(</span><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #000000;">os</span>, <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">byte</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> os &lt;&lt; <span style="color: #110099;">std</span>::bitset<span style="color: #7388d6;">&lt;</span>8<span style="color: #7388d6;">&gt;(</span><span style="color: #110099;">std</span>::to_integer<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">&gt;(</span>b<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">if_you_must_pun</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>&amp; <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">reinterpret_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">byte</span>*<span style="color: #7388d6;">&gt;(</span>&amp;x<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; p<span style="color: #7388d6;">[</span>0<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK; better</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = 100;
+    if_you_must_pun<span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+01100100
+</pre>
+
+
+<p>
+通过 <code>reinterpret_cast</code> 把一个对象转换成 <code>char*</code> , <code>unsigned char*</code> 或 <code>std::byte*</code> 是可以得到确定性的数据的。（不过我们不建议这种操作）。
+</p>
+
+<p>
+C++17 引入了 <code>std::byte</code> 来处理对象的原始字节表示。尽量避免使用 <code>unsinged
+char</code> 或 <code>char</code>
+</p>
