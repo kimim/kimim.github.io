@@ -1,0 +1,58 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines Enum.2 使用枚举来表示一组相关的常量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use enumerations to represent sets of related named constants"
+
+
+理由
+
+枚举表示一组相关的，带名字的常量。
+
+
+例子
+
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+enum class Web_color { red = 0xFF0000, green = 0x00FF00, blue = 0x0000FF };
+#+end_src
+
+
+注意
+
+根据枚举值判断条件分支很常用。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+enum class Product_info { red = 0, purple = 1, blue = 2 };
+
+void print(Product_info inf)
+{
+    switch (inf) {
+    case Product_info::red: cout << "red"; break;
+    case Product_info::purple: cout << "purple"; break;
+    }
+}
+
+int main()
+{
+    auto info = Product_info::red;
+    print(info);
+}
+#+end_src
+
+#+RESULTS:
+: red
+
+这种分支判断，没有完全列举枚举值，意味着枚举值太多了，或者测试不够全面。
+
+
+强化
+- 标记没有遍历所有枚举值的 switch 语句
+- 标记只列举了部分枚举值，且没有默认语句的 switch

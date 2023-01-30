@@ -1,0 +1,80 @@
+---
+layout: post
+title: CppCoreGuidelines Enum.2 使用枚举来表示一组相关的常量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use enumerations to represent sets of related named constants&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+枚举表示一组相关的，带名字的常量。
+</p>
+
+
+<p>
+例子
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Web_color</span> <span style="color: #707183;">{</span> <span style="color: #000000;">red</span> = 0xFF0000, <span style="color: #000000;">green</span> = 0x00FF00, <span style="color: #000000;">blue</span> = 0x0000FF <span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+根据枚举值判断条件分支很常用。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Product_info</span> <span style="color: #707183;">{</span> <span style="color: #000000;">red</span> = 0, <span style="color: #000000;">purple</span> = 1, <span style="color: #000000;">blue</span> = 2 <span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Product_info</span> <span style="color: #000000;">inf</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #7388d6;">(</span>inf<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #110099;">Product_info</span>::red: cout &lt;&lt; <span style="color: #2A00FF;">"red"</span>; <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #110099;">Product_info</span>::purple: cout &lt;&lt; <span style="color: #2A00FF;">"purple"</span>; <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">info</span> = <span style="color: #110099;">Product_info</span>::red;
+    print<span style="color: #7388d6;">(</span>info<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+red
+</pre>
+
+
+<p>
+这种分支判断，没有完全列举枚举值，意味着枚举值太多了，或者测试不够全面。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记没有遍历所有枚举值的 switch 语句</li>
+<li>标记只列举了部分枚举值，且没有默认语句的 switch</li>
+</ul>
