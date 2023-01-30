@@ -1,0 +1,75 @@
+---
+layout: post
+title: CppCoreGuidelines Enum.1 用枚举不要用宏
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer enumerations over macros&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+宏不遵循作用域范围和类型规则。另外，在预处理过程中，宏名会被删除。所以一般不会在调试工具中出现。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+首先是一些老的坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">webcolors.h (third party header)</span>
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">RED</span>   0xFF0000
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">GREEN</span> 0x00FF00
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">BLUE</span>  0x0000FF
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">productinfo.h</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">The following define product subtypes based on color</span>
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">RED</span>    0
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">PURPLE</span> 1
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">BLUE</span>   2
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">webby</span> = BLUE;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">webby == 2; probably not what was desired</span>
+</pre>
+</div>
+
+
+<p>
+其实，应该使用 enum
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Web_color</span> <span style="color: #707183;">{</span> <span style="color: #000000;">red</span> = 0xFF0000, <span style="color: #000000;">green</span> = 0x00FF00, <span style="color: #000000;">blue</span> = 0x0000FF <span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Product_info</span> <span style="color: #707183;">{</span> <span style="color: #000000;">red</span> = 0, <span style="color: #000000;">purple</span> = 1, <span style="color: #000000;">blue</span> = 2 <span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">webby</span> = blue;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: be specific</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Web_color</span> <span style="color: #000000;">webby</span> = <span style="color: #110099;">Web_color</span>::blue;
+</pre>
+</div>
+
+<p>
+这里，我们用了 enum class 避免名字冲突。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记定义了整型数值的宏</li>
+</ul>

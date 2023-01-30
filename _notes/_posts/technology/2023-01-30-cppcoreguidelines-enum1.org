@@ -1,0 +1,56 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines Enum.1 用枚举不要用宏
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer enumerations over macros"
+
+
+理由
+
+宏不遵循作用域范围和类型规则。另外，在预处理过程中，宏名会被删除。所以
+一般不会在调试工具中出现。
+
+
+例子
+
+首先是一些老的坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+// webcolors.h (third party header)
+#define RED   0xFF0000
+#define GREEN 0x00FF00
+#define BLUE  0x0000FF
+
+// productinfo.h
+// The following define product subtypes based on color
+#define RED    0
+#define PURPLE 1
+#define BLUE   2
+
+int webby = BLUE;   // webby == 2; probably not what was desired
+#+end_src
+
+
+其实，应该使用 enum
+
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+enum class Web_color { red = 0xFF0000, green = 0x00FF00, blue = 0x0000FF };
+enum class Product_info { red = 0, purple = 1, blue = 2 };
+
+int webby = blue;   // error: be specific
+Web_color webby = Web_color::blue;
+#+end_src
+
+这里，我们用了 enum class 避免名字冲突。
+
+
+强化
+- 标记定义了整型数值的宏
