@@ -1,0 +1,49 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines Enum.3 用 enum class，而不要用普通枚举
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer class enums over “plain” enums"
+
+
+理由
+
+减少惊讶：传统枚举太容易转换成 int 值。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void Print_color(int color);
+
+enum Web_color { red = 0xFF0000, green = 0x00FF00, blue = 0x0000FF };
+enum Product_info { red = 0, purple = 1, blue = 2 };
+
+Web_color webby = Web_color::blue;
+
+// Clearly at least one of these calls is buggy.
+Print_color(webby);
+Print_color(Product_info::blue);
+#+end_src
+
+相反地，应该使用 enum class：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void Print_color(int color);
+
+enum class Web_color { red = 0xFF0000, green = 0x00FF00, blue = 0x0000FF };
+enum class Product_info { red = 0, purple = 1, blue = 2 };
+
+Web_color webby = Web_color::blue;
+Print_color(webby);  // Error: cannot convert Web_color to int.
+Print_color(Product_info::red);  // Error: cannot convert Product_info to int.
+#+end_src
+
+
+强化
+- （简单）警告没有使用 class 的枚举定义
