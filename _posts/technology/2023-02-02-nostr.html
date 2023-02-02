@@ -1,0 +1,72 @@
+---
+layout: post
+title: Nostr Pura Vida
+categories: [technology]
+tags: [nostr]
+---
+
+<p>
+“Pura Vida”。1 月 1 日，前 Twitter CEO Jack Dorsey 在 Twitter 上打出了这组词，点赞无数。
+</p>
+
+<p>
+Pura Vida 是哥斯达黎有一句标志性的话，就是 “Pure Life”，体现了他们的简单与热情，不管是见面、问候、还是再见，都可以说 Pura Vida。一句 Pura
+Vida 就拉近了人之间的距离。卸任了 Twitter CEO 职位的 Jack Dorsey 也在思考如何构建一个简单纯粹的社交网络。
+</p>
+
+<p>
+2 月 1 日，Jack Dorsey 发布推文表示，基于分布式社交媒体协议 Nostr 的社交产品 Damus 和 Amethyst 正式在苹果 App Store 和谷歌 Google Play Store
+上线。于是，这几天，nostr 成了坊间热议的话题。
+</p>
+
+<p>
+一句话概括就是：nostr 是一个匿名、简单、开放的网络协议，任何人都可以参与其中，建立一个无监管的社交网络。它不需要任何可信的中心服务器，所以服务不间断。它基于非对称密钥和签名，安全又可靠。
+</p>
+
+<p>
+nostr 的工作机制是这样的：任何人，在任何地方，可以通过任何形式的客户端，生成一对密钥对，注册帐号。客户端可以是原生的、可以是 web 的、甚至命令行形式的。然后你可以发布一些信息，用你的私钥签名，发送到多个中继服务器。你可以自己搭一个中继服务器，也可以用任何他人运维的中继服务器。然后，其他人就可以通过这些中继服务器，获取你发布的信息。中继的功能很简单，就是接受客户端或向其他中继转发消息。这种消息，在 nostr 协议中叫 Event 事件。中继不关心消息事件的内容，只有客户端会去验证消息来源是否可靠。这就是所谓的 “dumb server, smart client”模型。
+</p>
+
+<p>
+nostr 协议很简单，就是通过 websocket 收发 JSON 格式 Event，其格式如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript"><span style="color: #707183;">{</span>
+  <span style="color: #2A00FF;">"id"</span>: &lt;sha256 <span style="color: #7F0055; font-weight: bold;">of</span> the serialized event data&gt;
+  <span style="color: #2A00FF;">"pubkey"</span>: &lt;32-bytes hex <span style="color: #7F0055; font-weight: bold;">of</span> <span style="color: #7F0055; font-weight: bold;">public</span> key <span style="color: #7F0055; font-weight: bold;">of</span> the event creator&gt;,
+  <span style="color: #2A00FF;">"created_at"</span>: &lt;unix timestamp <span style="color: #7F0055; font-weight: bold;">in</span> seconds&gt;,
+  <span style="color: #2A00FF;">"kind"</span>: &lt;integer&gt;,
+  <span style="color: #2A00FF;">"tags"</span>: <span style="color: #7388d6;">[</span>
+    <span style="color: #909183;">[</span><span style="color: #2A00FF;">"e"</span>, &lt;32-bytes hex <span style="color: #7F0055; font-weight: bold;">of</span> the id <span style="color: #7F0055; font-weight: bold;">of</span> another event&gt;, &lt;recommended relay URL&gt;<span style="color: #909183;">]</span>,
+    <span style="color: #909183;">[</span><span style="color: #2A00FF;">"p"</span>, &lt;32-bytes hex <span style="color: #7F0055; font-weight: bold;">of</span> the key&gt;, &lt;recommended relay URL&gt;<span style="color: #909183;">]</span>,
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">other kinds of tags may be included later</span>
+  <span style="color: #7388d6;">]</span>
+  <span style="color: #2A00FF;">"content"</span>: &lt;arbitrary string&gt;,
+  <span style="color: #2A00FF;">"sig"</span>: &lt;64-bytes signature <span style="color: #7F0055; font-weight: bold;">of</span> the sha256 hash <span style="color: #7F0055; font-weight: bold;">of</span> the serialized event data&gt;,
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+比如下面这个 Event 就是我在 nostr 网络中发送的第一条消息：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript"><span style="color: #707183;">{</span>
+    <span style="color: #2A00FF;">"id"</span>:<span style="color: #2A00FF;">"5b8794d009a43139558318df5475fd2a1659b52f26df3c0f3ce8b022d0d88370"</span>,
+    <span style="color: #2A00FF;">"pubkey"</span>:<span style="color: #2A00FF;">"172c463cf703a1abd9a1f8d9ff2a9d66c9904e1719b6352617d6293ac4929cdc"</span>,
+    <span style="color: #2A00FF;">"created_at"</span>:1675339072,
+    <span style="color: #2A00FF;">"kind"</span>:1,
+    <span style="color: #2A00FF;">"tags"</span>:<span style="color: #7388d6;">[]</span>,
+    <span style="color: #2A00FF;">"content"</span>:<span style="color: #2A00FF;">"Nice day"</span>,
+    <span style="color: #2A00FF;">"sig"</span>:<span style="color: #2A00FF;">"cc3a441feadaaef8ba745457732ea05a0d26fee0f08d97208853aa94085e2d3ceda8b18ef7ca871935ea0668a46fb095f258437588809b9c16089c92bb4459d1"</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+客户端发给中继服务器 Relay 的所有 Event 都是 Schnorr 算法签名的。其他客户端通过订阅过滤器得到任何 Event。客户端不是去中心化的，但是 Relay
+是去中心化的，Relay 之间互相通信收发 Event。客户端自己决定要订阅哪些
+Event，怎么验证 Event 是否可信。你可能会觉得这样的协议，太过简单，没什么价值。其实，正是因为协议简单，才适合与去中心化的应用场景，满足去中心化社交网络 DSN 的需求。
+</p>
