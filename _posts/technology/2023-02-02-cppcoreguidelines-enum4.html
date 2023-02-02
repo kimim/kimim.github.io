@@ -1,0 +1,74 @@
+---
+layout: post
+title: CppCoreGuidelines Enum.4 为了安全且简单的使用，基于枚举值定义操作
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Define operations on enumerations for safe and simple use&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+使用习惯，避免错误。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span> <span style="color: #707183;">{</span> <span style="color: #000000;">mon</span>, <span style="color: #000000;">tue</span>, <span style="color: #000000;">wed</span>, <span style="color: #000000;">thu</span>, <span style="color: #000000;">fri</span>, <span style="color: #000000;">sat</span>, <span style="color: #000000;">sun</span> <span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">++</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span>&amp; <span style="color: #000000;">d</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> d = <span style="color: #7388d6;">(</span>d == <span style="color: #110099;">Day</span>::sun<span style="color: #7388d6;">)</span> ? <span style="color: #110099;">Day</span>::mon : <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span><span style="color: #7388d6;">&gt;(</span><span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">&gt;(</span>d<span style="color: #909183;">)</span>+1<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span> <span style="color: #000000;">today</span> = <span style="color: #110099;">Day</span>::sat;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span> <span style="color: #000000;">tomorrow</span> = ++today;
+    cout &lt;&lt; tomorrow;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+6
+</pre>
+
+
+<p>
+这里用了 <code>statc_cast</code> 看起来不太优美。但是：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">++</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span>&amp; <span style="color: #000000;">d</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> d = <span style="color: #7388d6;">(</span>d == <span style="color: #110099;">Day</span>::sun<span style="color: #7388d6;">)</span> ? <span style="color: #110099;">Day</span>::mon : Day<span style="color: #7388d6;">{</span>++d<span style="color: #7388d6;">}</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这里 ++ 的使用，会导致无限递归。要么使用 switch 实现，但这样代码又太多。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记重复的转换回枚举的表达式。</li>
+</ul>
