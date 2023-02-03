@@ -1,0 +1,181 @@
+---
+layout: post
+title: Nostr NIPS
+categories: [technology]
+tags: [nostr]
+---
+
+<p>
+昨天简单介绍了一下 nostr。今天继续介绍。
+</p>
+
+<p>
+其实 nostr 是 Notes and Other Stuff Transmitted by Relays，即“通过中继传输笔记和其他资料”。正如其名字所暗示，它是一个很简单很轻量级的协议，刚刚好能够工作。
+</p>
+
+<p>
+nostr 协议通过所谓的 NIP 规定。NIP 是 Nostr Improvement Proposals，即“Nostr 改进建议”。
+</p>
+
+<p>
+NIP-01 定义了 nostr 协议的基本数据结构和工作流。
+</p>
+
+<p>
+其中，事件消息的 JSON 格式如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript"><span style="color: #707183;">{</span>
+  <span style="color: #2A00FF;">"id"</span>: &lt;&#20107;&#20214;&#30340;&#25968;&#25454;&#30340; sha256&gt;
+  <span style="color: #2A00FF;">"pubkey"</span>: &lt;&#20107;&#20214;&#21457;&#36865;&#32773;&#30340;&#20844;&#38053;&gt;,
+  <span style="color: #2A00FF;">"created_at"</span>: &lt;unix &#26102;&#38388;&#25139;<span style="color: #7388d6;">&#65288;</span>&#31186;<span style="color: #7388d6;">&#65289;</span>&gt;,
+  <span style="color: #2A00FF;">"kind"</span>: &lt;&#25972;&#25968;&gt;,
+  <span style="color: #2A00FF;">"tags"</span>: <span style="color: #7388d6;">[</span>
+    <span style="color: #909183;">[</span><span style="color: #2A00FF;">"e"</span>, &lt;&#20854;&#20182;&#20107;&#20214;&#30340; ID&gt;, &lt;&#24314;&#35758;&#30340;&#20013;&#32487; URL &#22320;&#22336;&gt;<span style="color: #909183;">]</span>,
+    <span style="color: #909183;">[</span><span style="color: #2A00FF;">"p"</span>, &lt;&#20844;&#38053;&gt;, &lt;&#24314;&#35758;&#30340;&#20013;&#32487; URL &#22320;&#22336;&gt;<span style="color: #909183;">]</span>,
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#20854;&#20182;&#26631;&#31614;</span>
+  <span style="color: #7388d6;">]</span>,
+  <span style="color: #2A00FF;">"content"</span>: &lt;&#20107;&#20214;&#28040;&#24687;&#20869;&#23481;&gt;,
+  <span style="color: #2A00FF;">"sig"</span>: &lt;&#20107;&#20214;&#30340;&#31169;&#38053;&#31614;&#21517;&gt;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+所有其他的 NIP 都是基于这个事件格式，通过事件种类 kind 和事件标签 tag
+扩展功能。比如，NIP-02 定义了如何 kind 3，tag p 查询好友列表、好友昵称。
+NIP-04 定义了如何用 kind 4，tag p 发送私聊信息。NIP-08 定义如何在事件消息中@某个人。NIP-09 定义了通过 kind 5，tag e 删除事件消息。NIP-10 定义了过滤查询方法。NIP-13 定义了工作量证明方法。NIP-28 定义了 kind
+40-44，用来管理公共聊天室。NIP-36 定义了&ldquo;content-warning&rdquo; tag，用来告知接收者，消息可能比较敏感。
+</p>
+
+<p>
+nostr 通信模型也很简单。中继服务器 Relay 开放 websocket 端口给客户端连接访问。客户端可以发送三种 JSON 消息：
+</p>
+
+<ul class="org-ul">
+<li>[&ldquo;EVENT&rdquo;, &lt;事件 JSON&gt;]：发布事件</li>
+<li>[&ldquo;REQ&rdquo;, &lt;订阅 ID&gt;, &lt;过滤器&gt; &#x2026;]：请求事件，订阅更新</li>
+<li>[&ldquo;CLOSE&rdquo;, &lt;订阅 ID&gt;]：终止前面创建的订阅</li>
+</ul>
+
+
+<p>
+中继服务器收到客户端的 REQ 请求后，创建订阅，根据过滤器，从数据库查询消息，返回给客户端。然后，如果有更新，发送更新给客户端。知道客户端发送
+CLOSE 请求。
+</p>
+
+<p>
+过滤器的格式如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript"><span style="color: #707183;">{</span>
+  <span style="color: #2A00FF;">"ids"</span>: &lt;&#20107;&#20214;ID&#21015;&#34920;&gt;,
+  <span style="color: #2A00FF;">"authors"</span>: &lt;&#21457;&#24067;&#32773;&#30340;&#20844;&#38053;&#21015;&#34920;&gt;,
+    <span style="color: #2A00FF;">"kinds"</span>: &lt;&#28040;&#24687;&#31867;&#22411;&#21015;&#34920;&gt;,
+  <span style="color: #2A00FF;">"#e"</span>: &lt;e &#26631;&#31614;&#24341;&#29992;&#30340;&#28040;&#24687;ID&#21015;&#34920;&gt;,
+  <span style="color: #2A00FF;">"#p"</span>: &lt;p &#26631;&#31614;&#24341;&#29992;&#30340;&#21457;&#24067;&#32773;&#20844;&#38053;&#21015;&#34920;&gt;,
+  <span style="color: #2A00FF;">"since"</span>: &lt;&#36215;&#22987;&#20107;&#20214;&gt;,
+  <span style="color: #2A00FF;">"until"</span>: &lt;&#32467;&#26463;&#20107;&#20214;&gt;,
+  <span style="color: #2A00FF;">"limit"</span>: &lt;&#26368;&#22823;&#36820;&#22238;&#25968;&#37327;&gt;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+中继服务器发给客户端的消息类型有：
+</p>
+
+<ul class="org-ul">
+<li>[&ldquo;EVENT&rdquo;, &lt;订阅号&gt;, &lt;事件&gt;]：返回客户端请求的事件</li>
+<li>[&ldquo;NOTICE&rdquo;, &lt;消息&gt;]：出错消息</li>
+</ul>
+
+<p>
+NIP-01 中定义的基本事件类型有：
+</p>
+<ul class="org-ul">
+<li>0 设置用户名、个人介绍和图片</li>
+<li>1 发送文本消息</li>
+<li>2 建议使用的中继地址</li>
+</ul>
+
+
+<p>
+差不多，Nostr 协议的核心内容就是这些了。
+</p>
+
+<p>
+接下来，我们来看看，怎么使用 noscl 工具直接在命令行下收发消息。
+</p>
+
+<p>
+在 nostr 网络中，你无需注册帐号，只要自己生成一对公钥和私钥，就可以往
+Relay 发送消息了。用 noscl 命令行工具，生成公私钥也很方便。
+</p>
+
+<p>
+生成私钥：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-example">$./noscl key-gen
+seed: strike correct brother asset frequent garden bamboo episode certain verify tip canoe daring below intact roast whale jazz toddler sell giraffe index camera zoo
+private key: a831778dd9cabb28d0929bad0a32dccd2da8e930c4bc3433890d861c64fa3267
+</pre>
+</div>
+
+<p>
+设置你的私钥，根据私钥，生成公钥：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-example">$./noscl setprivate  a831778dd9cabb28d0929bad0a32dccd2da8e930c4bc3433890d861c64fa3267
+$./noscl public
+5213a71f9189243e197b23b6f7ee5ae4edda04815559e92f4d6d80df05cc007e
+</pre>
+</div>
+
+<p>
+添加一个能连接的 Relay：
+</p>
+
+<pre class="example" id="orgcc234c7">
+$./noscl relay add wss://nos.lol
+$./noscl relay
+wss://nos.lol: rw
+</pre>
+
+<p>
+发送消息：
+</p>
+<pre class="example" id="orga935d9d">
+$./noscl publish "hello from Linux
+</pre>
+
+<p>
+接收消息：
+</p>
+
+<pre class="example" id="org2927145">
+$./noscl publish "hello from Linux
+</pre>
+
+<p>
+Follow 我自己，就能看到我昨天发过的消息：
+</p>
+
+<pre class="example" id="orgf28cf02">
+$./noscl follow 172c463cf703a1abd9a1f8d9ff2a9d66c9904e1719b6352617d6293ac4929cdc
+Followed 172c463cf703a1abd9a1f8d9ff2a9d66c9904e1719b6352617d6293ac4929cdc.
+$./noscl home
+
+Text Note [5b87...8370] from  (172c...9cdc) 23 hours ago
+  Nice day
+  https://i.postimg.cc/Vvf7qhrf/039-A488-D-6143-48-EE-B2-DF-E23-A35-D17-DD0.jpg
+Profile Metadata [9eeb...e24c] from kimim (172c...9cdc) 23 hours ago
+  name: kimim
+about: ""
+picture: https://i.postimg.cc/Vvf7qhrf/039-A488-D-6143-48-EE-B2-DF-E23-A35-D17-DD0.jpg
+</pre>

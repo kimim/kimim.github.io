@@ -1,0 +1,141 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: Nostr NIPS
+categories: [technology]
+tags: [nostr]
+---
+#+END_EXPORT
+
+昨天简单介绍了一下 nostr。今天继续介绍。
+
+其实 nostr 是 Notes and Other Stuff Transmitted by Relays，即“通过中继
+传输笔记和其他资料”。正如其名字所暗示，它是一个很简单很轻量级的协议，
+刚刚好能够工作。
+
+nostr 协议通过所谓的 NIP 规定。NIP 是 Nostr Improvement Proposals，即
+“Nostr 改进建议”。
+
+NIP-01 定义了 nostr 协议的基本数据结构和工作流。
+
+其中，事件消息的 JSON 格式如下：
+
+#+begin_src javascript
+{
+  "id": <事件的数据的 sha256>
+  "pubkey": <事件发送者的公钥>,
+  "created_at": <unix 时间戳（秒）>,
+  "kind": <整数>,
+  "tags": [
+    ["e", <其他事件的 ID>, <建议的中继 URL 地址>],
+    ["p", <公钥>, <建议的中继 URL 地址>],
+    // 其他标签
+  ],
+  "content": <事件消息内容>,
+  "sig": <事件的私钥签名>
+}
+#+end_src
+
+所有其他的 NIP 都是基于这个事件格式，通过事件种类 kind 和事件标签 tag
+扩展功能。比如，NIP-02 定义了如何 kind 3，tag p 查询好友列表、好友昵称。
+NIP-04 定义了如何用 kind 4，tag p 发送私聊信息。NIP-08 定义如何在事件
+消息中@某个人。NIP-09 定义了通过 kind 5，tag e 删除事件消息。NIP-10 定
+义了过滤查询方法。NIP-13 定义了工作量证明方法。NIP-28 定义了 kind
+40-44，用来管理公共聊天室。NIP-36 定义了"content-warning" tag，用来告
+知接收者，消息可能比较敏感。
+
+nostr 通信模型也很简单。中继服务器 Relay 开放 websocket 端口给客户端连
+接访问。客户端可以发送三种 JSON 消息：
+
+- ["EVENT", <事件 JSON>]：发布事件
+- ["REQ", <订阅 ID>, <过滤器> ...]：请求事件，订阅更新
+- ["CLOSE", <订阅 ID>]：终止前面创建的订阅
+
+
+中继服务器收到客户端的 REQ 请求后，创建订阅，根据过滤器，从数据库查询
+消息，返回给客户端。然后，如果有更新，发送更新给客户端。知道客户端发送
+CLOSE 请求。
+
+过滤器的格式如下：
+
+#+begin_src javascript
+{
+  "ids": <事件ID列表>,
+  "authors": <发布者的公钥列表>,
+    "kinds": <消息类型列表>,
+  "#e": <e 标签引用的消息ID列表>,
+  "#p": <p 标签引用的发布者公钥列表>,
+  "since": <起始事件>,
+  "until": <结束事件>,
+  "limit": <最大返回数量>
+}
+#+end_src
+
+中继服务器发给客户端的消息类型有：
+
+- ["EVENT", <订阅号>, <事件>]：返回客户端请求的事件
+- ["NOTICE", <消息>]：出错消息
+
+NIP-01 中定义的基本事件类型有：
+- 0 设置用户名、个人介绍和图片
+- 1 发送文本消息
+- 2 建议使用的中继地址
+
+
+差不多，Nostr 协议的核心内容就是这些了。
+
+接下来，我们来看看，怎么使用 noscl 工具直接在命令行下收发消息。
+
+在 nostr 网络中，你无需注册帐号，只要自己生成一对公钥和私钥，就可以往
+Relay 发送消息了。用 noscl 命令行工具，生成公私钥也很方便。
+
+生成私钥：
+
+#+begin_src example
+$./noscl key-gen
+seed: strike correct brother asset frequent garden bamboo episode certain verify tip canoe daring below intact roast whale jazz toddler sell giraffe index camera zoo
+private key: a831778dd9cabb28d0929bad0a32dccd2da8e930c4bc3433890d861c64fa3267
+#+end_src
+
+设置你的私钥，根据私钥，生成公钥：
+
+#+begin_src example
+$./noscl setprivate  a831778dd9cabb28d0929bad0a32dccd2da8e930c4bc3433890d861c64fa3267
+$./noscl public
+5213a71f9189243e197b23b6f7ee5ae4edda04815559e92f4d6d80df05cc007e
+#+end_src
+
+添加一个能连接的 Relay：
+
+#+begin_example
+$./noscl relay add wss://nos.lol
+$./noscl relay
+wss://nos.lol: rw
+#+end_example
+
+发送消息：
+#+begin_example
+$./noscl publish "hello from Linux
+#+end_example
+
+接收消息：
+
+#+begin_example
+$./noscl publish "hello from Linux
+#+end_example
+
+Follow 我自己，就能看到我昨天发过的消息：
+
+#+begin_example
+$./noscl follow 172c463cf703a1abd9a1f8d9ff2a9d66c9904e1719b6352617d6293ac4929cdc
+Followed 172c463cf703a1abd9a1f8d9ff2a9d66c9904e1719b6352617d6293ac4929cdc.
+$./noscl home
+
+Text Note [5b87...8370] from  (172c...9cdc) 23 hours ago
+  Nice day
+  https://i.postimg.cc/Vvf7qhrf/039-A488-D-6143-48-EE-B2-DF-E23-A35-D17-DD0.jpg
+Profile Metadata [9eeb...e24c] from kimim (172c...9cdc) 23 hours ago
+  name: kimim
+about: ""
+picture: https://i.postimg.cc/Vvf7qhrf/039-A488-D-6143-48-EE-B2-DF-E23-A35-D17-DD0.jpg
+#+end_example
