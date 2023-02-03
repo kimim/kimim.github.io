@@ -1,0 +1,48 @@
+---
+layout: post
+title: CppCoreGuidelines Enum.5 不要使用全大写的枚举
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t use ALL<sub>CAPS</sub> for enumerators&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+避免与宏名字冲突。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">webcolors.h (third party header)</span>
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">RED</span>   0xFF0000
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">GREEN</span> 0x00FF00
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">BLUE</span>  0x0000FF
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">productinfo.h</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">The following define product subtypes based on color</span>
+<span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Product_info</span> <span style="color: #707183;">{</span> <span style="color: #000000;">RED</span>, <span style="color: #000000;">PURPLE</span>, <span style="color: #000000;">BLUE</span> <span style="color: #707183;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">syntax error</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记全大写的枚举值</li>
+</ul>

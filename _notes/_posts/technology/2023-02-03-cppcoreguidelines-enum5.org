@@ -1,0 +1,35 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines Enum.5 不要使用全大写的枚举
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t use ALL_CAPS for enumerators"
+
+
+理由
+
+避免与宏名字冲突。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+// webcolors.h (third party header)
+#define RED   0xFF0000
+#define GREEN 0x00FF00
+#define BLUE  0x0000FF
+
+// productinfo.h
+// The following define product subtypes based on color
+enum class Product_info { RED, PURPLE, BLUE };   // syntax error
+#+end_src
+
+
+强化
+- 标记全大写的枚举值
