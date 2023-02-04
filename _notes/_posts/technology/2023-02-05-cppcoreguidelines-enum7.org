@@ -1,0 +1,50 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines Enum.7 只有必要的时候才指定枚举项的数据类型
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Specify the underlying type of an enumeration only when necessary"
+
+
+理由
+
+默认的方式更容易阅读和编写。 int 是默认的整型值，int 与 C 枚举兼容。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+enum class Direction : char
+{
+    n, s, e, w,
+    ne, nw, se, sw
+};  // underlying type saves space
+
+enum class Web_color : int32_t
+{
+    red   = 0xFF0000,
+    green = 0x00FF00,
+    blue  = 0x0000FF
+};  // underlying type is redundant
+#+end_src
+
+
+注意
+
+在提前声明枚举类型的时候，你必须指明内部用什么数据类型：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+enum Flags : char;
+
+void f(Flags);
+
+// ....
+
+enum Flags : char { /* ... */ };
+#+end_src

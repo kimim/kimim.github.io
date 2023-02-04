@@ -1,0 +1,64 @@
+---
+layout: post
+title: CppCoreGuidelines Enum.7 只有必要的时候才指定枚举项的数据类型
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Specify the underlying type of an enumeration only when necessary&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+默认的方式更容易阅读和编写。 int 是默认的整型值，int 与 C 枚举兼容。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Direction</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000;">n</span>, <span style="color: #000000;">s</span>, <span style="color: #000000;">e</span>, <span style="color: #000000;">w</span>,
+    <span style="color: #000000;">ne</span>, <span style="color: #000000;">nw</span>, <span style="color: #000000;">se</span>, <span style="color: #000000;">sw</span>
+<span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">underlying type saves space</span>
+
+<span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Web_color</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">int32_t</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000;">red</span>   = 0xFF0000,
+    <span style="color: #000000;">green</span> = 0x00FF00,
+    <span style="color: #000000;">blue</span>  = 0x0000FF
+<span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">underlying type is redundant</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+在提前声明枚举类型的时候，你必须指明内部用什么数据类型：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flags</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Flags</span><span style="color: #707183;">)</span>;
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">....</span>
+
+<span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Flags</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;
+</pre>
+</div>

@@ -1,0 +1,291 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 搭建一个 nostr 中继服务
+categories: [technology]
+tags: [nostr]
+---
+#+END_EXPORT
+
+[[https://github.com/nostr-protocol/nostr][nostr]] 是一个相当简单的开放协议，可以在全球范围内搭建一个有趣的社交网络。
+因为协议本身很简单，所以大部分的加密、签名工作在客户端完成，而中继服务
+器 Relay 所做的事情只是接收事件消息，根据客户端订阅要求返回消息。
+
+目前 relay 的实现也很多，比如 nostream 的搭建就很方便，只要安装好
+docker，设置好域名，直接运行就可以啦。
+
+以下记录一下 Relay 的搭建过程。
+
+* 安装基础软件
+
+首先分配一台安装 Ubuntu Server 20.04 LTS Ubuntu Server 20.04 LTS 操作
+系统的虚拟机，默认规格就够了。
+
+首先，更新软件包列表。提示 30 个软件包需要升级，暂时先不管。
+
+#+begin_src shell
+kimim@nostr:~$ sudo apt update
+
+# update package list from mirrors
+Fetched 25.5 MB in 4s (6240 kB/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+30 packages can be upgraded. Run 'apt list --upgradable' to see them.
+#+end_src
+
+然后，安装以下软件包，用来运行编译 nostream，配置 relay 的证书。
+
+#+begin_src shell
+kimim@nostr:~$ sudo apt install nodejs npm nginx certbot python3-certbot-nginx
+
+# list of packages need to be installed
+0 upgraded, 410 newly installed, 0 to remove and 30 not upgraded.
+Need to get 168 MB of archives.
+After this operation, 669 MB of additional disk space will be used.
+Do you want to continue? [Y/n] Y
+# installation in progress
+#+end_src
+
+* 安装 docker
+
+接下来，安装 docker，因为根据 nostream 官网要求，需要安装官方的 docker。
+就是按照 https://docs.docker.com/engine/install/ubuntu/ 安装 docker。
+
+首先，删除已经安装的 docker（如果有，我的这台机器刚初始化，所以没有安装 docker）。
+
+#+begin_src shell
+kimim@nostr:~$ sudo apt-get remove docker.io
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Package 'docker.io' is not installed, so not removed
+0 upgraded, 0 newly installed, 0 to remove and 30 not upgraded.
+#+end_src
+
+然后，安装 docker 需要的证书组件。
+
+#+begin_src shell
+kimim@nostr:~$ sudo apt-get install ca-certificates curl gnupg lsb-release
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+lsb-release is already the newest version (11.1.0ubuntu4).
+lsb-release set to manually installed.
+ca-certificates is already the newest version (20211016ubuntu0.22.04.1).
+ca-certificates set to manually installed.
+curl is already the newest version (7.81.0-1ubuntu1.7).
+curl set to manually installed.
+gnupg is already the newest version (2.2.27-3ubuntu2.1).
+gnupg set to manually installed.
+0 upgraded, 0 newly installed, 0 to remove and 30 not upgraded.
+#+end_src
+
+接着，添加 docker 官方 GPG 证书。
+
+#+begin_src shell
+kimim@nostr:~$ sudo mkdir -p /etc/apt/keyrings
+kimim@nostr:~$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+#+end_src
+
+添加 docker 官方源：
+
+#+begin_src shell
+kimim@nostr:~$ echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+#+end_src
+
+再次更新软件包：
+
+#+begin_src shell
+kimim@nostr:~$ sudo apt-get update
+Get:1 https://download.docker.com/linux/ubuntu jammy InRelease [48.9 kB]
+Get:2 https://download.docker.com/linux/ubuntu jammy/stable amd64 Packages [12.7 kB]
+Fetched 61.6 kB in 1s (105 kB/s)
+Reading package lists... Done
+#+end_src
+
+安装 docker 以及 cli，compose 插件。
+
+#+begin_src shell
+kimim@nostr:~$ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# list of packages need to be installed
+0 upgraded, 11 newly installed, 0 to remove and 30 not upgraded.
+Need to get 111 MB of archives.
+After this operation, 397 MB of additional disk space will be used.
+Do you want to continue? [Y/n] Y
+
+# installation in progress
+#+end_src
+
+把当前用户添加到 docker 权限组：
+
+#+begin_src shell
+kimim@nostr:~$ sudo usermod -a -G docker kimim
+kimim@nostr:~$ newgrp docker
+#+end_src
+
+测试一下 docker 是否正常工作：
+
+#+begin_src shell
+kimim@nostr:~$ docker run hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+2db29710123e: Pull complete
+Digest: sha256:aa0cc8055b82dc2509bed2e19b275c8f463506616377219d9642221ab53cf9fe
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+#+end_src
+
+* 配置服务器证书
+
+修改 nginx 的配置文件。请根据自己的服务器域名修改 ~server_name~ 字段。
+
+#+begin_src shell
+kimim@nostr:~$ sudo rm -rf /etc/nginx/sites-available/default
+kimim@nostr:~$ sudo vi /etc/nginx/sites-available/default
+# 添加以下内容
+kimim@nostr:~$ cat /etc/nginx/sites-available/default
+server{
+    server_name nostr.kimi.im;
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_pass http://127.0.0.1:8008;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}
+#+end_src
+
+重启 nginx，使配置生效。
+
+#+begin_src shell
+kimim@nostr:~$ sudo service nginx restart
+#+end_src
+
+添加 A 域名记录，比如：
+
+#+begin_example
+TYPE    HOST            ANSWER          TTL
+A       nostr.kimi.im   192.30.252.153  300
+#+end_example
+
+等一两分钟，等域名记录生效，再用 certbox 配置服务器证书：
+
+#+begin_src shell
+kimim@nostr:~$ sudo certbot --nginx -d nostr.kimi.im
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Enter email address (used for urgent renewal and security notices)
+ (Enter 'c' to cancel): kimim@kimi.im
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please read the Terms of Service at
+https://letsencrypt.org/documents/LE-SA-v1.3-September-21-2022.pdf. You must
+agree in order to register with the ACME server. Do you agree?
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(Y)es/(N)o: Y
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/nostr.kimi.im/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/nostr.kimi.im/privkey.pem
+This certificate expires on 2023-05-05.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+Deploying certificate
+Successfully deployed certificate for nostr.kimi.im to /etc/nginx/sites-enabled/default
+Congratulations! You have successfully enabled HTTPS on https://nostr.kimi.im
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+If you like Certbot, please consider supporting our work by:
+ * Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+ * Donating to EFF:                    https://eff.org/donate-le
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#+end_src
+
+* 运行 nostream
+
+获取 nostream 代码：
+
+#+begin_src shell
+kimim@nostr:~$ git clone https://github.com/Cameri/nostream.git
+Cloning into 'nostream'...
+remote: Enumerating objects: 3287, done.
+remote: Counting objects: 100% (1228/1228), done.
+remote: Compressing objects: 100% (415/415), done.
+remote: Total 3287 (delta 889), reused 984 (delta 803), pack-reused 2059
+Receiving objects: 100% (3287/3287), 1.05 MiB | 7.90 MiB/s, done.
+Resolving deltas: 100% (2036/2036), done.
+#+end_src
+
+用 docker 运行 nostream，大概用了两分钟，就看到一个漂亮的 NOSTREAM logo 了。
+
+#+begin_src shell
+kimim@nostr:~$ cd nostream/
+kimim@nostr:~/nostream$ npm run docker:compose:start
+> nostream@1.21.0 docker:compose:start
+> ./scripts/start
+
+[+] Running 25/25
+# ...
+[+] Building 128.2s (16/16) FINISHED
+# ...
+[+] Running 6/5
+# ...
+Attaching to nostream, nostream-cache, nostream-db, nostream-migrate
+# ...
+nostream-db       | CREATE DATABASE
+# ...
+nostream          |
+nostream          |  ███▄    █  ▒█████    ██████ ▄▄▄█████▓ ██▀███  ▓█████ ▄▄▄       ███▄ ▄███▓
+nostream          |  ██ ▀█   █ ▒██▒  ██▒▒██    ▒ ▓  ██▒ ▓▒▓██ ▒ ██▒▓█   ▀▒████▄    ▓██▒▀█▀ ██▒
+nostream          | ▓██  ▀█ ██▒▒██░  ██▒░ ▓██▄   ▒ ▓██░ ▒░▓██ ░▄█ ▒▒███  ▒██  ▀█▄  ▓██    ▓██░
+nostream          | ▓██▒  ▐▌██▒▒██   ██░  ▒   ██▒░ ▓██▓ ░ ▒██▀▀█▄  ▒▓█  ▄░██▄▄▄▄██ ▒██    ▒██
+nostream          | ▒██░   ▓██░░ ████▓▒░▒██████▒▒  ▒██▒ ░ ░██▓ ▒██▒░▒████▒▓█   ▓██▒▒██▒   ░██▒
+nostream          | ░ ▒░   ▒ ▒ ░ ▒░▒░▒░ ▒ ▒▓▒ ▒ ░  ▒ ░░   ░ ▒▓ ░▒▓░░░ ▒░ ░▒▒   ▓▒█░░ ▒░   ░  ░
+nostream          | ░ ░░   ░ ▒░  ░ ▒ ▒░ ░ ░▒  ░ ░    ░      ░▒ ░ ▒░ ░ ░  ░ ▒   ▒▒ ░░  ░      ░
+nostream          |    ░   ░ ░ ░ ░ ░ ▒  ░  ░  ░    ░        ░░   ░    ░    ░   ▒   ░      ░
+nostream          |          ░     ░ ░        ░              ░        ░  ░     ░  ░       ░
+nostream          |                                   v1.21.0
+nostream          |           NIPs implemented: 1,2,4,9,11,12,15,16,20,22,26,28,33,40
+nostream          |                            Pay-to-relay disabled
+nostream          |                          Payments provider: zebedee
+nostream          |                           2 client workers started
+nostream          |                         1 maintenance worker started
+nostream          |                         Tor hidden service: disabled
+#+end_src
+
+* 用 noscl 测试 relay 是否正常工作
+
+删除之前添加的 relay：
+#+begin_src shell
+[kimim@virtualbox Desktop]$ ./noscl relay
+wss://nos.lol: rw
+[kimim@virtualbox Desktop]$ ./noscl relay remove wss://nos.lol
+Removed relay wss://nos.lol.
+#+end_src
+
+添加刚刚搭建的 relay：
+
+#+begin_src shell
+[kimim@virtualbox Desktop]$ ./noscl relay add wss://nostr.kimi.im
+Added relay wss://nostr.kimi.im.
+#+end_src
+
+发送消息 Bonjour tout le monde：
+
+#+begin_src shell
+[kimim@virtualbox Desktop]$ ./noscl publish "Bonjour tout le monde"
+Sent event a170e3f3c4f8cfb79cacccf28d5f7d51a5e17b4e40c0984593a692b83f9cf43c to 'wss://nostr.kimi.im'.
+Seen a170e3f3c4f8cfb79cacccf28d5f7d51a5e17b4e40c0984593a692b83f9cf43c on 'wss://nostr.kimi.im'.
+#+end_src
+
+在 Damus 一开始收不测试帐号发送的消息，需要在 Damus 客户端也添加同样的 relay。
+
+然后，就能看到测试帐号发的：Bonjour tout le monde
