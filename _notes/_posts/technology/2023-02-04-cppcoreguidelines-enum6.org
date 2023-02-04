@@ -1,0 +1,35 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines Enum.6 不要用没名字的枚举类型
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid unnamed enumerations"
+
+
+理由
+
+如果你无法给一个枚举命名，那么说明枚举值是不相关的。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+enum { red = 0xFF0000, scale = 4, is_signed = 1 };
+#+end_src
+
+以往代码中，这种错误比较场景。可以用 constexpr 改进：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+constexpr int red = 0xFF0000;
+constexpr short scale = 4;
+constexpr bool is_signed = true;
+#+end_src
+
+
+强化
+- 标记未命名的枚举

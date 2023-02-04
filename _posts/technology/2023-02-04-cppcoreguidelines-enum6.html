@@ -1,0 +1,51 @@
+---
+layout: post
+title: CppCoreGuidelines Enum.6 不要用没名字的枚举类型
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid unnamed enumerations&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+如果你无法给一个枚举命名，那么说明枚举值是不相关的。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #707183;">{</span> <span style="color: #000000;">red</span> = 0xFF0000, <span style="color: #000000;">scale</span> = 4, <span style="color: #000000;">is_signed</span> = 1 <span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+以往代码中，这种错误比较场景。可以用 constexpr 改进：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">red</span> = 0xFF0000;
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">short</span> <span style="color: #000000;">scale</span> = 4;
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #000000;">is_signed</span> = <span style="color: #110099;">true</span>;
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记未命名的枚举</li>
+</ul>
