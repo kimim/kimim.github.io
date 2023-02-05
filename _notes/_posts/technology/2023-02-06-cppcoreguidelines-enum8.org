@@ -1,0 +1,39 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines Enum.8 需要的时候才指定枚举项的值
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Specify enumerator values only when necessary"
+
+
+理由
+
+简单方便。避免枚举项的值重复。默认的值是按顺序设定的，对于 switch 语句
+的实现来说比较友好。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+enum class Col1 { red, yellow, blue };
+enum class Col2 { red = 1, yellow = 2, blue = 2 }; // typo
+enum class Month { jan = 1, feb, mar, apr, may, jun,
+                   jul, august, sep, oct, nov, dec };
+                 // starting with 1 is conventional
+enum class Base_flag { dec = 1, oct = dec << 1, hex = dec << 2 }; // set of bits
+#+end_src
+
+明确指定枚举项的值只有在这些情况下有用：
+- 需要约定俗成的值，比如月份
+- 连续的值不是想要的，如设定不同的比特位
+
+
+强化
+- 标记重复的枚举项值
+- 标记多余的显式方式设定连续值的情况
