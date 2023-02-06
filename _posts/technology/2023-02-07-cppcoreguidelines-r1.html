@@ -1,0 +1,100 @@
+---
+layout: post
+title: CppCoreGuidelines R.1 通过资源句柄和 RAII 自动管理资源
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Manage resources automatically using resource handles and RAII (Resource Acquisition Is Initialization)&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+避免内存泄漏，避免手工管理资源的复杂性。C++ 语言强化了构造和析构函数，对应资源的获取和释放，比如 fopen/fclose, lock/unlock, new/delete。在你需要这种成对的获取/释放函数的时候，可以将资源封装在对象中，让对象的构造/析构函数来强化这种成对的操作。
+</p>
+
+<p>
+坏例子
+</p>
+
+<p>
+考虑
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">send</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>* <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">destination</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">port</span> = open_port<span style="color: #7388d6;">(</span>destination<span style="color: #7388d6;">)</span>;
+    my_mutex.lock<span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    send<span style="color: #7388d6;">(</span>port, x<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    my_mutex.unlock<span style="color: #7388d6;">()</span>;
+    close_port<span style="color: #7388d6;">(</span>port<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">delete</span> x;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这段代码里，你必须记住 <code>unlock</code> ， <code>close_port</code> ， <code>delete</code> 等操作，而且必须操作一次，任何地方出错，抛出了异常，就会导致资源泄漏，比如 x 没删掉，
+<code>my_mutex</code> 没解锁。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">send</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span>X<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">destination</span><span style="color: #707183;">)</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">x owns the X</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Port</span> <span style="color: #000000;">port</span><span style="color: #7388d6;">{</span>destination<span style="color: #7388d6;">}</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">port owns the PortHandle</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span><span style="color: #7388d6;">&lt;</span>mutex<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">guard</span><span style="color: #7388d6;">{</span>my_mutex<span style="color: #7388d6;">}</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">guard owns the lock</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    send<span style="color: #7388d6;">(</span>port, x<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">automatically unlocks my_mutex and deletes the pointer in x</span>
+</pre>
+</div>
+
+<p>
+这个例子里，所哟资源都是自动清理掉的，而且只处理一次，不管有没有遇到异常情况。另外，函数还声明，接收指针的所有权。
+</p>
+
+<p>
+什么是 Port？其实是对资源的一个简单封装：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Port</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">PortHandle</span> <span style="color: #000000;">port</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Port</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">destination</span><span style="color: #7388d6;">)</span> : port<span style="color: #7388d6;">{</span>open_port<span style="color: #909183;">(</span>destination<span style="color: #909183;">)</span><span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>
+    ~<span style="color: #0000ff; font-weight: bold;">Port</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> close_port<span style="color: #909183;">(</span>port<span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">operator</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">PortHandle</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> port; <span style="color: #7388d6;">}</span>
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">port handles can't usually be cloned, so disable copying and assignment if necessary</span>
+    <span style="color: #0000ff; font-weight: bold;">Port</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Port</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Port</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Port</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+当一个资源不是一个有析构函数的类表示的时候，请将它封装到一个类中，或者用 finally。
+</p>

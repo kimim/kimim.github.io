@@ -1,0 +1,81 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines R.1 通过资源句柄和 RAII 自动管理资源
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Manage resources automatically using resource handles and RAII (Resource Acquisition Is Initialization)"
+
+
+理由
+
+避免内存泄漏，避免手工管理资源的复杂性。C++ 语言强化了构造和析构函数，
+对应资源的获取和释放，比如 fopen/fclose, lock/unlock, new/delete。在你
+需要这种成对的获取/释放函数的时候，可以将资源封装在对象中，让对象的构
+造/析构函数来强化这种成对的操作。
+
+坏例子
+
+考虑
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void send(X* x, string_view destination)
+{
+    auto port = open_port(destination);
+    my_mutex.lock();
+    // ...
+    send(port, x);
+    // ...
+    my_mutex.unlock();
+    close_port(port);
+    delete x;
+}
+#+end_src
+
+这段代码里，你必须记住 ~unlock~ ， ~close_port~ ， ~delete~ 等操作，而且必须
+操作一次，任何地方出错，抛出了异常，就会导致资源泄漏，比如 x 没删掉，
+~my_mutex~ 没解锁。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void send(unique_ptr<X> x, string_view destination)  // x owns the X
+{
+    Port port{destination};            // port owns the PortHandle
+    lock_guard<mutex> guard{my_mutex}; // guard owns the lock
+    // ...
+    send(port, x);
+    // ...
+} // automatically unlocks my_mutex and deletes the pointer in x
+#+end_src
+
+这个例子里，所哟资源都是自动清理掉的，而且只处理一次，不管有没有遇到异
+常情况。另外，函数还声明，接收指针的所有权。
+
+什么是 Port？其实是对资源的一个简单封装：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class Port {
+    PortHandle port;
+public:
+    Port(string_view destination) : port{open_port(destination)} { }
+    ~Port() { close_port(port); }
+    operator PortHandle() { return port; }
+
+    // port handles can't usually be cloned, so disable copying and assignment if necessary
+    Port(const Port&) = delete;
+    Port& operator=(const Port&) = delete;
+};
+#+end_src
+
+
+注意
+
+当一个资源不是一个有析构函数的类表示的时候，请将它封装到一个类中，或者
+用 finally。
