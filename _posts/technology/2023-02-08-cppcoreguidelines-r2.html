@@ -1,0 +1,84 @@
+---
+layout: post
+title: CppCoreGuidelines R.2 在接口中，只用原始指针表示独立的对象
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;In interfaces, use raw pointers to denote individual objects (only)&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+最好用容器类型表示数组，比如 vector（有所有权的）或 span（无所有权的）。因为容器和 view 带有可以进行范围检查的信息。
+</p>
+
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">n is the number of elements in p[]</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    p<span style="color: #7388d6;">[</span>2<span style="color: #7388d6;">]</span> = 7;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: subscript raw pointer</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+编译器无法解析代码注释，没有其他信息，无法知道 p 执行的数组元素的数量是 n。应该使用 span。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">fmt</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">print *p using format #fmt</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... uses *p and p[0] only ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+例外
+</p>
+
+<p>
+C 风格字符串以 NULL 结尾，所以可以以单独指针的方式传参。避免使用 char*
+，用 zstring 来表达你需要用到空字符结尾的字符串。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+目前很多指向单一元素的指针都可以用引用替代。不过，如果 nullptr 是一个可选的值，那么引用就不合适了。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记在指针上使用了指针运算符的情况（包括 <code>++</code> ）。不过在老代码上，会产生很多误报。</li>
+<li>标记数组名作为单独指针传递的情况</li>
+</ul>
