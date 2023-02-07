@@ -1,0 +1,37 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: SOLID 原则
+categories: [technology]
+tags: [programming]
+---
+#+END_EXPORT
+
+软件工程领域，有一个概念叫 SOLID。SOLID 是五个面向对象设计原则的首字母
+缩写。最早由 Robert C. Martin 在其 2000 年的论文《Design Principles
+and Design Patterns》中提出的。
+
+SOLID 指的是以下五个原则：
+- Single-responsibility principle，单一责任原则，简称 SRP。"There
+  should never be more than one reason for a class to change." In
+  other words, every class should have only one responsibility. 一个类
+  应该只有一个发生变化的原因。换言之，每个类应该只有一个职责。
+- Open–closed principle，开闭原则，简称 OCP。"Software entities
+  ... should be open for extension, but closed for modification." 软件
+  实体应该开放于扩展，但封闭于修改。
+- Liskov substitution principle，里氏替换原则，利斯科夫替代原则，简称
+  LSP。 "Functions that use pointers or references to base classes
+  must be able to use objects of derived classes without knowing it."
+  通过对象的指针或引用调用其基类上定义的函数时，必须做到不用关心实际对
+  象是基类的实体还是继承类的实体。
+- Interface segregation principle，接口隔离原则，简称 ISP。"Clients
+  should not be forced to depend upon interfaces that they do not
+  use." 客户端不应该依赖它不需要的接口。一个类对另一个类的依赖应该建立
+  在最小的接口上。
+- Dependency inversion principle，依赖倒置原则，简称 DIP。 "Depend
+  upon abstractions, [not] concretions." 程序要依赖于抽象接口，不要依
+  赖于具体实现。简单的说就是要求对抽象进行编程，不要对实现进行编程，这
+  样就降低了实现模块间的耦合。
+
+
+据说 SOLID 是在 2004 年的时候，由 Michael Feathers 总结出来的。
