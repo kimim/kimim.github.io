@@ -1,0 +1,162 @@
+---
+layout: post
+title: CppCoreGuidelines R.3 原始指针是无主的
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;A raw pointer (a T*) is non-owning&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+无需多言，原始指针都是无主的。我们想要有主指针，从而可以可靠且高效地删除指针所指向的对象。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p1</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">{</span>7<span style="color: #7388d6;">}</span>;           <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: raw owning pointer</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p2</span> = make_unique<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;(</span>7<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: the int is owned by a unique pointer</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+<code>unique_ptr</code> 可以确保所指向的对象成功删除，从而防止内存泄漏。就算是在异常情况下，也能很好的保证。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">p</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: it is unclear whether p is owning or not</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">q</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: it is unclear whether q is owning or not</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+我们可以通过显式的说明所有权，来修复上面代码的问题。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>*<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: p is owning</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">q</span>;         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: q is not owning</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+例外
+</p>
+
+<p>
+大部分例外情况出现在老的代码里，为了可以和 C 或 C 风格接口的代码一起编译，有不少 C++ 代码违背此规则。最好是有什么工具可以自动转换，但是比较困难。
+</p>
+
+<p>
+有些很底层的资源处理的代码还避免不了原始指针，比如 vector 的实现中就用了一个有主指针，两个无主原始指针。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+<code>owner&lt;T*&gt;</code> 和原始指针没有太多语义上的区别，只是作为一个标记，告诉程序员或分析工具，这里有一个指针，请记得删除。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<p>
+返回原始指针导致对象生命周期管理的不确定性，调用方到底要不要手工删除指向的对象？
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span>* <span style="color: #0000ff; font-weight: bold;">make_gadget</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span><span style="color: #7388d6;">{</span>n<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> p;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">caller</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = make_gadget<span style="color: #7388d6;">(</span>n<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">remember to delete p</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">delete</span> p;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+除了可能会有内存泄漏问题，这段代码还增加了 new 和 delete 操作。其实如果对象比较小，完全可以通过移动，或者值返回操作从函数返回。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span> <span style="color: #0000ff; font-weight: bold;">make_gadget</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span> <span style="color: #000000;">g</span><span style="color: #7388d6;">{</span>n<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> g;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+此规则适用于工厂函数。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果一定需要指针语义，比如返回基类指针，指向类层级中的子类，可以使用智能指针。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>警告：删除没有标记为 <code>owner&lt;T&gt;</code> 的原始指针</li>
+<li>警告：在任何代码路径上重置或删除 <code>owner&lt;T&gt;</code> 指针失败的情况</li>
+<li>警告：返回值是 new 出来的原始指针</li>
+<li>警告：如果函数以返回一个对象，但是这个对象是函数中分配的，并且该对象有一个移动构造函数。建议考虑值返回。</li>
+</ul>

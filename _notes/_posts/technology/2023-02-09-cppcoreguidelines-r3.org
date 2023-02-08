@@ -1,0 +1,124 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines R.3 原始指针是无主的
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"A raw pointer (a T*) is non-owning"
+
+
+理由
+
+无需多言，原始指针都是无主的。我们想要有主指针，从而可以可靠且高效地删
+除指针所指向的对象。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f()
+{
+    int* p1 = new int{7};           // bad: raw owning pointer
+    auto p2 = make_unique<int>(7);  // OK: the int is owned by a unique pointer
+    // ...
+}
+#+end_src
+
+~unique_ptr~ 可以确保所指向的对象成功删除，从而防止内存泄漏。就算是在异
+常情况下，也能很好的保证。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template<typename T>
+class X {
+public:
+    T* p;   // bad: it is unclear whether p is owning or not
+    T* q;   // bad: it is unclear whether q is owning or not
+    // ...
+};
+#+end_src
+
+我们可以通过显式的说明所有权，来修复上面代码的问题。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template<typename T>
+class X2 {
+public:
+    owner<T*> p;  // OK: p is owning
+    T* q;         // OK: q is not owning
+    // ...
+};
+#+end_src
+
+
+例外
+
+大部分例外情况出现在老的代码里，为了可以和 C 或 C 风格接口的代码一起编
+译，有不少 C++ 代码违背此规则。最好是有什么工具可以自动转换，但是比较
+困难。
+
+有些很底层的资源处理的代码还避免不了原始指针，比如 vector 的实现中就用
+了一个有主指针，两个无主原始指针。
+
+
+注意
+
+~owner<T*>~ 和原始指针没有太多语义上的区别，只是作为一个标记，告诉程序员
+或分析工具，这里有一个指针，请记得删除。
+
+
+坏例子
+
+返回原始指针导致对象生命周期管理的不确定性，调用方到底要不要手工删除指
+向的对象？
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+Gadget* make_gadget(int n)
+{
+    auto p = new Gadget{n};
+    // ...
+    return p;
+}
+
+void caller(int n)
+{
+    auto p = make_gadget(n);   // remember to delete p
+    // ...
+    delete p;
+}
+#+end_src
+
+除了可能会有内存泄漏问题，这段代码还增加了 new 和 delete 操作。其实如
+果对象比较小，完全可以通过移动，或者值返回操作从函数返回。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+Gadget make_gadget(int n)
+{
+    Gadget g{n};
+    // ...
+    return g;
+}
+#+end_src
+
+
+注意
+
+此规则适用于工厂函数。
+
+
+注意
+
+如果一定需要指针语义，比如返回基类指针，指向类层级中的子类，可以使用智能指针。
+
+
+强化
+- 警告：删除没有标记为 ~owner<T>~ 的原始指针
+- 警告：在任何代码路径上重置或删除 ~owner<T>~ 指针失败的情况
+- 警告：返回值是 new 出来的原始指针
+- 警告：如果函数以返回一个对象，但是这个对象是函数中分配的，并且该对象
+  有一个移动构造函数。建议考虑值返回。
