@@ -1,0 +1,30 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines R.4 原始引用是无主的
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"A raw reference (a ~T&~) is non-owning"
+
+
+理由
+
+大部分原始引用是无主的。我们希望明确引用的所有权，从而可以可靠、高效地
+删除对象。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f()
+{
+    int& r = *new int{7};  // bad: raw owning reference
+    // ...
+    delete &r;             // bad: violated the rule against deleting raw pointers
+}
+#+end_src
