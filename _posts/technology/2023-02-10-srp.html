@@ -1,0 +1,304 @@
+---
+layout: post
+title: 单一责任原则，Single-responsibility principle，SRP
+categories: [technology]
+tags: [programming, SOLID]
+---
+
+<p>
+软件工程领域，有一个概念叫 SOLID。SOLID 是五个面向对象设计原则的首字母缩写。最早由 Robert C. Martin 在其 2000 年的论文《Design Principles
+and Design Patterns》中提出的。
+</p>
+
+<p>
+其中，S 原则指的是 Single-responsibility principle，单一责任原则，简称
+SRP。
+</p>
+
+<p>
+SRP 是这么表述的：“There should never be more than one reason for a
+class to change.” In other words, every class should have only one
+responsibility. 一个类应该只有一个发生变化的原因。换言之，每个类应该只有一个职责。
+</p>
+
+<p>
+如果有多个原因导致类设计的变更，那么这个类就不仅仅只有一个职责，很可能承担了多个职责。而单一职责原则就是指一个类或者模块应该有且只有一个导致其变更的原因。
+</p>
+
+<p>
+如果一个类承担了多个职责，那么最好按照单一职责原则，将这个类拆分成多个类实现。为什么呢？每一个职责都是变更的一个轴线，当我们的需求变更的时候，这些需求变更会通过类的职责传导到类的设计实现中。如果一个类有一个以上的职责，这些职责就耦合在了一起。这会导致设计的脆弱性。当你因为某个需求变更修改类的某个职责的时候，可能会影响到该类的其他职责，尽管你小心谨慎的进行代码修改，你还是可能会因为某些考虑不周，改动了不该改动的针对其他职责的设计。这是代码设计脆弱易碎的一个常见原因。另外，多个职责耦合在一起，还会会影响代码的复用性。你需要花点工夫才能把某个职责相关的代码分离出来，分离出来的代码可能还粘连了处理其他职责的代码，你就不太放心复用这段代码。
+</p>
+
+<p>
+比如说，我们设计一个 Triangle 类，它有两个方法，分别是：在屏幕绘制图形，计算图形的面积。
+</p>
+
+
+<div id="org9d3a429" class="figure">
+<p><div align="center"><?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="185px" preserveAspectRatio="none" style="width:487px;height:185px;background:#FFFFFF;" version="1.1" viewBox="0 0 487 185" width="487px" zoomAndPan="magnify"><defs/><g><!--MD5=[40b067e448d061f8c1f714bff454de58]
+class Triangle--><g id="elem_Triangle"><rect codeLine="1" fill="#F1F1F1" height="75.2188" id="Triangle" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="112" x="186" y="7"/><ellipse cx="213.6" cy="23" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M216.3656,18.875 Q216.5219,18.6563 216.7094,18.5469 Q216.8969,18.4375 217.1156,18.4375 Q217.4906,18.4375 217.725,18.7031 Q217.9594,18.9531 217.9594,19.5625 L217.9594,21.0156 Q217.9594,21.625 217.725,21.8906 Q217.4906,22.1563 217.1156,22.1563 Q216.7719,22.1563 216.5688,21.9531 Q216.3656,21.7656 216.2563,21.25 Q216.2094,20.8906 216.0219,20.7031 Q215.6938,20.3281 215.0844,20.1094 Q214.475,19.8906 213.85,19.8906 Q213.0844,19.8906 212.4438,20.2188 Q211.8188,20.5469 211.3188,21.2969 Q210.8344,22.0469 210.8344,23.0781 L210.8344,24.1719 Q210.8344,25.4063 211.725,26.2344 Q212.6156,27.0469 214.2094,27.0469 Q215.1469,27.0469 215.8031,26.7969 Q216.1938,26.6406 216.6156,26.2031 Q216.8813,25.9375 217.0219,25.8594 Q217.1781,25.7813 217.3813,25.7813 Q217.7094,25.7813 217.9594,26.0469 Q218.225,26.2969 218.225,26.6406 Q218.225,26.9844 217.8813,27.3906 Q217.3813,27.9688 216.5844,28.2969 Q215.5063,28.75 214.2094,28.75 Q212.6938,28.75 211.4906,28.125 Q210.5063,27.625 209.8188,26.5625 Q209.1313,25.4844 209.1313,24.2031 L209.1313,23.0469 Q209.1313,21.7188 209.7406,20.5781 Q210.3656,19.4219 211.4594,18.8125 Q212.5531,18.1875 213.7875,18.1875 Q214.5219,18.1875 215.1625,18.3594 Q215.8188,18.5156 216.3656,18.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="52" x="230.4" y="28.7285">Triangle</text><line style="stroke:#181818;stroke-width:0.5;" x1="187" x2="297" y1="39" y2="39"/><ellipse cx="197" cy="50" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="40" x="206" y="57.5332">draw()</text><ellipse cx="197" cy="67.6094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="86" x="206" y="75.1426">double area()</text></g><g id="elem_ca"><rect fill="#F1F1F1" height="37.6094" style="stroke:#181818;stroke-width:0.5;" width="144" x="7" y="25.5"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="130" x="14" y="42.0332">Compute Application</text><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="150" y1="47.1094" y2="47.1094"/></g><g id="elem_ga"><rect fill="#F1F1F1" height="37.6094" style="stroke:#181818;stroke-width:0.5;" width="148" x="333" y="25.5"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="134" x="340" y="42.0332">Graphical Application</text><line style="stroke:#181818;stroke-width:0.5;" x1="334" x2="480" y1="47.1094" y2="47.1094"/></g><g id="elem_gui"><rect fill="#F1F1F1" height="37.6094" style="stroke:#181818;stroke-width:0.5;" width="37" x="305.5" y="142"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="23" x="312.5" y="158.5332">GUI</text><line style="stroke:#181818;stroke-width:0.5;" x1="306.5" x2="341.5" y1="163.6094" y2="163.6094"/></g><!--MD5=[1b4915d434968cc561da42ef14295676]
+link ca to Triangle--><g id="link_ca_Triangle"><path codeLine="8" d="M151.27,44.5 C161.03,44.5 170.78,44.5 180.54,44.5 " fill="none" id="ca-to-Triangle" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="185.65,44.5,176.65,40.5,180.65,44.5,176.65,48.5,185.65,44.5" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[9e31abf28d37fa5a089f71d43401679f]
+reverse link Triangle to ga--><g id="link_Triangle_ga"><path codeLine="9" d="M303.25,44.5 C313.16,44.5 323.06,44.5 332.96,44.5 " fill="none" id="Triangle-backto-ga" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="298.07,44.5,307.07,48.5,303.07,44.5,307.07,40.5,298.07,44.5" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[f318b4d0706210fb567d27b5a21f94c1]
+link ga to gui--><g id="link_ga_gui"><path codeLine="10" d="M393.85,63.64 C379.28,83.74 355.78,116.16 340.11,137.77 " fill="none" id="ga-to-gui" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="337.09,141.94,345.6091,136.9979,340.0232,137.8908,339.1304,132.3048,337.09,141.94" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[a83942a8436a922a0ce607e4e08eef07]
+link Triangle to gui--><g id="link_Triangle_gui"><path codeLine="11" d="M268.17,82.04 C281.19,100.23 296.53,121.64 307.82,137.41 " fill="none" id="Triangle-to-gui" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="310.9,141.71,308.8981,132.0667,307.983,137.6491,302.4007,136.7339,310.9,141.71" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[90207bf5d4dd9001cdb19b15c8ab1309]
+@startuml
+class Triangle {
+        +draw()
+        + double area()
+}
+object "Compute Application" as ca
+object "Graphical Application" as ga
+object "GUI" as gui
+ca -> Triangle
+ga -l-> Triangle
+ga -d-> gui
+Triangle -> gui
+hide members
+show Triangle methods
+@enduml
+
+PlantUML version 1.2022.3beta3(Unknown compile time)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg></div>
+</p>
+</div>
+
+<p>
+于是，会有两个应用程序会用到 Triangle 这个类。一个是图形计算应用，它会调用 Triangle 类的 area() 方法计算图形面积。还有一个应用是图形显示应用，它会调用 Triangle 类的 draw() 方法，在 GUI 上绘制图形。 draw() 方法本身也要用到 GUI 子系统的资源。
+</p>
+
+<p>
+这个设计就违背了 SRP。Triangle 类实现了两个职责。一个职责是计算图形面积，另一个职责是在 GUI 上显示图形。
+</p>
+
+<p>
+这导致的第一个问题是，在进行面积计算的时候，你也不得不包含 GUI 程序库。对于 C++ 程序来说，意味着你要链接 GUI 库，编译需要时间、链接需要时间、还会占用运行内存和使得应用程序变得臃肿。对于 Java 来说，你还要把 GUI
+相关的 .class 或 .jar 文件部署到目标平台。
+</p>
+
+<p>
+第二个问题是，为了改进图形显示应用，你修改了 Triangle 中的 draw() 方法，你就不得不再一次编译图形计算应用，重新使用修改过的 Triangle 类。如果你忘记做，可能遇到意想不到的程序崩溃。
+</p>
+
+<p>
+改进的设计应该是能够将两个职责放到不同的类中实现。GeoTriangle 实现图形计算的 area() 职责，而 Triangle 实现图形显示的 draw() 职责。这时候，当你修改了图形显示职责时，不会影响到图形计算应用。
+</p>
+
+
+<div id="orgb86f31a" class="figure">
+<p><div align="center"><?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="169px" preserveAspectRatio="none" style="width:364px;height:169px;background:#FFFFFF;" version="1.1" viewBox="0 0 364 169" width="364px" zoomAndPan="magnify"><defs/><g><!--MD5=[a72409d4ff22c8ec5b400d3bbb023114]
+class GeoTriangle--><g id="elem_GeoTriangle"><rect codeLine="1" fill="#F1F1F1" height="32" id="GeoTriangle" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="111" x="23.5" y="118"/><ellipse cx="38.5" cy="134" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M41.2656,129.875 Q41.4219,129.6563 41.6094,129.5469 Q41.7969,129.4375 42.0156,129.4375 Q42.3906,129.4375 42.625,129.7031 Q42.8594,129.9531 42.8594,130.5625 L42.8594,132.0156 Q42.8594,132.625 42.625,132.8906 Q42.3906,133.1563 42.0156,133.1563 Q41.6719,133.1563 41.4688,132.9531 Q41.2656,132.7656 41.1563,132.25 Q41.1094,131.8906 40.9219,131.7031 Q40.5938,131.3281 39.9844,131.1094 Q39.375,130.8906 38.75,130.8906 Q37.9844,130.8906 37.3438,131.2188 Q36.7188,131.5469 36.2188,132.2969 Q35.7344,133.0469 35.7344,134.0781 L35.7344,135.1719 Q35.7344,136.4063 36.625,137.2344 Q37.5156,138.0469 39.1094,138.0469 Q40.0469,138.0469 40.7031,137.7969 Q41.0938,137.6406 41.5156,137.2031 Q41.7813,136.9375 41.9219,136.8594 Q42.0781,136.7813 42.2813,136.7813 Q42.6094,136.7813 42.8594,137.0469 Q43.125,137.2969 43.125,137.6406 Q43.125,137.9844 42.7813,138.3906 Q42.2813,138.9688 41.4844,139.2969 Q40.4063,139.75 39.1094,139.75 Q37.5938,139.75 36.3906,139.125 Q35.4063,138.625 34.7188,137.5625 Q34.0313,136.4844 34.0313,135.2031 L34.0313,134.0469 Q34.0313,132.7188 34.6406,131.5781 Q35.2656,130.4219 36.3594,129.8125 Q37.4531,129.1875 38.6875,129.1875 Q39.4219,129.1875 40.0625,129.3594 Q40.7188,129.5156 41.2656,129.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="79" x="52.5" y="139.7285">GeoTriangle</text></g><!--MD5=[40b067e448d061f8c1f714bff454de58]
+class Triangle--><g id="elem_Triangle"><rect codeLine="4" fill="#F1F1F1" height="57.6094" id="Triangle" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="84" x="170" y="105"/><ellipse cx="185" cy="121" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M187.7656,116.875 Q187.9219,116.6563 188.1094,116.5469 Q188.2969,116.4375 188.5156,116.4375 Q188.8906,116.4375 189.125,116.7031 Q189.3594,116.9531 189.3594,117.5625 L189.3594,119.0156 Q189.3594,119.625 189.125,119.8906 Q188.8906,120.1563 188.5156,120.1563 Q188.1719,120.1563 187.9688,119.9531 Q187.7656,119.7656 187.6563,119.25 Q187.6094,118.8906 187.4219,118.7031 Q187.0938,118.3281 186.4844,118.1094 Q185.875,117.8906 185.25,117.8906 Q184.4844,117.8906 183.8438,118.2188 Q183.2188,118.5469 182.7188,119.2969 Q182.2344,120.0469 182.2344,121.0781 L182.2344,122.1719 Q182.2344,123.4063 183.125,124.2344 Q184.0156,125.0469 185.6094,125.0469 Q186.5469,125.0469 187.2031,124.7969 Q187.5938,124.6406 188.0156,124.2031 Q188.2813,123.9375 188.4219,123.8594 Q188.5781,123.7813 188.7813,123.7813 Q189.1094,123.7813 189.3594,124.0469 Q189.625,124.2969 189.625,124.6406 Q189.625,124.9844 189.2813,125.3906 Q188.7813,125.9688 187.9844,126.2969 Q186.9063,126.75 185.6094,126.75 Q184.0938,126.75 182.8906,126.125 Q181.9063,125.625 181.2188,124.5625 Q180.5313,123.4844 180.5313,122.2031 L180.5313,121.0469 Q180.5313,119.7188 181.1406,118.5781 Q181.7656,117.4219 182.8594,116.8125 Q183.9531,116.1875 185.1875,116.1875 Q185.9219,116.1875 186.5625,116.3594 Q187.2188,116.5156 187.7656,116.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="52" x="199" y="126.7285">Triangle</text><line style="stroke:#181818;stroke-width:0.5;" x1="171" x2="253" y1="137" y2="137"/><ellipse cx="181" cy="148" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="40" x="190" y="155.5332">draw()</text></g><g id="elem_ca"><rect fill="#F1F1F1" height="37.6094" style="stroke:#181818;stroke-width:0.5;" width="144" x="7" y="7"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="130" x="14" y="23.5332">Compute Application</text><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="150" y1="28.6094" y2="28.6094"/></g><g id="elem_ga"><rect fill="#F1F1F1" height="37.6094" style="stroke:#181818;stroke-width:0.5;" width="148" x="210" y="7"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="134" x="217" y="23.5332">Graphical Application</text><line style="stroke:#181818;stroke-width:0.5;" x1="211" x2="357" y1="28.6094" y2="28.6094"/></g><g id="elem_gui"><rect fill="#F1F1F1" height="37.6094" style="stroke:#181818;stroke-width:0.5;" width="37" x="289.5" y="115"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="23" x="296.5" y="131.5332">GUI</text><line style="stroke:#181818;stroke-width:0.5;" x1="290.5" x2="325.5" y1="136.6094" y2="136.6094"/></g><!--MD5=[300ae1a6b57c83aa75bcd67fea62e456]
+link ca to GeoTriangle--><g id="link_ca_GeoTriangle"><path codeLine="10" d="M79,45.46 C79,64.22 79,93.21 79,112.63 " fill="none" id="ca-to-GeoTriangle" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="79,117.83,83,108.83,79,112.83,75,108.83,79,117.83" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[cefe6da901cdabc96aa66b972d245767]
+link ga to Triangle--><g id="link_ga_Triangle"><path codeLine="11" d="M271.46,45.46 C261.21,60.56 246.46,82.27 234.22,100.29 " fill="none" id="ga-to-Triangle" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="231.16,104.79,239.5221,99.5866,233.9665,100.6519,232.9011,95.0963,231.16,104.79" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[f318b4d0706210fb567d27b5a21f94c1]
+link ga to gui--><g id="link_ga_gui"><path codeLine="12" d="M288.18,45.46 C292.21,63.25 298.31,90.22 302.68,109.52 " fill="none" id="ga-to-gui" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="303.87,114.75,305.7625,105.0847,302.7551,109.8759,297.9639,106.8685,303.87,114.75" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[a83942a8436a922a0ce607e4e08eef07]
+link Triangle to gui--><g id="link_Triangle_gui"><path codeLine="13" d="M254.38,134 C264.25,134 274.12,134 283.99,134 " fill="none" id="Triangle-to-gui" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="289.15,134,280.15,130,284.15,134,280.15,138,289.15,134" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[3935d09fbe0d85f1814af562d2372619]
+reverse link GeoTriangle to Triangle--><g id="link_GeoTriangle_Triangle"><path codeLine="14" d="M139.84,134 C149.88,134 159.93,134 169.97,134 " fill="none" id="GeoTriangle-backto-Triangle" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="134.59,134,143.59,138,139.59,134,143.59,130,134.59,134" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[e85a67cfc4ba57a56bb613e1a3ce6422]
+@startuml
+class GeoTriangle {
+        + double area()
+}
+class Triangle {
+        + draw()
+}
+object "Compute Application" as ca
+object "Graphical Application" as ga
+object "GUI" as gui
+ca -d-> GeoTriangle
+ga -d-> Triangle
+ga -d-> gui
+Triangle -> gui
+Triangle -l> GeoTriangle
+hide members
+show Triangle methods
+@enduml
+
+PlantUML version 1.2022.3beta3(Unknown compile time)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg></div>
+</p>
+</div>
+
+<p>
+SRP 原则也适用于函数式编程。在函数式编程中，SRP 意味分离 IO 和程序逻辑。比如这个最简单的例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bb"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">mean</span> <span style="color: #7388d6;">[</span>a b<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>println <span style="color: #2A00FF;">"Mean: "</span>, <span style="color: #909183;">(</span>/ <span style="color: #709870;">(</span>+ a b<span style="color: #709870;">)</span> 2.0<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span>mean 11 22<span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<p>
+mean 这个函数，既承担了计算平均数的职责，又承担了在命令行的输出结果的职责。那么，如果我现在不想在命令行输出结果，而是想把计算结果写到文件里，是不是就得重新写一个差不多的函数，然后把输出方式改掉？
+</p>
+
+<p>
+如果我们把这个还是拆分成两个函数，一个函数是做数值计算，另一个函数是做数据输出：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">mean</span> <span style="color: #7388d6;">[</span>a b<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>/ <span style="color: #909183;">(</span>+ a b<span style="color: #909183;">)</span> 2.0<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">print-log</span> <span style="color: #7388d6;">[</span>msg val<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">println</span> msg val<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;&gt;</span> <span style="color: #7388d6;">(</span>mean 11 22<span style="color: #7388d6;">)</span>
+     <span style="color: #7388d6;">(</span>print-log <span style="color: #2A00FF;">"Mean: "</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+Mean:  16.5
+</pre>
+
+
+<p>
+这时候，我如果想输出到文件，只要再添加一个函数即可：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">write-log</span> <span style="color: #7388d6;">[</span>msg val<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">spit</span> <span style="color: #2A00FF;">"mean.txt"</span> <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">str</span> msg val<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;&gt;</span> <span style="color: #7388d6;">(</span>mean 11 22<span style="color: #7388d6;">)</span>
+     <span style="color: #7388d6;">(</span>write-log <span style="color: #2A00FF;">"Mean: "</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<p>
+再举个例子，假设我们有一组各个国家 GDP 清单，现在我想计算每个国家 GDP
+占清单总额的比例是多少。代码可以这样写：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">nations</span> <span style="color: #7388d6;">[</span><span style="color: #909183;">{</span><span style="color: #110099;">:country</span> <span style="color: #2A00FF;">"China"</span>  <span style="color: #110099;">:gdp</span> 17734062645371<span style="color: #909183;">}</span>
+              <span style="color: #909183;">{</span><span style="color: #110099;">:country</span> <span style="color: #2A00FF;">"USA"</span>    <span style="color: #110099;">:gdp</span> 23315080560000<span style="color: #909183;">}</span>
+              <span style="color: #909183;">{</span><span style="color: #110099;">:country</span> <span style="color: #2A00FF;">"Japan"</span>  <span style="color: #110099;">:gdp</span> 4940877780755<span style="color: #909183;">}</span>
+              <span style="color: #909183;">{</span><span style="color: #110099;">:country</span> <span style="color: #2A00FF;">"German"</span> <span style="color: #110099;">:gdp</span> 4259934911821<span style="color: #909183;">}</span>
+              <span style="color: #909183;">{</span><span style="color: #110099;">:country</span> <span style="color: #2A00FF;">"India"</span>  <span style="color: #110099;">:gdp</span> 3176295065497<span style="color: #909183;">}</span>
+              <span style="color: #909183;">{</span><span style="color: #110099;">:country</span> <span style="color: #2A00FF;">"UK"</span>     <span style="color: #110099;">:gdp</span> 3131377762925<span style="color: #909183;">}</span>
+              <span style="color: #909183;">{</span><span style="color: #110099;">:country</span> <span style="color: #2A00FF;">"France"</span> <span style="color: #110099;">:gdp</span> 2957879759263<span style="color: #909183;">}</span>
+              <span style="color: #909183;">{</span><span style="color: #110099;">:name</span> <span style="color: #2A00FF;">"kimim"</span>  <span style="color: #110099;">:salary</span> 800000<span style="color: #909183;">}</span>
+              <span style="color: #909183;">{</span><span style="color: #110099;">:country</span> <span style="color: #2A00FF;">"Utopia"</span> <span style="color: #110099;">:gdp</span> -100000<span style="color: #909183;">}</span><span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">print-nations-gdp-percentage</span> <span style="color: #7388d6;">[</span>nations<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">empty?</span> nations<span style="color: #909183;">)</span>
+    <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">do</span>
+      <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">println</span> <span style="color: #2A00FF;">"Nation list empty!"</span><span style="color: #709870;">)</span>
+      <span style="color: #110099;">:invalid</span><span style="color: #909183;">)</span>
+    <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">let</span> <span style="color: #709870;">[</span>cleanups <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;&gt;</span> nations
+                        <span style="color: #6276ba;">(</span><span style="color: #7F0055; font-weight: bold;">filter</span> <span style="color: #110099;">:country</span><span style="color: #6276ba;">)</span>
+                        <span style="color: #6276ba;">(</span><span style="color: #7F0055; font-weight: bold;">filter</span> #<span style="color: #858580;">(</span>&lt; 0 <span style="color: #80a880;">(</span><span style="color: #110099;">:gdp</span> <span style="color: #000000;">%</span><span style="color: #80a880;">)</span><span style="color: #858580;">)</span><span style="color: #6276ba;">)</span><span style="color: #907373;">)</span>
+          sum <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;&gt;</span> cleanups
+                   <span style="color: #6276ba;">(</span><span style="color: #7F0055; font-weight: bold;">map</span> <span style="color: #110099;">:gdp</span><span style="color: #6276ba;">)</span>
+                   <span style="color: #6276ba;">(</span><span style="color: #7F0055; font-weight: bold;">reduce</span> +<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span>
+          results <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;&gt;</span> cleanups
+                       <span style="color: #6276ba;">(</span><span style="color: #7F0055; font-weight: bold;">map</span>
+                        <span style="color: #858580;">(</span><span style="color: #7F0055; font-weight: bold;">fn</span> <span style="color: #80a880;">[</span>n<span style="color: #80a880;">]</span>
+                          <span style="color: #80a880;">(</span><span style="color: #7F0055; font-weight: bold;">assoc</span> n <span style="color: #110099;">:percentage</span> <span style="color: #887070;">(</span>* 100.0 <span style="color: #707183;">(</span>/ <span style="color: #7388d6;">(</span><span style="color: #110099;">:gdp</span> n<span style="color: #7388d6;">)</span> sum<span style="color: #707183;">)</span><span style="color: #887070;">)</span><span style="color: #80a880;">)</span><span style="color: #858580;">)</span><span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">]</span>
+      <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #907373;">[</span>x results<span style="color: #907373;">]</span>
+        <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">println</span> <span style="color: #6276ba;">(</span><span style="color: #7F0055; font-weight: bold;">format</span> <span style="color: #2A00FF;">"Country: %-7s</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\t</span><span style="color: #2A00FF;">GDP: %d</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\t</span><span style="color: #2A00FF;">Percentage: %5.2f%%"</span>
+                         <span style="color: #858580;">(</span><span style="color: #110099;">:country</span> x<span style="color: #858580;">)</span>
+                         <span style="color: #858580;">(</span><span style="color: #110099;">:gdp</span> x<span style="color: #858580;">)</span>
+                         <span style="color: #858580;">(</span><span style="color: #110099;">:percentage</span> x<span style="color: #858580;">)</span><span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span>append-gdp-percentage nations<span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+Country: China  	GDP: 17734062645371	Percentage: 29.80%
+Country: USA    	GDP: 23315080560000	Percentage: 39.17%
+Country: Japan  	GDP: 4940877780755	Percentage:  8.30%
+Country: German 	GDP: 4259934911821	Percentage:  7.16%
+Country: India  	GDP: 3176295065497	Percentage:  5.34%
+Country: UK     	GDP: 3131377762925	Percentage:  5.26%
+Country: France 	GDP: 2957879759263	Percentage:  4.97%
+</pre>
+
+
+<p>
+但是这个函数职责太多：
+</p>
+<ul class="org-ul">
+<li>检查异常输入</li>
+<li>过滤异常记录</li>
+<li>求和</li>
+<li>求百分比</li>
+<li>格式化打印</li>
+</ul>
+
+
+<p>
+如果我们把这些职责拆分成不同的函数，看起来会是这个样子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">handle-nations-empty</span> <span style="color: #7388d6;">[</span>nations<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">println</span> <span style="color: #2A00FF;">"Nation list empty!"</span><span style="color: #7388d6;">)</span>
+  <span style="color: #110099;">:invalid</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">cleanup</span> <span style="color: #7388d6;">[</span>nations<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;&gt;</span> nations
+       <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">filter</span> <span style="color: #110099;">:country</span><span style="color: #909183;">)</span>
+       <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">filter</span> #<span style="color: #709870;">(</span>&lt; 0 <span style="color: #907373;">(</span><span style="color: #110099;">:gdp</span> <span style="color: #000000;">%</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">gdp-sum</span> <span style="color: #7388d6;">[</span>nations<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;&gt;</span> nations
+       <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">map</span> <span style="color: #110099;">:gdp</span><span style="color: #909183;">)</span>
+       <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">reduce</span> +<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">calc-percentage</span> <span style="color: #7388d6;">[</span>sum val<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>* 100.0 <span style="color: #909183;">(</span>/ val sum<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">format-nation-record</span> <span style="color: #7388d6;">[</span>nation<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">format</span> <span style="color: #2A00FF;">"Country: %-7s</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\t</span><span style="color: #2A00FF;">GDP: %d</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\t</span><span style="color: #2A00FF;">Percentage: %5.2f%%"</span>
+          <span style="color: #909183;">(</span><span style="color: #110099;">:country</span> nation<span style="color: #909183;">)</span>
+          <span style="color: #909183;">(</span><span style="color: #110099;">:gdp</span> nation<span style="color: #909183;">)</span>
+          <span style="color: #909183;">(</span><span style="color: #110099;">:percentage</span> nation<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defn</span> <span style="color: #0000ff; font-weight: bold;">print-nations-gdp-percentage-v2</span> <span style="color: #7388d6;">[</span>nations<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">if</span><span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">empty?</span> nations<span style="color: #909183;">)</span>
+    <span style="color: #909183;">(</span>handle-nations-empty nations<span style="color: #909183;">)</span>
+    <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">let</span> <span style="color: #709870;">[</span>cleanuped <span style="color: #907373;">(</span>cleanup nations<span style="color: #907373;">)</span>
+          total <span style="color: #907373;">(</span>gdp-sum cleanuped<span style="color: #907373;">)</span>
+          results <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">map</span>
+                   <span style="color: #6276ba;">(</span><span style="color: #7F0055; font-weight: bold;">fn</span> <span style="color: #858580;">[</span>n<span style="color: #858580;">]</span>
+                     <span style="color: #858580;">(</span><span style="color: #7F0055; font-weight: bold;">assoc</span>
+                      n <span style="color: #110099;">:percentage</span>
+                      <span style="color: #80a880;">(</span>calc-percentage <span style="color: #887070;">(</span><span style="color: #110099;">:gdp</span> n<span style="color: #887070;">)</span> total<span style="color: #80a880;">)</span><span style="color: #858580;">)</span><span style="color: #6276ba;">)</span> cleanuped<span style="color: #907373;">)</span><span style="color: #709870;">]</span>
+      <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #907373;">[</span>x results<span style="color: #907373;">]</span>
+        <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">println</span> <span style="color: #6276ba;">(</span>format-nation-record x<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span>print-nations-gdp-percentage-v2 nations<span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+Country: China  	GDP: 17734062645371	Percentage: 335.60%
+Country: USA    	GDP: 23315080560000	Percentage: 255.27%
+Country: Japan  	GDP: 4940877780755	Percentage: 1204.55%
+Country: German 	GDP: 4259934911821	Percentage: 1397.10%
+Country: India  	GDP: 3176295065497	Percentage: 1873.74%
+Country: UK     	GDP: 3131377762925	Percentage: 1900.62%
+Country: France 	GDP: 2957879759263	Percentage: 2012.10%
+</pre>
+
+
+
+<p>
+看起来，有些函数非常简单，似乎是多此一举。但是正因为其简单，只承担单一职责，我们进行单元测试的时候也很方便能保证代码正确。因为职责单一，修改起来也更容易，针对修改的测试也更容易编写。另外，每个步骤的函数都需要有一个有意义的函数名。可能会让你绞尽脑汁，但是仔细想想，这正是要求你为各个函数所承担的职责命名。如果你难以给函数命名，说明职责还是没有厘清。有了这些职责单一、命名合理、清晰明确的函数，未来不管是自己还是他人读这个代码也更容易理解、更好维护、节省时间。
+</p>

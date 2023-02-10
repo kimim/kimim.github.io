@@ -1,0 +1,262 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 单一责任原则，Single-responsibility principle，SRP
+categories: [technology]
+tags: [programming, SOLID]
+---
+#+END_EXPORT
+
+软件工程领域，有一个概念叫 SOLID。SOLID 是五个面向对象设计原则的首字母
+缩写。最早由 Robert C. Martin 在其 2000 年的论文《Design Principles
+and Design Patterns》中提出的。
+
+其中，S 原则指的是 Single-responsibility principle，单一责任原则，简称
+SRP。
+
+SRP 是这么表述的：“There should never be more than one reason for a
+class to change.” In other words, every class should have only one
+responsibility. 一个类应该只有一个发生变化的原因。换言之，每个类应该只
+有一个职责。
+
+如果有多个原因导致类设计的变更，那么这个类就不仅仅只有一个职责，很可能
+承担了多个职责。而单一职责原则就是指一个类或者模块应该有且只有一个导致
+其变更的原因。
+
+如果一个类承担了多个职责，那么最好按照单一职责原则，将这个类拆分成多个
+类实现。为什么呢？每一个职责都是变更的一个轴线，当我们的需求变更的时候，
+这些需求变更会通过类的职责传导到类的设计实现中。如果一个类有一个以上的
+职责，这些职责就耦合在了一起。这会导致设计的脆弱性。当你因为某个需求变
+更修改类的某个职责的时候，可能会影响到该类的其他职责，尽管你小心谨慎的
+进行代码修改，你还是可能会因为某些考虑不周，改动了不该改动的针对其他职
+责的设计。这是代码设计脆弱易碎的一个常见原因。另外，多个职责耦合在一起，
+还会会影响代码的复用性。你需要花点工夫才能把某个职责相关的代码分离出来，
+分离出来的代码可能还粘连了处理其他职责的代码，你就不太放心复用这段代码。
+
+比如说，我们设计一个 Triangle 类，它有两个方法，分别是：在屏幕绘制图形，
+计算图形的面积。
+
+#+begin_src plantuml :output-dir images :file triangle.svg :cmdline -charset utf-8 :eval no-export :exports results
+@startuml
+class Triangle {
+        +draw()
+        + double area()
+}
+object "Compute Application" as ca
+object "Graphical Application" as ga
+object "GUI" as gui
+ca -> Triangle
+ga -l-> Triangle
+ga -d-> gui
+Triangle -> gui
+hide members
+show Triangle methods
+@enduml
+#+end_src
+
+#+ATTR_LATEX: :scale 0.7
+#+RESULTS:
+[[file:images/triangle.svg]]
+
+于是，会有两个应用程序会用到 Triangle 这个类。一个是图形计算应用，它会
+调用 Triangle 类的 area() 方法计算图形面积。还有一个应用是图形显示应用，
+它会调用 Triangle 类的 draw() 方法，在 GUI 上绘制图形。 draw() 方法本
+身也要用到 GUI 子系统的资源。
+
+这个设计就违背了 SRP。Triangle 类实现了两个职责。一个职责是计算图形面
+积，另一个职责是在 GUI 上显示图形。
+
+这导致的第一个问题是，在进行面积计算的时候，你也不得不包含 GUI 程序库。
+对于 C++ 程序来说，意味着你要链接 GUI 库，编译需要时间、链接需要时间、
+还会占用运行内存和使得应用程序变得臃肿。对于 Java 来说，你还要把 GUI
+相关的 .class 或 .jar 文件部署到目标平台。
+
+第二个问题是，为了改进图形显示应用，你修改了 Triangle 中的 draw() 方法，
+你就不得不再一次编译图形计算应用，重新使用修改过的 Triangle 类。如果你
+忘记做，可能遇到意想不到的程序崩溃。
+
+改进的设计应该是能够将两个职责放到不同的类中实现。GeoTriangle 实现图形
+计算的 area() 职责，而 Triangle 实现图形显示的 draw() 职责。这时候，当
+你修改了图形显示职责时，不会影响到图形计算应用。
+
+#+begin_src plantuml :output-dir images :file triangle2.svg :cmdline -charset utf-8 :eval no-export :exports results
+@startuml
+class GeoTriangle {
+        + double area()
+}
+class Triangle {
+        + draw()
+}
+object "Compute Application" as ca
+object "Graphical Application" as ga
+object "GUI" as gui
+ca -d-> GeoTriangle
+ga -d-> Triangle
+ga -d-> gui
+Triangle -> gui
+Triangle -l> GeoTriangle
+hide members
+show Triangle methods
+@enduml
+#+end_src
+
+#+RESULTS:
+[[file:images/triangle2.svg]]
+
+SRP 原则也适用于函数式编程。在函数式编程中，SRP 意味分离 IO 和程序逻辑。
+比如这个最简单的例子：
+
+#+begin_src bb :eval no-export
+(defn mean [a b]
+  (println "Mean: ", (/ (+ a b) 2.0)))
+
+(mean 11 22)
+#+end_src
+
+#+RESULTS:
+: Mean:  16.5
+
+mean 这个函数，既承担了计算平均数的职责，又承担了在命令行的输出结果的
+职责。那么，如果我现在不想在命令行输出结果，而是想把计算结果写到文件里，
+是不是就得重新写一个差不多的函数，然后把输出方式改掉？
+
+如果我们把这个还是拆分成两个函数，一个函数是做数值计算，另一个函数是做
+数据输出：
+
+#+begin_src clojure :results output :exports both :eval no-export
+(defn mean [a b]
+  (/ (+ a b) 2.0))
+(defn print-log [msg val]
+  (println msg val))
+
+(->> (mean 11 22)
+     (print-log "Mean: "))
+#+end_src
+
+#+RESULTS:
+: Mean:  16.5
+
+这时候，我如果想输出到文件，只要再添加一个函数即可：
+
+#+begin_src clojure :results silent :eval no-export
+(defn write-log [msg val]
+  (spit "mean.txt" (str msg val)))
+
+(->> (mean 11 22)
+     (write-log "Mean: "))
+#+end_src
+
+再举个例子，假设我们有一组各个国家 GDP 清单，现在我想计算每个国家 GDP
+占清单总额的比例是多少。代码可以这样写：
+
+#+begin_src clojure :results output :exports both :eval no-export
+(def nations [{:country "China"  :gdp 17734062645371}
+              {:country "USA"    :gdp 23315080560000}
+              {:country "Japan"  :gdp 4940877780755}
+              {:country "German" :gdp 4259934911821}
+              {:country "India"  :gdp 3176295065497}
+              {:country "UK"     :gdp 3131377762925}
+              {:country "France" :gdp 2957879759263}
+              {:name "kimim"  :salary 800000}
+              {:country "Utopia" :gdp -100000}])
+
+(defn print-nations-gdp-percentage [nations]
+  (if (empty? nations)
+    (do
+      (println "Nation list empty!")
+      :invalid)
+    (let [cleanups (->> nations
+                        (filter :country)
+                        (filter #(< 0 (:gdp %))))
+          sum (->> cleanups
+                   (map :gdp)
+                   (reduce +))
+          results (->> cleanups
+                       (map
+                        (fn [n]
+                          (assoc n :percentage (* 100.0 (/ (:gdp n) sum))))))]
+      (doseq [x results]
+        (println (format "Country: %-7s\tGDP: %d\tPercentage: %5.2f%%"
+                         (:country x)
+                         (:gdp x)
+                         (:percentage x)))))))
+
+(append-gdp-percentage nations)
+#+end_src
+
+#+RESULTS:
+: Country: China  	GDP: 17734062645371	Percentage: 29.80%
+: Country: USA    	GDP: 23315080560000	Percentage: 39.17%
+: Country: Japan  	GDP: 4940877780755	Percentage:  8.30%
+: Country: German 	GDP: 4259934911821	Percentage:  7.16%
+: Country: India  	GDP: 3176295065497	Percentage:  5.34%
+: Country: UK     	GDP: 3131377762925	Percentage:  5.26%
+: Country: France 	GDP: 2957879759263	Percentage:  4.97%
+
+但是这个函数职责太多：
+- 检查异常输入
+- 过滤异常记录
+- 求和
+- 求百分比
+- 格式化打印
+
+
+如果我们把这些职责拆分成不同的函数，看起来会是这个样子：
+
+#+begin_src clojure :results output :exports both :eval no-export
+(defn handle-nations-empty [nations]
+  (println "Nation list empty!")
+  :invalid)
+
+(defn cleanup [nations]
+  (->> nations
+       (filter :country)
+       (filter #(< 0 (:gdp %)))))
+
+(defn gdp-sum [nations]
+  (->> nations
+       (map :gdp)
+       (reduce +)))
+
+(defn calc-percentage [sum val]
+  (* 100.0 (/ val sum)))
+
+(defn format-nation-record [nation]
+  (format "Country: %-7s\tGDP: %d\tPercentage: %5.2f%%"
+          (:country nation)
+          (:gdp nation)
+          (:percentage nation)))
+
+
+(defn print-nations-gdp-percentage-v2 [nations]
+  (if(empty? nations)
+    (handle-nations-empty nations)
+    (let [cleanuped (cleanup nations)
+          total (gdp-sum cleanuped)
+          results (map
+                   (fn [n]
+                     (assoc
+                      n :percentage
+                      (calc-percentage (:gdp n) total))) cleanuped)]
+      (doseq [x results]
+        (println (format-nation-record x))))))
+(print-nations-gdp-percentage-v2 nations)
+#+end_src
+
+#+RESULTS:
+: Country: China  	GDP: 17734062645371	Percentage: 335.60%
+: Country: USA    	GDP: 23315080560000	Percentage: 255.27%
+: Country: Japan  	GDP: 4940877780755	Percentage: 1204.55%
+: Country: German 	GDP: 4259934911821	Percentage: 1397.10%
+: Country: India  	GDP: 3176295065497	Percentage: 1873.74%
+: Country: UK     	GDP: 3131377762925	Percentage: 1900.62%
+: Country: France 	GDP: 2957879759263	Percentage: 2012.10%
+
+
+看起来，有些函数非常简单，似乎是多此一举。但是正因为其简单，只承担单一
+职责，我们进行单元测试的时候也很方便能保证代码正确。因为职责单一，修改
+起来也更容易，针对修改的测试也更容易编写。另外，每个步骤的函数都需要有
+一个有意义的函数名。可能会让你绞尽脑汁，但是仔细想想，这正是要求你为各
+个函数所承担的职责命名。如果你难以给函数命名，说明职责还是没有厘清。有
+了这些职责单一、命名合理、清晰明确的函数，未来不管是自己还是他人读这个
+代码也更容易理解、更好维护、节省时间。
