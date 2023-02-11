@@ -1,0 +1,108 @@
+---
+layout: post
+title: CppCoreGuidelines R.5 首选带作用域的对象，避免不必要的堆分配
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer scoped objects, don&rsquo;t heap-allocate unnecessarily&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+有作用域范围的对象可以是局部的、全局的或成员的。这意味着，在作用域范围内，没有额外的分配释放开销。有作用域范围的对象的成员本省也是在作用域范围内，通过对象的构造析构函数管理生存周期。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+下面代码效率不高。每次调用都要申请释放内存。而且可能因为异常，导致内存泄漏。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span><span style="color: #7388d6;">{</span>n<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">delete</span> p;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+可以使用局部变量替代：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span> <span style="color: #000000;">g</span><span style="color: #7388d6;">{</span>n<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>如果一个对象在函数中分配，又释放，可以考虑使用局部栈对象。</li>
+<li>警告：如果一个局部的 unique 指针，shared 指针没有被移动、复制、重赋值、重置，但又不是声明为 const</li>
+</ul>
+
+
+<p>
+例外
+</p>
+
+<p>
+不要警告一个局部的指向一个没约束范围的数组的 unique 指针
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+允许创建一个局部的常量的 <code>unique_ptr&lt;T[]&gt;</code> 指向堆中分配的缓存区。因为这是表示带范围的动态数组的有效方式。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+局部 <code>const unique_ptr&lt;T[]&gt;</code> 变量的合法案例：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_median_value</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">list</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">integers</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">size</span> = integers.size<span style="color: #7388d6;">()</span>;
+
+  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: declaring a local unique_ptr&lt;T[]&gt;.</span>
+  <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">local_buffer</span> = <span style="color: #110099;">std</span>::make_unique_for_overwrite<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">[]</span><span style="color: #7388d6;">&gt;(</span>size<span style="color: #7388d6;">)</span>;
+
+  <span style="color: #110099;">std</span>::copy_n<span style="color: #7388d6;">(</span>begin<span style="color: #909183;">(</span>integers<span style="color: #909183;">)</span>, size, local_buffer.get<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;
+  <span style="color: #110099;">std</span>::nth_element<span style="color: #7388d6;">(</span>local_buffer.get<span style="color: #909183;">()</span>,
+                   local_buffer.get<span style="color: #909183;">()</span> + size/2,
+                   local_buffer.get<span style="color: #909183;">()</span> + size<span style="color: #7388d6;">)</span>;
+  <span style="color: #7F0055; font-weight: bold;">return</span> local_buffer<span style="color: #7388d6;">[</span>size/2<span style="color: #7388d6;">]</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>

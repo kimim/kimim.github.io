@@ -1,0 +1,82 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines R.5 首选带作用域的对象，避免不必要的堆分配
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer scoped objects, don't heap-allocate unnecessarily"
+
+
+理由
+
+有作用域范围的对象可以是局部的、全局的或成员的。这意味着，在作用域范围
+内，没有额外的分配释放开销。有作用域范围的对象的成员本省也是在作用域范
+围内，通过对象的构造析构函数管理生存周期。
+
+
+例子
+
+下面代码效率不高。每次调用都要申请释放内存。而且可能因为异常，导致内存
+泄漏。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f(int n)
+{
+    auto p = new Gadget{n};
+    // ...
+    delete p;
+}
+#+end_src
+
+可以使用局部变量替代：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f(int n)
+{
+    Gadget g{n};
+    // ...
+}
+#+end_src
+
+
+强化
+- 如果一个对象在函数中分配，又释放，可以考虑使用局部栈对象。
+- 警告：如果一个局部的 unique 指针，shared 指针没有被移动、复制、重赋
+  值、重置，但又不是声明为 const
+
+
+例外
+
+不要警告一个局部的指向一个没约束范围的数组的 unique 指针
+
+
+例外
+
+允许创建一个局部的常量的 ~unique_ptr<T[]>~ 指向堆中分配的缓存区。因为这
+是表示带范围的动态数组的有效方式。
+
+
+例子
+
+局部 ~const unique_ptr<T[]>~ 变量的合法案例：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int get_median_value(const std::list<int>& integers)
+{
+  const auto size = integers.size();
+
+  // OK: declaring a local unique_ptr<T[]>.
+  const auto local_buffer = std::make_unique_for_overwrite<int[]>(size);
+
+  std::copy_n(begin(integers), size, local_buffer.get());
+  std::nth_element(local_buffer.get(),
+                   local_buffer.get() + size/2,
+                   local_buffer.get() + size);
+  return local_buffer[size/2];
+}
+#+end_src
