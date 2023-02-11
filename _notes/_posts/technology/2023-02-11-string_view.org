@@ -1,0 +1,101 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: C++17 string_view
+categories: [technology]
+tags: [C++, programming]
+---
+#+END_EXPORT
+
+~string_view~ 是 C++17 提供的只读字符串的视图轻对象。
+
+- 可以调用 ~string_view~ 构造器从字符串构造 ~string_view~ 对象。
+- ~string_view~ 代替 ~const string&~ ，可以避免内存分配。
+- ~string_view~ 的外部接口与 ~string~ 一致，但只包含只读的部分。
+- ~string_view::substr()~ 的返回值类型还是 ~string_view~ ，不产生新的字符
+  串，不进行内存分配。
+- ~string_view~ 字面量的后缀是 ~sv~ 。string字面量的后缀是 ~s~ 。
+
+以下展示从 ~char*~ 和 ~std::string~ 生成 ~std::string_view~ ：
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+#include <iostream>
+#include <string>
+#include <string_view>
+#include <typeinfo>
+using namespace std;
+
+int main()
+{
+    const char* cstr = "bonjour tout le monde";
+    std::string_view sv11(cstr);
+    std::string_view sv12(cstr, 7);
+    std::string_view sv13(cstr + 7, cstr + 12);
+    std::cout << "sv11: " << sv11
+              << ", sv12: " << sv12
+              << ", sv13: " << sv13 << std::endl;
+
+    std::string str = "bonjour tout le monde";
+    std::string_view sv21(str);
+    std::string_view sv22(cbegin(str), cbegin(str) + 7);
+    std::string_view sv23(str.substr(8, 4));
+    std::cout << "sv21: " << sv21
+              << ", sv22: " << sv22
+              << ", sv23: " << sv23 << std::endl;
+    auto sv31 = "bonjour"sv;
+    auto sv32 = " tout"s;
+    // implicit conversion from string to string_view
+    std::string_view sv33 = " le monde"s;
+    std::cout << sv31 << sv32 << sv33 << std::endl;
+    std::cout << typeid(sv32).name() << std::endl;
+    std::cout << typeid(sv33).name() << std::endl;
+}
+#+end_src
+
+#+RESULTS:
+: sv11: bonjour tout le monde, sv12: bonjour, sv13:  tout
+: sv21: bonjour tout le monde, sv22: bonjour, sv23: tout
+: bonjour tout le monde
+: NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+: St17basic_string_viewIcSt11char_traitsIcEE
+
+因为 ~std::string_view~ 不分配内存，所以执行效率比 ~std::string~ 高。前者
+比后者大致快 20 倍。
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+#include <iostream>
+#include <string>
+#include <string_view>
+#include <chrono>
+using namespace std;
+using namespace std::chrono;
+
+int main()
+{
+    const char* cstr = "bonjour tout le monde";
+    auto constexpr repeats = 1000000;
+
+    auto it_string = [cstr]() {
+        std::string s{cstr+7};
+    };
+    auto it_string_view = [cstr]() {
+        std::string_view s2{cstr, 7};
+    };
+    auto time_it = [](auto it) {
+        auto tix = high_resolution_clock::now();
+        for (size_t i{}; i < repeats; i++) {
+            it();
+        }
+        auto duration =
+            duration_cast<nanoseconds>(high_resolution_clock::now() - tix);
+        cout << duration.count() << endl;
+    };
+
+    time_it(it_string);
+    time_it(it_string_view);
+}
+#+end_src
+
+#+RESULTS:
+: 64267000
+: 3667000

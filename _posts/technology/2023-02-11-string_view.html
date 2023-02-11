@@ -1,0 +1,110 @@
+---
+layout: post
+title: C++17 string_view
+categories: [technology]
+tags: [C++, programming]
+---
+
+<p>
+<code>string_view</code> 是 C++17 提供的只读字符串的视图轻对象。
+</p>
+
+<ul class="org-ul">
+<li>可以调用 <code>string_view</code> 构造器从字符串构造 <code>string_view</code> 对象。</li>
+<li><code>string_view</code> 代替 <code>const string&amp;</code> ，可以避免内存分配。</li>
+<li><code>string_view</code> 的外部接口与 <code>string</code> 一致，但只包含只读的部分。</li>
+<li><code>string_view::substr()</code> 的返回值类型还是 <code>string_view</code> ，不产生新的字符串，不进行内存分配。</li>
+<li><code>string_view</code> 字面量的后缀是 <code>sv</code> 。string字面量的后缀是 <code>s</code> 。</li>
+</ul>
+
+<p>
+以下展示从 <code>char*</code> 和 <code>std::string</code> 生成 <code>std::string_view</code> ：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">string</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">string_view</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">typeinfo</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">cstr</span> = <span style="color: #2A00FF;">"bonjour tout le monde"</span>;
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">sv11</span><span style="color: #7388d6;">(</span>cstr<span style="color: #7388d6;">)</span>;
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">sv12</span><span style="color: #7388d6;">(</span>cstr, 7<span style="color: #7388d6;">)</span>;
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">sv13</span><span style="color: #7388d6;">(</span>cstr + 7, cstr + 12<span style="color: #7388d6;">)</span>;
+    <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"sv11: "</span> &lt;&lt; sv11
+              &lt;&lt; <span style="color: #2A00FF;">", sv12: "</span> &lt;&lt; sv12
+              &lt;&lt; <span style="color: #2A00FF;">", sv13: "</span> &lt;&lt; sv13 &lt;&lt; <span style="color: #110099;">std</span>::endl;
+
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">str</span> = <span style="color: #2A00FF;">"bonjour tout le monde"</span>;
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">sv21</span><span style="color: #7388d6;">(</span>str<span style="color: #7388d6;">)</span>;
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">sv22</span><span style="color: #7388d6;">(</span>cbegin<span style="color: #909183;">(</span>str<span style="color: #909183;">)</span>, cbegin<span style="color: #909183;">(</span>str<span style="color: #909183;">)</span> + 7<span style="color: #7388d6;">)</span>;
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">sv23</span><span style="color: #7388d6;">(</span>str.substr<span style="color: #909183;">(</span>8, 4<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"sv21: "</span> &lt;&lt; sv21
+              &lt;&lt; <span style="color: #2A00FF;">", sv22: "</span> &lt;&lt; sv22
+              &lt;&lt; <span style="color: #2A00FF;">", sv23: "</span> &lt;&lt; sv23 &lt;&lt; <span style="color: #110099;">std</span>::endl;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">sv31</span> = <span style="color: #2A00FF;">"bonjour"</span>sv;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">sv32</span> = <span style="color: #2A00FF;">" tout"</span>s;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">implicit conversion from string to string_view</span>
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">sv33</span> = <span style="color: #2A00FF;">" le monde"</span>s;
+    <span style="color: #110099;">std</span>::cout &lt;&lt; sv31 &lt;&lt; sv32 &lt;&lt; sv33 &lt;&lt; <span style="color: #110099;">std</span>::endl;
+    <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">typeid</span><span style="color: #7388d6;">(</span>sv32<span style="color: #7388d6;">)</span>.name<span style="color: #7388d6;">()</span> &lt;&lt; <span style="color: #110099;">std</span>::endl;
+    <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">typeid</span><span style="color: #7388d6;">(</span>sv33<span style="color: #7388d6;">)</span>.name<span style="color: #7388d6;">()</span> &lt;&lt; <span style="color: #110099;">std</span>::endl;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+sv11: bonjour tout le monde, sv12: bonjour, sv13:  tout
+sv21: bonjour tout le monde, sv22: bonjour, sv23: tout
+bonjour tout le monde
+NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE
+St17basic_string_viewIcSt11char_traitsIcEE
+</pre>
+
+
+<p>
+因为 <code>std::string_view</code> 不分配内存，所以执行效率比 <code>std::string</code> 高。前者比后者大致快 20 倍。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">string</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">string_view</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">chrono</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>::<span style="color: #110099;">chrono</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">cstr</span> = <span style="color: #2A00FF;">"bonjour tout le monde"</span>;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000;">repeats</span> = 1000000;
+
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">it_string</span> = <span style="color: #7388d6;">[</span><span style="color: #110099;">cstr</span><span style="color: #7388d6;">]()</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span><span style="color: #909183;">{</span>cstr+7<span style="color: #909183;">}</span>;
+    <span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">it_string_view</span> = <span style="color: #7388d6;">[</span><span style="color: #110099;">cstr</span><span style="color: #7388d6;">]()</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">s2</span><span style="color: #909183;">{</span>cstr, 7<span style="color: #909183;">}</span>;
+    <span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">time_it</span> = <span style="color: #7388d6;">[](</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">it</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">tix</span> = <span style="color: #110099;">high_resolution_clock</span>::now<span style="color: #909183;">()</span>;
+        <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #000000;">i</span><span style="color: #709870;">{}</span>; i &lt; repeats; i++<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            it<span style="color: #709870;">()</span>;
+        <span style="color: #909183;">}</span>
+        <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">duration</span> =
+            duration_cast<span style="color: #909183;">&lt;</span>nanoseconds<span style="color: #909183;">&gt;(</span><span style="color: #110099;">high_resolution_clock</span>::now<span style="color: #709870;">()</span> - tix<span style="color: #909183;">)</span>;
+        cout &lt;&lt; duration.count<span style="color: #909183;">()</span> &lt;&lt; endl;
+    <span style="color: #7388d6;">}</span>;
+
+    time_it<span style="color: #7388d6;">(</span>it_string<span style="color: #7388d6;">)</span>;
+    time_it<span style="color: #7388d6;">(</span>it_string_view<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+64267000
+3667000
+</pre>
