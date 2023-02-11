@@ -7,6 +7,14 @@ tags: [programming, SOLID]
 ---
 #+END_EXPORT
 
+#+begin_quote
+许由曰：“子治天下，天下既已治也；而我犹代子，吾将为名乎？名者，实之宾
+也；吾将为宾乎？鹪鹩巢于深林，不过一枝；偃鼠饮河，不过满腹。归休乎君，
+予无所用天下为！庖人虽不治庖，尸祝不越樽俎而代之矣！”
+
+《庄子·逍遥游》
+#+end_quote
+
 软件工程领域，有一个概念叫 SOLID。SOLID 是五个面向对象设计原则的首字母
 缩写。最早由 Robert C. Martin 在其 2000 年的论文《Design Principles
 and Design Patterns》中提出的。
