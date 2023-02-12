@@ -1,0 +1,142 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: 开放封闭原则，Open–closed principle，OCP
+categories: [technology]
+tags: [programming]
+---
+#+END_EXPORT
+
+ 软件工程领域，有一个概念叫 SOLID。SOLID 是五个面向对象设计原则的首字
+ 母缩写。最早由 Robert C. Martin 在其 2000 年的论文《Design Principles
+ and Design Patterns》中提出的。
+
+其中，O 原则指的是 Open–closed principle，开放封闭原则，简称 OCP。
+
+OCP 是这么表述的：“Software entities … should be open for extension,
+but closed for modification.” 软件实体应该开放于扩展，但封闭于修改。
+
+正如 Ivar Jacobson 所说的：“All systems change during their life
+cycles. This must be borne in mind when developing systems expected to
+last longer than the first version.” （在其生存周期中，任何系统都会改
+变。只要系统还有后续版本，就要在开发过程中，清醒的意识到，系统后续一定
+会改变）。所以，设计系统的时候要遵循 OCP 原则。这意味着一个软件实体是
+允许在不改变它的源代码的前提下扩展它的行为。该原则在生产环境中是特别有
+价值的，在这种环境中，改变源代码需要代码审查，单元测试等用以确保产品使
+用质量的过程。遵循这种原则的代码在扩展时本身并不发生改变，因此无需上述
+的过程。只需对扩展部分进行质量保障即可。
+
+符合 OCP 原则的模块遵循两个属性：
+
+1. 扩展模块是开放的
+
+   就是说，模块的行为是可以扩展的。根据新的需求，我们可以扩展模块，调
+   整它的行为。
+
+2. 修改模块是封闭的
+
+   模块本身的代码是封闭的。不允许修改模块的代码来改变它的行为。
+
+
+一般认为，要修改一个模块的行为，就应该修改模块的代码，如果模块的代码不
+允许修改，那怎么调整它的行为？
+
+这里的关键技术就是抽象。
+
+在面向对象语言中，我们可以创建一个抽象类。这个抽象类本身的行为接口是确
+定的，但是它的继承类，可以扩展它的功能。而使用这个抽象类的模块，只是依
+赖与抽象类的接口，所以这个修改这个模块是封闭的。但是可以通过扩展抽象类，
+调整模块的行为。
+
+#+NAME: closed-client
+#+begin_src plantuml :output-dir images :file cloded-client.svg :cmdline -charset utf-8 :eval no-export :exports results
+'sequence no length than 20
+hide footbox
+hide unlinked
+class "Client" as C
+class "Server" as S
+S -lo C
+hide members
+#+end_src
+
+#+CAPTION: 封闭的客户端
+#+RESULTS: closed-client
+[[file:images/cloded-client.svg]]
+
+比如图 [[closed-client]]，描述的设计就没有遵循开放封闭原则。Client 和
+Server 类都是具体类，我们不能确保 Server 类的成员函数都是虚函数。如果
+Client 要改用别的 Server 对象， 我们就要 Client 的代码，以适配新的
+Server 类。
+
+#+NAME: open-client
+#+begin_src plantuml :output-dir images :file open-client.svg :cmdline -charset utf-8 :eval no-export :exports results
+'sequence no length than 20
+hide footbox
+hide unlinked
+class "Client" as C
+abstract class "AbstractServer" as AS
+class "Server" as S
+AS -lo C
+S -u-|> AS
+hide members
+#+end_src
+
+#+CAPTION: 开放的客户端
+#+RESULTS: open-client
+[[file:images/open-client.svg]]
+
+图 [[open-client]] 描述的设计就符合开放封闭原则。我们添加了一个
+AbstractServer 抽象类。抽象类的成员函数都是纯虚函数。Client 调用抽象接
+口。至于具体实现，则由 AbstractServer 的继承类 Server 完成。如果
+Client 要用不同的 Server 实现，只要从 AbstractServer 派生一个新的类，
+给 Client 用就可以了。Client 本身的代码逻辑就不需要修改了。如图
+[[open-client-extended]] 所示。
+
+#+NAME: open-client-extended
+#+begin_src plantuml :output-dir images :file open-client-extended.svg :cmdline -charset utf-8 :eval no-export :exports results
+'sequence no length than 20
+hide footbox
+hide unlinked
+class "Client" as C
+abstract class "AbstractServer" as AS
+class "Server" as S
+class "NewServer" as NS
+
+AS -lo C
+S -u-|> AS
+NS -u-|> AS
+hide members
+#+end_src
+
+#+CAPTION: 开放的客户端的扩展
+#+RESULTS: open-client-extended
+[[file:images/open-client-extended.svg]]
+
+那么，对于函数式编程（Functional Programming, FP）来说，OCP 意味着对于
+函数组合开放，对于函数修改封闭。比如以下例子，我们定义了一个函数求成员
+的比例：
+
+#+begin_src bb :results pp :exports both
+(defn calc-percent [v]
+  (let [total (reduce + v)]
+    (map #(* 100.0 (/ % (count v))) v)))
+(calc-percent [1 2 3 4 5 6 7 8 9])
+#+end_src
+
+#+RESULTS:
+: (11.11111111111111 22.22222222222222 33.33333333333333 44.44444444444444 55.55555555555556 66.66666666666667 77.77777777777779 88.8888888888889 100.0)
+
+我们可以通过函数的组合扩展功能，比如说，把刚才的结果转换成百分比格式的字符串：
+
+#+begin_src bb :results pp :exports both
+(defn calc-percent [v]
+  (let [total (reduce + v)]
+    (map #(* 100.0 (/ % (count v))) v)))
+
+(defn format-percent [vv]
+  (map #(format "%.2f%%" %) vv))
+(format-percent (calc-percent [1 2 3 4 5 6 7 8 9]))
+#+end_src
+
+#+RESULTS:
+: (11.11% 22.22% 33.33% 44.44% 55.56% 66.67% 77.78% 88.89% 100.00%)
