@@ -1,0 +1,62 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines R.10 避免使用 malloc() 和 free()
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid malloc() and free()"
+
+
+理由
+
+
+~malloc()~ 和 ~free()~ 不支持构造与析构，而且不能很好的和 ~new~ 及 ~delete~ 混用。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class Record {
+    int id;
+    string name;
+    // ...
+};
+
+void use()
+{
+    // p1 might be nullptr
+    // *p1 is not initialized; in particular,
+    // that string isn't a string, but a string-sized bag of bits
+    Record* p1 = static_cast<Record*>(malloc(sizeof(Record)));
+
+    auto p2 = new Record;
+
+    // unless an exception is thrown, *p2 is default initialized
+    auto p3 = new(nothrow) Record;
+    // p3 might be nullptr; if not, *p3 is default initialized
+
+    // ...
+
+    delete p1;    // error: cannot delete object allocated by malloc()
+    free(p2);    // error: cannot free() object allocated by new
+}
+#+end_src
+
+有些实现中， ~delete~ 与 ~free()~ 混用可能能工作，但是也可能导致运行时错误。
+
+
+例外
+
+有些不能抛出异常的代码中可以用 malloc 和 free。比如有些关键的硬实时系
+统。但是请注意，大部分禁止使用异常都是坏的迷信，或者是因为不系统的资源
+管理。在这些情况下，可以考虑使用 nothrow 版本的 new。
+
+
+强化
+
+标记显式使用 malloc 和 free 的代码

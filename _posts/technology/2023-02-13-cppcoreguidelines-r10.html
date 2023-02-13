@@ -1,0 +1,79 @@
+---
+layout: post
+title: CppCoreGuidelines R.10 避免使用 malloc() 和 free()
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid malloc() and free()&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+
+<p>
+<code>malloc()</code> 和 <code>free()</code> 不支持构造与析构，而且不能很好的和 <code>new</code> 及 <code>delete</code> 混用。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">id</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">name</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">p1 might be nullptr</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">*p1 is not initialized; in particular,</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">that string isn't a string, but a string-sized bag of bits</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span>* <span style="color: #000000;">p1</span> = <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span>*<span style="color: #7388d6;">&gt;(</span>malloc<span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #709870;">(</span>Record<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p2</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span>;
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">unless an exception is thrown, *p2 is default initialized</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p3</span> = <span style="color: #7F0055; font-weight: bold;">new</span><span style="color: #7388d6;">(</span>nothrow<span style="color: #7388d6;">)</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">p3 might be nullptr; if not, *p3 is default initialized</span>
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+
+    <span style="color: #7F0055; font-weight: bold;">delete</span> p1;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: cannot delete object allocated by malloc()</span>
+    free<span style="color: #7388d6;">(</span>p2<span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: cannot free() object allocated by new</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+有些实现中， <code>delete</code> 与 <code>free()</code> 混用可能能工作，但是也可能导致运行时错误。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+有些不能抛出异常的代码中可以用 malloc 和 free。比如有些关键的硬实时系统。但是请注意，大部分禁止使用异常都是坏的迷信，或者是因为不系统的资源管理。在这些情况下，可以考虑使用 nothrow 版本的 new。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记显式使用 malloc 和 free 的代码
+</p>
