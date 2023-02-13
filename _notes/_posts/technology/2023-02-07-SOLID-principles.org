@@ -33,6 +33,4 @@ SOLID 指的是以下五个原则：
   赖于具体实现。简单的说就是要求对抽象进行编程，不要对实现进行编程，这
   样就降低了实现模块间的耦合。
 
-[[./images/SOLID Principles.svg]]
-
 据说 SOLID 是在 2004 年的时候，由 Michael Feathers 总结出来的。
