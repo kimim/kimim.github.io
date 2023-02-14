@@ -1,0 +1,29 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines R.11 避免直接调用 new 和 delete
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid calling new and delete explicitly"
+
+
+理由
+
+new 返回的指针应该属于某种资源句柄，该句柄能够调用 delete。如果 new 返
+回的指针赋值给了原始裸露指针，就有资源泄漏的风险。
+
+
+注意
+
+在大型程序中，裸露的 delete 操作可能是个 bug：如果你有 N 次 delete，你
+怎么确保你是不是需要 N+1 次，或 N-1 次？这个 bug 可能很隐蔽，你可能在
+某些地方少了一次裸露的 delete 操作。
+
+
+强化
+- 对于直接调用 new 和 delete 的操作进行警告。建议使用 ~make_unique~
