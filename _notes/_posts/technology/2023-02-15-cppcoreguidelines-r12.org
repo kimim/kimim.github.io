@@ -1,0 +1,50 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines R.12 对于直接分配的资源，立即用一个对象管理起来
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Immediately give the result of an explicit resource allocation to a manager object"
+
+
+理由
+
+如果你不这么做，异常或返回就会导致内存泄漏
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void func(const string& name)
+{
+    FILE* f = fopen(name, "r");            // open the file
+    vector<char> buf(1024);
+    auto _ = finally([f] { fclose(f); });  // remember to close the file
+    // ...
+}
+#+end_src
+
+以上例子中，分配 buf 的过程可能失败，这样 f 这个文件句柄就没有关掉，内存泄漏了。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void func(const string& name)
+{
+    ifstream f{name};   // open the file
+    vector<char> buf(1024);
+    // ...
+}
+#+end_src
+
+使用 ifstream 作为文件句柄更简洁、高效、安全。
+
+
+强化
+- 标记使用直接内存分配的方式初始化指针的地方

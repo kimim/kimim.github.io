@@ -1,0 +1,70 @@
+---
+layout: post
+title: CppCoreGuidelines R.12 对于直接分配的资源，立即用一个对象管理起来
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Immediately give the result of an explicit resource allocation to a manager object&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+如果你不这么做，异常或返回就会导致内存泄漏
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">func</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">name</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">FILE</span>* <span style="color: #000000;">f</span> = fopen<span style="color: #7388d6;">(</span>name, <span style="color: #2A00FF;">"r"</span><span style="color: #7388d6;">)</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">open the file</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">buf</span><span style="color: #7388d6;">(</span>1024<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">_</span> = finally<span style="color: #7388d6;">(</span><span style="color: #909183;">[</span><span style="color: #110099;">f</span><span style="color: #909183;">]</span> <span style="color: #909183;">{</span> fclose<span style="color: #709870;">(</span>f<span style="color: #709870;">)</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">remember to close the file</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+以上例子中，分配 buf 的过程可能失败，这样 f 这个文件句柄就没有关掉，内存泄漏了。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">func</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">name</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">ifstream</span> <span style="color: #000000;">f</span><span style="color: #7388d6;">{</span>name<span style="color: #7388d6;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">open the file</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">buf</span><span style="color: #7388d6;">(</span>1024<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+使用 ifstream 作为文件句柄更简洁、高效、安全。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记使用直接内存分配的方式初始化指针的地方</li>
+</ul>
