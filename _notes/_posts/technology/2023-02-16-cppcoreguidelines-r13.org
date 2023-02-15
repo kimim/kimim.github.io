@@ -1,0 +1,57 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines R.13 一个表达式中只显式地分配一个资源
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Perform at most one explicit resource allocation in a single expression statement"
+
+
+理由
+
+
+在一个语句中申请两个资源，可能会导致内存泄漏，因为很多子语句的执行顺序
+是未定义的。包括函数参数。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void fun(shared_ptr<Widget> sp1, shared_ptr<Widget> sp2);
+#+end_src
+
+可能会这样调用这个函数：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+// BAD: potential leak
+fun(shared_ptr<Widget>(new Widget(a, b)), shared_ptr<Widget>(new Widget(c, d)));
+#+end_src
+
+这段代码在出现异常的时候是不安全的。因为编译器处理两个参数的时候，可能
+会做一些顺序调整，比如先统一分配内存，然后调用两个对象的构造函数。一旦
+构造一个对象的时候，抛出异常了，就再也不释放另一个对象的内存，就导致内
+存泄漏了。
+
+一个简单的解决方案是：不在一个语句中分配多个资源。比如：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+shared_ptr<Widget> sp1(new Widget(a, b)); // Better, but messy
+fun(sp1, new Widget(c, d));
+#+end_src
+
+最佳的解决方案是避免直接的内存分配，而是使用工厂函数直接返回所管理的对
+象：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+fun(make_shared<Widget>(a, b), make_shared<Widget>(c, d)); // Best
+#+end_src
+
+如果没有现成的工厂函数，自己封装一个。
+
+强化
+- 标注显式分配多个资源的语句

@@ -1,0 +1,78 @@
+---
+layout: post
+title: CppCoreGuidelines R.13 一个表达式中只显式地分配一个资源
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Perform at most one explicit resource allocation in a single expression statement&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+
+<p>
+在一个语句中申请两个资源，可能会导致内存泄漏，因为很多子语句的执行顺序是未定义的。包括函数参数。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">fun</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span>Widget<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">sp1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span>Widget<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">sp2</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+可能会这样调用这个函数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: potential leak</span>
+fun<span style="color: #707183;">(</span>shared_ptr<span style="color: #7388d6;">&lt;</span>Widget<span style="color: #7388d6;">&gt;(</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Widget</span><span style="color: #909183;">(</span>a, b<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>, shared_ptr<span style="color: #7388d6;">&lt;</span>Widget<span style="color: #7388d6;">&gt;(</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Widget</span><span style="color: #909183;">(</span>c, d<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+这段代码在出现异常的时候是不安全的。因为编译器处理两个参数的时候，可能会做一些顺序调整，比如先统一分配内存，然后调用两个对象的构造函数。一旦构造一个对象的时候，抛出异常了，就再也不释放另一个对象的内存，就导致内存泄漏了。
+</p>
+
+<p>
+一个简单的解决方案是：不在一个语句中分配多个资源。比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #707183;">&lt;</span>Widget<span style="color: #707183;">&gt;</span> <span style="color: #000000;">sp1</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Widget</span><span style="color: #7388d6;">(</span>a, b<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Better, but messy</span>
+fun<span style="color: #707183;">(</span>sp1, <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Widget</span><span style="color: #7388d6;">(</span>c, d<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+最佳的解决方案是避免直接的内存分配，而是使用工厂函数直接返回所管理的对象：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">fun<span style="color: #707183;">(</span>make_shared<span style="color: #7388d6;">&lt;</span>Widget<span style="color: #7388d6;">&gt;(</span>a, b<span style="color: #7388d6;">)</span>, make_shared<span style="color: #7388d6;">&lt;</span>Widget<span style="color: #7388d6;">&gt;(</span>c, d<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Best</span>
+</pre>
+</div>
+
+<p>
+如果没有现成的工厂函数，自己封装一个。
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标注显式分配多个资源的语句</li>
+</ul>
