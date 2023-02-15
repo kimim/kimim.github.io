@@ -1,0 +1,168 @@
+---
+layout: post
+title: 设置 nostr 代理
+categories: [technology]
+tags: [nostr]
+---
+
+<p>
+上一篇文章，我们<a href="./2023-02-04-setup-nostr-relay.html">搭建了一个 nostr relay</a>。如果在 nostr 客户端只设置自己的 relay，就只能看到自己的消息，不管你设置了多少个私钥，都是自己一个人的狂欢。
+</p>
+
+<p>
+这次，我们试着搭建一个 nostr 代理。
+</p>
+
+<p>
+那么，在搭建代理之前，我们要清楚一个问题，即：为什么要搭建代理？
+</p>
+
+<p>
+我们知道，nostr 的消息都是通过 relay 中转的。为了确保更多的人能收到我们的消息，我们会在客户端中添加很多 relay，尤其是那些用到人多的 relay。这样才能加入到更多人的狂欢之中。
+</p>
+
+<p>
+但是，这样就会出现个问题，当我们添加的 relay 太多的时候，我们要获取更新的时候，客户端就要不停的连接这些 relay，检查是不是有最新消息。当我们要去发送消息的时候，客户端就要向所有 relay 发送消息。对于客户端来说，这显然效率不太高。
+</p>
+
+<p>
+这时候，nostr 代理就能解决这个问题。当我们查询更新的时候，nostr 代理会去汇总其他 relay 的消息，我们的客户端只要向代理查询最新消息即可。当我们发送消息的时候，只要发送一条消息给 nostr 代理，然后它会把消息发送给其他 relay。
+</p>
+
+<p>
+现在我们看看怎么搭建 nostr relay。
+</p>
+
+<p>
+首先，从 <a href="https://github.com/Dolu89/nostr-proxy">https://github.com/Dolu89/nostr-proxy</a> clone nostr-relay：
+</p>
+
+<pre class="example" id="orgee0496b">
+kimim@nostr:~$ git clone https://github.com/Dolu89/nostr-proxy
+Cloning into 'nostr-proxy'...
+remote: Enumerating objects: 226, done.
+remote: Counting objects: 100% (226/226), done.
+remote: Compressing objects: 100% (157/157), done.
+remote: Total 226 (delta 75), reused 191 (delta 49), pack-reused 0
+Receiving objects: 100% (226/226), 193.45 KiB | 2.33 MiB/s, done.
+Resolving deltas: 100% (75/75), done.
+</pre>
+
+<p>
+然后，记得卸载当前的旧版的 nodejs，安装官网最新版本。因为 nostr-relay
+需要最新的 nodejs。
+</p>
+
+<pre class="example" id="orgd972874">
+$ sudo apt-get remove nodejs libnode-dev
+$ curl -fsSL https://deb.nodesource.com/setup_current.x | sudo -E bash -
+$ sudo apt-get install nodejs
+</pre>
+
+<p>
+然后，cd 到刚才 clone 的 nostr-relay 文件夹下，安装依赖包：
+</p>
+
+<pre class="example" id="org1e29203">
+kimim@nostr:~$ cd nostr-proxy/
+kimim@nostr:~/nostr-proxy$ npm install
+...
+added 1295 packages, and audited 1296 packages in 2m
+
+131 packages are looking for funding
+  run `npm fund` for details
+
+5 high severity vulnerabilities
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+</pre>
+
+<p>
+调用命令生成 APP KEY：
+</p>
+
+<pre class="example" id="org8e696ca">
+kimim@nostr:~/nostr-proxy$ node ace generate:key
+snZunvc4O9U_f4IN2LgzqVc5kQUU9w-0
+  &gt; During development, you may want to set the above secret as "APP_KEY" inside the .env file
+</pre>
+
+<p>
+然后将密钥填入 .env 文件。同时设置 proxy 的端口，按照之前
+<a href="./2023-02-04-setup-nostr-relay.html">安装 nostr relay 的设置</a>，我用了 8008 端口。这里我只添加了两个 relay，其实可以添加很多很多个。
+</p>
+
+<pre class="example" id="org69119d4">
+kimim@nostr:~/nostr-proxy$ cp .env.example .env
+kimim@nostr:~/nostr-proxy$ vi .env
+kimim@nostr:~/nostr-proxy$ cat .env
+PORT=8008
+HOST=0.0.0.0
+NODE_ENV=development
+APP_KEY=snZunvc4O9U_f4IN2LgzqVc5kQUU9w-0
+DRIVE_DISK=local
+SESSION_DRIVER=cookie
+CACHE_VIEWS=false
+PROXY_URL=wss:/nostr.kimi.im/
+RELAYS=wss://nos.lol,wss://brb.io
+</pre>
+
+<p>
+然后，开启 dev 服务试试看。
+</p>
+
+<pre class="example" id="org873abd7">
+kimim@nostr:~/nostr-proxy$ npm run dev
+
+&gt; nostr-proxy@1.0.0 dev
+&gt; node ace serve --watch
+
+[ info ]  building project...
+[ info ]  starting http server...
+[ encore ] Running webpack-dev-server ...
+[ info ]  watching file system for changes
+[10:44:39.919] INFO (nostr-proxy/45785): started server on 0.0.0.0:8008
+╭────────────────────────────────────────────────────────╮
+│                                                        │
+│    Server address: http://127.0.0.1:8008               │
+│    Watching filesystem for changes: YES                │
+│    Encore server address: http://localhost:8080        │
+│                                                        │
+╰────────────────────────────────────────────────────────╯
+UPDATE: public/assets/manifest.json
+UPDATE: public/assets/entrypoints.json
+[ encore ]  DONE  Compiled successfully in 1499ms10:44:42 AM
+[ encore ] webpack compiled successfully
+</pre>
+
+<p>
+切换到我本地的 Linux 虚拟机，试试看：
+</p>
+
+<p>
+删除之前配置的 relay，添加 nostr proxy
+</p>
+<pre class="example" id="org20ab155">
+$ ./noscl relay
+wss://nos.lol: rw
+$ ./noscl relay remove wss://nos.lol
+Removed relay wss://nos.lol.
+$ ./noscl relay add wss://nostr.kimi.im
+</pre>
+
+<p>
+发送消息：
+</p>
+
+<pre class="example" id="org9157881">
+$ ./noscl publish "Bonjour tout le monde from nostr-proxy"
+Sent event 1c4a92e8c36c259eb5d34ccd96c5a78e7dea1bdd2ba46f61fc9f8b5bebb7442d to 'wss://nostr.kimi.im'.
+Seen 1c4a92e8c36c259eb5d34ccd96c5a78e7dea1bdd2ba46f61fc9f8b5bebb7442d on 'wss://nostr.kimi.im'.
+</pre>
+
+<p>
+消息通过 nostr 代理成功发送！
+</p>
