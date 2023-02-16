@@ -1,0 +1,33 @@
+#+BEGIN_EXPORT html
+---
+layout: post
+title: CppCoreGuidelines R.14 用 span 做参数，不要用 []
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+#+END_EXPORT
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid [] parameters, prefer span"
+
+
+理由
+
+用指针访问数组，会导致数组的大小信息丢失。会导致一些列相关的错误。用
+span 保留数组大小信息。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f(int[]);          // not recommended
+
+void f(int*);           // not recommended for multiple objects
+                        // (a pointer should point to a single object, do not subscript)
+
+void f(gsl::span<int>); // good, recommended
+#+end_src
+
+强化
+- 标记 [] 参数，改用 span

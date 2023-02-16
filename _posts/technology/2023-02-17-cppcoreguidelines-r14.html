@@ -1,0 +1,46 @@
+---
+layout: post
+title: CppCoreGuidelines R.14 用 span 做参数，不要用 []
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid [] parameters, prefer span&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+用指针访问数组，会导致数组的大小信息丢失。会导致一些列相关的错误。用
+span 保留数组大小信息。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">[]</span><span style="color: #707183;">)</span>;          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">not recommended</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #707183;">)</span>;           <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">not recommended for multiple objects</span>
+                        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">(a pointer should point to a single object, do not subscript)</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good, recommended</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记 [] 参数，改用 span</li>
+</ul>
