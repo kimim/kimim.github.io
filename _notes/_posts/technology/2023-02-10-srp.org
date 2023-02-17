@@ -189,7 +189,7 @@ mean 这个函数，既承担了计算平均数的职责，又承担了在命令
                          (:gdp x)
                          (:percentage x)))))))
 
-(append-gdp-percentage nations)
+(print-nations-gdp-percentage nations)
 #+end_src
 
 #+RESULTS:
@@ -226,7 +226,7 @@ mean 这个函数，既承担了计算平均数的职责，又承担了在命令
        (map :gdp)
        (reduce +)))
 
-(defn calc-percentage [sum val]
+(defn calc-percentage [val sum]
   (* 100.0 (/ val sum)))
 
 (defn format-nation-record [nation]
@@ -252,13 +252,13 @@ mean 这个函数，既承担了计算平均数的职责，又承担了在命令
 #+end_src
 
 #+RESULTS:
-: Country: China  	GDP: 17734062645371	Percentage: 335.60%
-: Country: USA    	GDP: 23315080560000	Percentage: 255.27%
-: Country: Japan  	GDP: 4940877780755	Percentage: 1204.55%
-: Country: German 	GDP: 4259934911821	Percentage: 1397.10%
-: Country: India  	GDP: 3176295065497	Percentage: 1873.74%
-: Country: UK     	GDP: 3131377762925	Percentage: 1900.62%
-: Country: France 	GDP: 2957879759263	Percentage: 2012.10%
+: Country: China  	GDP: 17734062645371	Percentage: 29.80%
+: Country: USA    	GDP: 23315080560000	Percentage: 39.17%
+: Country: Japan  	GDP: 4940877780755	Percentage:  8.30%
+: Country: German 	GDP: 4259934911821	Percentage:  7.16%
+: Country: India  	GDP: 3176295065497	Percentage:  5.34%
+: Country: UK     	GDP: 3131377762925	Percentage:  5.26%
+: Country: France 	GDP: 2957879759263	Percentage:  4.97%
 
 
 看起来，有些函数非常简单，似乎是多此一举。但是正因为其简单，只承担单一
