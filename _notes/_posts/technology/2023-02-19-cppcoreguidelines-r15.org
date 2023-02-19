@@ -1,0 +1,35 @@
+#+layout: post
+#+title: CppCoreGuidelines R.15 重载匹配的分配/释放函数对
+#+categories: technology
+#+tags: CppCoreGuidelines
+#+description: cgl
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+'"Always overload matched allocation/deallocation pairs"
+
+
+理由
+
+不然，会导致不匹配的操作，混乱。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class X {
+    // ...
+    void* operator new(size_t s);
+    void operator delete(void*);
+    // ...
+};
+#+end_src
+
+
+注意
+
+如果你希望分配的内容不释放，可以把释放函数设置为 ~=delete~ ，但不要留着不定义。
+
+
+强化
+- 标注不完全的函数对。

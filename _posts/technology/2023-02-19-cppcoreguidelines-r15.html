@@ -1,0 +1,59 @@
+---
+date: 2023-02-19 18:16
+author: 
+layout: post
+title: CppCoreGuidelines R.15 重载匹配的分配/释放函数对
+categories: 
+- technology
+tags: 
+- CppCoreGuidelines
+excerpt: cgl
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&rsquo;&ldquo;Always overload matched allocation/deallocation pairs&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+不然，会导致不匹配的操作，混乱。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>* <span style="color: #7F0055; font-weight: bold;">operator</span> <span style="color: #7F0055; font-weight: bold;">new</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #000000;">s</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #7F0055; font-weight: bold;">operator</span> <span style="color: #7F0055; font-weight: bold;">delete</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>*<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果你希望分配的内容不释放，可以把释放函数设置为 <code>=delete</code> ，但不要留着不定义。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标注不完全的函数对。</li>
+</ul>

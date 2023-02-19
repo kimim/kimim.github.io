@@ -1,0 +1,160 @@
+#+STARTUP: showall
+#+STARTUP: hidestars
+#+OPTIONS: H:2 num:nil tags:t toc:nil timestamps:t
+#+LAYOUT: post
+#+AUTHOR: kimim
+#+DATE: 2023-02-19 Sun 18:48
+#+TITLE: Use org2jekyll to publish my blog
+#+DESCRIPTION: try to use org2jekyll to publish my blogs
+#+TAGS: emacs
+#+CATEGORIES: technology
+
+I've already created some org jekyll function to publish blogs for
+github jekyll. But there is a small issue that the org file should
+contains the ~export_html~ drawer with jekyll YAML metadata.
+
+The emacs extension [[https://github.com/ardumont/org2jekyll][org2jekyll]] already supports extract metadata from
+orgmode files. So I reuse this extension with some modifications.
+
+* Publish settings
+
+My orgmode files are located in ~<jekyll-folder>/_notes/_posts~ and the
+exported HTML files are in ~<jekyll-folder>/_posts~:
+
+#+begin_src emacs-lisp
+(custom-set-variables '(org2jekyll-blog-author "kimim")
+                      '(org2jekyll-source-directory (expand-file-name "~/kimi.im/_notes/_posts"))
+                      '(org2jekyll-jekyll-directory (expand-file-name "~/kimi.im/_posts"))
+                      '(org2jekyll-jekyll-drafts-dir "")
+                      '(org2jekyll-jekyll-posts-dir "")
+                      '(org-publish-project-alist
+                        `(("post"  ;; dynamic pages like blog articles
+                           :base-directory ,(org2jekyll-input-directory)
+                           :base-extension "org\\|txt"
+                           :publishing-directory ,(org2jekyll-output-directory)
+                           :publishing-function org-html-publish-to-html
+                           :headline-levels 4
+                           :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
+                           :html-preamble t
+                           :recursive t
+                           :make-index t
+                           :html-extension "html"
+                           :body-only t)
+                          ("images"
+                           :base-directory ,(org2jekyll-input-directory "img")
+                           :base-extension "jpg\\|gif\\|png"
+                           :publishing-directory ,(org2jekyll-output-directory "img")
+                           :publishing-function org-publish-attachment
+                           :recursive t)
+                          ("js"
+                           :base-directory ,(org2jekyll-input-directory "js")
+                           :base-extension "js"
+                           :publishing-directory ,(org2jekyll-output-directory "js")
+                           :publishing-function org-publish-attachment
+                           :recursive t)
+                          ("css"
+                           :base-directory ,(org2jekyll-input-directory "css")
+                           :base-extension "css\\|el"
+                           :publishing-directory ,(org2jekyll-output-directory "css")
+                           :publishing-function org-publish-attachment
+                           :recursive t)
+                          ("web" :components ("images" "js" "css")))))
+#+end_src
+
+* Method to create draft
+
+#+begin_src emacs-lisp
+;; read filename from prompt
+(defun org2jekyll--read-filename ()
+  "Read the file name."
+  (read-string "Filename: "))
+
+(defun org2jekyll--init-buffer-metadata (&optional ignore-plist)
+  "Return an plist holding buffer metadata information collected from the user.
+Any non-nil property in IGNORE-PLIST will not be collected from the user, and
+will instead have its value omitted in the returned plist."
+  (-concat (unless (plist-get ignore-plist :author)
+	     (list :author org2jekyll-blog-author))
+	   (unless (plist-get ignore-plist :date)
+	     (list :date (org2jekyll-now)))
+	   (unless (plist-get ignore-plist :layout)
+	     (list :layout (org2jekyll--input-read "Layout: " org2jekyll-jekyll-layouts)))
+       (unless (plist-get ignore-plist :filename)
+         (list :filename (org2jekyll--read-filename)))
+	   (unless (plist-get ignore-plist :title)
+	     (list :title (org2jekyll--read-title)))
+	   (unless (plist-get ignore-plist :description)
+	     (list :description (org2jekyll--read-description)))
+	   (unless (plist-get ignore-plist :tags)
+	     (list :tags (org2jekyll--read-tags)))
+	   (unless (plist-get ignore-plist :categories)
+	     (list :categories (org2jekyll--read-categories)))))
+;; concat category, date string and filename
+;; for example: _notes/_posts/language/2023-02-19-filename.org
+(defun org2jekyll-create-draft ()
+  "Prompt the user for org metadata and then create a new Jekyll blog post.
+The specified title will be used as the name of the file."
+  (interactive)
+  (let* ((metadata (org2jekyll--init-buffer-metadata))
+	 (metadata-alist (org2jekyll--plist-to-alist metadata))
+     (category (plist-get metadata :categories))
+	 (filename (plist-get metadata :filename))
+     (date-str (-> (plist-get metadata :date)
+                   org2jekyll--convert-timestamp-to-yyyy-dd-mm))
+     (filename-full (concat category "/" date-str "-" filename))
+     (draft-file  (org2jekyll--draft-filename
+                   (org2jekyll-input-directory org2jekyll-jekyll-drafts-dir)
+                   filename-full))
+	 (add-to-file-options (org2jekyll--get-template-entries metadata-alist))
+	 (add-to-file-tuples (org2jekyll--alist-to-tuples add-to-file-options)))
+    (unless (file-exists-p draft-file)
+      (with-temp-file draft-file
+        (insert (org2jekyll-default-headers-template add-to-file-tuples) "\n\n")
+        (insert "* ")))
+    (find-file draft-file)))
+#+end_src
+
+* Publish
+
+#+begin_src emacs-lisp
+;; use .txt file ext as the temp file
+(defun org2jekyll--publish-post-org-file-with-metadata (org-metadata org-file)
+  "Publish as post with ORG-METADATA the ORG-FILE."
+  (let* ((project      (-> "layout"
+                           (assoc-default org-metadata)  ;; layout is the blog-project
+                           (assoc org-publish-project-alist)))
+         (file-cat    (->> (assoc-default "categories" org-metadata)
+                           (split-string)
+                           (last)
+                           (car)))
+         (temp-file (->> org-file
+                         (replace-regexp-in-string ".org$" ".txt"))))
+    (org2jekyll--publish-temp-file-then-cleanup org-file temp-file project)))
+
+;; change org to txt, as .txt is the temp file, will be removed.
+(defun org2jekyll-install-yaml-headers (original-file published-file)
+  "Read ORIGINAL-FILE metadata and install yaml header to PUBLISHED-FILE.
+Then delete the original-file which is intended as a temporary file.
+Only for org-mode file, for other files, it's a noop.
+This function is intended to be used as org-publish hook function."
+  (let ((original-file-ext (file-name-extension original-file))
+        (published-file-ext (file-name-extension published-file)))
+    ;; original-file is the temporary file generated which will be edited with
+    ;; jekyll's yaml headers
+
+    ;; careful about extensions: "post" -> org ; page -> org2jekyll
+    ;; other stuff are considered neither, so it's a noop
+    (when (and (or (string= "txt" original-file-ext) (string= "org2jekyll" original-file-ext))
+               (string= "html" published-file-ext))
+      (let ((yaml-headers (-> original-file
+                              org2jekyll-read-metadata
+                              org2jekyll--to-yaml-header)))
+        (with-temp-file published-file
+          (insert-file-contents published-file)
+          (goto-char (point-min))
+          (insert yaml-headers))))))
+#+end_src
+
+* Future plan
+
+- complete TAGS, CATEGORIES from existing jekyll project
