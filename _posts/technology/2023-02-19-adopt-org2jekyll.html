@@ -1,14 +1,20 @@
 ---
-date: 2023-02-19 18:48
-author: kimim
 layout: post
 title: Use org2jekyll to publish my blog
-excerpt: try to use org2jekyll to publish my blogs
-tags: 
-- emacs
-categories: 
-- technology
+tags: [emacs]
+categories: [technology]
 ---
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org014b915">1. Publish settings</a></li>
+<li><a href="#org4daf0a3">2. Method to create draft</a></li>
+<li><a href="#org00b63c5">3. Publish</a></li>
+<li><a href="#orgea2de35">4. Future plan</a></li>
+</ul>
+</div>
+</div>
 <p>
 I&rsquo;ve already created some org jekyll function to publish blogs for
 github jekyll. But there is a small issue that the org file should
@@ -21,8 +27,8 @@ orgmode files. So I reuse this extension with some modifications.
 </p>
 
 <div id="outline-container-org014b915" class="outline-2">
-<h2 id="org014b915">Publish settings</h2>
-<div class="outline-text-2" id="text-org014b915">
+<h2 id="org014b915"><span class="section-number-2">1.</span> Publish settings</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 My orgmode files are located in <code>&lt;jekyll-folder&gt;/_notes/_posts</code> and the
 exported HTML files are in <code>&lt;jekyll-folder&gt;/_posts</code>:
@@ -72,8 +78,8 @@ exported HTML files are in <code>&lt;jekyll-folder&gt;/_posts</code>:
 </div>
 
 <div id="outline-container-org4daf0a3" class="outline-2">
-<h2 id="org4daf0a3">Method to create draft</h2>
-<div class="outline-text-2" id="text-org4daf0a3">
+<h2 id="org4daf0a3"><span class="section-number-2">2.</span> Method to create draft</h2>
+<div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">simplify template</span>
 <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> org2jekyll-default-template-entries
@@ -143,8 +149,8 @@ exported HTML files are in <code>&lt;jekyll-folder&gt;/_posts</code>:
 </div>
 
 <div id="outline-container-org00b63c5" class="outline-2">
-<h2 id="org00b63c5">Publish</h2>
-<div class="outline-text-2" id="text-org00b63c5">
+<h2 id="org00b63c5"><span class="section-number-2">3.</span> Publish</h2>
+<div class="outline-text-2" id="text-3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">use .txt file ext as the temp file</span>
 <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">org2jekyll--publish-post-org-file-with-metadata</span> <span style="color: #7388d6;">(</span>org-metadata org-file<span style="color: #7388d6;">)</span>
@@ -214,8 +220,8 @@ exported HTML files are in <code>&lt;jekyll-folder&gt;/_posts</code>:
 </div>
 
 <div id="outline-container-orgea2de35" class="outline-2">
-<h2 id="orgea2de35">Future plan</h2>
-<div class="outline-text-2" id="text-orgea2de35">
+<h2 id="orgea2de35"><span class="section-number-2">4.</span> Future plan</h2>
+<div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>complete TAGS, CATEGORIES from existing jekyll project</li>
 <li>with more and more modification, it turns out that I should fork

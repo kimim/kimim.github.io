@@ -1,11 +1,5 @@
-#+STARTUP: showall
-#+STARTUP: hidestars
-#+OPTIONS: H:2 num:nil tags:t toc:nil timestamps:t
 #+LAYOUT: post
-#+AUTHOR: kimim
-#+DATE: 2023-02-19 Sun 18:48
 #+TITLE: Use org2jekyll to publish my blog
-#+DESCRIPTION: try to use org2jekyll to publish my blogs
 #+TAGS: emacs
 #+CATEGORIES: technology
 
