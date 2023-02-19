@@ -75,54 +75,68 @@ exported HTML files are in <code>&lt;jekyll-folder&gt;/_posts</code>:
 <h2 id="org4daf0a3">Method to create draft</h2>
 <div class="outline-text-2" id="text-org4daf0a3">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">read filename from prompt</span>
-<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">org2jekyll--read-filename</span> <span style="color: #7388d6;">()</span>
-  <span style="color: #2A00FF;">"Read the file name."</span>
-  <span style="color: #7388d6;">(</span>read-string <span style="color: #2A00FF;">"Filename: "</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">simplify template</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> org2jekyll-default-template-entries
+  '<span style="color: #7388d6;">(</span><span style="color: #909183;">(</span><span style="color: #2A00FF;">"layout"</span><span style="color: #909183;">)</span>
+    <span style="color: #909183;">(</span><span style="color: #2A00FF;">"author"</span><span style="color: #909183;">)</span>
+    <span style="color: #909183;">(</span><span style="color: #2A00FF;">"title"</span><span style="color: #909183;">)</span>
+    <span style="color: #909183;">(</span><span style="color: #2A00FF;">"tags"</span><span style="color: #909183;">)</span>
+    <span style="color: #909183;">(</span><span style="color: #2A00FF;">"categories"</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
 
-<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">org2jekyll--init-buffer-metadata</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">&amp;optional</span> ignore-plist<span style="color: #7388d6;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defconst</span> <span style="color: #000000;">org2jekyll-required-org-header-alist</span> '<span style="color: #7388d6;">(</span><span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:title</span>       . 'required<span style="color: #909183;">)</span>
+                                                 <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:date</span><span style="color: #909183;">)</span>
+                                                 <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:categories</span>  . 'required<span style="color: #909183;">)</span>
+                                                 <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:tags</span><span style="color: #909183;">)</span>
+                                                 <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:description</span><span style="color: #909183;">)</span>
+                                                 <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:author</span><span style="color: #909183;">)</span>
+                                                 <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:layout</span>      . 'required<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+
+<span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">read filename from prompt</span>
+<span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">org2jekyll--read-filename</span> <span style="color: #909183;">()</span>
+  <span style="color: #2A00FF;">"Read the file name."</span>
+  <span style="color: #909183;">(</span>read-string <span style="color: #2A00FF;">"Filename: "</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+
+<span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">org2jekyll--init-buffer-metadata</span> <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">&amp;optional</span> ignore-plist<span style="color: #909183;">)</span>
   <span style="color: #2A00FF;">"Return an plist holding buffer metadata information collected from the user.</span>
 <span style="color: #2A00FF;">Any non-nil property in IGNORE-PLIST will not be collected from the user, and</span>
 <span style="color: #2A00FF;">will instead have its value omitted in the returned plist."</span>
-  <span style="color: #7388d6;">(</span>-concat <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #709870;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:author</span><span style="color: #709870;">)</span>
-         <span style="color: #709870;">(</span>list <span style="color: #7F0055; font-weight: bold;">:author</span> org2jekyll-blog-author<span style="color: #709870;">)</span><span style="color: #909183;">)</span>
-       <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #709870;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:date</span><span style="color: #709870;">)</span>
-         <span style="color: #709870;">(</span>list <span style="color: #7F0055; font-weight: bold;">:date</span> <span style="color: #907373;">(</span>org2jekyll-now<span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
-       <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #709870;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:layout</span><span style="color: #709870;">)</span>
-         <span style="color: #709870;">(</span>list <span style="color: #7F0055; font-weight: bold;">:layout</span> <span style="color: #907373;">(</span>org2jekyll--input-read <span style="color: #2A00FF;">"Layout: "</span> org2jekyll-jekyll-layouts<span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
-       <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #709870;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:filename</span><span style="color: #709870;">)</span>
-         <span style="color: #709870;">(</span>list <span style="color: #7F0055; font-weight: bold;">:filename</span> <span style="color: #907373;">(</span>org2jekyll--read-filename<span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
-       <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #709870;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:title</span><span style="color: #709870;">)</span>
-         <span style="color: #709870;">(</span>list <span style="color: #7F0055; font-weight: bold;">:title</span> <span style="color: #907373;">(</span>org2jekyll--read-title<span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
-       <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #709870;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:description</span><span style="color: #709870;">)</span>
-         <span style="color: #709870;">(</span>list <span style="color: #7F0055; font-weight: bold;">:description</span> <span style="color: #907373;">(</span>org2jekyll--read-description<span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
-       <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #709870;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:tags</span><span style="color: #709870;">)</span>
-         <span style="color: #709870;">(</span>list <span style="color: #7F0055; font-weight: bold;">:tags</span> <span style="color: #907373;">(</span>org2jekyll--read-tags<span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
-       <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #709870;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:categories</span><span style="color: #709870;">)</span>
-         <span style="color: #709870;">(</span>list <span style="color: #7F0055; font-weight: bold;">:categories</span> <span style="color: #907373;">(</span>org2jekyll--read-categories<span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+  <span style="color: #909183;">(</span>-concat <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #907373;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:author</span><span style="color: #907373;">)</span>
+         <span style="color: #907373;">(</span>list <span style="color: #7F0055; font-weight: bold;">:author</span> org2jekyll-blog-author<span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+       <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">(unless (plist-get ignore-plist :date)</span>
+       <span style="color: #3F7F5F;">;;   </span><span style="color: #3F7F5F;">(list :date (org2jekyll-now)))</span>
+       <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #907373;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:layout</span><span style="color: #907373;">)</span>
+         <span style="color: #907373;">(</span>list <span style="color: #7F0055; font-weight: bold;">:layout</span> <span style="color: #6276ba;">(</span>org2jekyll--input-read <span style="color: #2A00FF;">"Layout: "</span> org2jekyll-jekyll-layouts<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+       <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #907373;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:filename</span><span style="color: #907373;">)</span>
+         <span style="color: #907373;">(</span>list <span style="color: #7F0055; font-weight: bold;">:filename</span> <span style="color: #6276ba;">(</span>org2jekyll--read-filename<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+       <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #907373;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:title</span><span style="color: #907373;">)</span>
+         <span style="color: #907373;">(</span>list <span style="color: #7F0055; font-weight: bold;">:title</span> <span style="color: #6276ba;">(</span>org2jekyll--read-title<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+       <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">(unless (plist-get ignore-plist :description)</span>
+       <span style="color: #3F7F5F;">;;   </span><span style="color: #3F7F5F;">(list :description (org2jekyll--read-description)))</span>
+       <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #907373;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:tags</span><span style="color: #907373;">)</span>
+         <span style="color: #907373;">(</span>list <span style="color: #7F0055; font-weight: bold;">:tags</span> <span style="color: #6276ba;">(</span>org2jekyll--read-tags<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+       <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #907373;">(</span>plist-get ignore-plist <span style="color: #7F0055; font-weight: bold;">:categories</span><span style="color: #907373;">)</span>
+         <span style="color: #907373;">(</span>list <span style="color: #7F0055; font-weight: bold;">:categories</span> <span style="color: #6276ba;">(</span>org2jekyll--read-categories<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+
 <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">concat category, date string and filename</span>
 <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">for example: _notes/_posts/language/2023-02-19-filename.org</span>
-<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">org2jekyll-create-draft</span> <span style="color: #7388d6;">()</span>
+<span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">org2jekyll-create-draft</span> <span style="color: #909183;">()</span>
   <span style="color: #2A00FF;">"Prompt the user for org metadata and then create a new Jekyll blog post.</span>
 <span style="color: #2A00FF;">The specified title will be used as the name of the file."</span>
-  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">interactive</span><span style="color: #7388d6;">)</span>
-  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">let*</span> <span style="color: #909183;">(</span><span style="color: #709870;">(</span>metadata <span style="color: #907373;">(</span>org2jekyll--init-buffer-metadata<span style="color: #907373;">)</span><span style="color: #709870;">)</span>
-     <span style="color: #709870;">(</span>metadata-alist <span style="color: #907373;">(</span>org2jekyll--plist-to-alist metadata<span style="color: #907373;">)</span><span style="color: #709870;">)</span>
-     <span style="color: #709870;">(</span>category <span style="color: #907373;">(</span>plist-get metadata <span style="color: #7F0055; font-weight: bold;">:categories</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
-     <span style="color: #709870;">(</span>filename <span style="color: #907373;">(</span>plist-get metadata <span style="color: #7F0055; font-weight: bold;">:filename</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
-     <span style="color: #709870;">(</span>date-str <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;</span> <span style="color: #6276ba;">(</span>plist-get metadata <span style="color: #7F0055; font-weight: bold;">:date</span><span style="color: #6276ba;">)</span>
-                   org2jekyll--convert-timestamp-to-yyyy-dd-mm<span style="color: #907373;">)</span><span style="color: #709870;">)</span>
-     <span style="color: #709870;">(</span>filename-full <span style="color: #907373;">(</span>concat category <span style="color: #2A00FF;">"/"</span> date-str <span style="color: #2A00FF;">"-"</span> filename<span style="color: #907373;">)</span><span style="color: #709870;">)</span>
-     <span style="color: #709870;">(</span>draft-file  <span style="color: #907373;">(</span>org2jekyll--draft-filename
-                   <span style="color: #6276ba;">(</span>org2jekyll-input-directory org2jekyll-jekyll-drafts-dir<span style="color: #6276ba;">)</span>
-                   filename-full<span style="color: #907373;">)</span><span style="color: #709870;">)</span>
-     <span style="color: #709870;">(</span>add-to-file-options <span style="color: #907373;">(</span>org2jekyll--get-template-entries metadata-alist<span style="color: #907373;">)</span><span style="color: #709870;">)</span>
-     <span style="color: #709870;">(</span>add-to-file-tuples <span style="color: #907373;">(</span>org2jekyll--alist-to-tuples add-to-file-options<span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
-    <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #709870;">(</span>file-exists-p draft-file<span style="color: #709870;">)</span>
-      <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">with-temp-file</span> draft-file
-        <span style="color: #907373;">(</span>insert <span style="color: #6276ba;">(</span>org2jekyll-default-headers-template add-to-file-tuples<span style="color: #6276ba;">)</span> <span style="color: #2A00FF;">"\n\n"</span><span style="color: #907373;">)</span>
-        <span style="color: #907373;">(</span>insert <span style="color: #2A00FF;">"* "</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
-    <span style="color: #909183;">(</span>find-file draft-file<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+  <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">interactive</span><span style="color: #909183;">)</span>
+  <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">let*</span> <span style="color: #709870;">(</span><span style="color: #907373;">(</span>metadata <span style="color: #6276ba;">(</span>org2jekyll--init-buffer-metadata<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span>
+     <span style="color: #907373;">(</span>metadata-alist <span style="color: #6276ba;">(</span>org2jekyll--plist-to-alist metadata<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span>
+     <span style="color: #907373;">(</span>category <span style="color: #6276ba;">(</span>plist-get metadata <span style="color: #7F0055; font-weight: bold;">:categories</span><span style="color: #6276ba;">)</span><span style="color: #907373;">)</span>
+     <span style="color: #907373;">(</span>filename <span style="color: #6276ba;">(</span>plist-get metadata <span style="color: #7F0055; font-weight: bold;">:filename</span><span style="color: #6276ba;">)</span><span style="color: #907373;">)</span>
+     <span style="color: #907373;">(</span>draft-file  <span style="color: #6276ba;">(</span>org2jekyll--draft-filename
+                   <span style="color: #2A00FF;">"~/kimim/_draft/"</span>
+                   filename<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span>
+     <span style="color: #907373;">(</span>add-to-file-options <span style="color: #6276ba;">(</span>org2jekyll--get-template-entries metadata-alist<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span>
+     <span style="color: #907373;">(</span>add-to-file-tuples <span style="color: #6276ba;">(</span>org2jekyll--alist-to-tuples add-to-file-options<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+    <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #907373;">(</span>file-exists-p draft-file<span style="color: #907373;">)</span>
+      <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">with-temp-file</span> draft-file
+        <span style="color: #6276ba;">(</span>insert <span style="color: #858580;">(</span>org2jekyll-default-headers-template add-to-file-tuples<span style="color: #858580;">)</span> <span style="color: #2A00FF;">"\n\n"</span><span style="color: #6276ba;">)</span>
+        <span style="color: #6276ba;">(</span>insert <span style="color: #2A00FF;">"* "</span><span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+    <span style="color: #709870;">(</span>find-file draft-file<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
 </pre>
 </div>
 </div>
@@ -138,10 +152,6 @@ exported HTML files are in <code>&lt;jekyll-folder&gt;/_posts</code>:
   <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">let*</span> <span style="color: #909183;">(</span><span style="color: #709870;">(</span>project      <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;</span> <span style="color: #2A00FF;">"layout"</span>
                            <span style="color: #6276ba;">(</span>assoc-default org-metadata<span style="color: #6276ba;">)</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">layout is the blog-project</span>
                            <span style="color: #6276ba;">(</span>assoc org-publish-project-alist<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
-         <span style="color: #709870;">(</span>file-cat    <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;&gt;</span> <span style="color: #6276ba;">(</span>assoc-default <span style="color: #2A00FF;">"categories"</span> org-metadata<span style="color: #6276ba;">)</span>
-                           <span style="color: #6276ba;">(</span>split-string<span style="color: #6276ba;">)</span>
-                           <span style="color: #6276ba;">(</span>last<span style="color: #6276ba;">)</span>
-                           <span style="color: #6276ba;">(</span>car<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
          <span style="color: #709870;">(</span>temp-file <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;&gt;</span> org-file
                          <span style="color: #6276ba;">(</span>replace-regexp-in-string <span style="color: #2A00FF;">".org$"</span> <span style="color: #2A00FF;">".txt"</span><span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
     <span style="color: #909183;">(</span>org2jekyll--publish-temp-file-then-cleanup org-file temp-file project<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
@@ -168,6 +178,36 @@ exported HTML files are in <code>&lt;jekyll-folder&gt;/_posts</code>:
           <span style="color: #6276ba;">(</span>insert-file-contents published-file<span style="color: #6276ba;">)</span>
           <span style="color: #6276ba;">(</span>goto-char <span style="color: #858580;">(</span>point-min<span style="color: #858580;">)</span><span style="color: #6276ba;">)</span>
           <span style="color: #6276ba;">(</span>insert yaml-headers<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">org2jekyll-publish-from-jekyll</span> <span style="color: #7388d6;">(</span>org-file<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">let*</span> <span style="color: #909183;">(</span><span style="color: #709870;">(</span>org-options <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">with-current-buffer</span> <span style="color: #6276ba;">(</span>current-buffer<span style="color: #6276ba;">)</span> <span style="color: #6276ba;">(</span>org2jekyll-get-options-from-buffer<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+         <span style="color: #709870;">(</span>publish-fn <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;</span> <span style="color: #6276ba;">(</span>plist-get org-options <span style="color: #7F0055; font-weight: bold;">:layout</span><span style="color: #6276ba;">)</span>
+                         org2jekyll-post-p
+                         <span style="color: #6276ba;">(</span><span style="color: #7F0055; font-weight: bold;">if</span> 'org2jekyll-publish-post
+                             'org2jekyll-publish-page<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+         <span style="color: #709870;">(</span>final-message <span style="color: #907373;">(</span>funcall publish-fn org-file<span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
+    <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">progn</span>
+      <span style="color: #709870;">(</span>org2jekyll-publish-web-project<span style="color: #709870;">)</span>
+      <span style="color: #709870;">(</span>org2jekyll-message final-message<span style="color: #709870;">)</span>
+      <span style="color: #709870;">(</span>magit-status-setup-buffer<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">org2jekyll-publish</span> <span style="color: #7388d6;">()</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">interactive</span><span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span>load-theme 'kimim-light t<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">let*</span> <span style="color: #909183;">(</span><span style="color: #709870;">(</span>buffer <span style="color: #907373;">(</span>current-buffer<span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+         <span style="color: #709870;">(</span>org-file <span style="color: #907373;">(</span>buffer-file-name <span style="color: #6276ba;">(</span>current-buffer<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+         <span style="color: #709870;">(</span>filepath <span style="color: #907373;">(</span>file-name-directory org-file<span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
+    <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #709870;">(</span>string-prefix-p <span style="color: #907373;">(</span>file-truename org2jekyll-source-directory<span style="color: #907373;">)</span>
+                         filepath<span style="color: #709870;">)</span>
+        <span style="color: #709870;">(</span>org2jekyll-publish-from-jekyll org-file<span style="color: #709870;">)</span>
+        <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">let*</span> <span style="color: #907373;">(</span><span style="color: #6276ba;">(</span>filename <span style="color: #858580;">(</span>file-name-nondirectory org-file<span style="color: #858580;">)</span><span style="color: #6276ba;">)</span>
+               <span style="color: #6276ba;">(</span>movefile <span style="color: #858580;">(</span>concat
+                          org2jekyll-source-directory <span style="color: #2A00FF;">"/"</span>
+                          <span style="color: #80a880;">(</span>plist-get <span style="color: #887070;">(</span>org2jekyll-get-options-from-buffer<span style="color: #887070;">)</span> <span style="color: #7F0055; font-weight: bold;">:categories</span><span style="color: #80a880;">)</span> <span style="color: #2A00FF;">"/"</span>
+                          <span style="color: #80a880;">(</span>format-time-string <span style="color: #2A00FF;">"%Y-%m-%d-"</span><span style="color: #80a880;">)</span> filename<span style="color: #858580;">)</span><span style="color: #6276ba;">)</span>
+               <span style="color: #6276ba;">(</span>_ <span style="color: #858580;">(</span>rename-file buffer-file-name movefile<span style="color: #858580;">)</span><span style="color: #6276ba;">)</span>
+               <span style="color: #6276ba;">(</span>_ <span style="color: #858580;">(</span>switch-to-buffer <span style="color: #80a880;">(</span>find-file-noselect movefile<span style="color: #80a880;">)</span><span style="color: #858580;">)</span><span style="color: #6276ba;">)</span><span style="color: #907373;">)</span>
+          <span style="color: #907373;">(</span>org2jekyll-publish-from-jekyll org-file<span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
 </pre>
 </div>
 </div>
@@ -178,6 +218,8 @@ exported HTML files are in <code>&lt;jekyll-folder&gt;/_posts</code>:
 <div class="outline-text-2" id="text-orgea2de35">
 <ul class="org-ul">
 <li>complete TAGS, CATEGORIES from existing jekyll project</li>
+<li>with more and more modification, it turns out that I should fork
+org2jekyll now</li>
 </ul>
 </div>
 </div>

@@ -64,6 +64,22 @@ exported HTML files are in ~<jekyll-folder>/_posts~:
 * Method to create draft
 
 #+begin_src emacs-lisp
+;; simplify template
+(setq org2jekyll-default-template-entries
+  '(("layout")
+    ("author")
+    ("title")
+    ("tags")
+    ("categories")))
+
+(defconst org2jekyll-required-org-header-alist '((:title       . 'required)
+                                                 (:date)
+                                                 (:categories  . 'required)
+                                                 (:tags)
+                                                 (:description)
+                                                 (:author)
+                                                 (:layout      . 'required))
+
 ;; read filename from prompt
 (defun org2jekyll--read-filename ()
   "Read the file name."
@@ -75,20 +91,21 @@ Any non-nil property in IGNORE-PLIST will not be collected from the user, and
 will instead have its value omitted in the returned plist."
   (-concat (unless (plist-get ignore-plist :author)
 	     (list :author org2jekyll-blog-author))
-	   (unless (plist-get ignore-plist :date)
-	     (list :date (org2jekyll-now)))
+	   ;; (unless (plist-get ignore-plist :date)
+	   ;;   (list :date (org2jekyll-now)))
 	   (unless (plist-get ignore-plist :layout)
 	     (list :layout (org2jekyll--input-read "Layout: " org2jekyll-jekyll-layouts)))
        (unless (plist-get ignore-plist :filename)
          (list :filename (org2jekyll--read-filename)))
 	   (unless (plist-get ignore-plist :title)
 	     (list :title (org2jekyll--read-title)))
-	   (unless (plist-get ignore-plist :description)
-	     (list :description (org2jekyll--read-description)))
+	   ;; (unless (plist-get ignore-plist :description)
+	   ;;   (list :description (org2jekyll--read-description)))
 	   (unless (plist-get ignore-plist :tags)
 	     (list :tags (org2jekyll--read-tags)))
 	   (unless (plist-get ignore-plist :categories)
 	     (list :categories (org2jekyll--read-categories)))))
+
 ;; concat category, date string and filename
 ;; for example: _notes/_posts/language/2023-02-19-filename.org
 (defun org2jekyll-create-draft ()
@@ -99,12 +116,9 @@ The specified title will be used as the name of the file."
 	 (metadata-alist (org2jekyll--plist-to-alist metadata))
      (category (plist-get metadata :categories))
 	 (filename (plist-get metadata :filename))
-     (date-str (-> (plist-get metadata :date)
-                   org2jekyll--convert-timestamp-to-yyyy-dd-mm))
-     (filename-full (concat category "/" date-str "-" filename))
      (draft-file  (org2jekyll--draft-filename
-                   (org2jekyll-input-directory org2jekyll-jekyll-drafts-dir)
-                   filename-full))
+                   "~/kimim/_draft/"
+                   filename))
 	 (add-to-file-options (org2jekyll--get-template-entries metadata-alist))
 	 (add-to-file-tuples (org2jekyll--alist-to-tuples add-to-file-options)))
     (unless (file-exists-p draft-file)
@@ -123,10 +137,6 @@ The specified title will be used as the name of the file."
   (let* ((project      (-> "layout"
                            (assoc-default org-metadata)  ;; layout is the blog-project
                            (assoc org-publish-project-alist)))
-         (file-cat    (->> (assoc-default "categories" org-metadata)
-                           (split-string)
-                           (last)
-                           (car)))
          (temp-file (->> org-file
                          (replace-regexp-in-string ".org$" ".txt"))))
     (org2jekyll--publish-temp-file-then-cleanup org-file temp-file project)))
@@ -153,8 +163,40 @@ This function is intended to be used as org-publish hook function."
           (insert-file-contents published-file)
           (goto-char (point-min))
           (insert yaml-headers))))))
+
+(defun org2jekyll-publish-from-jekyll (org-file)
+  (let* ((org-options (with-current-buffer (current-buffer) (org2jekyll-get-options-from-buffer)))
+         (publish-fn (-> (plist-get org-options :layout)
+                         org2jekyll-post-p
+                         (if 'org2jekyll-publish-post
+                             'org2jekyll-publish-page)))
+         (final-message (funcall publish-fn org-file)))
+    (progn
+      (org2jekyll-publish-web-project)
+      (org2jekyll-message final-message)
+      (magit-status-setup-buffer))))
+
+(defun org2jekyll-publish ()
+  (interactive)
+  (load-theme 'kimim-light t)
+  (let* ((buffer (current-buffer))
+         (org-file (buffer-file-name (current-buffer)))
+         (filepath (file-name-directory org-file)))
+    (if (string-prefix-p (file-truename org2jekyll-source-directory)
+                         filepath)
+        (org2jekyll-publish-from-jekyll org-file)
+        (let* ((filename (file-name-nondirectory org-file))
+               (movefile (concat
+                          org2jekyll-source-directory "/"
+                          (plist-get (org2jekyll-get-options-from-buffer) :categories) "/"
+                          (format-time-string "%Y-%m-%d-") filename))
+               (_ (rename-file buffer-file-name movefile))
+               (_ (switch-to-buffer (find-file-noselect movefile))))
+          (org2jekyll-publish-from-jekyll org-file)))))
 #+end_src
 
 * Future plan
 
 - complete TAGS, CATEGORIES from existing jekyll project
+- with more and more modification, it turns out that I should fork
+  org2jekyll now
