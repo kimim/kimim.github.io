@@ -1,0 +1,407 @@
+---
+layout: post
+title: 基于区块链智能合约的服务等级协议
+categories: [technology]
+tags: [blockchain]
+---
+
+<p>
+我们应用物联网的云服务的时候，会考量其服务等级协议 SLA。服务等级协议描述的是双方的一种约定，是一种服务可用性的指标。服务可用性可以用以下公式计算：
+</p>
+
+<p>
+\(\textit{SLA} = \frac{\sum_{i=i}^n V}{\sum_{i=1}^n V + \sum_{i=i}^n F} \times 100\%\)
+</p>
+
+<p>
+其中 V 表示有效服务，F 表示无效服务。
+</p>
+
+<p>
+但是，目前 SLA 的结果通常由用户来提供证明。服务提供方和用户之间又会存在猜疑，有时候还会需要上升到法律仲裁。
+</p>
+
+<p>
+那么，具有不可篡改（immutability）、分布式、不可抵赖的区块链技术是否能解决这个问题呢？
+</p>
+
+<p>
+是的，英国纽卡斯尔大学和瑞典吕勒奥科技大学的研究人员就提出了一个基于分布式区块链智能合约的 SLA 方案。
+</p>
+
+
+<div id="orge268f03" class="figure">
+<p><div align="center"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   xml:space="preserve"
+   width="560"
+   height="796.15997"
+   viewBox="0 0 560 796.15997"
+   sodipodi:docname="SLA-smart-contract.pdf"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs6"><clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath16"><path
+         d="M 0,0 H 1749.9999 V 2487.1572 H 0 Z"
+         clip-rule="evenodd"
+         id="path14" /></clipPath><clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath30"><path
+         d="M 0,0 H 1749.9999 V 2481.1643 H 0 Z"
+         clip-rule="evenodd"
+         id="path28" /></clipPath></defs><sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0" /><g
+     id="g8"
+     inkscape:groupmode="layer"
+     inkscape:label="SLA-smart-contract"
+     transform="matrix(0.31999998,0,0,0.31999998,0,1.9904e-5)"><g
+       id="g10"><g
+         id="g12"
+         clip-path="url(#clipPath16)"><g
+           id="g18"
+           transform="scale(2.9965751)"><path
+             d="M 0,0 H 584 V 830 H 0 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path20" /><path
+             d="M 0,0 H 584 V 828 H 0 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path22" /></g></g></g><g
+       id="g24"><g
+         id="g26"
+         clip-path="url(#clipPath30)"><g
+           id="g32"
+           transform="matrix(2.9965751,0,0,2.9965751,1.4982876,1.4982876)"><path
+             d="m 115,388 h 52.13"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path34" /><path
+             d="m 173.88,388 -9,4.5 2.25,-4.5 -2.25,-4.5 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path36" /><path
+             d="m 173.88,388 -9,4.5 2.25,-4.5 -2.25,-4.5 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path38" /><path
+             d="M 100,358 V 251.87"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path40" /><path
+             d="m 100,245.12 4.5,9 -4.5,-2.25 -4.5,2.25 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path42" /><path
+             d="m 100,245.12 4.5,9 -4.5,-2.25 -4.5,2.25 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path44" /><path
+             d="m 107.5,365.5 c 0,0.49246 -0.048,0.98016 -0.14412,1.46317 -0.0961,0.483 -0.23834,0.95196 -0.42679,1.40692 -0.18846,0.45498 -0.41948,0.8872 -0.69308,1.29666 -0.2736,0.40945 -0.5845,0.7883 -0.93272,1.13653 -0.34822,0.34824 -0.72706,0.65912 -1.13653,0.93271 -0.40946,0.27359 -0.84167,0.50464 -1.29664,0.69309 -0.45497,0.18844 -0.92395,0.33072 -1.40695,0.42679 -0.48299,0.0961 -0.97071,0.1441 -1.46317,0.14413 -0.492462,-3e-5 -0.980194,-0.0481 -1.463188,-0.14413 -0.482994,-0.0961 -0.951981,-0.23835 -1.406952,-0.42682 -0.454971,-0.18845 -0.887192,-0.41947 -1.296654,-0.69306 -0.409462,-0.27359 -0.788299,-0.58447 -1.136513,-0.93271 -0.348228,-0.34823 -0.659133,-0.72708 -0.932724,-1.13653 -0.273597,-0.40946 -0.504623,-0.84168 -0.693077,-1.29666 -0.188453,-0.45496 -0.330719,-0.92392 -0.426788,-1.40692 C 92.548027,366.48016 92.499992,365.99246 92.5,365.5 c -8e-6,-0.49246 0.04803,-0.98016 0.144096,-1.46317 0.09608,-0.483 0.238343,-0.95199 0.426796,-1.40698 0.188454,-0.45498 0.41948,-0.8872 0.69307,-1.29669 0.273598,-0.40945 0.584503,-0.78827 0.932731,-1.13647 0.348214,-0.34824 0.727051,-0.65915 1.136513,-0.93274 0.40947,-0.27359 0.84169,-0.50464 1.296662,-0.69309 0.454963,-0.18844 0.92395,-0.33069 1.406944,-0.42673 C 99.019806,358.04803 99.507538,358 100,358 c 0.49246,0 0.98018,0.048 1.46317,0.14413 0.483,0.096 0.95198,0.23829 1.40695,0.42673 0.45497,0.18845 0.88718,0.41947 1.29664,0.69306 0.40947,0.27359 0.78831,0.58453 1.13653,0.93277 0.34822,0.3482 0.65912,0.72705 0.93272,1.13653 0.2736,0.40946 0.50462,0.84165 0.69308,1.29663 0.18845,0.45499 0.33071,0.92398 0.42679,1.40698 0.0961,0.48301 0.14412,0.97071 0.14412,1.46317 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path46" /><path
+             d="m 107.5,365.5 c 0,0.49246 -0.048,0.98016 -0.14412,1.46317 -0.0961,0.483 -0.23834,0.95196 -0.42679,1.40692 -0.18846,0.45498 -0.41948,0.8872 -0.69308,1.29666 -0.2736,0.40945 -0.5845,0.7883 -0.93272,1.13653 -0.34822,0.34824 -0.72706,0.65912 -1.13653,0.93271 -0.40946,0.27359 -0.84167,0.50464 -1.29664,0.69309 -0.45497,0.18844 -0.92395,0.33072 -1.40695,0.42679 -0.48299,0.0961 -0.97071,0.1441 -1.46317,0.14413 -0.492462,-3e-5 -0.980194,-0.0481 -1.463188,-0.14413 -0.482994,-0.0961 -0.951981,-0.23835 -1.406952,-0.42682 -0.454971,-0.18845 -0.887192,-0.41947 -1.296654,-0.69306 -0.409462,-0.27359 -0.788299,-0.58447 -1.136513,-0.93271 -0.348228,-0.34823 -0.659133,-0.72708 -0.932724,-1.13653 -0.273597,-0.40946 -0.504623,-0.84168 -0.693077,-1.29666 -0.188453,-0.45496 -0.330719,-0.92392 -0.426788,-1.40692 C 92.548027,366.48016 92.499992,365.99246 92.5,365.5 c -8e-6,-0.49246 0.04803,-0.98016 0.144096,-1.46317 0.09608,-0.483 0.238343,-0.95199 0.426796,-1.40698 0.188454,-0.45498 0.41948,-0.8872 0.69307,-1.29669 0.273598,-0.40945 0.584503,-0.78827 0.932731,-1.13647 0.348214,-0.34824 0.727051,-0.65915 1.136513,-0.93274 0.40947,-0.27359 0.84169,-0.50464 1.296662,-0.69309 0.454963,-0.18844 0.92395,-0.33069 1.406944,-0.42673 C 99.019806,358.04803 99.507538,358 100,358 c 0.49246,0 0.98018,0.048 1.46317,0.14413 0.483,0.096 0.95198,0.23829 1.40695,0.42673 0.45497,0.18845 0.88718,0.41947 1.29664,0.69306 0.40947,0.27359 0.78831,0.58453 1.13653,0.93277 0.34822,0.3482 0.65912,0.72705 0.93272,1.13653 0.2736,0.40946 0.50462,0.84165 0.69308,1.29663 0.18845,0.45499 0.33071,0.92398 0.42679,1.40698 0.0961,0.48301 0.14412,0.97071 0.14412,1.46317 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path48" /><path
+             d="m 100,373 v 25 m 0,-20 H 85 m 15,0 h 15 m -15,20 -15,20 m 15,-20 15,20"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path50" /></g><g
+           id="g52"
+           transform="scale(2.9965751)"><text
+             transform="translate(68.5,440)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text56"><tspan
+               x="0 16 32 48"
+               y="0"
+               sodipodi:role="line"
+               id="tspan54">云服务商</tspan></text></g><g
+           id="g58"
+           transform="matrix(2.9965751,0,0,2.9965751,1.4982876,1.4982876)"><path
+             d="M 115,503 H 215 V 445.87"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path60" /><path
+             d="m 215,439.12 4.5,9 -4.5,-2.25 -4.5,2.25 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path62" /><path
+             d="m 215,439.12 4.5,9 -4.5,-2.25 -4.5,2.25 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path64" /><path
+             d="m 107.5,480.5 c 0,0.49243 -0.048,0.98013 -0.14412,1.4631 -0.0961,0.48298 -0.23834,0.95194 -0.42679,1.40693 -0.18846,0.45498 -0.41948,0.8872 -0.69308,1.29672 -0.2736,0.40945 -0.5845,0.7883 -0.93272,1.13653 -0.34822,0.34824 -0.72706,0.65912 -1.13653,0.93271 -0.40946,0.27359 -0.84167,0.50461 -1.29664,0.69309 -0.45497,0.18844 -0.92395,0.33072 -1.40695,0.42682 -0.48299,0.096 -0.97071,0.14407 -1.46317,0.1441 -0.492462,-3e-5 -0.980194,-0.0481 -1.463188,-0.14413 -0.482994,-0.0961 -0.951981,-0.23835 -1.406952,-0.42679 -0.454971,-0.18848 -0.887192,-0.4195 -1.296654,-0.69309 -0.409462,-0.27359 -0.788299,-0.58447 -1.136513,-0.93271 -0.348228,-0.34823 -0.659133,-0.72708 -0.932724,-1.13653 -0.273597,-0.40952 -0.504623,-0.84174 -0.693077,-1.29669 -0.188453,-0.45499 -0.330719,-0.92398 -0.426788,-1.40696 -0.09608,-0.48297 -0.144112,-0.97067 -0.144104,-1.4631 -8e-6,-0.49249 0.04803,-0.98026 0.144096,-1.46326 0.09608,-0.483 0.238343,-0.95196 0.426796,-1.40695 0.188454,-0.45499 0.41948,-0.88721 0.69307,-1.29666 0.273598,-0.40945 0.584503,-0.78827 0.932731,-1.13647 0.348214,-0.34824 0.727051,-0.65912 1.136513,-0.93271 0.40947,-0.27362 0.84169,-0.50464 1.296662,-0.69309 0.454963,-0.18844 0.92395,-0.33072 1.406944,-0.42676 C 99.019806,473.04803 99.507538,473 100,473 c 0.49246,0 0.98018,0.048 1.46317,0.14407 0.483,0.0961 0.95198,0.23832 1.40695,0.42676 0.45497,0.18845 0.88718,0.41947 1.29664,0.69309 0.40947,0.27359 0.78831,0.5845 1.13653,0.93274 0.34822,0.3482 0.65912,0.72702 0.93272,1.13647 0.2736,0.40945 0.50462,0.84171 0.69308,1.29669 0.18845,0.45499 0.33071,0.92395 0.42679,1.40695 0.0961,0.48301 0.14412,0.97074 0.14412,1.46323 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path66" /><path
+             d="m 107.5,480.5 c 0,0.49243 -0.048,0.98013 -0.14412,1.4631 -0.0961,0.48298 -0.23834,0.95194 -0.42679,1.40693 -0.18846,0.45498 -0.41948,0.8872 -0.69308,1.29672 -0.2736,0.40945 -0.5845,0.7883 -0.93272,1.13653 -0.34822,0.34824 -0.72706,0.65912 -1.13653,0.93271 -0.40946,0.27359 -0.84167,0.50461 -1.29664,0.69309 -0.45497,0.18844 -0.92395,0.33072 -1.40695,0.42682 -0.48299,0.096 -0.97071,0.14407 -1.46317,0.1441 -0.492462,-3e-5 -0.980194,-0.0481 -1.463188,-0.14413 -0.482994,-0.0961 -0.951981,-0.23835 -1.406952,-0.42679 -0.454971,-0.18848 -0.887192,-0.4195 -1.296654,-0.69309 -0.409462,-0.27359 -0.788299,-0.58447 -1.136513,-0.93271 -0.348228,-0.34823 -0.659133,-0.72708 -0.932724,-1.13653 -0.273597,-0.40952 -0.504623,-0.84174 -0.693077,-1.29669 -0.188453,-0.45499 -0.330719,-0.92398 -0.426788,-1.40696 -0.09608,-0.48297 -0.144112,-0.97067 -0.144104,-1.4631 -8e-6,-0.49249 0.04803,-0.98026 0.144096,-1.46326 0.09608,-0.483 0.238343,-0.95196 0.426796,-1.40695 0.188454,-0.45499 0.41948,-0.88721 0.69307,-1.29666 0.273598,-0.40945 0.584503,-0.78827 0.932731,-1.13647 0.348214,-0.34824 0.727051,-0.65912 1.136513,-0.93271 0.40947,-0.27362 0.84169,-0.50464 1.296662,-0.69309 0.454963,-0.18844 0.92395,-0.33072 1.406944,-0.42676 C 99.019806,473.04803 99.507538,473 100,473 c 0.49246,0 0.98018,0.048 1.46317,0.14407 0.483,0.0961 0.95198,0.23832 1.40695,0.42676 0.45497,0.18845 0.88718,0.41947 1.29664,0.69309 0.40947,0.27359 0.78831,0.5845 1.13653,0.93274 0.34822,0.3482 0.65912,0.72702 0.93272,1.13647 0.2736,0.40945 0.50462,0.84171 0.69308,1.29669 0.18845,0.45499 0.33071,0.92395 0.42679,1.40695 0.0961,0.48301 0.14412,0.97074 0.14412,1.46323 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path68" /><path
+             d="m 100,488 v 25 m 0,-20 H 85 m 15,0 h 15 m -15,20 -15,20 m 15,-20 15,20"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path70" /></g><g
+           id="g72"
+           transform="scale(2.9965751)"><text
+             transform="translate(84.5,555)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text76"><tspan
+               x="0 16"
+               y="0"
+               sodipodi:role="line"
+               id="tspan74">用户</tspan></text></g><g
+           id="g78"
+           transform="matrix(2.9965751,0,0,2.9965751,1.4982876,1.4982876)"><path
+             d="M 215,338 V 234 h 72.13"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path80" /><path
+             d="m 293.88,234 -9,4.5 2.25,-4.5 -2.25,-4.5 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path82" /><path
+             d="m 293.88,234 -9,4.5 2.25,-4.5 -2.25,-4.5 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path84" /></g><g
+           id="g86"
+           transform="scale(2.9965751)"><path
+             d="m 180,239 h 72 v 15 h -72 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path88" /><text
+             transform="translate(179.5,250)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text92"><tspan
+               x="0 12 24 36 48 60"
+               y="0"
+               sodipodi:role="line"
+               id="tspan90">部署智能合约</tspan></text></g><g
+           id="g94"
+           transform="matrix(2.9965751,0,0,2.9965751,1.4982876,1.4982876)"><path
+             d="m 175,338 h 50 l 30,30 v 70 h -80 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path96" /><path
+             d="m 175,338 h 50 l 30,30 v 70 h -80 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path98" /><path
+             d="m 225,338 v 30 h 30 z"
+             style="fill:#000000;fill-opacity:0.051;fill-rule:nonzero;stroke:none"
+             id="path100" /><path
+             d="m 225,338 v 30 h 30"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path102" /></g><g
+           id="g104"
+           transform="scale(2.9965751)"><text
+             transform="translate(183.875,394)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:ArialMT;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text108"><tspan
+               x="0 10.671875 19.570312"
+               y="0"
+               sodipodi:role="line"
+               id="tspan106">SLA</tspan></text><text
+             transform="translate(214.11719,394)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text112"><tspan
+               x="0 16"
+               y="0"
+               sodipodi:role="line"
+               id="tspan110">协议</tspan></text></g><g
+           id="g114"
+           transform="matrix(2.9965751,0,0,2.9965751,1.4982876,1.4982876)"><path
+             d="m 355,264 c 0,0 0,31.33334 0,94"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path116" /><path
+             d="m 415,262 c 0,0 10,4.66666 30,14"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path118" /><path
+             d="m 295,204 h 120 v 60 H 295 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path120" /><path
+             d="m 295,204 h 120 v 60 H 295 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path122" /></g><g
+           id="g124"
+           transform="scale(2.9965751)"><text
+             transform="translate(315,240)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text128"><tspan
+               x="0 16 32 48 64"
+               y="0"
+               sodipodi:role="line"
+               id="tspan126">区块链节点</tspan></text></g><g
+           id="g130"
+           transform="matrix(2.9965751,0,0,2.9965751,1.4982876,1.4982876)"><path
+             d="m 355,418 c 0,0 0,32 0,96"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path132" /><path
+             d="m 408.57001,358 c 0,0 14.28665,-8 42.85998,-24"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path134" /><path
+             d="m 415,417.79999 c 0,0 11,5.46667 33,16.40002"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path136" /><path
+             d="m 295,358 h 120 v 60 H 295 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path138" /><path
+             d="m 295,358 h 120 v 60 H 295 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path140" /></g><g
+           id="g142"
+           transform="scale(2.9965751)"><text
+             transform="translate(315,394)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text146"><tspan
+               x="0 16 32 48 64"
+               y="0"
+               sodipodi:role="line"
+               id="tspan144">区块链节点</tspan></text></g><g
+           id="g148"
+           transform="matrix(2.9965751,0,0,2.9965751,1.4982876,1.4982876)"><path
+             d="m 412.38,514 c 0,0 12.75,-6.66666 38.25,-20"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path150" /><path
+             d="m 295,514 h 120 v 60 H 295 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path152" /><path
+             d="m 295,514 h 120 v 60 H 295 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path154" /></g><g
+           id="g156"
+           transform="scale(2.9965751)"><text
+             transform="translate(315,550)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text160"><tspan
+               x="0 16 32 48 64"
+               y="0"
+               sodipodi:role="line"
+               id="tspan158">区块链节点</tspan></text></g><g
+           id="g162"
+           transform="matrix(2.9965751,0,0,2.9965751,1.4982876,1.4982876)"><path
+             d="m 505.56,334 c 0,0 0.62668,33.33331 1.88,100"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path164" /><path
+             d="m 486.25,334 c 0,0 -37.5,60 -112.5,180"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path166" /><path
+             d="m 445,274 h 120 v 60 H 445 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path168" /><path
+             d="m 445,274 h 120 v 60 H 445 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path170" /></g><g
+           id="g172"
+           transform="scale(2.9965751)"><text
+             transform="translate(465,310)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text176"><tspan
+               x="0 16 32 48 64"
+               y="0"
+               sodipodi:role="line"
+               id="tspan174">区块链节点</tspan></text></g><g
+           id="g178"
+           transform="matrix(2.9965751,0,0,2.9965751,1.4982876,1.4982876)"><path
+             d="m 488.04001,434 c 0,0 -37.69333,-56.66666 -113.08002,-170"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path180" /><path
+             d="m 448,434 h 120 v 60 H 448 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path182" /><path
+             d="m 448,434 h 120 v 60 H 448 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path184" /></g><g
+           id="g186"
+           transform="scale(2.9965751)"><text
+             transform="translate(468,470)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text190"><tspan
+               x="0 16 32 48 64"
+               y="0"
+               sodipodi:role="line"
+               id="tspan188">区块链节点</tspan></text></g><g
+           id="g192"
+           transform="matrix(2.9965751,0,0,2.9965751,1.4982876,1.4982876)"><path
+             d="M 70,184 C 46,184 40,204 59.200001,208 40,216.8 61.599998,236 77.199997,228 88,244 124,244 136,228 c 24,0 24,-16 9,-24 15,-16 -9,-32 -30,-24 -15,-12 -39,-12 -45,4 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path194" /><path
+             d="M 70,184 C 46,184 40,204 59.200001,208 40,216.8 61.599998,236 77.199997,228 88,244 124,244 136,228 c 24,0 24,-16 9,-24 15,-16 -9,-32 -30,-24 -15,-12 -39,-12 -45,4 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path196" /></g><g
+           id="g198"
+           transform="scale(2.9965751)"><text
+             transform="translate(76,210)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text202"><tspan
+               x="0 16 32"
+               y="0"
+               sodipodi:role="line"
+               id="tspan200">云服务</tspan></text></g><g
+           id="g204"
+           transform="matrix(2.9965751,0,0,2.9965751,1.4982876,1.4982876)"><path
+             d="M 35,634 H 15 V 196 h 25.529999"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path206" /><path
+             d="m 47.279999,196 -9,4.5 2.25,-4.5 -2.25,-4.5 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path208" /><path
+             d="m 47.279999,196 -9,4.5 2.25,-4.5 -2.25,-4.5 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path210" /><path
+             d="M 155,634 H 355 V 581.87"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path212" /><path
+             d="m 355,575.12 4.5,9 -4.5,-2.25 -4.5,2.25 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path214" /><path
+             d="m 355,575.12 4.5,9 -4.5,-2.25 -4.5,2.25 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path216" /></g><g
+           id="g218"
+           transform="scale(2.9965751)"><path
+             d="m 250,627 h 72 v 15 h -72 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path220" /><text
+             transform="translate(249.5,638)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text224"><tspan
+               x="0 12 24 36 48 60"
+               y="0"
+               sodipodi:role="line"
+               id="tspan222">调用智能合约</tspan></text></g><g
+           id="g226"
+           transform="matrix(2.9965751,0,0,2.9965751,1.4982876,1.4982876)"><path
+             d="m 35,604 h 120 v 60 H 35 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path228" /><path
+             d="m 35,604 h 120 v 60 H 35 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path230" /></g><g
+           id="g232"
+           transform="scale(2.9965751)"><text
+             transform="translate(63.875,630)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:Arial;-inkscape-font-specification:ArialMT;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text236"><tspan
+               x="0 10.671875 19.570312"
+               y="0"
+               sodipodi:role="line"
+               id="tspan234">SLA</tspan></text><text
+             transform="translate(94.117188,630)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text240"><tspan
+               x="0 16"
+               y="0"
+               sodipodi:role="line"
+               id="tspan238">监控</tspan></text><text
+             transform="translate(55,650)"
+             style="font-variant:normal;font-weight:normal;font-size:16px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text244"><tspan
+               x="0 16 32 48 64"
+               y="0"
+               sodipodi:role="line"
+               id="tspan242">物联网设备</tspan></text></g></g></g></g></svg>
+</div>
+</p>
+</div>
+
+<p>
+云服务商和用户签订 SLA 协议，并部署到联盟区块链 Hyperledger Fabric 上。物联网设备通过 MQTT Broker 发送消息的时候，监控消息是否发送成功，并在区块链账本记录有效请求和失败请求数据。等到核算日期，计算失败率。如果消息发送失败率出发 SLA 惩罚条件，触发智能合约执行。
+</p>
+
+<p>
+但是区块链的执行速度还不能满足物联网大量数据通信的要求，论文作者也提出，下一工作方向是调研可行的改进方法。
+</p>
