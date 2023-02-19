@@ -61,17 +61,13 @@ exported HTML files are in ~<jekyll-folder>/_posts~:
 ;; simplify template
 (setq org2jekyll-default-template-entries
   '(("layout")
-    ("author")
     ("title")
     ("tags")
     ("categories")))
 
 (defconst org2jekyll-required-org-header-alist '((:title       . 'required)
-                                                 (:date)
                                                  (:categories  . 'required)
                                                  (:tags)
-                                                 (:description)
-                                                 (:author)
                                                  (:layout      . 'required))
 
 ;; read filename from prompt
@@ -134,6 +130,16 @@ The specified title will be used as the name of the file."
          (temp-file (->> org-file
                          (replace-regexp-in-string ".org$" ".txt"))))
     (org2jekyll--publish-temp-file-then-cleanup org-file temp-file project)))
+
+(defun org2jekyll--space-separated-values-to-yaml (str)
+  "Transform a STR of space separated values entries into yaml entries."
+  (concat "["
+          (->> (if str str "")
+               (s-split " ")
+               (--filter (unless (equal it "") it))
+               (--map (format  "%s" it))
+               (s-join ","))
+          "]"))
 
 ;; change org to txt, as .txt is the temp file, will be removed.
 (defun org2jekyll-install-yaml-headers (original-file published-file)

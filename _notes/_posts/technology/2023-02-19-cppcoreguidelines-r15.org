@@ -2,7 +2,6 @@
 #+title: CppCoreGuidelines R.15 重载匹配的分配/释放函数对
 #+categories: technology
 #+tags: CppCoreGuidelines
-#+description: cgl
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 

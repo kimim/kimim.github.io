@@ -84,17 +84,13 @@ exported HTML files are in <code>&lt;jekyll-folder&gt;/_posts</code>:
 <pre class="src src-emacs-lisp"><span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">simplify template</span>
 <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">setq</span> org2jekyll-default-template-entries
   '<span style="color: #7388d6;">(</span><span style="color: #909183;">(</span><span style="color: #2A00FF;">"layout"</span><span style="color: #909183;">)</span>
-    <span style="color: #909183;">(</span><span style="color: #2A00FF;">"author"</span><span style="color: #909183;">)</span>
     <span style="color: #909183;">(</span><span style="color: #2A00FF;">"title"</span><span style="color: #909183;">)</span>
     <span style="color: #909183;">(</span><span style="color: #2A00FF;">"tags"</span><span style="color: #909183;">)</span>
     <span style="color: #909183;">(</span><span style="color: #2A00FF;">"categories"</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
 
 <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defconst</span> <span style="color: #000000;">org2jekyll-required-org-header-alist</span> '<span style="color: #7388d6;">(</span><span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:title</span>       . 'required<span style="color: #909183;">)</span>
-                                                 <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:date</span><span style="color: #909183;">)</span>
                                                  <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:categories</span>  . 'required<span style="color: #909183;">)</span>
                                                  <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:tags</span><span style="color: #909183;">)</span>
-                                                 <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:description</span><span style="color: #909183;">)</span>
-                                                 <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:author</span><span style="color: #909183;">)</span>
                                                  <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">:layout</span>      . 'required<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
 
 <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">read filename from prompt</span>
@@ -161,6 +157,16 @@ exported HTML files are in <code>&lt;jekyll-folder&gt;/_posts</code>:
          <span style="color: #709870;">(</span>temp-file <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;&gt;</span> org-file
                          <span style="color: #6276ba;">(</span>replace-regexp-in-string <span style="color: #2A00FF;">".org$"</span> <span style="color: #2A00FF;">".txt"</span><span style="color: #6276ba;">)</span><span style="color: #907373;">)</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
     <span style="color: #909183;">(</span>org2jekyll--publish-temp-file-then-cleanup org-file temp-file project<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">org2jekyll--space-separated-values-to-yaml</span> <span style="color: #7388d6;">(</span>str<span style="color: #7388d6;">)</span>
+  <span style="color: #2A00FF;">"Transform a STR of space separated values entries into yaml entries."</span>
+  <span style="color: #7388d6;">(</span>concat <span style="color: #2A00FF;">"["</span>
+          <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">-&gt;&gt;</span> <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">if</span> str str <span style="color: #2A00FF;">""</span><span style="color: #709870;">)</span>
+               <span style="color: #709870;">(</span>s-split <span style="color: #2A00FF;">" "</span><span style="color: #709870;">)</span>
+               <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">--filter</span> <span style="color: #907373;">(</span><span style="color: #7F0055; font-weight: bold;">unless</span> <span style="color: #6276ba;">(</span>equal it <span style="color: #2A00FF;">""</span><span style="color: #6276ba;">)</span> it<span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+               <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">--map</span> <span style="color: #907373;">(</span>format  <span style="color: #2A00FF;">"%s"</span> it<span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+               <span style="color: #709870;">(</span>s-join <span style="color: #2A00FF;">","</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>
+          <span style="color: #2A00FF;">"]"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
 
 <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">change org to txt, as .txt is the temp file, will be removed.</span>
 <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">defun</span> <span style="color: #0000ff; font-weight: bold;">org2jekyll-install-yaml-headers</span> <span style="color: #7388d6;">(</span>original-file published-file<span style="color: #7388d6;">)</span>
