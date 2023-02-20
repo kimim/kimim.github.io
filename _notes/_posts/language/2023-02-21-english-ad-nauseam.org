@@ -1,0 +1,30 @@
+#+LAYOUT: post
+#+TITLE: 单词本：ad nauseam
+#+TAGS: English
+#+CATEGORIES: language
+
+读文章的时候，看到这句话：
+
+You've heard it *ad nauseam*: Digital transformation is pivotal to the future success of your business.
+
+对此，你一定听烦：数字化转型是业务未来成功的关键。
+
+这里 ad nauseam 的意思是 used to refer to the fact that something has
+been done or repeated so often that it has become annoying or
+tiresome. 对于重复了很多遍的事情或话语，产生了厌烦疲倦。
+
+ad nauseam 来自拉丁语，字面意思是 to sickness，导致生病。 nauseam 的原
+意是作呕。所以 ad nauseam 更具体的说是厌烦到作呕想吐。
+
+naus 其实是船的意思。所以，nauseam 其实是指 ship-sickness，即晕船。比如：
+- aeronautics 飞行术，就是空中航行
+- aquanaut 海底观察员
+- astronaut 宇航员，即太空船员。也称 cosmonaut
+- navy 海军
+- naval 海军的
+- navicular 船状的
+- navigation 导航
+
+nauseam 相关的单词，英语里还有:
+- nauseous：令人作呕的；厌恶的
+- nauseate：作呕；厌恶；产生恶感；使厌恶；使恶心；使作呕
