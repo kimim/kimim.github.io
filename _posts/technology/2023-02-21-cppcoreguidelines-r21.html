@@ -1,0 +1,67 @@
+---
+layout: post
+title: CppCoreGuidelines R.21 最好用 unique_ptr，除非有共享所有权的需要，则用 shared_ptr
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer <code>unique_ptr</code> over <code>shared_ptr</code> unless you need to share ownership&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+<code>unique_ptr</code> 更简单，行为更可预测。因为你能知道什么时候会调用析构函数。速度也更快，不需要维护使用计数。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<p>
+这里其实不需要维护引用计数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span>Base<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">base</span> = make_shared<span style="color: #7388d6;">&lt;</span>Derived<span style="color: #7388d6;">&gt;()</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">use base locally, without copying it -- refcount never exceeds 1</span>
+<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">destroy base</span>
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<p>
+效率更高
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span>Base<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">base</span> = make_unique<span style="color: #7388d6;">&lt;</span>Derived<span style="color: #7388d6;">&gt;()</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">use base locally</span>
+<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">destroy base</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+警告：如果一个函数内用了共享指针，但是却不返回该指针，或以共享指针引用的方式传递给别的函数。建议使用 <code>unique_ptr</code>
+</p>

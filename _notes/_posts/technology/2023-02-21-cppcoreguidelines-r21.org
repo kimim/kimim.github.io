@@ -1,0 +1,46 @@
+#+layout: post
+#+title: CppCoreGuidelines R.21 最好用 unique_ptr，除非有共享所有权的需要，则用 shared_ptr
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer ~unique_ptr~ over ~shared_ptr~ unless you need to share ownership"
+
+
+理由
+
+~unique_ptr~ 更简单，行为更可预测。因为你能知道什么时候会调用析构函数。
+速度也更快，不需要维护使用计数。
+
+
+坏例子
+
+这里其实不需要维护引用计数：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f()
+{
+    shared_ptr<Base> base = make_shared<Derived>();
+    // use base locally, without copying it -- refcount never exceeds 1
+} // destroy base
+#+end_src
+
+
+例子
+
+效率更高
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f()
+{
+    unique_ptr<Base> base = make_unique<Derived>();
+    // use base locally
+} // destroy base
+#+end_src
+
+
+强化
+
+警告：如果一个函数内用了共享指针，但是却不返回该指针，或以共享指针引用
+的方式传递给别的函数。建议使用 ~unique_ptr~
