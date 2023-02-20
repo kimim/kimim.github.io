@@ -1,0 +1,50 @@
+---
+layout: post
+title: CppCoreGuidelines R.20 用 unique_ptr 或 shared_ptr 表达所有权
+tags: [CppCoreGuidelines]
+categories: [technology]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>unique_ptr</code> or <code>shared_ptr</code> to represent ownership&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+可以避免资源泄漏。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>* <span style="color: #000000;">p1</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #7388d6;">}</span>;              <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, p1 will leak</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p2</span> = make_unique<span style="color: #7388d6;">&lt;</span>X<span style="color: #7388d6;">&gt;()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good, unique ownership</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p3</span> = make_shared<span style="color: #7388d6;">&lt;</span>X<span style="color: #7388d6;">&gt;()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good, shared ownership</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+上面函数中，初始化 p1 指针的对象会泄漏。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>警告：new 出来的对象赋值给原始指针的情况</li>
+<li>警告：函数的返回值是原始指针，并赋值给另一个原始指针的情况</li>
+</ul>

@@ -1,0 +1,32 @@
+#+layout: post
+#+title: CppCoreGuidelines R.20 用 unique_ptr 或 shared_ptr 表达所有权
+#+tags: CppCoreGuidelines
+#+categories: technology
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~unique_ptr~ or ~shared_ptr~ to represent ownership"
+
+
+理由
+
+可以避免资源泄漏。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f()
+{
+    X* p1 { new X };              // bad, p1 will leak
+    auto p2 = make_unique<X>();   // good, unique ownership
+    auto p3 = make_shared<X>();   // good, shared ownership
+}
+#+end_src
+
+上面函数中，初始化 p1 指针的对象会泄漏。
+
+
+强化
+- 警告：new 出来的对象赋值给原始指针的情况
+- 警告：函数的返回值是原始指针，并赋值给另一个原始指针的情况
