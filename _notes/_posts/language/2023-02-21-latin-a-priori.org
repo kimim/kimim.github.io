@@ -6,8 +6,8 @@
 #+TAGS: English Latin
 #+CATEGORIES: language
 
-昨天读到 Meier et al. cite:&samanis2022adaptive 的一篇论文，看到以下这段
-话：
+昨天读到 Samanis et al. cite:&samanis2022adaptive 的一篇论文，看到以下
+这段话：
 
 Our approach involves transforming policies from simply a means to
 enforce security requirements defined a priori, to adaptive objects
@@ -36,7 +36,6 @@ element methods
 意思就是：一种根据在有限元素中的错误评估的经验推导出来的优化控制方法。
 
 *References*
-
 
 #+BEGIN_EXPORT latex
 \iffalse % multiline comment
