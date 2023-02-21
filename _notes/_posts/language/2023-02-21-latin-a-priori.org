@@ -1,0 +1,45 @@
+:PROPERTIES:
+:ID:       d5b628f1-4e84-49ce-8212-aaac5d04d68f
+:END:
+#+LAYOUT: post
+#+TITLE: 单词本：a priori
+#+TAGS: English Latin
+#+CATEGORIES: language
+
+昨天读到 Meier et al. [[cite:&meier2022secprov]] 的一篇论文，看到以下这段
+话：
+
+Our approach involves transforming policies from simply a means to
+enforce security requirements defined a priori, to adaptive objects
+that are capable to evolve in response to unfolding attacks.
+
+我们的方法可以针对网络攻击的方式，调整先验的转换策略。
+
+这里咱们遇到一个拉丁语单词 a priori 即 from causes to the effect，先验
+的，超越经验的。
+
+在上面这段话的语境中， security requirement defined a priori 指的是在
+未遭遇安全攻击之前，所事先提出的一些网络安全需求。
+
+再举个例子：There has been considerable recent interest in methods of
+determining sample size for qualitative research a priori, rather than
+through an adaptive approach such as saturation. 相对于通过饱和的适应
+方法，最近大家对确定样本大小的先验定量研究更感兴趣。（实在有点绕口）
+
+那么，与 a priori 相对应的就是后验，即 a posteriori，凭经验得到的。
+
+举个例子：
+
+An optimal control approach to a posteriori error estimation in finite
+element methods
+
+意思就是：一种根据在有限元素中的错误评估的经验推导出来的优化控制方法。
+
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography
+#+END_EXPORT

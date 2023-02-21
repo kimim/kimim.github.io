@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       29bf383f-1350-463c-b507-22cb493617a1
+:END:
 #+LAYOUT: post
 #+TITLE: 单词本：ad nauseam
 #+TAGS: English
