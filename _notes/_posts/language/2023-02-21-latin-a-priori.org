@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       d5b628f1-4e84-49ce-8212-aaac5d04d68f
-:END:
 #+LAYOUT: post
 #+TITLE: 单词本：a priori
 #+TAGS: English Latin
