@@ -1,0 +1,41 @@
+---
+layout: post
+title: CppCoreGuidelines R.23 用 make_unique 创建 unique_ptr
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>make_unique()</code> to make <code>unique_ptr</code>&rsquo;s&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+代码更精简。在复杂语句中，确保发生异常也是安全的。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #707183;">&lt;</span>Foo<span style="color: #707183;">&gt;</span> <span style="color: #000000;">p</span> <span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7388d6;">{</span>7<span style="color: #7388d6;">}</span><span style="color: #707183;">}</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: but repetitive</span>
+
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">q</span> = make_unique<span style="color: #707183;">&lt;</span>Foo<span style="color: #707183;">&gt;(</span>7<span style="color: #707183;">)</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Better: no repetition of Foo</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>警告：用 new 构造 <code>unique_ptr</code> 的地方</li>
+</ul>

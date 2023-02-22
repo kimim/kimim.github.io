@@ -1,0 +1,25 @@
+#+layout: post
+#+title: CppCoreGuidelines R.23 用 make_unique 创建 unique_ptr
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~make_unique()~ to make ~unique_ptr~'s"
+
+理由
+
+代码更精简。在复杂语句中，确保发生异常也是安全的。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+unique_ptr<Foo> p {new Foo{7}};    // OK: but repetitive
+
+auto q = make_unique<Foo>(7);      // Better: no repetition of Foo
+#+end_src
+
+
+强化
+- 警告：用 new 构造 ~unique_ptr~ 的地方
