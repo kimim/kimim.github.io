@@ -1,0 +1,36 @@
+:PROPERTIES:
+:ID: e6aba5fc-d6f2-4bb2-bc0c-286e07e14e54
+:END:
+#+LAYOUT: post
+#+TITLE: 单词本：argumentum ad ignorantiam
+#+TAGS: English Latin
+#+CATEGORIES: language
+
+前几天，读信息安全的技术资料，看到这句话：
+
+This is in contrast to the use of *argumentum ad ignorantiam* where just
+because you have no evidence of a protection breach implies a fully
+protected.
+
+这和无知的辩论相反。后者认为就算是没有证据的安全失效，也要进行完全的保
+护。
+
+这里出现一个拉丁语词组 argumentum ad ignorantiam 意思是无知的辩论。其
+实说白了，就是无理取闹的意思吧。
+
+这个 argumentum ad ignorantiam 是一种谬论，其推理过程有两种：
+
+
+其一：假设 p 断言是无法证实的，∴ 非 p 为真。
+
+其二：假设非 p 断言是无法证实的，∴ p 为真。
+
+
+举个例子：
+- 因为你不能证明外星人的存在，所以外星人不存在。
+- 因为你不能证明外星人不存在，所以外星人存在。
+
+
+再回头看本文引用的那段话，其实就是说，因为无法证明安全防护是不是会被攻
+破，我们就要不遗余力的砸大价钱进行网络安全保护。这就有点无知者无畏的意
+思啦。也就是所谓的 argumentum ad ignorantiam。
