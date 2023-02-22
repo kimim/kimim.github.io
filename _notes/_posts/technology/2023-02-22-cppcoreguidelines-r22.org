@@ -1,0 +1,29 @@
+:PROPERTIES:
+:ID:       b6728fec-d682-48e5-b17a-309a153bce4e
+:END:
+#+layout: post
+#+title: CppCoreGuidelines R.22 用 make_shared 创建 shared_ptr
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~make_shared()~ to make ~shared_ptr~'s"
+
+理由
+
+~make_shared~ 语句代码更简洁。且能避免分开分配内存，对象的生成和引用计数更接近。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+shared_ptr<X> p1 { new X{2} }; // bad
+auto p = make_shared<X>(2);    // good
+#+end_src
+
+第二句只用到一次 X，所以代码更精简，速度更快。
+
+
+强化
+- 警告：用 new 构造 ~shared_ptr~ 的地方
