@@ -38,3 +38,7 @@ uova. 我侄子对鸡蛋过敏。nepote 大概是 nipote 在 17 世纪比较老�
 侄子或外甥。法语 neveu，德语 Neffe，英语 nephew，意大利 nipote，应该都
 源自拉丁语 nepot。故而，选贤唯亲。法语 népotisme, 德语 Nepotismus，英
 语 nepotism，意大利语 nepotismo。
+
+*参考文献*
+
+bibliography:~/docs/references.bib
