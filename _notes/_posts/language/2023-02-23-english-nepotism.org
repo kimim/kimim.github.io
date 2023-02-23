@@ -1,0 +1,40 @@
+:PROPERTIES:
+:ID: 98d9d2c9-4d83-47ec-87d0-a1b28be40c38
+:END:
+#+LAYOUT: post
+#+TITLE: 单词本：nepotism
+#+TAGS: English
+#+CATEGORIES: language
+
+最近在看管理学原则，看到管理学历史这部分，介绍科学管理之父泰勒
+Frederick Winslow Taylor (1856–1915)，他提出了几条管理原则。其中第二条
+原则就是要科学的选择和培养员工。
+
+Scientifically select and train each worker. Prior to Taylor's work,
+the selection of workers was made based on favoritism, *nepotism*, or
+random choice. [[cite:&openstax2019principle]]
+
+在泰勒之前，企业提拔员工主要是基于偏袒、任人唯亲，或根本就是随机选择。
+
+事实上，1878 年，泰勒能进入位于费城的米德维尔钢铁公司任职。 也是因为他
+父亲的朋友帮忙的。
+
+这里这个单词 *nepotism* 是指裙带关系、任人唯亲、任用亲属的意思。
+
+聪明的同学一定发现了，这个 nepotism 和 nephew （外甥、侄子） 很像。事
+实上，也确实是相关的。
+
+大概是十五世纪七十年代，有个叫 Sixtus IV 西克斯图斯四世的教皇。他当上
+教皇之后，就提拔了很多自己的亲戚，他任命他的两个侄子，两个行为放荡的年
+轻人，为枢机团成员。后来他另外的三个侄子和侄孙也获得这一职位。
+
+后来，有个叫 Gregorio Leti 的人，写了本书《Nepotismo di Roma》就是讲教
+皇侄子的故事，英文翻译为《The History of the Popes' Nephews》。从此
+nepotism 就流行开来，指这种任人唯亲的行为。
+
+意大利语 nipote 就是侄子的意思。比如 Mio nipote è allergico alle
+uova. 我侄子对鸡蛋过敏。nepote 大概是 nipote 在 17 世纪比较老的写法吧。
+
+侄子或外甥。法语 neveu，德语 Neffe，英语 nephew，意大利 nipote，应该都
+源自拉丁语 nepot。故而，选贤唯亲。法语 népotisme, 德语 Nepotismus，英
+语 nepotism，意大利语 nepotismo。
