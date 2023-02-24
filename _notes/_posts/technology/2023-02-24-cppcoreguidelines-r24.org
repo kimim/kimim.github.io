@@ -1,0 +1,108 @@
+:PROPERTIES:
+:ID:       292c6ad6-d6de-4e91-8105-9829ad28d6c4
+:END:
+#+layout: post
+#+title: CppCoreGuidelines R.24 用 std::weak_ptr 打破 shared_ptr 循环
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~std::weak_ptr~ to break cycles of ~shared_ptr~'s"
+
+
+理由
+
+~shared_ptr~ 依赖于使用计数，如果我们的数据结构是一种循环结构，你依赖我，
+我依赖你，那么使用计数就永远不会减到 0。所以我们需要一种机制去破坏这种
+循环结构。
+
+~std::weak_ptr~ 可以临时指向一个 ~std::shared_ptr~ ，作为一个临时所有者，
+不增加其使用计数。这样，就不会阻止别的代码删除这个这个对象。一旦这个对
+象的使用计数清零， ~weak_ptr~ 指向的对象就没了。这就要求我们在使用这个指
+针的时候，先判断对象是否还存在，可以通过 ~lock()~ 函数锁住对象，然后访问
+使用。
+
+
+比如
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+#include <memory>
+
+class bar;
+
+class foo {
+public:
+  explicit foo(const std::shared_ptr<bar>& forward_reference)
+    : forward_reference_(forward_reference)
+  { }
+private:
+  std::shared_ptr<bar> forward_reference_;
+};
+
+class bar {
+public:
+  explicit bar(const std::weak_ptr<foo>& back_reference)
+    : back_reference_(back_reference)
+  { }
+  void do_something()
+  {
+    if (auto shared_back_reference = back_reference_.lock()) {
+      // Use *shared_back_reference
+    }
+  }
+private:
+  std::weak_ptr<foo> back_reference_;
+};
+#+end_src
+
+再比如以下代码，树的结构就是一种循环结构。当我们把树的根节点设置成
+~weak_ptr~ 的时候，就可以通过 reset 根节点来销毁这棵树。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+#include <memory>
+#include <vector>
+
+struct TreeNode {
+    std::weak_ptr<TreeNode> parent;
+    std::vector< std::shared_ptr<TreeNode> > children;
+    ~TreeNode() {
+        cout << "destroying node\n";
+    }
+};
+
+int main() {
+    // Create a TreeNode as the root
+    auto root = make_shared<TreeNode>();
+
+    // Give the parent 10 child nodes.
+    for (size_t i = 0; i < 10; ++i) {
+        auto child = make_shared<TreeNode>();
+        root->children.push_back(child);
+        child->parent = root;
+    }
+
+    // Reset the root shared pointer, destroying the root object, and
+    // subsequently its child nodes.
+    root.reset();
+}
+#+end_src
+
+#+RESULTS:
+#+begin_example
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+#+end_example
+
+
+强化
+如果可以静态检测到这种循环，就不需要 ~weak_ptr~ 了。

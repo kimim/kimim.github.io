@@ -1,0 +1,116 @@
+---
+layout: post
+title: CppCoreGuidelines R.24 用 std::weak_ptr 打破 shared_ptr 循环
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>std::weak_ptr</code> to break cycles of <code>shared_ptr</code>&rsquo;s&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+<code>shared_ptr</code> 依赖于使用计数，如果我们的数据结构是一种循环结构，你依赖我，我依赖你，那么使用计数就永远不会减到 0。所以我们需要一种机制去破坏这种循环结构。
+</p>
+
+<p>
+<code>std::weak_ptr</code> 可以临时指向一个 <code>std::shared_ptr</code> ，作为一个临时所有者，不增加其使用计数。这样，就不会阻止别的代码删除这个这个对象。一旦这个对象的使用计数清零， <code>weak_ptr</code> 指向的对象就没了。这就要求我们在使用这个指针的时候，先判断对象是否还存在，可以通过 <code>lock()</code> 函数锁住对象，然后访问使用。
+</p>
+
+
+<p>
+比如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">memory</span><span style="color: #707183;">&gt;</span>
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">bar</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">foo</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+  <span style="color: #7F0055; font-weight: bold;">explicit</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">bar</span><span style="color: #909183;">&gt;</span>&amp; <span style="color: #000000;">forward_reference</span><span style="color: #7388d6;">)</span>
+    : forward_reference_<span style="color: #7388d6;">(</span>forward_reference<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+  <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">bar</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">forward_reference_</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">bar</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+  <span style="color: #7F0055; font-weight: bold;">explicit</span> <span style="color: #0000ff; font-weight: bold;">bar</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">weak_ptr</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">foo</span><span style="color: #909183;">&gt;</span>&amp; <span style="color: #000000;">back_reference</span><span style="color: #7388d6;">)</span>
+    : back_reference_<span style="color: #7388d6;">(</span>back_reference<span style="color: #7388d6;">)</span>
+  <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>
+  <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #7388d6;">()</span>
+  <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">shared_back_reference</span> = back_reference_.lock<span style="color: #709870;">()</span><span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Use *shared_back_reference</span>
+    <span style="color: #909183;">}</span>
+  <span style="color: #7388d6;">}</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+  <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">weak_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">foo</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">back_reference_</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+再比如以下代码，树的结构就是一种循环结构。当我们把树的根节点设置成
+<code>weak_ptr</code> 的时候，就可以通过 reset 根节点来销毁这棵树。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">memory</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">vector</span><span style="color: #707183;">&gt;</span>
+
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">TreeNode</span> <span style="color: #707183;">{</span>
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">weak_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">TreeNode</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">parent</span>;
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span> <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">TreeNode</span><span style="color: #909183;">&gt;</span> <span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">children</span>;
+    ~<span style="color: #0000ff; font-weight: bold;">TreeNode</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        cout &lt;&lt; <span style="color: #2A00FF;">"destroying node\n"</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Create a TreeNode as the root</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">root</span> = make_shared<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">TreeNode</span><span style="color: #7388d6;">&gt;()</span>;
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Give the parent 10 child nodes.</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #000000;">i</span> = 0; i &lt; 10; ++i<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">child</span> = make_shared<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">TreeNode</span><span style="color: #909183;">&gt;()</span>;
+        root-&gt;children.push_back<span style="color: #909183;">(</span>child<span style="color: #909183;">)</span>;
+        child-&gt;parent = root;
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Reset the root shared pointer, destroying the root object, and</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">subsequently its child nodes.</span>
+    root.reset<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example" id="orgd479873">
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+destroying node
+</pre>
+
+
+<p>
+强化如果可以静态检测到这种循环，就不需要 <code>weak_ptr</code> 了。
+</p>
