@@ -1,0 +1,50 @@
+:PROPERTIES:
+:ID: 1439594e-b05e-42d9-b9cb-230ac0443c7b
+:END:
+#+LAYOUT: post
+#+TITLE: 单词本：inter alia
+#+TAGS: Latin English
+#+CATEGORIES: language
+
+昨天读到篇论文 [[cite:&binder2020model]]，估计作者学过法律还是怎么的，用了
+好多次 *inter alia*:
+
+This includes *inter alia* the asset's ability to autonomously negotiate
+characteristics like bitrate, quality and security during the setup of
+communication channels.
+
+「试翻译」在设置通信通道的时候，尤其需要包含设备自主协商比特率、质量、
+安全等特性的能力。
+
+Source of the data is the current order, which includes *inter alia*
+label and quantity of the product, or other production parameters,
+that can be defined directly within the model.
+
+「试翻译」数据的来源是当前的顺序，尤其包括产品、生产参数的标签和质量。
+因为这些能直接在模型中定义。
+
+
+*inter alia* 是拉丁语，意思是 among other things “在其他东西之间”。这个
+词放在句子中间，大概是表达这样一个意思，其他还有很多事情，也很重要，但
+是在其他这些事情之中，我后面列出来的东西尤其重要。
+
+之前我们学过，[[./2022-06-24-latin-primus-inter-pares.org][primus inter pares]]，意思是同行中最牛的。这里也用到了
+inter。
+
+那么，我们用 inter alia 来造句看看（下次写专利、写论文就可以用上啦
+^_^）：
+
+Operating system is used for, *inter alia*, managing computer resources
+and scheduling computing tasks.
+
+The principle of SOA includes *inter alia* loose coupling, late binding,
+and service discovery.
+
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography
+#+END_EXPORT
