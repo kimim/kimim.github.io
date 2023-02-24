@@ -40,6 +40,8 @@ and scheduling computing tasks.
 The principle of SOA includes *inter alia* loose coupling, late binding,
 and service discovery.
 
+*参考文献*
+
 #+BEGIN_EXPORT latex
 \iffalse % multiline comment
 #+END_EXPORT
