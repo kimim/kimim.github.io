@@ -1,0 +1,90 @@
+#+LAYOUT: post
+#+TITLE: 单词本：circumscribe
+#+TAGS: English Latin
+#+CATEGORIES: language
+
+很多人都知道，Stephen Richards Covery 写过一本书叫做《高效能人士的七个
+习惯》（The 7 Habits of Highly Effective People）。
+
+今天介绍的单词是另一个人写的书《Trust & Inspire: How Truly Great
+Leaders Unleash Greatness in Others》，作者名字叫 Stephen M.R. Covey。
+他好像，大概是 Stephen Richards Covery 的儿子。
+
+先不管了，这本书就是说信任+启发式领导与命令+控制式领导的差别。书中举了
+个例子，说把跳蚤关在玻璃罐子里，不加盖子，跳蚤会轻易跳出去。但是加了盖
+子，它们就跳不出去了。过段时间，把盖子拿到，它们也不会尝试跳出去。作者
+就总结说：
+
+You have conditioned them against jumping out of the jar and have
+severely *circumscribed* their potential. [[cite:&covey2022trust]]
+
+你已经把它们训练的不敢跳出罐子了。你严重的限制了它们的潜力。
+
+作者举这个例子就是要说明命令+控制式领导对员工能力的负面作用。所以要成
+为信任+启发式领导。 Wise executives and managers now embrace a new
+leadership method and mind-set: “Trust & Inspire.”
+
+当然，本文重点不是介绍信任与启发，而是介绍 *circumscribe* 这个单词。
+circum 是拉丁语around、周围的意思。scribe 是书写的意思。所以合起来就是
+在周围画了个圈，限制其活动。就好象是孙悟空用金箍棒给唐僧他们画了个保护
+圈，限制他们的活动。
+
+拉丁语 scribo, scribere, scripsi, scriptum 是书写的意思。相关的单词还有
+- conscript 征召，通过书写的文件，让人集合：Your body accords with
+  *conscript* requirement completely.
+- describe 描述：How do you *describe* your books?
+- inscribe 铭记：His name is *inscribed* on the monument.
+- proscribe 禁止，反对的描述：The crux of the dispute was an
+  initiative by a few members to *proscribe* any broadcasts to aliens,
+  whether or not we receive a signal first.
+- postscript 附言，写在后面的文字：I mean an addendum which he called
+  *postscript*.
+- subscribe 订阅：Which journals does the library *subscribe* to?
+- transcribe 转录： I have done some dictations that I need you to *transcribe*.
+- scribble 乱涂乱画：I'm sorry what I wrote was such a *scribble*.
+- scrivener 公证人、代笔人。
+
+德语动词 schreiben 书写，直接就是拉丁语微调了一下么。法语动词 écrire
+也有一些拉丁语的痕迹。
+
+在讲到领袖的榜样作用时，《Trust & Inspire: How Truly Great Leaders
+Unleash Greatness in Others》书中还提到古希腊哲学家的领导力标准：
+
+classic Greek philosophers’ focus on three leadership standards:
+“ethos, pathos and logos.” ... Logos concerns logic. Take care to act
+in a logical, rational way that is appropriate in scale to the
+*cirumstances*.
+
+这里也出现了 circum- 开头的单词 circumstance，即所出的环境，即条件、状
+况。在拉丁语里：
+- circumsto: 周围站着，stand around 即环境、状况。
+- circumduco: 带领着环绕，lead around。英语单词 circumduction 应该就是
+  从这个词来的。 *Circumduction* is the movement of a body region in a
+  circular manner, in which one end of the body region being moved
+  stays relatively stationary while the other end describes a circle.
+- circumvenio: come around 绕着来。英语单词 circumvent 回避、规避、改
+  道。Title II of the Civil Rights Act of 1964 mandates that hotels
+  and other public accommodations must not discriminate based on race,
+  national origin, sex, or religion, and Title VIII of the Civil
+  Rights Act of 1968 (also known as the Fair Housing Act [FHA])
+  prohibits discrimination specifically in housing. However, Airbnb's
+  unique structure allows it to *circumvent* those
+  laws. [[cite:&openstax2019principle]]
+
+其他还有：
+- circumference: 周围承受，即图形的周长。
+- circumflex 法语单词中的 ^ 符号，比如 côte 中 o 上面的那个。
+
+德语里 circumvent 就是 umgehen，相应的 circumscribe 就成了 umschreiben。
+
+
+*References*
+
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
