@@ -1,0 +1,121 @@
+:PROPERTIES:
+:ID:       e640d5a2-729c-4940-9924-a84d1c9c5f12
+:END:
+#+layout: post
+#+title: CppCoreGuidelines R.30 只有在需要表达生存周期机制的时候使用智能指针
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Take smart pointers as parameters only to explicitly express lifetime semantics"
+
+请参考 [[http://kimi.im/2022-04-10-cppcoreguidelines-f7][F.7]]
+
+
+理由：
+
+智能指针可以传递所有权或共享所有权。只有在需要所有权机制的时候使用。不
+操作生存周期的函数，应该只接受原始指针 ~T*~ 或引用 ~T&~ 。
+
+函数的参数如果是智能指针的话，就要求调用它的地方也使用智能指针。函数应
+该能以各种方式接受对象，而不能依靠智能指针，因为智能指针需要相应的生存
+周期管理。
+
+使用共享指针做参数，会产生潜在的运行时成本。
+
+例子
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+// accepts any int*
+void f(int*);
+
+// can only accept ints for which you want to transfer ownership
+void g(unique_ptr<int>);
+
+// can only accept ints for which you are willing to share ownership
+void g(shared_ptr<int>);
+
+// doesn't change ownership, but requires a particular ownership of the caller
+void h(const unique_ptr<int>&);
+
+// accepts any int
+void h(int&);
+#+end_src
+
+坏例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+#include <memory>
+// callee
+void f(shared_ptr<int>& w)
+{
+    // ...
+    cout << *w << endl; // only use of w -- the lifetime is not used at all
+    // ...
+};
+
+// caller
+int main()
+{
+    shared_ptr<int> my_widget = make_shared<int>(111);
+    f(my_widget);
+
+    //int* stack_widget =  new int(111);;
+    //f(stack_widget);
+    // error: invalid initialization of reference of type
+    // 'std::shared_ptr<int>&' from expression of type 'int*'
+    //26 |     f(stack_widget);
+    //   |       ^~~~~~~~~~~~
+    // note: in passing argument 1 of 'void f(std::shared_ptr<int>&)'
+    // 12 | void f(shared_ptr<int>& w)
+    //    |        ~~~~~~~~~~~~~~~~~^
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 111
+
+好例子：
+
+#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+#include <memory>
+// callee
+void f(int& w)
+{
+    // ...
+    cout << w << endl;
+    // ...
+};
+
+// caller
+int main()
+{
+    shared_ptr<int> my_widget = make_shared<int>(111);
+    f(*my_widget);
+
+    int stack_widget = 222;
+    f(stack_widget); // ok -- now this works
+
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 111
+: 222
+
+
+注意
+
+大部分的悬空指针（dangling pointer）问题都能通过静态代码分析检测到。函
+数参数的生存期持续到函数调用结束，所以没有太多指针生存期问题。
+
+
+强化
+
+- （简单）如果一个函数接受智能指针类型，但是这个函数只调用 ~operator*~
+  ， ~operator->~ 以及 ~get()~ 。建议使用 ~T*~ 或 ~T&~ 。
+- 如果一个参数是可复制、可移动的智能指针类型，但是在函数体或进一步的调
+  用中没有被复制或移动，那么，就不需要所有权机制。建议使用 ~T*~ 或 ~T&~ 。
