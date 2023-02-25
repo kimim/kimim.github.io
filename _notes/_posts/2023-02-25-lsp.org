@@ -1,0 +1,178 @@
+#+layout: post
+#+title: 利斯科夫替代原则，Liskov substitution principle，LSP
+#+categories: technology
+#+tags: programming
+
+#+begin_quote
+以指喻指之非指，不若以非指喻指之非指也；以马喻马之非马，不若以非马喻马
+之非马也。天地一指也，万物一马也。
+
+《庄子·齐物论》
+#+end_quote
+
+软件工程领域，有一个概念叫 SOLID。SOLID 是五个面向对象设计原则的首字母
+缩写。最早由 Robert C. Martin 在其 2000 年的论文《Design Principles
+and Design Patterns》中提出的。
+
+其中，L 原则指的是 Liskov substitution principle，里氏替换原则，利斯科
+夫替代原则，简称 LSP。
+
+LSP 是这么表述的：“Functions that use pointers or references to base
+classes must be able to use objects of derived classes without knowing
+it.” 通过对象的指针或引用调用其基类上定义的函数时，必须做到不用关心实
+际对象是基类的实体还是继承类的实体。
+
+LSP 原则其实规定了一种所谓“强行为子类型化”（Strong Behavioral
+Subtyping ）的子类型化关系。这个概念最早在 1987 年由女计算机科学家
+Barbara Liskov 在一个会议的主旨发言中提出的。那个发言标题为“数据抽象和
+继承层级”。LSP 原则的基础是面向对象中的可替代性原则，即一个对象可以被
+它的子对象替换，而不会破坏现有程序。Barbara Liskov 和华人计算机女科学
+家周以真在 1994 年合写的论文中进一步阐述这个原则：
+
+#+begin_quote
+Subtype Requirement: Let $\phi (x)$ be a property provable about
+objects $x$ of type $T$. Then $\phi (y)$ should be true for objects
+$y$ of type $S$ where $S$ is a subtype of $T$.
+
+子类型要求：令 $\phi (x)$ 为关于类型 $T$ 的一个对象 $x$ 的一个可证明的
+属性。那么，对于 $T$ 的子类型 $S$，它的一个对象 $y$ 应该满足$\phi (y)$。
+#+end_quote
+
+用符号表示为：
+
+$S<:T\to (\forall x{:}T)\phi (x)\to (\forall y{:}S)\phi(y)$
+
+即，如果 $S$ 是 $T$ 的子类型，对于 $T$ 的对象成立的属性，对 $S$ 的对象
+也成立。
+
+之前介绍的开放封闭原则 OCP 是基于抽象和多态。而像 C++ 这样的静态类型语
+言，则是通过继承机制来支持抽象和多态。即通过继承，我们能通过定义抽象基
+类的纯虚函数，创建遵循抽象多态接口的派生类。而 LSP 原则就对子类型化，
+或者说继承机制提出了规定。
+
+那么，我们来举个最简单的例子。一般我们都认为，正方形是长方形的子类，如
+图：
+
+#+begin_src plantuml :output-dir images :file rectangle-squre.svg :cmdline -charset utf-8 :eval no-export
+class "Rectangle" as R {
+        +set_width(int)
+        +set_length(int)
+        +get_width()
+        +get_length()
+
+}
+class "Square" as S {
+
+}
+S -u-|> R
+#+end_src
+
+#+ATTR_LATEX: :scale 0.5
+#+RESULTS:
+[[file:images/rectangle-squre.svg]]
+
+现在，我们用 C++ 实现长方形 Rectangle 类：
+
+#+name: rectangle
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
+class Rectangle {
+  public:
+    Rectangle(int w, int l) : m_w(w), m_l(l) {}
+    virtual void set_width(const int w) {
+        m_w = w;
+    }
+    virtual void set_length(const int l) {
+        m_l = l;
+    }
+    virtual int get_width() const {
+        return m_w;
+    }
+    virtual int get_length() const {
+        return m_l;
+    }
+  private:
+    int m_w{0};
+    int m_l{0};
+};
+#+end_src
+
+假设，我们设计 Rectangle 类的同时，让一个实习小朋友写相应的单元测试函数：
+
+#+name: unit
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+void test_rectangle(Rectangle& r) {
+    r.set_width(9);
+    r.set_length(10);
+    if (!(r.get_width() * r.get_length() == 9 * 10)) std::cout << "ERROR!\n";
+    else std::cout << "PASS\n";
+}
+#+end_src
+
+显然，顺利通过了单元测试：
+
+#+begin_src C++ :noweb strip-export :flags -std=c++20 :includes  <iostream> :results output :exports both :eval no-export
+<<rectangle>>
+<<unit>>
+int main()
+{
+    Rectangle r{2, 4};
+    test_rectangle(r);
+}
+#+end_src
+
+#+RESULTS:
+: PASS
+
+再创建一个正方形 Square 类，继承 Rectangle。为了符合正方形的要求，我们
+初始化的时候，把长和宽都设置成一样。同时，不管是修改正方形的长或宽，都
+要同时设置长和宽。
+
+#+name: square
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+class Square : public Rectangle {
+  public:
+    Square(int l) : Rectangle(l, l){};
+    virtual void set_width(const int w) {
+        Rectangle::set_width(w);
+        Rectangle::set_length(w);
+    }
+    virtual void set_length(const int l) {
+        Rectangle::set_width(l);
+        Rectangle::set_length(l);
+    }
+};
+#+end_src
+
+#+begin_src C++ :noweb strip-export :flags -std=c++20 :includes <iostream> :results output :exports both :eval no-export
+<<rectangle>>
+<<square>>
+<<unit>>
+int main()
+{
+    Square s{4};
+    test_rectangle(s);
+}
+#+end_src
+
+#+RESULTS:
+: ERROR!
+
+好了，这下遇到麻烦了，单元测试出错了。我们检查下，发现，是因为长和宽同时变化导致出错。
+
+一个正方形可能是长方形，但是正方形对象的行为和长方形并不一样。面向对象
+所关注的是对象的行为。LSP 原则更加明确的说明，OOD 中的 ISA 关系针对的
+是对象外部行为。
+
+Bertrand Meyer 提出的 Design by Contract（基于契约的设计）更加清楚的
+阐述了 LSP 原则：
+
+#+begin_quote
+when redefining a routine [in a derivative], you may only replace its
+precondition by a weaker one, and its postcondition by a stronger one.
+
+当通过继承重新定义一个例程，你只能把它的前置条件替换成更弱的要求，并且
+把它的后置条件替换成更强的要求。
+#+end_quote
+
+只有符合这个契约条件，子类型对象才可能在使用父类型对象的地方替换父类型。

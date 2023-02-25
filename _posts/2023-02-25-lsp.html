@@ -1,0 +1,225 @@
+---
+layout: post
+title: 利斯科夫替代原则，Liskov substitution principle，LSP
+categories: [technology]
+tags: [programming]
+---
+<blockquote>
+<p>
+以指喻指之非指，不若以非指喻指之非指也；以马喻马之非马，不若以非马喻马之非马也。天地一指也，万物一马也。
+</p>
+
+<p>
+《庄子·齐物论》
+</p>
+</blockquote>
+
+<p>
+软件工程领域，有一个概念叫 SOLID。SOLID 是五个面向对象设计原则的首字母缩写。最早由 Robert C. Martin 在其 2000 年的论文《Design Principles
+and Design Patterns》中提出的。
+</p>
+
+<p>
+其中，L 原则指的是 Liskov substitution principle，里氏替换原则，利斯科夫替代原则，简称 LSP。
+</p>
+
+<p>
+LSP 是这么表述的：“Functions that use pointers or references to base
+classes must be able to use objects of derived classes without knowing
+it.” 通过对象的指针或引用调用其基类上定义的函数时，必须做到不用关心实际对象是基类的实体还是继承类的实体。
+</p>
+
+<p>
+LSP 原则其实规定了一种所谓“强行为子类型化”（Strong Behavioral
+Subtyping ）的子类型化关系。这个概念最早在 1987 年由女计算机科学家
+Barbara Liskov 在一个会议的主旨发言中提出的。那个发言标题为“数据抽象和继承层级”。LSP 原则的基础是面向对象中的可替代性原则，即一个对象可以被它的子对象替换，而不会破坏现有程序。Barbara Liskov 和华人计算机女科学家周以真在 1994 年合写的论文中进一步阐述这个原则：
+</p>
+
+<blockquote>
+<p>
+Subtype Requirement: Let \(\phi (x)\) be a property provable about
+objects \(x\) of type \(T\). Then \(\phi (y)\) should be true for objects
+\(y\) of type \(S\) where \(S\) is a subtype of \(T\).
+</p>
+
+<p>
+子类型要求：令 \(\phi (x)\) 为关于类型 \(T\) 的一个对象 \(x\) 的一个可证明的属性。那么，对于 \(T\) 的子类型 \(S\)，它的一个对象 \(y\) 应该满足\(\phi (y)\)。
+</p>
+</blockquote>
+
+<p>
+用符号表示为：
+</p>
+
+<p>
+\(S<:T\to (\forall x{:}T)\phi (x)\to (\forall y{:}S)\phi(y)\)
+</p>
+
+<p>
+即，如果 \(S\) 是 \(T\) 的子类型，对于 \(T\) 的对象成立的属性，对 \(S\) 的对象也成立。
+</p>
+
+<p>
+之前介绍的开放封闭原则 OCP 是基于抽象和多态。而像 C++ 这样的静态类型语言，则是通过继承机制来支持抽象和多态。即通过继承，我们能通过定义抽象基类的纯虚函数，创建遵循抽象多态接口的派生类。而 LSP 原则就对子类型化，或者说继承机制提出了规定。
+</p>
+
+<p>
+那么，我们来举个最简单的例子。一般我们都认为，正方形是长方形的子类，如图：
+</p>
+
+
+<div id="orgaea9acf" class="figure">
+<p><div align="center"><?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="240px" preserveAspectRatio="none" style="width:131px;height:240px;background:#FFFFFF;" version="1.1" viewBox="0 0 131 240" width="131px" zoomAndPan="magnify"><defs/><g><!--MD5=[c75e629d71444dd998043aef5ce1a035]
+class R--><g id="elem_R"><rect codeLine="1" fill="#F1F1F1" height="118.4375" id="R" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="117" x="7" y="7"/><ellipse cx="31.45" cy="23" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M34.2156,18.875 Q34.3719,18.6563 34.5594,18.5469 Q34.7469,18.4375 34.9656,18.4375 Q35.3406,18.4375 35.575,18.7031 Q35.8094,18.9531 35.8094,19.5625 L35.8094,21.0156 Q35.8094,21.625 35.575,21.8906 Q35.3406,22.1563 34.9656,22.1563 Q34.6219,22.1563 34.4188,21.9531 Q34.2156,21.7656 34.1063,21.25 Q34.0594,20.8906 33.8719,20.7031 Q33.5438,20.3281 32.9344,20.1094 Q32.325,19.8906 31.7,19.8906 Q30.9344,19.8906 30.2938,20.2188 Q29.6688,20.5469 29.1688,21.2969 Q28.6844,22.0469 28.6844,23.0781 L28.6844,24.1719 Q28.6844,25.4063 29.575,26.2344 Q30.4656,27.0469 32.0594,27.0469 Q32.9969,27.0469 33.6531,26.7969 Q34.0438,26.6406 34.4656,26.2031 Q34.7313,25.9375 34.8719,25.8594 Q35.0281,25.7813 35.2313,25.7813 Q35.5594,25.7813 35.8094,26.0469 Q36.075,26.2969 36.075,26.6406 Q36.075,26.9844 35.7313,27.3906 Q35.2313,27.9688 34.4344,28.2969 Q33.3563,28.75 32.0594,28.75 Q30.5438,28.75 29.3406,28.125 Q28.3563,27.625 27.6688,26.5625 Q26.9813,25.4844 26.9813,24.2031 L26.9813,23.0469 Q26.9813,21.7188 27.5906,20.5781 Q28.2156,19.4219 29.3094,18.8125 Q30.4031,18.1875 31.6375,18.1875 Q32.3719,18.1875 33.0125,18.3594 Q33.6688,18.5156 34.2156,18.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="64" x="47.55" y="28.7285">Rectangle</text><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="123" y1="39" y2="39"/><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="123" y1="47" y2="47"/><ellipse cx="18" cy="58" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84" x="27" y="65.5332">set_width(int)</text><ellipse cx="18" cy="75.6094" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="91" x="27" y="83.1426">set_length(int)</text><ellipse cx="18" cy="93.2188" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="70" x="27" y="100.752">get_width()</text><ellipse cx="18" cy="110.8281" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="77" x="27" y="118.3613">get_length()</text></g><!--MD5=[8d919f42174a8592853f0e252dac1126]
+class S--><g id="elem_S"><rect codeLine="8" fill="#F1F1F1" height="48" id="S" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="78" x="26.5" y="185"/><ellipse cx="41.5" cy="201" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M44.2656,196.875 Q44.4219,196.6563 44.6094,196.5469 Q44.7969,196.4375 45.0156,196.4375 Q45.3906,196.4375 45.625,196.7031 Q45.8594,196.9531 45.8594,197.5625 L45.8594,199.0156 Q45.8594,199.625 45.625,199.8906 Q45.3906,200.1563 45.0156,200.1563 Q44.6719,200.1563 44.4688,199.9531 Q44.2656,199.7656 44.1563,199.25 Q44.1094,198.8906 43.9219,198.7031 Q43.5938,198.3281 42.9844,198.1094 Q42.375,197.8906 41.75,197.8906 Q40.9844,197.8906 40.3438,198.2188 Q39.7188,198.5469 39.2188,199.2969 Q38.7344,200.0469 38.7344,201.0781 L38.7344,202.1719 Q38.7344,203.4063 39.625,204.2344 Q40.5156,205.0469 42.1094,205.0469 Q43.0469,205.0469 43.7031,204.7969 Q44.0938,204.6406 44.5156,204.2031 Q44.7813,203.9375 44.9219,203.8594 Q45.0781,203.7813 45.2813,203.7813 Q45.6094,203.7813 45.8594,204.0469 Q46.125,204.2969 46.125,204.6406 Q46.125,204.9844 45.7813,205.3906 Q45.2813,205.9688 44.4844,206.2969 Q43.4063,206.75 42.1094,206.75 Q40.5938,206.75 39.3906,206.125 Q38.4063,205.625 37.7188,204.5625 Q37.0313,203.4844 37.0313,202.2031 L37.0313,201.0469 Q37.0313,199.7188 37.6406,198.5781 Q38.2656,197.4219 39.3594,196.8125 Q40.4531,196.1875 41.6875,196.1875 Q42.4219,196.1875 43.0625,196.3594 Q43.7188,196.5156 44.2656,196.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="46" x="55.5" y="206.7285">Square</text><line style="stroke:#181818;stroke-width:0.5;" x1="27.5" x2="103.5" y1="217" y2="217"/><line style="stroke:#181818;stroke-width:0.5;" x1="27.5" x2="103.5" y1="225" y2="225"/></g><!--MD5=[f8ac62970a8a02b877306923832cf698]
+reverse link R to S--><g id="link_R_S"><path codeLine="11" d="M65.5,145.49 C65.5,159.84 65.5,173.74 65.5,184.77 " fill="none" id="R-backto-S" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="58.5,145.16,65.5,125.16,72.5,145.16,58.5,145.16" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[825eaae96a88d06aef822d32c8949889]
+@startuml
+class "Rectangle" as R {
+        +set_width(int)
+        +set_length(int)
+        +get_width()
+        +get_length()
+
+}
+class "Square" as S {
+
+}
+S -u-|> R
+@enduml
+
+PlantUML version 1.2022.3beta3(Unknown compile time)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg></div>
+</p>
+</div>
+
+<p>
+现在，我们用 C++ 实现长方形 Rectangle 类：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++" id="org555cb75"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rectangle</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Rectangle</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">w</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">l</span><span style="color: #7388d6;">)</span> : m_w<span style="color: #7388d6;">(</span>w<span style="color: #7388d6;">)</span>, m_l<span style="color: #7388d6;">(</span>l<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">set_width</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">w</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        m_w = w;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">set_length</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">l</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        m_l = l;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_width</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> m_w;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_length</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> m_l;
+    <span style="color: #7388d6;">}</span>
+  <span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m_w</span><span style="color: #7388d6;">{</span>0<span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m_l</span><span style="color: #7388d6;">{</span>0<span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+假设，我们设计 Rectangle 类的同时，让一个实习小朋友写相应的单元测试函数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++" id="org8cb424e"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">test_rectangle</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Rectangle</span>&amp; <span style="color: #000000;">r</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    r.set_width<span style="color: #7388d6;">(</span>9<span style="color: #7388d6;">)</span>;
+    r.set_length<span style="color: #7388d6;">(</span>10<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!<span style="color: #909183;">(</span>r.get_width<span style="color: #709870;">()</span> * r.get_length<span style="color: #709870;">()</span> == 9 * 10<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"ERROR!\n"</span>;
+    <span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"PASS\n"</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+显然，顺利通过了单元测试：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Rectangle</span> <span style="color: #000000;">r</span><span style="color: #7388d6;">{</span>2, 4<span style="color: #7388d6;">}</span>;
+    test_rectangle<span style="color: #7388d6;">(</span>r<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+PASS
+</pre>
+
+
+<p>
+再创建一个正方形 Square 类，继承 Rectangle。为了符合正方形的要求，我们初始化的时候，把长和宽都设置成一样。同时，不管是修改正方形的长或宽，都要同时设置长和宽。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++" id="orga349ce7"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Square</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rectangle</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Square</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">l</span><span style="color: #7388d6;">)</span> : Rectangle<span style="color: #7388d6;">(</span>l, l<span style="color: #7388d6;">){}</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">set_width</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">w</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #110099;">Rectangle</span>::set_width<span style="color: #909183;">(</span>w<span style="color: #909183;">)</span>;
+        <span style="color: #110099;">Rectangle</span>::set_length<span style="color: #909183;">(</span>w<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">set_length</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">l</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #110099;">Rectangle</span>::set_width<span style="color: #909183;">(</span>l<span style="color: #909183;">)</span>;
+        <span style="color: #110099;">Rectangle</span>::set_length<span style="color: #909183;">(</span>l<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-C++">
+
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Square</span> <span style="color: #000000;">s</span><span style="color: #7388d6;">{</span>4<span style="color: #7388d6;">}</span>;
+    test_rectangle<span style="color: #7388d6;">(</span>s<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+ERROR!
+</pre>
+
+
+<p>
+好了，这下遇到麻烦了，单元测试出错了。我们检查下，发现，是因为长和宽同时变化导致出错。
+</p>
+
+<p>
+一个正方形可能是长方形，但是正方形对象的行为和长方形并不一样。面向对象所关注的是对象的行为。LSP 原则更加明确的说明，OOD 中的 ISA 关系针对的是对象外部行为。
+</p>
+
+<p>
+Bertrand Meyer 提出的 Design by Contract（基于契约的设计）更加清楚的阐述了 LSP 原则：
+</p>
+
+<blockquote>
+<p>
+when redefining a routine [in a derivative], you may only replace its
+precondition by a weaker one, and its postcondition by a stronger one.
+</p>
+
+<p>
+当通过继承重新定义一个例程，你只能把它的前置条件替换成更弱的要求，并且把它的后置条件替换成更强的要求。
+</p>
+</blockquote>
+
+<p>
+只有符合这个契约条件，子类型对象才可能在使用父类型对象的地方替换父类型。
+</p>
