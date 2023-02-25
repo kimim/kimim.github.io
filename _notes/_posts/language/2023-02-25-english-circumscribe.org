@@ -58,6 +58,10 @@ in a logical, rational way that is appropriate in scale to the
 这里也出现了 circum- 开头的单词 circumstance，即所出的环境，即条件、状
 况。在拉丁语里：
 - circumsto: 周围站着，stand around 即环境、状况。
+- circumlocution: 之前学习 [[./2021-03-15-english-red-tape.org][red tap]] 的时候，遇到过这个词，迂回婉转。
+  This was no time for red tape and circumlocution, although these
+  have their place in a well-ordered, placid system. 官僚习气和推三拖
+  四的作风，在按部就班、平平稳稳的秩序里还可以，但现在却不合时宜。
 - circumduco: 带领着环绕，lead around。英语单词 circumduction 应该就是
   从这个词来的。 *Circumduction* is the movement of a body region in a
   circular manner, in which one end of the body region being moved
