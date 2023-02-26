@@ -1,0 +1,56 @@
+---
+layout: post
+title: CppCoreGuidelines R.31 如果要非标准库的智能指针，请遵循标准库的设计模式
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If you have non-std smart pointers, follow the basic pattern from std&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+此规则适用于任何第三方和定制的智能指针。有利于诊断智能指针的错误导致的性能、正确性问题。
+</p>
+
+<p>
+任何重载一元操作符 * 和 -&gt; 的类型（包括模板和派生类），都可以认为是智能指针：
+</p>
+<ul class="org-ul">
+<li>如果可复制，则认为是引用计数的共享指针 <code>shared_ptr</code></li>
+<li>如果不可复制，则认为是 <code>unique_ptr</code></li>
+</ul>
+
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">use Boost's intrusive_ptr</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">boost/intrusive_ptr.hpp</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #110099;">boost</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">intrusive_ptr</span><span style="color: #7388d6;">&lt;</span>widget<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error under rule 'sharedptrparam'</span>
+<span style="color: #707183;">{</span>
+    p-&gt;foo<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">use Microsoft's CComPtr</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">atlbase.h</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">CComPtr</span><span style="color: #7388d6;">&lt;</span>widget<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>               <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error under rule 'sharedptrparam'</span>
+<span style="color: #707183;">{</span>
+    p-&gt;foo<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这两个例子都违背了共享指针参数准则： p 是一个共享指针，但是并没有用到它的共享性。函数只有参与 widget 的生存周期管理才需要接收智能指针作为参数。不然的话，如果可以接收 nullptr， widget* 原始指针就可以。更好的情况接收引用 widget&amp;。
+</p>

@@ -1,0 +1,45 @@
+:PROPERTIES:
+:ID:       4682a422-81df-4c6d-800d-d20ad8e2ccac
+:END:
+#+layout: post
+#+title: CppCoreGuidelines R.31 如果要非标准库的智能指针，请遵循标准库的设计模式
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If you have non-std smart pointers, follow the basic pattern from std"
+
+
+理由
+
+此规则适用于任何第三方和定制的智能指针。有利于诊断智能指针的错误导致的
+性能、正确性问题。
+
+任何重载一元操作符 * 和 -> 的类型（包括模板和派生类），都可以认为是智能指针：
+- 如果可复制，则认为是引用计数的共享指针 ~shared_ptr~
+- 如果不可复制，则认为是 ~unique_ptr~
+
+
+错误例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+// use Boost's intrusive_ptr
+#include <boost/intrusive_ptr.hpp>
+void f(boost::intrusive_ptr<widget> p)  // error under rule 'sharedptrparam'
+{
+    p->foo();
+}
+
+// use Microsoft's CComPtr
+#include <atlbase.h>
+void f(CComPtr<widget> p)               // error under rule 'sharedptrparam'
+{
+    p->foo();
+}
+#+end_src
+
+这两个例子都违背了共享指针参数准则： p 是一个共享指针，但是并没有用到
+它的共享性。函数只有参与 widget 的生存周期管理才需要接收智能指针作为参
+数。不然的话，如果可以接收 nullptr， widget* 原始指针就可以。更好的情
+况接收引用 widget&。
