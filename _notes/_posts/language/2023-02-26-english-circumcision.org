@@ -26,4 +26,20 @@ concise 拉丁语意思切掉多余的，即简明的，简洁的。
 
 precise 拉丁语意思是之前就切好，即已经切得不多不少了，精确的，确切的。
 
+举个例子：
+
+Written for students encountering the subject for the first time, this
+*concise* textbook focuses on fundamental concepts, problem solving, and
+methodical calculations of common mechanical components, rather than
+providing a comprehensive treatment of a wide range of components.
+
+这里说这个教科书很简洁明了。
+
+比如 Google Maps: "The investigation is broadly focused on Google’s
+control of digital maps and location data, in this instance the
+*precise* location of a host of different places."
+
+这里指的是精确的位置。
+
+
 感谢 Doctor 的启发！
