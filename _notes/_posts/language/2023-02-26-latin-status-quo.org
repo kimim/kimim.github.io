@@ -1,0 +1,65 @@
+#+LAYOUT: post
+#+TITLE: 单词本：status quo
+#+TAGS: Latin English Deutsch
+#+CATEGORIES: language
+
+昨天看了一篇关于锂电池电芯数字孪生的文章。文章开头说这篇文章介绍数字孪
+生的现状，以及阐述锂电池电芯生产过程数字孪生概念：
+
+Es bietet einen Überblick über den Status Quo des Digitalen Zwillings
+in der Produktion und erläutert das Konzept für einen Digitalen
+Zwilling in der Batteriezellfertigung. [[cite:&fraunhofer2023dz]]
+
+这里出现了一个拉丁语单词 Status Quo。
+
+我们就来了解了解这个词吧。
+
+status 就是 state，状态。quo 是 what, which 的意思。连起来就是在此状态，
+state in which. 那么，如果我们说 your status quo 就相当于 the state in
+which your current results happen, 即你所处在的产生当前结果的状态。
+
+比如：The history of international relations suggests that a rising
+power always challenges the hegemon of the day and the status quo.
+
+那么，产生当前结果的现状可以是一种中性的陈述，如前面德文引用所表示的。
+
+也可以表示一种限制你发展的现状。这就是一种不太好的东西。
+
+要么你不愿改变，安于现状，溺于旧闻。
+
+要么你决心变革，改头换面，扭转乾坤。
+
+正如商鞅所说：常人安于故习，学着溺于所闻。治世不一道，便国不必法古。
+[[cite:&shang-sjs]] 只有 challenging the status quo will make you a better
+leader.
+
+那么怎么 challenging the status quo 呢？
+
+第一步，是要知道自己的 status quo 是什么。这个句子描述自己的 status quo：
+
+“My current status quo is the state in which [current outcome] occurs
+as the result of [description of inputs].”
+
+第二步，就是定义你当前 status quo 的风险：
+
+“If [current outcome] continues, I risk [worse outcomes].”
+
+例如 “If our team keeps [habitually missing deadlines], the risk is
+[missing our quarterly KPI goals for the second quarter].”
+
+第三步，就是设定目标。基于第一步陈述的 status quo，回答这个问题：假设
+今晚睡觉的时候发生奇迹，明天，我希望会有什么改变？
+
+第四步，就是制定计划了。根据上一步列出的目标，制定相应计划，一步一步落
+实。
+
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
