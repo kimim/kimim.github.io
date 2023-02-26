@@ -1,0 +1,29 @@
+#+LAYOUT: post
+#+TITLE: 单词本：circumcision
+#+TAGS: English
+#+CATEGORIES: language
+
+昨天，介绍了 [[./2023-02-25-english-circumscribe.org][circumscribe]] 这个词，顺便研究了下 circum- 开头的单词。因
+为 circum 是周围的意思，所以都是跟周围相关的。
+
+Dr. Cao 告诉我，其实还有一个单词 circumcision 也是 circum 开头的。意思
+是男生的环切手术。
+
+这个词在拉丁语里写作 circumcidere。
+
+这个 cidere 是拉丁语 caedere （to cut）的组合形式。
+
+所以，比如说过 incision 就是 cut in, 切入，也就是外科手术切口的意思。
+
+decision 就是 cut off，也就是作决定。正如我们常说的快刀斩乱麻、斩钉截
+铁、当机立断等。你看，“快刀”、“斩截”、“断”，是不是都有 cut 的意思呀？
+所以人类的语言还是相通的。正如，唯物历史观所认为的，语言是劳动的产物么。
+
+suicide，拉丁语 sui，self，自己，cide 就是 caedere，自己 cut 自己，就
+是自我了断。
+
+concise 拉丁语意思切掉多余的，即简明的，简洁的。
+
+precise 拉丁语意思是之前就切好，即已经切得不多不少了，精确的，确切的。
+
+感谢 Doctor 的启发！
