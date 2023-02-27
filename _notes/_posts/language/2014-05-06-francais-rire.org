@@ -1,11 +1,7 @@
-#+BEGIN_HTML
----
-layout: post
-title: 單詞本：法語單詞 rire
-categories: [language]
-tags: [Français]
----
-#+END_HTML
+#+layout: post
+#+title: 單詞本：rire
+#+categories: language
+#+tags: Français
 
 星期天的早晨，寶貝們還在睡覺。懷著愉快的心情翻開法語詞典看看。隨便一翻
 就看到 risible 這個單詞。它的意思是可笑的。因爲 rire 是笑的意思，於是很
@@ -38,9 +34,9 @@ sou-。至此，關於笑得幾個單詞似乎都被聯係在了一起。接下�
   - 無視，對……付之一笑。
     - *rire* des menaces de qn
   - 高興，快樂，玩耍。
-    - faire *rire* qn　使某人高興
+    - faire *rire* qn 使某人高興
     - aimer à *rire* 喜歡玩耍
-    - Plus on est de fous, plus on *rit*.　人越多越熱鬧。
+    - Plus on est de fous, plus on *rit*. 人越多越熱鬧。
   - 嘲弄。Se moquer de quelqu’un. se moquer: to mock, make fun of[fn:1]. 嘲笑，愚弄。
     - Elle *se rit* de vous. Il *se rit* de vos vains projets.
 

@@ -1,0 +1,52 @@
+---
+layout: post
+title: CppCoreGuidelines R.32 用 unique_ptr 参数标明函数接收指针的所有权
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Take a <code>unique_ptr&lt;widget&gt;</code> parameter to express that a function assumes ownership of a widget&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+使用 <code>unique_ptr</code> 说明并强化函数调用接收所有权转移。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sink</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span>widget<span style="color: #7388d6;">&gt;</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">takes ownership of the widget</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">uses</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span>*<span style="color: #707183;">)</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">just uses the widget</span>
+</pre>
+</div>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">thinko</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span>widget<span style="color: #7388d6;">&gt;</span>&amp;<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">usually not what you want</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>警告：如果一个函数接收左值引用的 <code>unique_ptr&lt;T&gt;</code> 参数，却在任何代码路径中不给它赋值，或调用 <code>reset()</code> 。考虑使用 T* 或 T&amp;</li>
+<li>警告：如果一个函数接收 <code>unique_ptr&lt;T&gt;</code> 的常值引用，考虑使用 <code>const T*</code>
+或 <code>const T&amp;</code></li>
+</ul>

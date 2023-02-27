@@ -1,0 +1,37 @@
+:PROPERTIES:
+:ID:       46f8c104-98f6-42d5-922a-05c11a36a629
+:END:
+#+layout: post
+#+title: CppCoreGuidelines R.32 用 unique_ptr 参数标明函数接收指针的所有权
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Take a ~unique_ptr<widget>~ parameter to express that a function assumes ownership of a widget"
+
+
+理由
+
+使用 ~unique_ptr~ 说明并强化函数调用接收所有权转移。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void sink(unique_ptr<widget>); // takes ownership of the widget
+
+void uses(widget*);            // just uses the widget
+#+end_src
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void thinko(const unique_ptr<widget>&); // usually not what you want
+#+end_src
+
+
+强化
+- 警告：如果一个函数接收左值引用的 ~unique_ptr<T>~ 参数，却在任何代码路
+  径中不给它赋值，或调用 ~reset()~ 。考虑使用 T* 或 T&
+- 警告：如果一个函数接收 ~unique_ptr<T>~ 的常值引用，考虑使用 ~const T*~
+  或 ~const T&~
