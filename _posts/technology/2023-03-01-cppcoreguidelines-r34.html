@@ -1,0 +1,50 @@
+---
+layout: post
+title: CppCoreGuidelines R.34 用 shared_ptr 参数表示共享所有权
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Take a shared<sub>ptr</sub>&lt;widget&gt; parameter to express shared ownership&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+显式的表明函数的共享所有权
+</p>
+
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">WidgetUser</span>
+<span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">WidgetUser will share ownership of the widget</span>
+    <span style="color: #7F0055; font-weight: bold;">explicit</span> <span style="color: #0000ff; font-weight: bold;">WidgetUser</span><span style="color: #7388d6;">(</span><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #909183;">&lt;</span>widget<span style="color: #909183;">&gt;</span> <span style="color: #000000;">w</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>:
+        m_widget<span style="color: #7388d6;">{</span><span style="color: #110099;">std</span>::move<span style="color: #909183;">(</span>w<span style="color: #909183;">)</span><span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span>widget<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">m_widget</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>警告：如果一个函数接收 <code>shared_ptr&lt;T&gt;</code> 的左值引用参数，但是在所有代码执行路径上既不赋值，也不调用 <code>reset()</code> 。考虑使用 <code>T*</code> 或 <code>T&amp;</code></li>
+<li>警告：如果一个函数接收 <code>unique_ptr&lt;T&gt;</code> 值或常值引用，但是在所有代码路径上，不复制或移动到另一个共享指针，考虑使用 <code>T*</code> 或 <code>T&amp;</code></li>
+<li>警告：如果一个函数接收 <code>shared_ptr&lt;T&gt;</code> 右值引用，考虑使用值传递。</li>
+</ul>
