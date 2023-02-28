@@ -15,12 +15,12 @@ the 16th century. [[cite:&fcg2016dt]]
 in 是朝向，petere 是攻击。合起来是朝着某处攻击。于是就引伸为动力、动量、
 冲力。
 
-比如，健身专家 Amaresh Ojha 在提到培养健身习惯的时候，说一个不清晰的健
-身目标本身是无法提供改变现状的动力。要一点一点的进步： Once you make
-the decision to launch your fitness habit, ... an ambiguous goal does
-not, in and of itself, give you the impetus you need to change your
-status quo. "Small progress everyday manifests bigger results in the
-long run." [[cite:&Ojha2021fit]] 这里他也用到了之前介绍的 [[./2023-02-26-latin-status-quo.org][Status Quo]]。
+比如，健身专家 Amaresh Ojha [[cite:&Ojha2021fit]] 在提到培养健身习惯的时候，
+说一个不清晰的健身目标本身是无法提供改变现状的动力。要一点一点的进步：
+Once you make the decision to launch your fitness habit, ... an
+ambiguous goal does not, in and of itself, give you the impetus you
+need to change your status quo. "Small progress everyday manifests
+bigger results in the long run." 这里他也用到了之前介绍的 [[./2023-02-26-latin-status-quo.org][Status Quo]]。
 
 再比如，Matthew T. Lawder 等 [[cite:&lawder2014battery]] 提到液流电池在储
 能领域的发展，说这种电池在储能圈子获得了推动力：However, one battery
