@@ -1,0 +1,57 @@
+---
+layout: post
+title: CppCoreGuidelines R.33 用 unique_ptr<widget>& 参数表示函数会重座该 widget
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Take a unique<sub>ptr</sub>&lt;widget&gt;&amp; parameter to express that a function reseats the widget&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+通过这种方式使用 <code>unique_ptr</code> 说明并强化函数调用的重座语义。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+重座（Reseat）意思是让一个指针或智能指针指向一个不同的对象。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">reseat</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span>widget<span style="color: #7388d6;">&gt;</span>&amp;<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">"will" or "might" reseat pointer</span>
+</pre>
+</div>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">thinko</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span>widget<span style="color: #7388d6;">&gt;</span>&amp;<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">usually not what you want</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>警告：如果一个函数接收 <code>unique_ptr&lt;T&gt;</code> 的左值引用参数，但是在所有代码执行路径上既不赋值，也不调用 <code>reset()</code> 。考虑使用 <code>T*</code> 或 <code>T&amp;</code></li>
+<li>警告：一个函数接收 <code>unique_ptr&lt;T&gt;</code> 常值引用，考虑使用 <code>const T*</code> 或 <code>const T&amp;</code></li>
+</ul>

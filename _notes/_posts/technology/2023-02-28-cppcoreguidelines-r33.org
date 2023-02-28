@@ -1,0 +1,35 @@
+#+layout: post
+#+title: CppCoreGuidelines R.33 用 unique_ptr<widget>& 参数表示函数会重座该 widget
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Take a unique_ptr<widget>& parameter to express that a function reseats the widget"
+
+理由
+
+通过这种方式使用 ~unique_ptr~ 说明并强化函数调用的重座语义。
+
+注意
+
+重座（Reseat）意思是让一个指针或智能指针指向一个不同的对象。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void reseat(unique_ptr<widget>&); // "will" or "might" reseat pointer
+#+end_src
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void thinko(const unique_ptr<widget>&); // usually not what you want
+#+end_src
+
+
+强化
+- 警告：如果一个函数接收 ~unique_ptr<T>~ 的左值引用参数，但是在所有代码
+  执行路径上既不赋值，也不调用 ~reset()~ 。考虑使用 ~T*~ 或 ~T&~
+- 警告：一个函数接收 ~unique_ptr<T>~ 常值引用，考虑使用 ~const T*~ 或 ~const T&~
