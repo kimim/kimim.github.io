@@ -3,6 +3,7 @@
 #+TAGS: Latin English
 #+CATEGORIES: language
 
+
 昨天看工业物联网时代的数字化转型，读到这句话：
 
 Technological advances have been the *impetus* for dramatic increases in
