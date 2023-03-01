@@ -26,11 +26,11 @@ expectations than of a product’s security posture. [[cite:&vedere2022oticefall
 而 syncratic 则是来自希腊语 synkrasis 混合物。合起来就是自己个人独特的
 混合的。
 
-比如 C++ 2020 标准里也提到：Implementations can provide additional
-execution policies to those described in this standard as extensions
-to address parallel architectures that require *idiosyncratic*
-parameters for efficient execution. 针对 C++ 标准库的算法函数，并行计
-算需要独特的参数以提高执行效率。
+比如 C++ 2020 [[cite:&isoiec14882]] 标准里也提到：Implementations can
+provide additional execution policies to those described in this
+standard as extensions to address parallel architectures that require
+*idiosyncratic* parameters for efficient execution. 针对 C++ 标准库的算
+法函数，并行计算需要独特的参数以提高执行效率。
 
 Elizabeth C. Hirschman and Morris B. Holbrook
 [[cite:&hirschman1982hedonic]] 引用了 Commonality and *Idiosyncracy* in
