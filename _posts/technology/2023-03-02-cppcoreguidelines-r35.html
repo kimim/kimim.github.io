@@ -1,0 +1,55 @@
+---
+layout: post
+title: CppCoreGuidelines R.35 使用 shared_ptr<widget>& 参数表示函数会重座共享指针
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Take a <code>shared_ptr&lt;widget&gt;&amp;</code> parameter to express that a function might reseat the shared pointer&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+明确标明函数的重座机制。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+重座（reseat）指的是让引用或智能指针指向另一个不同的对象
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">ChangeWidget</span><span style="color: #707183;">(</span><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span>widget<span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">w</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">This will change the callers widget</span>
+    w = <span style="color: #110099;">std</span>::make_shared<span style="color: #7388d6;">&lt;</span>widget<span style="color: #7388d6;">&gt;(</span>widget<span style="color: #909183;">{}</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>警告：如果一个函数接收 <code>shared_ptr&lt;T&gt;</code> 的左值引用参数，但是在所有代码执行路径上既不赋值，也不调用 <code>reset()</code> 。考虑使用 <code>T*</code> 或 <code>T&amp;</code></li>
+<li>警告：如果一个函数接收 <code>unique_ptr&lt;T&gt;</code> 值或常值引用，但是在所有代码路径上，不复制或移动到另一个共享指针，考虑使用 <code>T*</code> 或 <code>T&amp;</code></li>
+<li>警告：如果一个函数接收 <code>shared_ptr&lt;T&gt;</code> 右值引用，考虑使用值传递。</li>
+</ul>
