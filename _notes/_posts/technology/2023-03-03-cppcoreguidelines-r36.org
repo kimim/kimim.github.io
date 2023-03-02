@@ -1,0 +1,35 @@
+:PROPERTIES:
+:ID:       f5c6f006-6257-423b-aecc-7b5342c61471
+:END:
+#+layout: post
+#+title: CppCoreGuidelines R.36 用 const shared_ptr<widget>& 参数表明函数会保留对象的引用计数
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Take a ~const shared_ptr<widget>&~ parameter to express that it might retain a reference count to the object"
+
+
+理由
+
+显式的表达函数保持引用计数的机制
+
+
+好例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void share(shared_ptr<widget>);            // share -- "will" retain refcount
+
+void reseat(shared_ptr<widget>&);          // "might" reseat ptr
+
+void may_share(const shared_ptr<widget>&); // "might" retain refcount
+#+end_src
+
+
+强化
+- 警告：如果一个函数接收 ~shared_ptr<T>~ 的左值引用参数，但是在所有代码
+  执行路径上既不赋值，也不调用 ~reset()~ 。考虑使用 ~T*~ 或 ~T&~
+- 警告：如果一个函数接收 ~unique_ptr<T>~ 值或常值引用，但是在所有代码路
+  径上，不复制或移动到另一个共享指针，考虑使用 ~T*~ 或 ~T&~
+- 警告：如果一个函数接收 ~shared_ptr<T>~ 右值引用，考虑使用值传递。
