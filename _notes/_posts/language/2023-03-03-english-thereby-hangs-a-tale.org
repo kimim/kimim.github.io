@@ -1,0 +1,50 @@
+:PROPERTIES:
+:ID:       7138b8d1-5f93-4f8d-9889-924f48ab0269
+:END:
+#+LAYOUT: post
+#+TITLE: 单词本：Thereby hangs a tale
+#+TAGS: English
+#+CATEGORIES: language
+
+昨天看我们公司的架构师们写的架构文档，在提到某个设计方案的时候，写道：
+Thereby hangs a tale。然后，哗啦哗啦地写了一堆。
+
+这个 Thereby hangs a tale 直译是这里挂着一个故事。大概就是说来话长、一
+言难尽的意思。
+
+所以，当别人问你一个事情的时候，你觉得这个事情一时半会解释不清楚，可以
+说 “Thereby hangs a tale” 因为有很多东西要解释。
+
+这个表达方式出自莎士比亚的喜剧《皆大欢喜（As You Like It）》：
+
+#+begin_verse
+JAQUES:
+
+A fool, a fool! I met a fool i' the forest,
+A motley fool; a miserable world!
+As I do live by food, I met a fool
+Who laid him down and bask'd him in the sun,
+And rail'd on Lady Fortune in good terms,
+and yet a motley fool.
+'Good morrow, fool,' quoth I. 'No, sir,' quoth he,
+'Call me not fool till heaven hath sent me fortune:'
+And then he drew a dial from his poke,
+And, looking on it with lack-lustre eye,
+Says very wisely, 'It is ten o'clock:
+Thus we may see,' quoth he, 'how the world wags:
+'Tis but an hour ago since it was nine,
+And after one hour more 'twill be eleven;
+And so, from hour to hour, we ripe and ripe,
+And then, from hour to hour, we rot and rot;
+And *thereby hangs a tale*.' When I did hear
+The motley fool thus moral on the time,
+My lungs began to crow like chanticleer,
+That fools should be so deep-contemplative,
+And I did laugh sans intermission
+An hour by his dial. O noble fool!
+A worthy fool! Motley's the only wear.
+#+end_verse
+
+Jaques 在森林遇到个人，他说：“现在是十点钟了。我们可以从这里看出世界是
+怎样在变迁着：一小时之前还不过是九点钟，而再过一小时便是十一点钟了；照
+这样，一小时一小时地过去，我们越长越老，越老越不中用。真是一言难尽。”
