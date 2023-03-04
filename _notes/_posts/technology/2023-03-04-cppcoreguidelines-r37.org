@@ -1,0 +1,81 @@
+:PROPERTIES:
+:ID:       b0d3665f-d19e-4183-afa7-2e18bab52be2
+:END:
+#+layout: post
+#+title: CppCoreGuidelines R.37 不要以指针或引用的方式传递智能指针的别名
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Do not pass a pointer or reference obtained from an aliased smart pointer"
+
+
+理由
+
+违背此规则是导致引用计数丢失的首要原因。你会遇到悬挂指针问题。函数调用
+链中应该首选原始指针或引用。在调用链顶层，从智能指针获取原始指针或引用。
+智能指针用来记录对象是否存活。同时，你得保证在函数调用链中，智能指针不
+会不小心重置或重新赋值。
+
+
+注意
+
+有时候，你需要保存智能指针的一份本地副本，这个副本可以确保在函数调用期
+间对象不会删除。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+// global (static or heap), or aliased local ...
+shared_ptr<widget> g_p = ...;
+
+void f(widget& w)
+{
+    g();
+    use(w);  // A
+}
+
+void g()
+{
+    g_p = ...; // oops, if this was the last shared_ptr to that widget, destroys the widget
+}
+#+end_src
+
+以下代码有问题：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void my_code()
+{
+    // BAD: passing pointer or reference obtained from a non-local smart pointer
+    //      that could be inadvertently reset somewhere inside f or its callees
+    f(*g_p);
+
+    // BAD: same reason, just passing it as a "this" pointer
+    g_p->func();
+}
+#+end_src
+
+
+修改方法也很简单，只要本地复制一份指针，在调用树中保持引用计数。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+void my_code()
+{
+    // cheap: 1 increment covers this entire function and all the call trees below us
+    auto pin = g_p;
+
+    // GOOD: passing pointer or reference obtained from a local unaliased smart pointer
+    f(*pin);
+
+    // GOOD: same reason
+    pin->func();
+}
+#+end_src
+
+
+强化
+- 警告：从非局部的一个智能指针获取的指针/引用或者局部但可能是个别名的
+  指针，用在了函数调用中。如果智能指针是一个共享指针，那么建议获取一份
+  局部副本，并从那个副本获取指针或引用来使用。
