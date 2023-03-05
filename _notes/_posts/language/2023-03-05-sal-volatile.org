@@ -1,0 +1,22 @@
+#+LAYOUT: post
+#+TITLE: 单词本：sal volatile
+#+TAGS: English Français
+#+CATEGORIES: language
+
+还是 C. S. Lewis 的《纳尼亚传奇》（The Chronicles of Narnia）第一册 The
+Magician's Nephew 第七章中 Aunt Letty 被女巫 Jadis 摔倒之后，
+
+she had had some *sal volatile* and sat still for a few minutes, she
+said there was nothing the matter with her except a few bruises.
+
+这里 Aunt Letty 吸了一些 sal volatile。这个 大概是拉丁语和法语的组合。
+sal 是拉丁语“盐” salis 的属格。volatile 是法语，来自拉丁语 volatilis，
+即 飞 volare 的过去分词。合起来 sal volatile 就是挥发性盐，主要指的是
+碳酸氨，即 sal ammoniac。用来治疗眩晕用的。
+
+我们之前学到[[2021-12-16-english-worth-salt.org][单词本：worth salt]]的时候，也考究过，拉丁语 salarium 是古罗
+马战士的特殊津贴。而特殊津贴是用来买盐吃的。所以 salary 就从 salarium
+演变而来。
+
+顺便说下，这里 bruise 是瘀青的意思。大概来自古法语 bruisier 受伤。但是
+bruiser 在英语里又是 pugilist，彪形大汉，职业拳击家。

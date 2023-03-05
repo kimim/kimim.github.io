@@ -4,8 +4,8 @@
 #+CATEGORIES: language
 
 C. S. Lewis 的《纳尼亚传奇》（The Chronicles of Narnia）第一册 The
-Magician's Nephew 第七章中 Aunt Letty 女巫 Jadis 摔掉之后，起身让女佣
-Sarah 去警察局报警，让 Sarah 告诉警察， there is a dangerous *lunatic*
+Magician's Nephew 第七章中 Aunt Letty 被女巫 Jadis 摔倒之后，起身让女
+佣Sarah 去警察局报警，让 Sarah 告诉警察， there is a dangerous *lunatic*
 at large.
 
 这里 *lunatic* 是精神失常的意思。其实从字面看，好像是月亮相关的。因为月
