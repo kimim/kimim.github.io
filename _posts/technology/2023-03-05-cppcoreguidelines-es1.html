@@ -1,0 +1,85 @@
+---
+layout: post
+title: CppCoreGuidelines ES.1 相比非标准库和自己编写代码，首选标准库
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer the standard library to other libraries and to &lsquo;handcrafted code&rsquo;&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+使用程序标准库编码更容易、更精简、抽象层级更高。并且标准库代码都是经过严密测试的。ISO C++ 标准库是最广泛使用的、测试最彻底的库，所有 C++ 的实现中都自带的。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #707183;">[]{</span>1,3,5,7,9<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">sum</span> = accumulate<span style="color: #707183;">(</span>begin<span style="color: #7388d6;">(</span>a<span style="color: #7388d6;">)</span>, end<span style="color: #7388d6;">(</span>a<span style="color: #7388d6;">)</span>, 0.0<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+cout &lt;&lt; sum;
+</pre>
+</div>
+
+<pre class="example">
+25
+</pre>
+
+
+<p>
+最好是带范围信息的累加：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">sum</span> = accumulate<span style="color: #707183;">(</span>v, 0.0<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better</span>
+</pre>
+</div>
+
+<p>
+但是不要自己编写常见的算法：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span> <span style="color: #000000;">v</span><span style="color: #707183;">{</span>1,3,5,7,9<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">max</span> = v.size<span style="color: #707183;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: verbose, purpose unstated</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">sum</span> = 0.0;
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; max; ++i<span style="color: #707183;">)</span>
+    sum = sum + v<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span>;
+cout &lt;&lt; sum;
+</pre>
+</div>
+
+<pre class="example">
+25
+</pre>
+
+
+
+<p>
+例外
+</p>
+
+<p>
+大部分标准库依赖于动态内存分配（自由存储区）。所以标准库中容器这部分数据结构是不满足硬实时和嵌入式应用的要求。这种情况，请考虑实现类似的功能。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+检查混乱的循环，嵌套循环，长函数，较少标准库类型，圈复杂度。
+</p>

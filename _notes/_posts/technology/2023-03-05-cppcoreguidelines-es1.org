@@ -1,0 +1,61 @@
+:PROPERTIES:
+:ID:       dc73a1c9-6fa3-4cf5-9f4f-6f58319af7bb
+:END:
+#+layout: post
+#+title: CppCoreGuidelines ES.1 相比非标准库和自己编写代码，首选标准库
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer the standard library to other libraries and to 'handcrafted code'"
+
+
+理由
+
+使用程序标准库编码更容易、更精简、抽象层级更高。并且标准库代码都是经过
+严密测试的。ISO C++ 标准库是最广泛使用的、测试最彻底的库，所有 C++ 的
+实现中都自带的。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> <functional> <numeric> :eval no-export
+int a[]{1,3,5,7,9};
+auto sum = accumulate(begin(a), end(a), 0.0);   // good
+cout << sum;
+#+end_src
+
+#+RESULTS:
+: 25
+
+最好是带范围信息的累加：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> <functional> <numeric> :eval no-export
+auto sum = accumulate(v, 0.0); // better
+#+end_src
+
+但是不要自己编写常见的算法：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+vector v{1,3,5,7,9};
+int max = v.size();   // bad: verbose, purpose unstated
+double sum = 0.0;
+for (int i = 0; i < max; ++i)
+    sum = sum + v[i];
+cout << sum;
+#+end_src
+
+#+RESULTS:
+: 25
+
+
+例外
+
+大部分标准库依赖于动态内存分配（自由存储区）。所以标准库中容器这部分数
+据结构是不满足硬实时和嵌入式应用的要求。这种情况，请考虑实现类似的功能。
+
+
+强化
+
+检查混乱的循环，嵌套循环，长函数，较少标准库类型，圈复杂度。
