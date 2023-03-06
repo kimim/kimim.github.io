@@ -1,0 +1,45 @@
+:PROPERTIES:
+:ID:       5932bcd2-b791-452e-b2a6-7994d01938d1
+:END:
+#+LAYOUT: post
+#+TITLE: 单词本：perpectual
+#+TAGS: English
+#+CATEGORIES: language
+
+心理咨询师、执行教练 Michelle Brody 的书《Own Your Armor》
+[[cite:&brody2022armor]]，讲的是针对职场出现的主动和被动防御心理，我们要以
+身作则，对自己的这种防备心理负责，和同事开诚布公、坦诚相处才可以尽释前
+嫌。
+
+那么，这种防御性的盔甲是怎么造成的呢？她说：When people feel
+threatened, they build up their protective armor, and that fuels a
+*perpetual* cycle of workplace dysfunction. 当人们受到心理上的威胁的时候，
+就会建立自己的保护性盔甲，长此以往，就会形成持续性的工作空间功能紊乱。
+
+这里，Michelle 用了个单词是 perpetual，意思是永久的、持续的、无尽无休
+的。这个词来自拉丁语单词 perpetuus，意思也是持续的、无止尽的。
+
+刚刚，还找到个新闻，周忠福博士创立的Taurus International公司在收购英国
+威尔斯石墨烯制造商Perpetuus Group的交易，近日遭到了英国政府的审查。
+
+大家可以看到，这个周博士的公司 Taurus 是金牛座，在拉丁语里是公牛的意思。
+而 Perpetuus Group 正是用了我们今天介绍的 perpetuus。看来学点拉丁语，
+给公司取名字不愁了。顺便说下，Taurus International公司在国内也拥有全资
+控股的子公司——上海长犇实业有限公司，和 Taurus 还是有点关系的。
+
+其动词形式是 perpetuate，比如 Michelle 后面说到一个人穿上防御性盔甲之
+后，别人也会穿上，这就导致了无休止的不信任：When someone puts on armor
+in self-defense, that causes other employees to armor up as well. This
+fuels and *perpetuates* a cycle of mistrust. 看来作者还是很喜欢这个单词的。
+
+另外，在 Ron A. Carucci 的《To Be Honest》[[cite:&carucci2021honest]]，也
+用到了这个词：Microsoft once focused its traditional performance
+evaluations on each person's contribution, but it found that this
+approach *perpetuated* a culture of individualism and competitiveness.
+competitiveness. 他说微软传统的绩效考核注重员工的个人贡献，导致了无休
+止的个人主义和竞争主义的企业文化。现在这个科技巨头改成考核团队协作。
+
+健身大师 Amaresh Ojha 在《健身习惯》 [[cite:&Ojha2021fit]] 中也写道：Most
+people find it difficult to change their habits because the
+cue-routine-reward loop *perpetuates* itself. 很多人发现改变习惯很难，因
+为提示、例行、激励这种循环本身无穷无尽。
