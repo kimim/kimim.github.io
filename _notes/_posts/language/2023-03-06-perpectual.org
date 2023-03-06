@@ -43,3 +43,13 @@ competitiveness. 他说微软传统的绩效考核注重员工的个人贡献，
 people find it difficult to change their habits because the
 cue-routine-reward loop *perpetuates* itself. 很多人发现改变习惯很难，因
 为提示、例行、激励这种循环本身无穷无尽。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
