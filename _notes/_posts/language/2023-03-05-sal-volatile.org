@@ -14,7 +14,7 @@ sal 是拉丁语“盐” salis 的属格。volatile 是法语，来自拉丁语
 即 飞 volare 的过去分词。合起来 sal volatile 就是挥发性盐，主要指的是
 碳酸氨，即 sal ammoniac。用来治疗眩晕用的。
 
-我们之前学到[[2021-12-16-english-worth-salt.org][单词本：worth salt]]的时候，也考究过，拉丁语 salarium 是古罗
+我们之前学到[[./2021-12-16-english-worth-salt.org][单词本：worth salt]]的时候，也考究过，拉丁语 salarium 是古罗
 马战士的特殊津贴。而特殊津贴是用来买盐吃的。所以 salary 就从 salarium
 演变而来。
 

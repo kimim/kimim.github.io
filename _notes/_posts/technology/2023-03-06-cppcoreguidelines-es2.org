@@ -1,0 +1,56 @@
+:PROPERTIES:
+:ID:       f0a16469-7786-406b-b1c4-3865284cc204
+:END:
+#+layout: post
+#+title: CppCoreGuidelines ES.2 请使用适当的抽象机制
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer suitable abstractions to direct use of language features"
+
+
+理由
+
+恰当的抽象（如库、类）比纯语言功能更接近应用概念。产生更短、更清晰、更
+可测的代码。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+vector<string> read1(istream& is)   // good
+{
+    vector<string> res;
+    for (string s; is >> s;)
+        res.push_back(s);
+    return res;
+}
+#+end_src
+
+更传统和底层的实现方式代码更长、更混乱、更难写正确、可能速度更慢：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+char** read2(istream& is, int maxelem, int maxstring, int* nread)   // bad: verbose and incomplete
+{
+    auto res = new char*[maxelem];
+    int elemcount = 0;
+    while (is && elemcount < maxelem) {
+        auto s = new char[maxstring];
+        is.read(s, maxstring);
+        res[elemcount++] = s;
+    }
+    *nread = elemcount;
+    return res;
+}
+#+end_src
+
+
+如果再增加一些溢出检测和错误处理代码，程序会变得更加杂乱，还有个问题，
+我们还必须记得删除返回的指针和 C 风格的字符串数组。
+
+
+强化
+- 检查杂乱循环、嵌套循环、长函数、缺少的函数调用、少用内置类型的地方。
+  还有圈复杂度。
