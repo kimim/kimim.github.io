@@ -1,0 +1,50 @@
+:PROPERTIES:
+:ID:       318731a8-e03e-468b-acce-c4f70a1133e7
+:END:
+#+layout: post
+#+title: CppCoreGuidelines ES.3 不要重复、避免多余
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don't repeat yourself, avoid redundant code"
+
+理由
+
+重复多余的代码，导致代码目的混乱，逻辑难以理解，维护困难等问题。往往是
+因为拷贝粘贴编程导致。
+
+尽量使用标准算法，而不要自己编写算法实现。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void func(bool flag)    // Bad, duplicated code.
+{
+    if (flag) {
+        x();
+        y();
+    }
+    else {
+        x();
+        z();
+    }
+}
+#+end_src
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void func(bool flag)    // Better, no duplicated code.
+{
+    x();
+
+    if (flag)
+        y();
+    else
+        z();
+}
+#+end_src
+
+强化
+- 使用静态分析工具分析。可以发现一些多余重复的代码。
+- 进行代码评审
