@@ -1,0 +1,61 @@
+---
+layout: post
+title: 单词本：endorse
+tags: [English]
+categories: [language]
+---
+<p>
+昨天看了 Xu Lei, et. al. (<a href="#citeproc_bib_item_2">Xu et al. 2020</a>) 写的一篇论文，介绍如何使用
+FPGA 作为 TEE，构建工业物联网区块链系统的方案，因为用的是联盟区块链，所以他们写道：a device/server can participate the system only if it
+has a private key with corresponding public key <b>endorsed</b> by all
+administrators.
+</p>
+
+<p>
+这个 <b>endorse</b> 是背书、认可、赞同的意思。这里是指设备服务节点的非对称密钥的公钥被管理员认可了，才能参与区块链网络连接。
+</p>
+
+<p>
+至于背书、认可的过程，作者写道：All administrators verify the
+signature \(\sigma_{c_{s}}\) using the public key \(pk^D_{BSP}\), which
+they obtained directly from the device D. Then they <b>endorse</b> the public
+key \(pk^D-{BS}\) by signing it using their private keys and the
+multisignature scheme, and D can use \(sk^D_{BS}\) for interaction with
+other components of the system for authentication and other
+attestation purposes.
+</p>
+
+<p>
+所有区块链节点管理员签名认可了设备的公钥之后，参能与其他节点交互通信。这种多签名机制，就能避免了单一信任问题：To guarantee the genuineness
+of the corresponding public key, administrators physically obtain
+public keys from devices and then <b>endorse</b> them using a multi-signature
+scheme.
+</p>
+
+<p>
+Lee et. al. 也写过一篇利用区块链管理物联网的文章 (<a href="#citeproc_bib_item_1">Lee et al. 2021</a>)，其中也提到了区块链背书机制：In order to reduce both latency and
+traffic in IIoT blockchain network, we propose an <b>endorsement</b> policy
+that allows orderer to collect the <b>endorsed</b> responses from various
+<b>endorsers</b> instead of a client which transmits transaction proposals
+only.
+</p>
+
+<p>
+这里 endorsement 是背书的名词，endorser 是背书人。
+</p>
+
+<p>
+其实前缀 en- 有 put on，装上，穿上的意思。而 dorse 则来自拉丁语 dossum，即后背的意思。连在一起，相当于是在背面装上、写上点东西，表示认可。最早的意思，是指在纸质文档的背面签名确认。那么，在数字化时代，就是对实体的公钥进行签名认可。
+</p>
+
+<p>
+与 dossum 相关的还有 dorsal，背部的、后背的。
+</p>
+
+<p>
+<b>References</b>
+</p>
+<style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><div class="csl-bib-body">
+  <div class="csl-entry"><a id="citeproc_bib_item_1"></a>Lee, Yunseong, Donghyun Lee, Junsuk Oh, Laihyuk Park, Woongsoo Na, and Sungrae Cho. 2021. “Endorsement Policy for Industrial Internet of Thing with Private Blockchain.” In <i>2021 International Conference on Information and Communication Technology Convergence (ICTC)</i>, 449–52. doi:<a href="https://doi.org/10.1109/ICTC52510.2021.9620893">10.1109/ICTC52510.2021.9620893</a>.</div>
+  <div class="csl-entry"><a id="citeproc_bib_item_2"></a>Xu, Lei, Lin Chen, Zhimin Gao, Hanyee Kim, Taeweon Suh, and Weidong Shi. 2020. “FPGA Based Blockchain System for Industrial IoT.” In <i>2020 IEEE 19th International Conference on Trust, Security and Privacy in Computing and Communications (TrustCom)</i>, 876–83. doi:<a href="https://doi.org/10.1109/TrustCom50675.2020.00118">10.1109/TrustCom50675.2020.00118</a>.</div>
+</div>

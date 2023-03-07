@@ -1,0 +1,56 @@
+:PROPERTIES:
+:ID:       b6f17ec6-b347-4b86-8738-9a6c7b516634
+:END:
+#+LAYOUT: post
+#+TITLE: 单词本：endorse
+#+TAGS: English
+#+CATEGORIES: language
+
+昨天看了 Xu Lei, et. al. [[cite:&xu2020fpga]] 写的一篇论文，介绍如何使用
+FPGA 作为 TEE，构建工业物联网区块链系统的方案，因为用的是联盟区块链，
+所以他们写道：a device/server can participate the system only if it
+has a private key with corresponding public key *endorsed* by all
+administrators.
+
+这个 *endorse* 是背书、认可、赞同的意思。这里是指设备服务节点的非对称密
+钥的公钥被管理员认可了，才能参与区块链网络连接。
+
+至于背书、认可的过程，作者写道：All administrators verify the
+signature $\sigma_{c_{s}}$ using the public key $pk^D_{BSP}$, which
+they obtained directly from the device D. Then they *endorse* the public
+key $pk^D-{BS}$ by signing it using their private keys and the
+multisignature scheme, and D can use $sk^D_{BS}$ for interaction with
+other components of the system for authentication and other
+attestation purposes.
+
+所有区块链节点管理员签名认可了设备的公钥之后，参能与其他节点交互通信。
+这种多签名机制，就能避免了单一信任问题：To guarantee the genuineness
+of the corresponding public key, administrators physically obtain
+public keys from devices and then *endorse* them using a multi-signature
+scheme.
+
+Lee et. al. 也写过一篇利用区块链管理物联网的文章 [[cite:&lee2021endorse]]，
+其中也提到了区块链背书机制：In order to reduce both latency and
+traffic in IIoT blockchain network, we propose an *endorsement* policy
+that allows orderer to collect the *endorsed* responses from various
+*endorsers* instead of a client which transmits transaction proposals
+only.
+
+这里 endorsement 是背书的名词，endorser 是背书人。
+
+其实前缀 en- 有 put on，装上，穿上的意思。而 dorse 则来自拉丁语 dossum，
+即后背的意思。连在一起，相当于是在背面装上、写上点东西，表示认可。最早
+的意思，是指在纸质文档的背面签名确认。那么，在数字化时代，就是对实体的
+公钥进行签名认可。
+
+与 dossum 相关的还有 dorsal，背部的、后背的。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
