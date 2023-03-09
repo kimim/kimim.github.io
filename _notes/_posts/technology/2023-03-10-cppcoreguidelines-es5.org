@@ -1,0 +1,77 @@
+:PROPERTIES:
+:ID:       a1b10b25-c5ad-456d-bbbf-48837e3cd0a6
+:END:
+#+layout: post
+#+title: CppCoreGuidelines ES.5 小作用域范围
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Keep scopes small"
+
+
+理由
+
+可读性。减小资源的驻留。避免意外错误使用变量。
+
+
+其他规则：不要把变量声明在不必要的大作用域范围中。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void use()
+{
+    int i;    // bad: i is needlessly accessible after loop
+    for (i = 0; i < 20; ++i) { /* ... */ }
+    // no intended use of i here
+    for (int i = 0; i < 20; ++i) { /* ... */ }  // good: i is local to for-loop
+
+    if (auto pc = dynamic_cast<Circle*>(ps)) {  // good: pc is local to if-statement
+        // ... deal with Circle ...
+    }
+    else {
+        // ... handle error ...
+    }
+}
+#+end_src
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void use(const string& name)
+{
+    string fn = name + ".txt";
+    ifstream is {fn};
+    Record r;
+    is >> r;
+    // ... 200 lines of code without intended use of fn or is ...
+}
+#+end_src
+
+首先，这个函数太长了。但是，重点是 fn 这个文件句柄的驻留范围太大，在后
+面，可能被错误使用。所以，最好把相关代码提取出来，单独设立个函数：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+Record load_record(const string& name)
+{
+    string fn = name + ".txt";
+    ifstream is {fn};
+    Record r;
+    is >> r;
+    return r;
+}
+
+void use(const string& name)
+{
+    Record r = load_record(name);
+    // ... 200 lines of code ...
+}
+#+end_src
+
+
+强化
+- 标注变量声明在循环外，但是循环结束后却不再使用的情况
+- 标注一些开销大的，如文件、锁等资源，在连续 N 行代码没有被用到的情况。
