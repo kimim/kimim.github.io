@@ -1,0 +1,93 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.6 在 for 的初始化和条件判断处声明变量，限制变量范围
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Declare names in for-statement initializers and conditions to limit
+scope"
+
+
+理由
+
+
+高可读性。在循环或条件判断的范围内限制变量的作用域。避免在循环或条件判
+断外使用循环变量。缩小资源驻留期。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void use()
+{
+    for (string s; cin >> s;)
+        v.push_back(s);
+
+    for (int i = 0; i < 20; ++i) {
+    // good: i is local to for-loop
+        // ...
+    }
+
+    if (auto pc = dynamic_cast<Circle*>(ps)) {
+    // good: pc is local to if-statement
+        // ... deal with Circle ...
+    }
+    else {
+        // ... handle error ...
+    }
+}
+#+end_src
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int j;                            // BAD: j is visible outside the loop
+for (j = 0; j < 100; ++j) {
+    // ...
+}
+// j is still visible here and isn't needed
+#+end_src
+
+
+强化
+
+标注警告：如果一个变量在 for 循环外部声明，在循环内中修改了，之后没有被使用。
+
+标注警告：如果一个变量在循环前声明，在循环后又做其他用途。
+
+
+讨论
+
+限定循环变量的使用范围可以帮助优化代码。如果能识别出变量只在循环中使用，
+可以发掘潜在的优化可能：比如通过代码提升（把内部循环提升到外部执行）、
+强度减弱（用消耗小的等价代码替代耗费资源的的代码），循环不变代码移动
+（Loop-Invarian Code Motion (LICM)，通过发现每次循环执行的结果不变，直
+接用替代结果）。
+
+
+C++17 和 C++20 的例子
+
+注意， C++17 和 C++20 还引入了 if, switch, 范围 for 的初始化语句。
+
+比如
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <string> <vector> <algorithm> <map> :eval no-export :results output
+map<int, string> mymap{{1, "one"}, {2, "two"}};
+ 
+if (auto result = mymap.insert({4, "three"}); result.second) {
+    // insert succeeded, and result is valid for this block
+    cout << result.first->second;  // ok
+    // ...
+} // result is destroyed here
+#+end_src
+
+#+RESULTS:
+: three
+
+
+针对 C++17 和 C++20 的强化
+
+标注选择/循环变量在语句前声明的情况
+
+标注在选择/循环语句前声明，却在语句后用作它途的情况
