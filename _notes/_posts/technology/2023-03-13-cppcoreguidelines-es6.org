@@ -1,5 +1,5 @@
 #+layout: post
-#+title: CppCoreGuidelines ES.6 在 for 的初始化和条件判断处声明变量，限制变量范围
+#+title: CppCoreGuidelines ES.6 在 for 语句的初始化和条件判断处声明变量，限制变量范围
 #+categories: technology
 #+tags: CppCoreGuidelines
 
