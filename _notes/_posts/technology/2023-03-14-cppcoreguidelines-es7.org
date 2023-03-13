@@ -1,0 +1,93 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.7 常见局部变量名尽量短，不常见非局部变量名可稍长
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Keep common and local names short, and keep uncommon and non-local names longer"
+
+
+理由
+
+可读性。避免不相关的非局部变量重名。
+
+
+例子
+
+按照惯例，短小的局部变量名可提升可读性。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template<typename T>    // good
+void print(ostream& os, const vector<T>& v)
+{
+    for (gsl::index i = 0; i < v.size(); ++i)
+        os << v[i] << '\n';
+}
+#+end_src
+
+按照惯例，下标索引都叫 i。vector 也没特别要求，命名为 v 就足够了。
+
+试比较
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template<typename Element_type>   // bad: verbose, hard to read
+void print(ostream& target_stream, const vector<Element_type>& current_vector)
+{
+    for (gsl::index current_element_index = 0;
+         current_element_index < current_vector.size();
+         ++current_element_index
+    )
+    target_stream << current_vector[current_element_index] << '\n';
+}
+#+end_src
+
+是不是有些夸张，我们还见过更夸张的呢。
+
+
+例子
+
+没有相关惯例的情况下，短小的非局部名称会导致混乱：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void use1(const string& s)
+{
+    // ...
+    tt(s);   // bad: what is tt()?
+    // ...
+}
+#+end_src
+
+最好给这种非局部的实体取个可读性好的名字
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void use1(const string& s)
+{
+    // ...
+    trim_tail(s);   // better
+    // ...
+}
+#+end_src
+
+这样，读代码的人能猜出 ~trim_tail~ 的意思，之后，可能知道怎么查找。
+
+
+坏例子
+
+对于比较长的函数来说，其参数要作为非局部变量对待。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void complicated_algorithm(vector<Record>& vr, const vector<int>& vi, map<string, int>& out)
+// read from events in vr (marking used Records) for the indices in
+// vi placing (name, index) pairs into out
+{
+    // ... 500 lines of code using vr, vi, and out ...
+}
+#+end_src
+
+尽管我们建议短函数。但是总会出现长函数的情况，那么规则也要相应调整。
+
+
+强化
+
+检查局部和非局部的变量名长度情况。函数的长度也要考虑进来。

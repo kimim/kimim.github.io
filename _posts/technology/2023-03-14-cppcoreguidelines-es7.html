@@ -1,0 +1,135 @@
+---
+layout: post
+title: CppCoreGuidelines ES.7 常见局部变量名尽量短，不常见非局部变量名可稍长
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Keep common and local names short, and keep uncommon and non-local names longer&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+可读性。避免不相关的非局部变量重名。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+按照惯例，短小的局部变量名可提升可读性。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #000000;">os</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">index</span> <span style="color: #000000;">i</span> = 0; i &lt; v.size<span style="color: #909183;">()</span>; ++i<span style="color: #7388d6;">)</span>
+        os &lt;&lt; v<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+按照惯例，下标索引都叫 i。vector 也没特别要求，命名为 v 就足够了。
+</p>
+
+<p>
+试比较
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Element_type</span><span style="color: #707183;">&gt;</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: verbose, hard to read</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #000000;">target_stream</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Element_type</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">current_vector</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">index</span> <span style="color: #000000;">current_element_index</span> = 0;
+         current_element_index &lt; current_vector.size<span style="color: #909183;">()</span>;
+         ++current_element_index
+    <span style="color: #7388d6;">)</span>
+    target_stream &lt;&lt; current_vector<span style="color: #7388d6;">[</span>current_element_index<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+是不是有些夸张，我们还见过更夸张的呢。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+没有相关惯例的情况下，短小的非局部名称会导致混乱：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use1</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    tt<span style="color: #7388d6;">(</span>s<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: what is tt()?</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+最好给这种非局部的实体取个可读性好的名字
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use1</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    trim_tail<span style="color: #7388d6;">(</span>s<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这样，读代码的人能猜出 <code>trim_tail</code> 的意思，之后，可能知道怎么查找。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<p>
+对于比较长的函数来说，其参数要作为非局部变量对待。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> compl<span style="color: #0000ff; font-weight: bold;">icated_algorithm</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span>Record<span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">vr</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">vi</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">map</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">out</span><span style="color: #707183;">)</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read from events in vr (marking used Records) for the indices in</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">vi placing (name, index) pairs into out</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... 500 lines of code using vr, vi, and out ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+尽管我们建议短函数。但是总会出现长函数的情况，那么规则也要相应调整。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+检查局部和非局部的变量名长度情况。函数的长度也要考虑进来。
+</p>
