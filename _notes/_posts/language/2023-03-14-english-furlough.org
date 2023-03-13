@@ -1,0 +1,32 @@
+#+LAYOUT: post
+#+TITLE: 单词本：furlough
+#+TAGS: English
+#+CATEGORIES: language
+
+Peter Cappelli 写的《The Future of the Office》
+[[cite:&cappelli2021future]] 提到假期的重要性，写道：
+
+Some companies, such as Marriott International, *furloughed* 66% of
+their corporate employees for two months. 有些公司，比如万豪国际给 66%
+的员工提供 2 个月的放假。
+
+这个 furlough 是放假的意思，多用于军事中的准假。其实是 for leave 的一
+个比较古老的写法。
+
+举个例子，比如英国最近在清算，召回了 23 亿英镑新冠期间的企业补助。这些
+无良企业宣传员工在休假，领取政府补助，其实是在让员工上班。
+
+Efforts by Tory ministers to recover the £2.3 billion of taxpayers’
+cash received by employers falsely claiming Covid-19 *furlough* support
+for staff who continued to work are “woeful and will fail to deter
+potential future criminals,” MPs warned today.
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
