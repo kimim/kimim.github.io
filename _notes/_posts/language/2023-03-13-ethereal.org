@@ -1,0 +1,28 @@
+#+LAYOUT: post
+#+TITLE: 单词本：ethereal
+#+TAGS: English
+#+CATEGORIES: language
+
+以太网是 3Com 的创始人 Bob Metcalfe 发明的。
+
+那么，为什么要取这个名字呢。因为 19 世纪英国科学家 James Clerk Maxwell
+发现了电磁场，并提出了著名的麦克斯韦方程组。但是的科学家不知道真空中能
+传输电磁波，于是就认为空间中充满了某些 *ethereal* medium，即虚无飘渺的媒
+介。
+
+这个 ethereal 可能源自拉丁语 aether，意思是"the upper pure, bright
+air"，就是苍穹了。ethereal 的意思就是向苍穹那样虚无缥缈，轻飘飘的。
+
+虚无缥缈、轻飘飘，也是一种优雅。比如 She's the prettiest, most
+*ethereal* romantic heroine in the movies. 踏实最美的、最优雅的女主角。
+
+因为乙醚是一种极易挥发的轻飘飘的气体。所以它名字也叫 ether：乙醚，是一
+种有机化合物，化学式为 $C_{2}H_{5}OC_{2}H_{5}$，为无色透明液体，有特殊
+刺激气味。带甜味。极易挥发。
+
+这就导致了 etherealize 这个动词有两种意思，一个是使得东西含有乙醚，即
+乙醚化。另一个意思则是轻飘飘化、脱俗化。
+
+另外，网络抓报工具 wireshark 之前的名字叫 ethereal。也是有其深意的。
+
+还有比如以太坊 Ethereum，也是一种虚无缥缈的东西。
