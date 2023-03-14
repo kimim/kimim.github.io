@@ -1,0 +1,69 @@
+---
+layout: post
+title: CppCoreGuidelines ES.8 避免似是而非的名字
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid similar-looking names&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+代码清晰可读。太相似的名字，难以理解、容易出错。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>readable<span style="color: #7388d6;">(</span>i1 + l1 + ol + o1 + o0 + ol + o1 + I0 + l0<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span> surprise<span style="color: #707183;">()</span>;
+</pre>
+</div>
+
+
+<p>
+坏例子
+</p>
+
+<p>
+不要在同一个作用域范围中声明一个与类型名一样变量名。这样声明变量的时候，就可以避免添加 struct, enum 关键字。也能减少错误的可能。比如 struct X 可能会隐式的声明一个 X 类型。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">foo</span> <span style="color: #707183;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span>; <span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">foo</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, foo is a type already in scope</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">foo</span> <span style="color: #000000;">x</span> = foo<span style="color: #707183;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">requires disambiguation</span>
+</pre>
+</div>
+
+
+<p>
+例外
+</p>
+
+<p>
+古老的头文件中可能会在同个作用域范围内定义一个和类型名一样的变量名。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+检查难以识别的字母和数字组合。还可以选择区分度比较高的编码字体。
+</p>
+
+<p>
+标记在同一个作用域中，与类型名重名的变量、函数和枚举值。
+</p>

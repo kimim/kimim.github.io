@@ -1,0 +1,46 @@
+:PROPERTIES:
+:ID:       75999c43-24b2-486a-a9c3-05f121f961d3
+:END:
+#+layout: post
+#+title: CppCoreGuidelines ES.8 避免似是而非的名字
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid similar-looking names"
+
+
+理由
+
+代码清晰可读。太相似的名字，难以理解、容易出错。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+if (readable(i1 + l1 + ol + o1 + o0 + ol + o1 + I0 + l0)) surprise();
+#+end_src
+
+
+坏例子
+
+不要在同一个作用域范围中声明一个与类型名一样变量名。这样声明变量的时候，
+就可以避免添加 struct, enum 关键字。也能减少错误的可能。比如 struct X 可能会隐式的声明一个 X 类型。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+struct foo { int n; };
+struct foo foo();       // BAD, foo is a type already in scope
+struct foo x = foo();   // requires disambiguation
+#+end_src
+
+
+例外
+
+古老的头文件中可能会在同个作用域范围内定义一个和类型名一样的变量名。
+
+
+强化
+
+检查难以识别的字母和数字组合。还可以选择区分度比较高的编码字体。
+
+标记在同一个作用域中，与类型名重名的变量、函数和枚举值。
