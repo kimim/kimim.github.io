@@ -1,0 +1,39 @@
+#+LAYOUT: post
+#+TITLE: 单词本：paucity
+#+TAGS: English Français
+#+CATEGORIES: language
+
+Michelle Brody 的关于办公室文化的书《Own Your Armor》
+[[cite:&brody2022armor]] 中写道：
+
+Typical symptoms of a dysfunctional workplace include a *paucity* of
+trust, accountability and honesty. People behave unprofessionally,
+blame one another, gossip and complain. Frustrations run high. 办公室
+职能失调症状包括：缺少信任、责任感和坦诚。人们不专业、谴责他人、闲言碎
+语、报怨，容易懊恼。
+
+这里用到一个词 paucity，意思是缺乏、少数、少量。
+
+这个词来自拉丁语 paucus，意思是一些、一点点。
+
+另外法语中的 peu，意大利中的 poco 也都源自 paucus。比如：
+
+C'est une situation un *peu* étrange. 这个情况有些诡异。
+
+Quand je dis point, je veux dire très *peu*; Encor ce *peu* lui donnait de
+la peine. 当我说到点上，我说的很少，这很少一些仍能给他点颜色看看。
+
+le *peu* 也可以表示很短的时间，比如：
+
+Le *peu* que nous avons à les posséder. 我们只有很短的时间拥有世上的东西。
+
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
