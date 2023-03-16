@@ -71,10 +71,3 @@ int main()
 #+begin_example
 terminate called after throwing an instance of 'std::bad_cast'
 #+end_example
-
-#+begin_comment
-Local variables:
-org-babel-noweb-wrap-start: "$$"
-org-babel-noweb-wrap-end: "$$"
-End:
-#+end_comment
