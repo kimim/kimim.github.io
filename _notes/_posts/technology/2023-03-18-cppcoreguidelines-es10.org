@@ -1,0 +1,84 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.10 一个声明语句只声明一个变量
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Declare one name (only) per declaration"
+
+理由
+
+一行只声明一个变量可以提升可读性，避免语法相关的错误。也能有助于添加行尾注释。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+char *p, c, a[7], *pp[7], **aa[10];   // yuck!
+#+end_src
+
+
+例外
+
+函数声明中可以有多个参数声明。
+
+
+例外
+
+结构化绑定（C++17）设计的目的是为了引入多个变量：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+auto [iter, inserted] = m.insert_or_assign(k, val);
+if (inserted) { /* new entry was inserted */ }
+#+end_src
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template<class InputIterator, class Predicate>
+bool any_of(InputIterator first, InputIterator last, Predicate pred);
+#+end_src
+
+或者使用概念（concept）会更好：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+bool any_of(input_iterator auto first, input_iterator auto last, predicate auto pred);
+#+end_src
+
+#+RESULTS:
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+double scalbn(double x, int n);   // OK: x * pow(FLT_RADIX, n); FLT_RADIX is usually 2
+#+end_src
+
+或
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+double scalbn(    // better: x * pow(FLT_RADIX, n); FLT_RADIX is usually 2
+    double x,     // base value
+    int n         // exponent
+);
+#+end_src
+
+或
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+// better: base * pow(FLT_RADIX, exponent); FLT_RADIX is usually 2
+double scalbn(double base, int exponent);
+#+end_src
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int a = 10, b = 11, c = 12, d, e = 14, f = 15;
+#+end_src
+
+这种过长的初始化过程很容易不小心引入未初始化的变量。
+
+
+强化
+
+标注一行声明多个变量或常量的情况（如 int* p, q;）

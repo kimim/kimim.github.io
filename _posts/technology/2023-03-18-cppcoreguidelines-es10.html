@@ -1,0 +1,127 @@
+---
+layout: post
+title: CppCoreGuidelines ES.10 一个声明语句只声明一个变量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Declare one name (only) per declaration&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+一行只声明一个变量可以提升可读性，避免语法相关的错误。也能有助于添加行尾注释。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> *<span style="color: #000000;">p</span>, <span style="color: #000000;">c</span>, <span style="color: #000000;">a</span><span style="color: #707183;">[</span>7<span style="color: #707183;">]</span>, *<span style="color: #000000;">pp</span><span style="color: #707183;">[</span>7<span style="color: #707183;">]</span>, **<span style="color: #000000;">aa</span><span style="color: #707183;">[</span>10<span style="color: #707183;">]</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">yuck!</span>
+</pre>
+</div>
+
+
+<p>
+例外
+</p>
+
+<p>
+函数声明中可以有多个参数声明。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+结构化绑定（C++17）设计的目的是为了引入多个变量：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #707183;">[</span>iter, inserted<span style="color: #707183;">]</span> = m.insert_or_assign<span style="color: #707183;">(</span>k, val<span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>inserted<span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">new entry was inserted</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Predicate</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #0000ff; font-weight: bold;">any_of</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator</span> <span style="color: #000000;">first</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">InputIterator</span> <span style="color: #000000;">last</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Predicate</span> <span style="color: #000000;">pred</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+或者使用概念（concept）会更好：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #0000ff; font-weight: bold;">any_of</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">input_iterator</span> <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">first</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">input_iterator</span> <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">last</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">predicate</span> <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">pred</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">scalbn</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: x * pow(FLT_RADIX, n); FLT_RADIX is usually 2</span>
+</pre>
+</div>
+
+<p>
+或
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">scalbn</span><span style="color: #707183;">(</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better: x * pow(FLT_RADIX, n); FLT_RADIX is usually 2</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span>,     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">base value</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span>         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">exponent</span>
+<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+或
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better: base * pow(FLT_RADIX, exponent); FLT_RADIX is usually 2</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">scalbn</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">base</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">exponent</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span> = 10, <span style="color: #000000;">b</span> = 11, <span style="color: #000000;">c</span> = 12, <span style="color: #000000;">d</span>, <span style="color: #000000;">e</span> = 14, <span style="color: #000000;">f</span> = 15;
+</pre>
+</div>
+
+<p>
+这种过长的初始化过程很容易不小心引入未初始化的变量。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+标注一行声明多个变量或常量的情况（如 int* p, q;）
+</p>
