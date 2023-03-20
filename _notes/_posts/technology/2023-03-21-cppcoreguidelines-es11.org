@@ -1,0 +1,79 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.11 使用 auto 避免重复的类型名
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use auto to avoid redundant repetition of type names"
+
+
+理由
+
+- 简单的重复繁琐易错。
+- 如果你用了 auto，声明的变量实体在固定位置，（因为 auto 的宽度固定么）
+  提升了阅读性。
+- 声明函数模板时，auto 还可以表示返回值是成员类型
+
+
+例子
+
+考虑：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+auto p = v.begin();      // vector<DataRecord>::iterator
+auto z1 = v[3];          // makes copy of DataRecord
+auto& z2 = v[3];         // avoids copy
+const auto& z3 = v[3];   // const and avoids copy
+auto h = t.future();
+auto q = make_unique<int[]>(s);
+auto f = [](int x) { return x + 10; };
+#+end_src
+
+以上例子中，我们避免了写繁琐、难记的类型名。编译器能推导出来，但是程序
+员容易出错。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template<class T>
+auto Container<T>::first() -> Iterator;   // Container<T>::Iterator
+#+end_src
+
+
+例外
+
+
+如果你明确什么类型，就避免对初始化列表使用 auto。可能需要类型转换。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+auto lst = { 1, 2, 3 };   // lst is an initializer list
+auto x{1};   // x is an int (in C++17; initializer_list in C++11)
+#+end_src
+
+
+注意
+
+在 C++20 中，我们可以，而且应该用 concept 明确我们想推导的类型：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+// ...
+forward_iterator auto p = algo(x, y, z);
+#+end_src
+
+
+C++17 例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+std::set<int> values;
+// ...
+// break out the members of the std::pair
+auto [ position, newly_inserted ] = values.insert(5);   
+#+end_src
+
+
+强化
+
+在声明中标注多余重复的类型名

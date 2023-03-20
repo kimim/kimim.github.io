@@ -1,0 +1,115 @@
+---
+layout: post
+title: CppCoreGuidelines ES.11 使用 auto 避免重复的类型名
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use auto to avoid redundant repetition of type names&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<ul class="org-ul">
+<li>简单的重复繁琐易错。</li>
+<li>如果你用了 auto，声明的变量实体在固定位置，（因为 auto 的宽度固定么）提升了阅读性。</li>
+<li>声明函数模板时，auto 还可以表示返回值是成员类型</li>
+</ul>
+
+
+<p>
+例子
+</p>
+
+<p>
+考虑：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = v.begin<span style="color: #707183;">()</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">vector&lt;DataRecord&gt;::iterator</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">z1</span> = v<span style="color: #707183;">[</span>3<span style="color: #707183;">]</span>;          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">makes copy of DataRecord</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">z2</span> = v<span style="color: #707183;">[</span>3<span style="color: #707183;">]</span>;         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">avoids copy</span>
+<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">z3</span> = v<span style="color: #707183;">[</span>3<span style="color: #707183;">]</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">const and avoids copy</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">h</span> = t.future<span style="color: #707183;">()</span>;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">q</span> = make_unique<span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">[]</span><span style="color: #707183;">&gt;(</span>s<span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">f</span> = <span style="color: #707183;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x + 10; <span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+以上例子中，我们避免了写繁琐、难记的类型名。编译器能推导出来，但是程序员容易出错。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #110099;">Container</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>::<span style="color: #0000ff; font-weight: bold;">first</span><span style="color: #707183;">()</span> -&gt; <span style="color: #000000; font-style: italic; text-decoration: underline;">Iterator</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Container&lt;T&gt;::Iterator</span>
+</pre>
+</div>
+
+
+<p>
+例外
+</p>
+
+
+<p>
+如果你明确什么类型，就避免对初始化列表使用 auto。可能需要类型转换。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">lst</span> = <span style="color: #707183;">{</span> 1, 2, 3 <span style="color: #707183;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">lst is an initializer list</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x</span><span style="color: #707183;">{</span>1<span style="color: #707183;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">x is an int (in C++17; initializer_list in C++11)</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+在 C++20 中，我们可以，而且应该用 concept 明确我们想推导的类型：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">forward_iterator</span> <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = algo<span style="color: #707183;">(</span>x, y, z<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+C++17 例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">set</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">values</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">break out the members of the std::pair</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #707183;">[</span> position, newly_inserted <span style="color: #707183;">]</span> = values.insert<span style="color: #707183;">(</span>5<span style="color: #707183;">)</span>;   
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+在声明中标注多余重复的类型名
+</p>
