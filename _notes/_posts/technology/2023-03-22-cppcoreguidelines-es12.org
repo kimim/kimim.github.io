@@ -1,0 +1,103 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.12 不要在嵌套作用域内重用变量名
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Do not reuse names in nested scopes"
+
+理由
+
+太容易搞错了。导致维护上的麻烦。
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int d = 0;
+// ...
+if (cond) {
+    // ...
+    d = 9;
+    // ...
+}
+else {
+    // ...
+    int d = 7;
+    // ...
+    d = value_to_be_returned;
+    // ...
+}
+return d;
+#+end_src
+
+如果这里的 if 代码段很长的话，很容易忽视内部作用域引入的 d。这是很常见的 bug。有时候，这种内部作用域引入同名变量，称为“shadowing遮蔽”。
+
+注意
+
+当函数很长很复杂的时候，shadowing 是常见的问题。
+
+例子
+
+C++ 语言不允许对最外层的函数参数做 shadowing。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f(int x)
+{
+    int x = 4;  // error: reuse of function argument name
+
+    if (x) {
+        int x = 7;  // allowed, but bad
+        // ...
+    }
+}
+#+end_src
+
+
+坏例子
+
+局部变量重用成员变量名也容易出问题：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+struct S {
+    int m;
+    void f(int x);
+};
+
+void S::f(int x)
+{
+    m = 7;    // assign to member
+    if (x) {
+        int m = 9;
+        // ...
+        m = 99; // assign to local variable
+        // ...
+    }
+}
+#+end_src
+
+例外
+
+我们经常在派生类中重用基类函数名：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+struct B {
+    void f(int);
+};
+
+struct D : B {
+    void f(double);
+    using B::f;
+};
+#+end_src
+
+不过，这样也容易出错。比如，如果我们忘记用 ~using~ 声明，调用 ~d.f(1)~ 就找不到参数为 ~int~ 类型的 ~f~ 函数。
+
+
+强化
+
+- 标记在嵌套局部作用域重用变量名的情况
+- 标记在成员函数内重用成员变量名的情况
+- 标记把全局变量重用到局部变量或成员变量名的情况
+- 标记派生类中重用基类成员变量名的情况（函数名除外）

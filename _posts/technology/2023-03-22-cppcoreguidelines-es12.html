@@ -1,0 +1,142 @@
+---
+layout: post
+title: CppCoreGuidelines ES.12 不要在嵌套作用域内重用变量名
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Do not reuse names in nested scopes&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+太容易搞错了。导致维护上的麻烦。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">d</span> = 0;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>cond<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    d = 9;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">d</span> = 7;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    d = value_to_be_returned;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">return</span> d;
+</pre>
+</div>
+
+<p>
+如果这里的 if 代码段很长的话，很容易忽视内部作用域引入的 d。这是很常见的 bug。有时候，这种内部作用域引入同名变量，称为“shadowing遮蔽”。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+当函数很长很复杂的时候，shadowing 是常见的问题。
+</p>
+
+<p>
+例子
+</p>
+
+<p>
+C++ 语言不允许对最外层的函数参数做 shadowing。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = 4;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: reuse of function argument name</span>
+
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = 7;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">allowed, but bad</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+坏例子
+</p>
+
+<p>
+局部变量重用成员变量名也容易出问题：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #110099;">S</span>::<span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    m = 7;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assign to member</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m</span> = 9;
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+        m = 99; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assign to local variable</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+例外
+</p>
+
+<p>
+我们经常在派生类中重用基类函数名：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #110099;">B</span>::f;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+不过，这样也容易出错。比如，如果我们忘记用 <code>using</code> 声明，调用 <code>d.f(1)</code> 就找不到参数为 <code>int</code> 类型的 <code>f</code> 函数。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记在嵌套局部作用域重用变量名的情况</li>
+<li>标记在成员函数内重用成员变量名的情况</li>
+<li>标记把全局变量重用到局部变量或成员变量名的情况</li>
+<li>标记派生类中重用基类成员变量名的情况（函数名除外）</li>
+</ul>
