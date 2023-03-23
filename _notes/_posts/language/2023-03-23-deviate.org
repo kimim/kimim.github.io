@@ -1,0 +1,40 @@
+#+LAYOUT: post
+#+TITLE: 单词本：deviate
+#+TAGS: English Latin
+#+CATEGORIES: language
+
+不好意思，最近分享的比较少。一般来说，分享少的时候，就是埋头干活的时候。
+分享多的时候，就是大量阅读的时候。阅读也是在干活啊。所以，我一直在忙着
+干活。
+
+昨天看敏捷开发方法，遇到很多个 via 为词根的词，比如：
+
+As the project continues, the team may *deviate* from the original
+vision.  The team can manage the *deviations*, because the team delivers
+value sooner. [[cite:&pmi2017agile]] 随着项目进展，团队会偏离原来的愿景。
+团队能管理这些偏差，因为他们能很快发布有价值的交付物。
+
+The team may need feedback on a prototype and may then choose to
+deliver a minimum *viable* product (MVP) to a subset of
+customers. [[cite:&pmi2017agile]] 团队需要他人对原形的反馈，从而选择交付最
+小可行产品（MVP）。
+
+
+这里的 deviate 是偏离、违背的意思。deviation 是其名词，偏差。viable 是
+可行的意思。
+
+他们都源自拉丁语 via 道路。deviate 来自 deviatus，即偏离道路。viable
+即道路可行。
+
+那么，反义词，undevating 则是坚持正道、坚定不移、不迷失的。deviant 则
+是反常的、变态之人，也就是不走寻常路的人。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
