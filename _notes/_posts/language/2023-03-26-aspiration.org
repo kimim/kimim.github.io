@@ -1,0 +1,57 @@
+#+LAYOUT: post
+#+TITLE: 单词本：aspiration
+#+TAGS: English
+#+CATEGORIES: language
+
+最近看书遇到不少 aspiration，比如：
+
+Any enterprise integration program must be business driven and reflect
+the goals and *aspirations* of management concerning the expected
+outcome of the integration endeavor. 企业信息继承项目必须是业务驱动的，
+反映了管理层的目标和抱负。
+
+这里 aspiration，是渴望、抱负的意思。这词来自拉丁语 aspirationem，本意
+是向最远的地方吹气。 拉丁语 ad + spirare，ad 是 to，spirare 是呼吸。所
+以 aspire 的本意就是朝这最远的地方呼吸，即渴望、有志向于某事。
+
+比如，前几天，我们管理层开会，PPT 中有一句：By end of 2024, *aspire* to
+have xxx in place. 到 2024 年第，我们有志于实现 xxx 项目的产品化。
+
+Ross Mcilroy et. al. [[cite:&mcilroy2019spectre]] 的一篇芯片安全论文中也用
+到了这个词：Computer systems *aspire* to enforce three key security
+properties: confidentiality, integrity, and availability. 计算机系统立
+志于强化三个安全属性：保密、完整，以及可用性。
+
+再比如：
+
+Every project finds itself in tension with competing
+*aspirations*. [[cite:&pmi2017agile]] 每个项目都处于多个竞争的目标的紧张关系
+中。
+
+Hope is the bridge between *aspiration* and the disappointments of
+reality. [[cite:&carucci2021honest]] 希望是连接渴望的志向与现实的失望的桥
+梁。
+
+level of performance in relation to his *aspiration*
+level. [[cite:&openstax2019principle]] 绩效的等级与其渴望程度相关。
+
+另外，aspirational 是 aspiration 的形容词形式，即有雄心壮志的、梦寐以
+求的。
+
+比如，Thomas Gamer, et. al.  [[cite:&gamer2019aa]] 的一篇论文，介绍自动化
+系统的自主控制等级，提到：Today, this is still largely *aspirational*,
+but for instance an electric self-driving mining vehicle for fully
+autonomous loading of the ore would carry major advantages of safety
+and productivity. 如今，完全自主驾驶很大程度上还只是雄心壮志的目标。但
+是在矿区的自动驾驶已经能够完全自主执行挖矿加载操作。实现了安全高效矿区
+运营。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
