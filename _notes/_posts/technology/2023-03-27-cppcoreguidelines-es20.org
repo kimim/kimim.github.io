@@ -1,0 +1,227 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.20 确保对象总是被初始化
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Always initialize an object"
+
+理由
+
+避免设置前使用的错误。以及可能产生的未定义行为。避免难理解的复杂的初始
+化。使重构变得简单。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void use(int arg)
+{
+    int i;   // bad: uninitialized variable
+    // ...
+    i = 7;   // initialize i
+}
+#+end_src
+
+~i = 7~ 并不是初始化 ~i~ ，而是赋值给 ~i~ 。在省略号部分，可能就会读取 ~i~ 的
+未初始化的值。
+
+更好的代码:
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void use(int arg)   // OK
+{
+    int i = 7;   // OK: initialized
+    string s;    // OK: default initialized
+    // ...
+}
+#+end_src
+
+注意
+
+“总是要初始化”的规则比“对象必须设值”的规则更强。后者相对宽松，但是会导致：
+
+- 难以阅读的代码
+- 让人们在过大的范围声明变量
+- 鼓励复杂的代码，导致逻辑bug
+- 妨碍重构
+
+总是要初始化规则是一个代码风格规则，可提升可维护性。
+
+
+例子
+
+这个例子经常用于演示对稍微宽松一些的初始化规则的需求：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+widget i;    // "widget" a type that's expensive to initialize,
+             // possibly a large POD
+widget j;
+
+if (cond) {  // bad: i and j are initialized "late"
+    i = f1();
+    j = f2();
+}
+else {
+    i = f3();
+    j = f4();
+}
+#+end_src
+
+以上代码不能很轻松地就重构，从而可以通过初始化操作来初始化 ~i~ 和 ~j~ 。注
+意，如果一个类型有默认构造函数，那么，你尝试推出初始化，只会简单的导致
+先进行默认初始化，再进行一次赋值操作。以上这种写法的主流原因是“效率”。
+但是编译器其实能够检测到我们是否犯了“设置前使用”错误，也能避免多余的重
+复初始化。
+
+
+假设 ~i~ 与 ~j~ 之间有一些逻辑关联，那么这种关联可以通过代码表示：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+pair<widget, widget> make_related_widgets(bool x)
+{
+    return (x) ? {f1(), f2()} : {f3(), f4()};
+}
+
+auto [i, j] = make_related_widgets(cond);    // C++17
+#+end_src
+
+如果说，你觉得 ~make_related_widgets~ 函数有些重复多余，我们也可以通过
+~lambda~ 省略之。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+auto [i, j] = [x] { return (x) ? pair{f1(), f2()} : pair{f3(), f4()} }();
+// C++17
+#+end_src
+
+利用某个特殊的值表示“未初始化”通常是一种问题的症状，而非解决方法：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+widget i = uninit;  // bad
+widget j = uninit;
+
+// ...
+use(i);         // possibly used before set
+// ...
+
+if (cond) {     // bad: i and j are initialized "late"
+    i = f1();
+    j = f2();
+}
+else {
+    i = f3();
+    j = f4();
+}
+#+end_src
+
+这样写之后，编译器都无法简单的检测到“设置之前使用”这类错误。进一步来说，
+我们还在 ~widget~ 的状态空间引入了新的复杂性：哪些操作对未初始化的
+~widget~ 是合法的，哪些是不合法的？
+
+多年以来，聪明的程序员流行使用复杂的初始化方法。然而，这往往是大部分代
+码错误和复杂的来源。很多这类错误会在代码实现之后若干年的维护过程中引入。
+
+例如：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class X {
+public:
+    X(int i, int ci) : m2{i}, cm2{ci} {}
+    // ...
+
+private:
+    int m1 = 7;
+    int m2;
+    int m3;
+
+    const int cm1 = 7;
+    const int cm2;
+    const int cm3;
+};
+#+end_src
+
+编译器会标记出未初始化的 ~cm3~ ，因为这是个 ~const~ 成员变量。但是编译器不
+会发现 ~m3~ 缺少初始化。通常，偶尔的伪造的成员变量初始化是值得的。因为它
+可以避免缺少初始化而引起的错误。而且，编译器经常能够优化掉多余的初始化
+（比如，赋值操作前的一次初始化）。
+
+
+例外
+
+如果你声明一个以输入数据进行初始化的对象，那么在此之前进行初始化，会导
+致重复初始化。然而，必须注意，不要在输入数据之后，还存在未初始化的对象。
+那样会导致错误，以及安全性问题。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+constexpr int max = 8 * 1024;
+int buf[max];         // OK, but suspicious: uninitialized
+f.read(buf, max);
+#+end_src
+
+初始化这个大数组可能在某些情况下比较消耗计算资源。但是，这个例子中，未
+初始化的变量可能被访问。所以千万要小心处理。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+constexpr int max = 8 * 1024;
+int buf[max] = {};   // zero all elements; better in some situations
+f.read(buf, max);
+#+end_src
+
+因为对于数组和 ~std::array~ 的约束性初始化规则，所以有很多针对这类数据的
+例外情况。
+
+但是，如果可以，尽量使用不会溢出的库函数。比如：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+string s;   // s is default initialized to ""
+cin >> s;   // s expands to hold the string
+#+end_src
+
+对于简单的变量，不要考虑套用这里提到的例外情况（通过输入数据初始化）。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int i;   // bad
+// ...
+cin >> i;
+#+end_src
+
+通常，输入操作和对象的操作可能会分开，就可能会出现“设置前使用”的情况。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int i2 = 0;   // better, assuming that zero is an acceptable value for i2
+// ...
+cin >> i2;
+#+end_src
+
+一个好的编译优化器应该能识别输入操作，避免多余的初始化操作。
+
+
+注意
+
+有时候，我们可以用 ~lambda~ 作为初始化工具，从而避免未初始化的变量：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+error_code ec;
+Value v = [&] {
+    auto p = get_value();   // get_value() returns a pair<error_code, Value>
+    ec = p.first;
+    return p.second;
+}();
+#+end_src
+
+或者，可能这样：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+Value v = [] {
+    auto p = get_value();   // get_value() returns a pair<error_code, Value>
+    if (p.first) throw Bad_value{p.first};
+    return p.second;
+}();
+#+end_src
+
+强化
+
+标记每一个未初始化的变量。不要标记有默认构造函数的用户类型。
+
+确保未初始化的缓冲区在声明之后马上写入数据。以非 const 参数类型传递未
+初始化的变量，可以认为是对变量的一次写入操作。
