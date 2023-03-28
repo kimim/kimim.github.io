@@ -1,0 +1,76 @@
+---
+layout: post
+title: CppCoreGuidelines ES.22 不要在没有能用的初始值之前声明变量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t declare a variable until you have a value to initialize it with&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性。限制变量的作用域范围。避免“设置前使用”的问题。通常，初始化比赋值操作效率更高。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no use of s here ...</span>
+s = <span style="color: #2A00FF;">"what a waste"</span>;
+</pre>
+</div>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">SomeLargeType</span> <span style="color: #000000;">var</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Hard-to-read CaMeLcAsEvArIaBlE</span>
+
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>cond<span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">some non-trivial condition</span>
+    Set<span style="color: #707183;">(</span>&amp;var<span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>cond2 || !cond3<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    var = Set2<span style="color: #7388d6;">(</span>3.14<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #707183;">{</span>
+    var = 0;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">e</span> : something<span style="color: #7388d6;">)</span>
+        var += e;
+<span style="color: #707183;">}</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">use var;</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">that this isn't done too early can be enforced statically with only</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">control flow</span>
+</pre>
+</div>
+
+<p>
+如果 <code>SomeLargeType</code> 类型的默认初始化不太消耗资源，那问题不大。不然，程序员就要好好考虑，每一个迷宫一样的条件分支是不是都覆盖到了。如果没有的话，我们就可能遇到“设置前使用”的 bug。这将会是维护工作中的一个大陷阱。
+</p>
+
+<p>
+对于初始过程略微复杂的情况，包括 <code>const</code> 变量，可以考虑使用 <code>lambda</code> 来进行初始化。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记有默认初始化过程，被赋值操作又在首次读取操作之前的情况。
+</p>
+
+<p>
+标记在未初始化变量之后有一堆复杂计算，之后才使用这个变量的情况
+</p>

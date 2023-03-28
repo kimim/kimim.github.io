@@ -1,0 +1,54 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.22 不要在没有能用的初始值之前声明变量
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t declare a variable until you have a value to initialize it with"
+
+理由
+
+可读性。限制变量的作用域范围。避免“设置前使用”的问题。通常，初始化比赋
+值操作效率更高。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+string s;
+// ... no use of s here ...
+s = "what a waste";
+#+end_src
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+SomeLargeType var;  // Hard-to-read CaMeLcAsEvArIaBlE
+
+if (cond)   // some non-trivial condition
+    Set(&var);
+else if (cond2 || !cond3) {
+    var = Set2(3.14);
+}
+else {
+    var = 0;
+    for (auto& e : something)
+        var += e;
+}
+// use var;
+// that this isn't done too early can be enforced statically with only
+// control flow
+#+end_src
+
+如果 ~SomeLargeType~ 类型的默认初始化不太消耗资源，那问题不大。不然，程
+序员就要好好考虑，每一个迷宫一样的条件分支是不是都覆盖到了。如果没有的
+话，我们就可能遇到“设置前使用”的 bug。这将会是维护工作中的一个大陷阱。
+
+对于初始过程略微复杂的情况，包括 ~const~ 变量，可以考虑使用 ~lambda~ 来进行初始化。
+
+
+强化
+
+标记有默认初始化过程，被赋值操作又在首次读取操作之前的情况。
+
+标记在未初始化变量之后有一堆复杂计算，之后才使用这个变量的情况
