@@ -1,0 +1,40 @@
+---
+layout: post
+title: CppCoreGuidelines ES.21 不要在需要使用之前引入一个变量或常量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t introduce a variable (or constant) before you need to use it&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性。限制变量能使用的范围。
+</p>
+
+<p>
+例如（坏例子）
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = 7;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no use of x here ...</span>
+++x;
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+标记变量第一次使用的位置与声明的位置距离很远的情况
+</p>
