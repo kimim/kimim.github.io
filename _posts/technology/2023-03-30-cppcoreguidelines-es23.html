@@ -1,0 +1,193 @@
+---
+layout: post
+title: CppCoreGuidelines ES.23 首选 {} 花括号初始化语法
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer the <code>{}</code>-initializer syntax&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>{}</code> 初始化规则更简单、更普通、不模糊、相比其他形式更安全。
+</p>
+
+<p>
+只有当你确信没有变窄转换的时候，用 <code>=</code> 初始化。
+</p>
+
+<p>
+对于内置数值类型，只对 <code>auto</code> 变量，使用 <code>=</code> 初始化。
+</p>
+
+<p>
+避免 <code>()</code> 初始化。因为容易引起语法解析模糊。
+</p>
+
+
+<p>
+比如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> <span style="color: #707183;">{</span>f<span style="color: #7388d6;">(</span>99<span style="color: #7388d6;">)</span><span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span> = x;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v</span> = <span style="color: #707183;">{</span>1, 2, 3, 4, 5, 6<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+例外
+</p>
+
+<p>
+对于容器类型，按照传统，我们用 <code>{...}</code> 表示列表元素， <code>(...)</code> 表示容器大小：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v1</span><span style="color: #707183;">(</span>10<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">vector of 10 elements with the default value 0</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v2</span><span style="color: #707183;">{</span>10<span style="color: #707183;">}</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">vector of 1 element with the value 10</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v3</span><span style="color: #707183;">(</span>1, 2<span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">vector of 1 element with the value 2</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v4</span><span style="color: #707183;">{</span>1, 2<span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">vector of 2 elements with the values 1 and 2</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+<code>{}</code> 初始化不允许变窄类型转换（有时候是好东西），只允许显示构造函数（也很好，我们有意要初始化一个变量）。
+</p>
+
+<p>
+比如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> <span style="color: #707183;">{</span>7.9<span style="color: #707183;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: narrowing</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span> = 7.9;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: y becomes 7. Hope for a compiler warning</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">z</span> = <span style="color: #110099;">gsl</span>::narrow_cast<span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;(</span>7.9<span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: you asked for it</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+<code>{}</code> 几乎可以用于任何初始化。而其他形式不行。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #707183;">{</span>1, 2, 3, 4, 5<span style="color: #707183;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">initialized vector</span>
+<span style="color: #110099;">D</span>::<span style="color: #0000ff; font-weight: bold;">D</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> :m<span style="color: #707183;">{</span>a, b<span style="color: #707183;">}</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">member initializer (e.g., m might be a pair)</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">var</span> <span style="color: #707183;">{}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">initialize var to be empty</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m</span> <span style="color: #7388d6;">{</span>7<span style="color: #7388d6;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">default initializer for a member</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+基于此原因， <code>{}</code> 初始化又称“统一初始化/万能初始化”。（当然，也还有一些异常情况）。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+C++17 之前声明为 <code>auto</code> 的变量通过单值进行初始化，会有些奇怪的结果。比如 <code>{v}</code> ：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x1</span> <span style="color: #707183;">{</span>7<span style="color: #707183;">}</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">x1 is an int with the value 7</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x2</span> = <span style="color: #707183;">{</span>7<span style="color: #707183;">}</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">x2 is an initializer_list&lt;int&gt; with an element 7</span>
+
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x11</span> <span style="color: #707183;">{</span>7, 8<span style="color: #707183;">}</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: two initializers</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x22</span> = <span style="color: #707183;">{</span>7, 8<span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">x22 is an initializer_list&lt;int&gt; with elements 7 and 8</span>
+</pre>
+</div>
+
+<p>
+如果你确实想要一个初始化列表类型 <code>initializer_list&lt;T&gt;</code> 请使用 <code>={...}</code> ：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">fib10</span> = <span style="color: #707183;">{</span>1, 1, 2, 3, 5, 8, 13, 21, 34, 55<span style="color: #707183;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">fib10 is a list</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+<code>={}</code> 其实上是一个拷贝初始化。而 <code>{}</code> 是直接初始化。就跟拷贝初始化与直接初始化的差别一样。 <code>{}</code> 接受 <code>explicit</code> 构造函数，而 <code>={}</code> 不接受。
+</p>
+
+<p>
+比如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Z</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">explicit</span> <span style="color: #0000ff; font-weight: bold;">Z</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{}</span>
+<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Z</span> <span style="color: #000000;">z1</span><span style="color: #707183;">{}</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: direct initialization, so we use explicit constructor</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Z</span> <span style="color: #000000;">z2</span> = <span style="color: #707183;">{}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: copy initialization, so we cannot use the</span>
+            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">explicit constructor</span>
+</pre>
+</div>
+
+<p>
+请使用 <code>{}</code> 初始化，除非你想禁用 <code>explicit</code> 构造函数。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">x1</span><span style="color: #7388d6;">(</span>1<span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">T initialized with 1</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">x0</span><span style="color: #7388d6;">()</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: function declaration (often a mistake)</span>
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">y1</span> <span style="color: #7388d6;">{</span>1<span style="color: #7388d6;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">T initialized with 1</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">y0</span> <span style="color: #7388d6;">{}</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">default initialized T</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记使用 <code>=</code> 初始化数值类型，且出现窄类型转换的情况。
+</p>
+
+<p>
+标记使用 <code>()</code> 语法初始化，而实际是声明的情况。很多编译器应该会发出告警。
+</p>

@@ -1,0 +1,133 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.23 首选 {} 花括号初始化语法
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer the ~{}~-initializer syntax"
+
+理由
+
+~{}~ 初始化规则更简单、更普通、不模糊、相比其他形式更安全。
+
+只有当你确信没有变窄转换的时候，用 ~=~ 初始化。
+
+对于内置数值类型，只对 ~auto~ 变量，使用 ~=~ 初始化。
+
+避免 ~()~ 初始化。因为容易引起语法解析模糊。
+
+
+比如
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int x {f(99)};
+int y = x;
+vector<int> v = {1, 2, 3, 4, 5, 6};
+#+end_src
+
+例外
+
+对于容器类型，按照传统，我们用 ~{...}~ 表示列表元素， ~(...)~ 表示容器大小：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+vector<int> v1(10);    // vector of 10 elements with the default value 0
+vector<int> v2{10};    // vector of 1 element with the value 10
+
+vector<int> v3(1, 2);  // vector of 1 element with the value 2
+vector<int> v4{1, 2};  // vector of 2 elements with the values 1 and 2
+#+end_src
+
+
+注意
+
+~{}~ 初始化不允许变窄类型转换（有时候是好东西），只允许显示构造函数（也
+很好，我们有意要初始化一个变量）。
+
+比如
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int x {7.9};   // error: narrowing
+int y = 7.9;   // OK: y becomes 7. Hope for a compiler warning
+int z = gsl::narrow_cast<int>(7.9);  // OK: you asked for it
+#+end_src
+
+注意
+
+~{}~ 几乎可以用于任何初始化。而其他形式不行。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+auto p = new vector<int> {1, 2, 3, 4, 5};   // initialized vector
+D::D(int a, int b) :m{a, b} {   // member initializer (e.g., m might be a pair)
+    // ...
+};
+X var {};   // initialize var to be empty
+struct S {
+    int m {7};   // default initializer for a member
+    // ...
+};
+#+end_src
+
+基于此原因， ~{}~ 初始化又称“统一初始化/万能初始化”。（当然，也还有一些
+异常情况）。
+
+
+注意
+
+C++17 之前声明为 ~auto~ 的变量通过单值进行初始化，会有些奇怪的结果。比如 ~{v}~ ：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+auto x1 {7};        // x1 is an int with the value 7
+auto x2 = {7};      // x2 is an initializer_list<int> with an element 7
+
+auto x11 {7, 8};    // error: two initializers
+auto x22 = {7, 8};  // x22 is an initializer_list<int> with elements 7 and 8
+#+end_src
+
+如果你确实想要一个初始化列表类型 ~initializer_list<T>~ 请使用 ~={...}~ ：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+auto fib10 = {1, 1, 2, 3, 5, 8, 13, 21, 34, 55};   // fib10 is a list
+#+end_src
+
+
+注意
+
+~={}~ 其实上是一个拷贝初始化。而 ~{}~ 是直接初始化。就跟拷贝初始化与直接初
+始化的差别一样。 ~{}~ 接受 ~explicit~ 构造函数，而 ~={}~ 不接受。
+
+比如
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+struct Z {
+    explicit Z() {}
+};
+Z z1{};     // OK: direct initialization, so we use explicit constructor
+Z z2 = {};  // error: copy initialization, so we cannot use the
+            // explicit constructor
+#+end_src
+
+请使用 ~{}~ 初始化，除非你想禁用 ~explicit~ 构造函数。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template<typename T>
+void f()
+{
+    T x1(1);    // T initialized with 1
+    T x0();     // bad: function declaration (often a mistake)
+
+    T y1 {1};   // T initialized with 1
+    T y0 {};    // default initialized T
+    // ...
+}
+#+end_src
+
+
+强化
+
+标记使用 ~=~ 初始化数值类型，且出现窄类型转换的情况。
+
+标记使用 ~()~ 语法初始化，而实际是声明的情况。很多编译器应该会发出告警。
