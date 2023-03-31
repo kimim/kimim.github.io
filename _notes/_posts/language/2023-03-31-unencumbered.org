@@ -1,0 +1,41 @@
+#+LAYOUT: post
+#+TITLE: 单词本：unencumbered
+#+TAGS: English
+#+CATEGORIES: language
+
+因为非对称加解密计算量很大，对于那些资源有限的工业设备来说，可能负担不起。
+
+NIST 的电网安全指南 [[cite:&NIST.IR.7628]] 就提到：
+
+A trustworthy and *unencumbered* implementation of cryptography that is
+suitable (both computationally and resource-wise) for deployment in
+the smart grid would benefit all stakeholders in smart grid
+deployments.
+
+这里， unencumbered 的意思是没障碍、没负担的意思。指南后面还提到：
+
+The preconfigured SA class solution, for all but the smallest systems,
+is likely to be excessively costly, subject to human error, and
+*encumbered* with significant vulnerabilities due to the replication of
+so many credentials.
+
+这里，encumbered 则是有负担的、有障碍的。
+
+encumber 是个及物动词，意思是阻塞、妨碍、拖累。比如 You shouldn’t let
+those heavy books encumber you. 你不该让这些沉重的书拖累你的学习。
+
+而 cumber 则是不及物动词，比如 He does't want to cumber with anyone!
+他不想拖累任何人。
+
+cumber 可能最早源自拉丁语 cumulus，堆积的意思。cumulus 还是积云的意思。
+
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
