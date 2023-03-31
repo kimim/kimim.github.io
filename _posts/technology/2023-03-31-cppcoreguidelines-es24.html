@@ -1,0 +1,53 @@
+---
+layout: post
+title: CppCoreGuidelines ES.24 使用 unique_ptr<T> 管理指针
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use a unique_ptr&lt;T&gt; to hold pointers&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+使用<code>std::unique_ptr</code>是避免内存泄漏最简单的方法。非常可靠。让类型系统做尽可能多的工作确保所有权安全。增加可读性。几乎没有运行时开销。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #000000;">leak</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p1</span> = make_unique<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;(</span>7<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p2</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">{</span>7<span style="color: #7388d6;">}</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: might leak</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no assignment to p2 ...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>leak<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no assignment to p2 ...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #7388d6;">(</span>7<span style="color: #7388d6;">)</span>;
+    v.at<span style="color: #7388d6;">(</span>7<span style="color: #7388d6;">)</span> = 0;                    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">exception thrown</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果<code>leak == true</code>那么， <code>p2</code> 指向的对象就内存泄漏了。然而， <code>p1</code> 指向的对象不会泄漏。在<code>at()</code>处发生异常的话，也会发生同样的情况。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+检查以下给原始指针赋值的情况： <code>new</code> ， <code>malloc()</code> 以及返回指针的函数。
+</p>
