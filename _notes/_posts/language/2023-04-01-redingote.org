@@ -1,0 +1,29 @@
+#+LAYOUT: post
+#+TITLE: 单词本：redingote
+#+TAGS: English Français
+#+CATEGORIES: language
+
+La Langue Française : Une Longue Histoire Riche d'Emprunts
+[[cite:&pruvost2010]] 文中提到，18世纪，英国经济、政治方面比法国发展快，所
+以这个时期，法语里引进了很多英语单词。也包括时装界：
+
+Il arrive que certains mots soient si parfaitement intégrés à la
+langue française et à sa configuration phonétique et orthographique -
+citons par exemple la « *redingote* » qui correspond à la déformation du
+mot anglais « *riding coat* », un « manteau pour monter à cheval ».
+
+这个法语单词 redingote 其实是英语 riding coat 的法语写法。不知道这个历
+史的人，还真看不出来。
+
+之后，在时装界，法国可能迎头赶了上来，于是 redingote 又传回到了英国，
+也变成了一个英语单词：开襟女式轻外套，骑装式外衣；双排纽男式骑装长外套。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
