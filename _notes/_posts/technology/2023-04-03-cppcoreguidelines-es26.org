@@ -1,0 +1,52 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.26 不要把变量用于多个目的
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t use a variable for two unrelated purposes"
+
+
+理由
+
+可读性，安全性。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void use()
+{
+    int i;
+    for (i = 0; i < 20; ++i) { /* ... */ }
+    for (i = 0; i < 200; ++i) { /* ... */ } // bad: i recycled
+}
+#+end_src
+
+注意
+
+为了优化资源，你可能复用一个缓冲区。就算这种情况，也请限制变量的作用域
+范围，注意避免因为缓冲区留下的数据引起bug。这是常见的安全bug。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void write_to_file()
+{
+    std::string buffer;
+    // to avoid reallocations on every loop iteration
+    for (auto& o : objects) {
+        // First part of the work.
+        generate_first_string(buffer, o);
+        write_to_file(buffer);
+
+        // Second part of the work.
+        generate_second_string(buffer, o);
+        write_to_file(buffer);
+
+        // etc...
+    }
+}
+#+end_src
+
+强化
+
+标记回收重复利用的变量

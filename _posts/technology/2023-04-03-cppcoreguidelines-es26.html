@@ -1,0 +1,72 @@
+---
+layout: post
+title: CppCoreGuidelines ES.26 不要把变量用于多个目的
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t use a variable for two unrelated purposes&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+可读性，安全性。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span>i = 0; i &lt; 20; ++i<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span>i = 0; i &lt; 200; ++i<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: i recycled</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+为了优化资源，你可能复用一个缓冲区。就算这种情况，也请限制变量的作用域范围，注意避免因为缓冲区留下的数据引起 bug 。这是常见的安全 bug 。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">write_to_file</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">buffer</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">to avoid reallocations on every loop iteration</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">o</span> : objects<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">First part of the work.</span>
+        generate_first_string<span style="color: #909183;">(</span>buffer, o<span style="color: #909183;">)</span>;
+        write_to_file<span style="color: #909183;">(</span>buffer<span style="color: #909183;">)</span>;
+
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Second part of the work.</span>
+        generate_second_string<span style="color: #909183;">(</span>buffer, o<span style="color: #909183;">)</span>;
+        write_to_file<span style="color: #909183;">(</span>buffer<span style="color: #909183;">)</span>;
+
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">etc...</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+标记回收重复利用的变量
+</p>
