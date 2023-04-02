@@ -1,0 +1,45 @@
+---
+layout: post
+title: CppCoreGuidelines ES.25 把对象声明为 const 或 constexpr，除非之后要修改
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Declare an object <code>const</code> or <code>constexpr</code> unless you want to modify its
+value later on&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+这样你不会一不留神改值。还可能给编译器提供优化的机会。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">bufmax</span> = 2 * n + 2;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good: we can't change bufmax by accident</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">xmax</span> = n;                  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">suspicious: is xmax intended to change?</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+检查变量是否实际改动，不然打上标记。
+</p>
