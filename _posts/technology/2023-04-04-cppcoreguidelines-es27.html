@@ -1,0 +1,78 @@
+---
+layout: post
+title: CppCoreGuidelines ES.27 栈中数组用 std::array 或 stack_array
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>std::array</code> or <code>stack_array</code> for arrays on the stack&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性更好，不会隐式地类型转换成指针。不会和不标准的内置数组类型扩展搞混淆了。
+</p>
+
+<p>
+坏例子
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span> = 7;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m</span> = 9;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a1</span><span style="color: #7388d6;">[</span>n<span style="color: #7388d6;">]</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a2</span><span style="color: #7388d6;">[</span>m<span style="color: #7388d6;">]</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: not ISO C++</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+<code>a1</code> 的定义在C++中一直是合法的。但是容易出错，尤其是当数组的范围变量不是本地的时候。另外，这也是常见出错的地方（比如，缓冲区移除、指针腐蚀等）。然而 <code>a2</code> 在 C 中合法，在C++中不合法。容易引起安全性问题。
+</p>
+
+<p>
+建议参考以下例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span> = 7;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m</span> = 9;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">array</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, n<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">a1</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">stack_array</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">a2</span><span style="color: #7388d6;">(</span>m<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+标注使用非常量的范围值的数组
+</p>
+
+<p>
+标注非局部常量作为范围值的数组
+</p>

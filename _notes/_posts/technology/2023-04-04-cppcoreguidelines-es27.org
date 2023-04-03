@@ -1,0 +1,56 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.27 栈中数组用 std::array 或 stack_array
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~std::array~ or ~stack_array~ for arrays on the stack"
+
+理由
+
+可读性更好，不会隐式地类型转换成指针。不会和不标准的内置数组类型扩展搞
+混淆了。
+
+坏例子
+
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+const int n = 7;
+int m = 9;
+
+void f()
+{
+    int a1[n];
+    int a2[m];   // error: not ISO C++
+    // ...
+}
+#+end_src
+
+
+注意
+
+~a1~ 的定义在 C++ 中一直是合法的。但是容易出错，尤其是当数组的范围变量不
+是本地的时候。另外，这也是常见出错的地方（比如，缓冲区移除、指针腐蚀
+等）。然而 ~a2~ 在 C 中合法，在 C++ 中不合法。容易引起安全性问题。
+
+建议参考以下例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> <array> :eval no-export :results output
+const int n = 7;
+int m = 9;
+
+void f()
+{
+    array<int, n> a1;
+    stack_array<int> a2(m);
+    // ...
+}
+#+end_src
+
+
+强化
+
+标注使用非常量的范围值的数组
+
+标注非局部常量作为范围值的数组
