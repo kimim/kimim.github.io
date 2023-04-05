@@ -1,0 +1,41 @@
+#+LAYOUT: post
+#+TITLE: 单词本：oxymoronic
+#+TAGS: Latin English
+#+CATEGORIES: language
+
+在 PMI Agile Practice Guide [[cite:&pmi2017agile]] 中看到团队领导的这个引
+用：
+ 
+The *oxymoronic* quote “We lead teams by standing behind them” speaks to
+the role of the leader in developing their team members.
+
+这里说，团队领导的一个自相矛盾的引用：我们（领导）站在团队后面带领他们。
+说的就是那种服务型领导的工作模式。
+
+这个 oxymoronic 是“修辞上的自相矛盾的”之意。其名词形式为 oxymoron，剂
+自相矛盾修辞法。
+
+拆开来由 oxy- 和 moron 组成。oxy- 源自希腊语，意思是锋利的、尖的。
+moron 则是迟钝的。有可能和 moratorium 同源。moratorium 是金融上冻结、
+延期支付的意思。
+
+我们常见的 oxygen，oxide，ocid 也都是源自 oxy。那么怎么解释呢？因为酸
+的感觉，往往能通感到尖锐的。也就是酸是一种比较尖锐的味觉。oxygen 氧气
+往往能产生酸性物质，oxide 则是氧化物。ocid 就是酸了。
+
+这个跟我们韩非子中那个故事异曲同工呀。矛盾。矛为 oxy，盾为 moron：
+
+楚人有鬻盾与矛者，誉之曰：“吾盾之坚，物莫能陷也。”又誉其矛曰：“吾矛之
+利，于物无不陷也。”或曰：“以子之矛陷子之盾，何如？” 其人弗能应也。夫不
+可陷之盾与无不陷之矛，不可同世而立。
+
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
