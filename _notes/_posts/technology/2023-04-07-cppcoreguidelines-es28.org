@@ -1,0 +1,44 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.28 使用 lambda 初始化复杂对象，尤其是常变量
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use lambdas for complex initialization, especially of const variables"
+
+理由
+
+可以很好的把局部初始化封装起来。包括清理初始化过程中用到的临时变量，无
+需创建非局部，却不会重用的函数。此规则也适用于需要特定初始化工作的常量。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+widget x;   // should be const, but:
+for (auto i = 2; i <= N; ++i) {          // this could be some
+    x += some_obj.do_something_with(i);  // arbitrarily long code
+}                                        // needed to initialize x
+// from here, x should be const, but we can't say so in code in this style
+#+end_src
+
+好例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+const widget x = [&] {
+    widget val;                                // assume that widget
+                                               // has a default
+                                               // constructor
+    for (auto i = 2; i <= N; ++i) {            // this could be some
+        val += some_obj.do_something_with(i);  // arbitrarily long code
+    }                                          // needed to initialize x
+    return val;
+}();
+#+end_src
+
+如果可行的话，尽量将分支条件限定在某一组简单的数据集。（比如可以是一个枚举）。不要把初始化和选择分支语句混合在一起使用。
+
+
+强化
+
+比较难，只能是探索式的。检查是否有未初始化变量，其后紧跟一个循环给这个变量赋值。
