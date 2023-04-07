@@ -1,0 +1,101 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.30 避免用宏进行程序代码文本操作
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t use macros for program text manipulation"
+
+理由
+
+宏是大部分bug的根源。宏不遵循作用域范围规则和类型规则。宏使得人和编译器看到的东西不一样。宏使得编译过程更复杂。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+#define Case break; case   /* BAD */
+#+end_src
+
+这个宏看起来无伤大雅，它把小写字母的 ~case~ 变成大写字母的 ~Case~ ，但是却
+引入了控制过程bug。
+
+
+注意
+
+这条规则并不禁止使用 ~#ifdef~ 这类配置控制用的宏。
+
+未来，模块导入方式可能会替代这类配置控制宏。
+
+
+注意
+
+这条规则也不鼓励使用 ~#~ 进行字符串化处理，不鼓励用 ~##~ 进行字符串拼接。这类
+用法跟宏一样，有时候看起来人畜无害，却也给工具会引入问题。比如自动补全、
+静态分析、调试器等。经常的，对这种特殊宏的需要，预示着某总过度复杂的设
+计。 ~#~ 和 ~##~ 促进宏的定义与使用。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+#define CAT(a, b) a ## b
+#define STRINGIFY(a) #a
+
+void f(int x, int y)
+{
+    string CAT(x, y) = "asdf";   // BAD: hard for tools to handle (and ugly)
+    string sx2 = STRINGIFY(x);
+    // ...
+    cout << xy << endl;
+    cout << sx2 << endl;
+}
+int main()
+{
+    f(10, 111);
+    return EXIT_SUCCESS;
+}
+#+end_src
+
+#+RESULTS:
+: asdf
+: x
+
+对于这种底层字符串操作的宏，有规避方法，比如：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+string s = "asdf" "lkjh";   // ordinary string literal concatenation
+
+enum E { a, b };
+
+template<int x>
+constexpr const char* stringify()
+{
+    switch (x) {
+    case a: return "a";
+    case b: return "b";
+    }
+}
+
+int main()
+{
+    cout << s << endl;
+    string sx1 = stringify<a>();
+    cout << sx1 << endl;
+    string sx2 = stringify<b>();
+    cout << sx2 << endl;
+    return EXIT_SUCCESS;
+}
+#+end_src
+
+#+RESULTS:
+: asdflkjh
+: a
+: b
+
+虽然这段代码不像宏那样容易定义，但是使用起来没负担，也没有额外运行时开
+销。且遵循范围和类型规则。
+
+未来，静态反射很可能免除掉字符串的预处理操作。
+
+
+强化
+
+当你看到用于代码控制之外的目的时，请尖叫。

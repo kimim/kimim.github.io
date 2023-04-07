@@ -1,0 +1,136 @@
+---
+layout: post
+title: CppCoreGuidelines ES.30 避免用宏进行程序代码文本操作
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t use macros for program text manipulation&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+宏是大部分 bug 的根源。宏不遵循作用域范围规则和类型规则。宏使得人和编译器看到的东西不一样。宏使得编译过程更复杂。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">Case</span> <span style="color: #7F0055; font-weight: bold;">break</span>; <span style="color: #7F0055; font-weight: bold;">case</span>   <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">BAD</span><span style="color: #3F7F5F;"> */</span>
+</pre>
+</div>
+
+<p>
+这个宏看起来无伤大雅，它把小写字母的 <code>case</code> 变成大写字母的 <code>Case</code> ，但是却引入了控制过程 bug 。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+这条规则并不禁止使用<code>#ifdef</code>这类配置控制用的宏。
+</p>
+
+<p>
+未来，模块导入方式可能会替代这类配置控制宏。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+这条规则也不鼓励使用<code>#</code>进行字符串化处理，不鼓励用<code>##</code>进行字符串拼接。这类用法跟宏一样，有时候看起来人畜无害，却也给工具会引入问题。比如自动补全、静态分析、调试器等。经常的，对这种特殊宏的需要，预示着某总过度复杂的设计。<code>#</code>和 <code>##</code> 促进宏的定义与使用。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #0000ff; font-weight: bold;">CAT</span><span style="color: #707183;">(</span><span style="color: #000000;">a</span>, <span style="color: #000000;">b</span><span style="color: #707183;">)</span> a ## b
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #0000ff; font-weight: bold;">STRINGIFY</span><span style="color: #707183;">(</span><span style="color: #000000;">a</span><span style="color: #707183;">)</span> #a
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">CAT</span><span style="color: #7388d6;">(</span>x, y<span style="color: #7388d6;">)</span> = <span style="color: #2A00FF;">"asdf"</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: hard for tools to handle (and ugly)</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">sx2</span> = STRINGIFY<span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    cout &lt;&lt; xy &lt;&lt; endl;
+    cout &lt;&lt; sx2 &lt;&lt; endl;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f<span style="color: #7388d6;">(</span>10, 111<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+asdf
+x
+</pre>
+
+
+<p>
+对于这种底层字符串操作的宏，有规避方法，比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span> = <span style="color: #2A00FF;">"asdf"</span> <span style="color: #2A00FF;">"lkjh"</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ordinary string literal concatenation</span>
+
+<span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">E</span> <span style="color: #707183;">{</span> <span style="color: #000000;">a</span>, <span style="color: #000000;">b</span> <span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #0000ff; font-weight: bold;">stringify</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> a: <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">"a"</span>;
+    <span style="color: #7F0055; font-weight: bold;">case</span> b: <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">"b"</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    cout &lt;&lt; s &lt;&lt; endl;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">sx1</span> = stringify<span style="color: #7388d6;">&lt;</span>a<span style="color: #7388d6;">&gt;()</span>;
+    cout &lt;&lt; sx1 &lt;&lt; endl;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">sx2</span> = stringify<span style="color: #7388d6;">&lt;</span>b<span style="color: #7388d6;">&gt;()</span>;
+    cout &lt;&lt; sx2 &lt;&lt; endl;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+asdflkjh
+a
+b
+</pre>
+
+
+<p>
+虽然这段代码不像宏那样容易定义，但是使用起来没负担，也没有额外运行时开销。且遵循范围和类型规则。
+</p>
+
+<p>
+未来，静态反射很可能免除掉字符串的预处理操作。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+当你看到用于代码控制之外的目的时，请尖叫。
+</p>
