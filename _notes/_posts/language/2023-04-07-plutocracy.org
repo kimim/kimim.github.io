@@ -1,0 +1,51 @@
+#+LAYOUT: post
+#+TITLE: 单词本：plutocracy
+#+TAGS: English
+#+CATEGORIES: language
+
+昨天看了一个关于分布式自治组织（DAO）的报告[[cite:&wef2023dao]] 。
+
+仅仅 2021 年一年， DAO 的财富值就增加了 40 倍，达到了 3.8 亿美元。其中
+提到 DAO 的投票机制可能会因为代币所有权的大小而导致财阀统治，所以在
+DAO 的决策投票设计过程中，要避免这种情况发生，文中写道：Voting
+processes of DAO seek to increase efficiency while mitigating common
+governance issues such as rational apathy and *plutocracy*.
+
+这里， plutocracy 就是富豪统治，财阀统治的意思。其对应的财阀、富豪则是
+plutocrat。
+
+所谓的财阀统治指的是拥有财富的阶层获得了统治地位。plutocrat 这个单词中，
+Pluto 就是那个太阳系的冥王星（[[http://kimi.im/2019-02-10-solar-system][太阳系]]）的名字。也就是罗马神话故事中的冥
+王布鲁托。希腊神话中，Pluton 其实是财富之神。因为我们地球的财富都是深
+藏在地下的么，所以他也就是冥王了。
+
+而这个 pluto 很可能是从 pleu 演化来的。pleu 就是我们现在看到的 flow，
+流水，因为财富都是流动的么，所以流动的东西就是财富，也说的通。flow，
+float，flood，flight，fly 都是从 pleu 演化来的。包括 pluvial，洪水季的。
+
+-cracy 则是统治的意思。比如 aristocracy 贵族统治阶级，autocracy 独裁统
+治，bureaucracy 官僚统治，kleptocracy 盗贼统治。
+
+报告 [[cite:&wef2023dao]] 后面进一步解释了什么是 plutocracy：
+
+DAO voting processes balance efficiency and effectiveness
+considerations. They seek to avoid familiar problems in governance
+systems, such as rational apathy (where voters do not participate
+because it requires time and effort, but each voter has a minimal
+impact on outcomes) and plutocracy (a concentration of power deriving
+from wealth).
+
+最近经济不太好，但是为财富阶层制造豪车的企业反而发展很不错：The maker
+of incredibly expensive carriages of the *plutocracy* fared far better
+than BMW and Aston Martin, which produce cars for the wealthy. 可见，
+财富的两级分化越来越严重了呀。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
