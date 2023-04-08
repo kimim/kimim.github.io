@@ -1,0 +1,51 @@
+---
+layout: post
+title: CppCoreGuidelines ES.31 不要用宏定义常量或“函数”
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t use macros for constants or “ functions ”&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+很多 bug 是因为宏引起的。宏不遵循通常的作用域范围和类型规则。宏不遵循通常的参数传递规则。开发人员和编译器所看到的宏是有差异的。宏会把编译过程变得复杂。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">PI</span> 3.14
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #0000ff; font-weight: bold;">SQUARE</span><span style="color: #707183;">(</span><span style="color: #000000;">a</span>, <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">(</span>a * b<span style="color: #707183;">)</span>
+</pre>
+</div>
+
+
+<p>
+以下例子更好：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">pi</span> = 3.14;
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #0000ff; font-weight: bold;">square</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> a * b; <span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+如果宏不是用于源码控制（如<code>#ifdef</code>等），请尖叫吧
+</p>
