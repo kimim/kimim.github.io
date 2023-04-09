@@ -1,0 +1,41 @@
+---
+layout: post
+title: CppCoreGuidelines ES.32 宏名字要全部大写字母
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>ALL_CAPS</code> for all macro names&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+编码习俗。可读性。容易辨认出宏。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">forever</span> <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span>;;<span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">very BAD</span><span style="color: #3F7F5F;"> */</span>
+
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">FOREVER</span> <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span>;;<span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">Still evil, but at least visible to humans</span><span style="color: #3F7F5F;"> */</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+当你看到小写字母组成的宏时，请大声尖叫。
+</p>

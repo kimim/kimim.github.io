@@ -1,0 +1,25 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.32 宏名字要全部大写字母
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~ALL_CAPS~ for all macro names"
+
+理由
+
+编码习俗。可读性。容易辨认出宏。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+#define forever for (;;)   /* very BAD */
+
+#define FOREVER for (;;)   /* Still evil, but at least visible to humans */
+#+end_src
+
+
+强化
+
+当你看到小写字母组成的宏时，请大声尖叫。
