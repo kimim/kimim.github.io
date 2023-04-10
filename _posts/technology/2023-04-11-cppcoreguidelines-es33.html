@@ -1,0 +1,49 @@
+---
+layout: post
+title: CppCoreGuidelines ES.33 如果必须用到宏，请使用独一无二的名字
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If you must use macros, give them unique names&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+宏不遵循作用域范围规则。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">MYCHAR</span>        <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">BAD, will eventually clash with someone else's MYCHAR</span><span style="color: #3F7F5F;">*/</span>
+
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #000000;">ZCORP_CHAR</span>    <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">Still evil, but less likely to clash</span><span style="color: #3F7F5F;"> */</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+尽量避免使用宏。然而，世界上有大量的代码散乱着各种宏。对宏的过度使用也有相当长的传统。如果你不得不使用宏，请用长名称，并添加独一无二的前缀（比如你的组织的名字），以降低名称冲突的可能性。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+对短的宏名称提出警告。
+</p>

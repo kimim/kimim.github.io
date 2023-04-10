@@ -1,0 +1,31 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.33 如果必须用到宏，请使用独一无二的名字
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If you must use macros, give them unique names"
+
+理由
+
+宏不遵循作用域范围规则。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+#define MYCHAR        /* BAD, will eventually clash with someone else's MYCHAR*/
+
+#define ZCORP_CHAR    /* Still evil, but less likely to clash */
+#+end_src
+
+
+注意
+
+尽量避免使用宏。然而，世界上有大量的代码散乱着各种宏。对宏的过度使用也
+有相当长的传统。如果你不得不使用宏，请用长名称，并添加独一无二的前缀
+（比如你的组织的名字），以降低名称冲突的可能性。
+
+强化
+
+对短的宏名称提出警告。
