@@ -1,0 +1,101 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.34 不要定义 C 风格的可变长参数的函数
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t define a (C-style) variadic function"
+
+理由
+
+类型不安全。需要杂乱的加载宏和类型转换才可以让代码正确工作。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+#include <cstdarg>
+
+// "severity" followed by a zero-terminated list of char*s; write the
+// C-style strings to cerr
+void error(int severity ...)
+{
+    va_list ap;             // a magic type for holding arguments
+    va_start(ap, severity); // arg startup: "severity" is the first
+                            // argument of error()
+
+    for (;;) {
+        // treat the next var as a char*; no checking: a cast in
+        // disguise
+        char* p = va_arg(ap, char*);
+        if (!p) break;
+        cout << p << ' ';
+    }
+
+    va_end(ap);             // arg cleanup (don't forget this)
+
+    cout << '\n';
+    if (severity) exit(severity);
+}
+
+void use()
+{
+    error(7, "this", "is", "an", "error", nullptr);
+    error(7); // crash
+    error(7, "this", "is", "an", "error");  // crash
+    const char* is = "is";
+    string an = "an";
+    error(7, "this", "is", an, "error"); // crash
+}
+int main()
+{
+    use();
+    return EXIT_SUCCESS;
+}
+#+end_src
+
+#+RESULTS:
+: this is an error 
+
+
+替代方案：重载。模板。可变参数模板。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+#include <iostream>
+
+void error(int severity)
+{
+    std::cerr << '\n';
+    std::exit(severity);
+}
+template<typename T, typename... Ts>
+constexpr void error(int severity, T head, Ts... tail)
+{
+    std::cerr << head;
+    error(severity, tail...);
+}
+
+void use()
+{
+    error(7); // No crash!
+    error(5, "this", "is", "not", "an", "error"); // No crash!
+
+    std::string an = "an";
+    error(7, "this", "is", "not", an, "error"); // No crash!
+
+    error(5, "oh", "no", nullptr); // Compile error! No need for nullptr.
+}
+#+end_src
+
+
+注意
+
+大体上， ~printf~ 都是这么实现的。
+
+
+强化
+
+标记定义 C 风格可变参数函数之处。
+
+标记 ~#includ <cstdarg>~ 和 ~#include <stdarg.h>~ 之处。

@@ -1,0 +1,128 @@
+---
+layout: post
+title: CppCoreGuidelines ES.34 不要定义 C 风格的可变长参数的函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t define a (C-style) variadic function&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+类型不安全。需要杂乱的加载宏和类型转换才可以让代码正确工作。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">cstdarg</span><span style="color: #707183;">&gt;</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">"severity" followed by a zero-terminated list of char*s; write the</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">C-style strings to cerr</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">error</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">severity</span> ...<span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">va_list</span> <span style="color: #000000;">ap</span>;             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">a magic type for holding arguments</span>
+    va_start<span style="color: #7388d6;">(</span>ap, severity<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">arg startup: "severity" is the first</span>
+                            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">argument of error()</span>
+
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span>;;<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">treat the next var as a char*; no checking: a cast in</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">disguise</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">p</span> = va_arg<span style="color: #909183;">(</span>ap, <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>*<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>!p<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">break</span>;
+        cout &lt;&lt; p &lt;&lt; <span style="color: #2A00FF;">' '</span>;
+    <span style="color: #7388d6;">}</span>
+
+    va_end<span style="color: #7388d6;">(</span>ap<span style="color: #7388d6;">)</span>;             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">arg cleanup (don't forget this)</span>
+
+    cout &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>severity<span style="color: #7388d6;">)</span> exit<span style="color: #7388d6;">(</span>severity<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    error<span style="color: #7388d6;">(</span>7, <span style="color: #2A00FF;">"this"</span>, <span style="color: #2A00FF;">"is"</span>, <span style="color: #2A00FF;">"an"</span>, <span style="color: #2A00FF;">"error"</span>, <span style="color: #110099;">nullptr</span><span style="color: #7388d6;">)</span>;
+    error<span style="color: #7388d6;">(</span>7<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">crash</span>
+    error<span style="color: #7388d6;">(</span>7, <span style="color: #2A00FF;">"this"</span>, <span style="color: #2A00FF;">"is"</span>, <span style="color: #2A00FF;">"an"</span>, <span style="color: #2A00FF;">"error"</span><span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">crash</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">is</span> = <span style="color: #2A00FF;">"is"</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">an</span> = <span style="color: #2A00FF;">"an"</span>;
+    error<span style="color: #7388d6;">(</span>7, <span style="color: #2A00FF;">"this"</span>, <span style="color: #2A00FF;">"is"</span>, an, <span style="color: #2A00FF;">"error"</span><span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">crash</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    use<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+this is an error 
+</pre>
+
+
+
+<p>
+替代方案：重载。模板。可变参数模板。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">error</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">severity</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">std</span>::cerr &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #110099;">std</span>::exit<span style="color: #7388d6;">(</span>severity<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>, <span style="color: #7F0055; font-weight: bold;">typename</span>... <span style="color: #000000; font-style: italic; text-decoration: underline;">Ts</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">error</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">severity</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">head</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Ts</span>... <span style="color: #000000;">tail</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">std</span>::cerr &lt;&lt; head;
+    error<span style="color: #7388d6;">(</span>severity, tail...<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    error<span style="color: #7388d6;">(</span>7<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">No crash!</span>
+    error<span style="color: #7388d6;">(</span>5, <span style="color: #2A00FF;">"this"</span>, <span style="color: #2A00FF;">"is"</span>, <span style="color: #2A00FF;">"not"</span>, <span style="color: #2A00FF;">"an"</span>, <span style="color: #2A00FF;">"error"</span><span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">No crash!</span>
+
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">an</span> = <span style="color: #2A00FF;">"an"</span>;
+    error<span style="color: #7388d6;">(</span>7, <span style="color: #2A00FF;">"this"</span>, <span style="color: #2A00FF;">"is"</span>, <span style="color: #2A00FF;">"not"</span>, an, <span style="color: #2A00FF;">"error"</span><span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">No crash!</span>
+
+    error<span style="color: #7388d6;">(</span>5, <span style="color: #2A00FF;">"oh"</span>, <span style="color: #2A00FF;">"no"</span>, <span style="color: #110099;">nullptr</span><span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Compile error! No need for nullptr.</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+大体上， <code>printf</code> 都是这么实现的。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记定义 C 风格可变参数函数之处。
+</p>
+
+<p>
+标记<code>#includ &lt;cstdarg&gt;</code>和 <code>#include &lt;stdarg.h&gt;</code> 之处。
+</p>
