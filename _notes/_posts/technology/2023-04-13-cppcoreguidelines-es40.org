@@ -1,0 +1,82 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.40 避免复杂的表达式
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid complicated expressions"
+
+理由
+
+复杂表达式容易出错。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+// bad: assignment hidden in subexpression
+while ((c = getc()) != -1)
+
+// bad: two non-local variables assigned in sub-expressions
+while ((cin >> c1, cin >> c2), c1 == c2)
+
+// better, but possibly still too complicated
+for (char c1, c2; cin >> c1 >> c2 && c1 == c2;)
+
+// OK: if i and j are not aliased
+int x = ++i + ++j;
+
+// OK: if i != j and i != k
+v[i] = v[j] + v[k];
+
+// bad: multiple assignments "hidden" in subexpressions
+x = a + (b = f()) + (c = g()) * 7;
+
+// bad: relies on commonly misunderstood precedence rules
+x = a & b + c * d && e ^ f == 7;
+
+// bad: undefined behavior
+x = x++ + x++ + ++x;
+#+end_src
+
+有些表达式肯定是不好的（比如，他们依赖于未定义的行为）。其他的，就是太
+复杂，哪怕熟练的程序员也不能理解或在匆忙中忽视其中的问题。
+
+
+注意
+
+C++17 加强了求值顺序的规则（除了赋值操作，其他都是从左到右，不规定函数
+参数的求值顺序），但是不变的实事是，复杂表达式很容易误解。
+
+注意
+
+程序员应该会使用最基本的表达式规则。
+
+比如
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+x = k * y + z;             // OK
+
+auto t1 = k * y;           // bad: unnecessarily verbose
+x = t1 + z;
+
+if (0 <= x && x < max)   // OK
+
+auto t1 = 0 <= x;        // bad: unnecessarily verbose
+auto t2 = x < max;
+if (t1 && t2)            // ...
+#+end_src
+
+
+强化
+
+比较麻烦。到底多复杂的表达式算太复杂？一个语句进行一次计算也容易导致误解。
+
+需要考虑的事情：
+- 副作用：对多个非局部变量产生副作用的操作。尤其是副作用分散在多个不同
+  的子表达式中。
+- 改写别名变量。
+- 多余 N 个操作符。N = 多少？
+- 基于晦涩的优先级规则。
+- 使用未定义的行为。
+- 使用不同实现定义的不同行为。

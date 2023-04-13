@@ -1,0 +1,112 @@
+---
+layout: post
+title: CppCoreGuidelines ES.40 避免复杂的表达式
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid complicated expressions&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+复杂表达式容易出错。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: assignment hidden in subexpression</span>
+<span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #707183;">(</span><span style="color: #7388d6;">(</span>c = getc<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> != -1<span style="color: #707183;">)</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: two non-local variables assigned in sub-expressions</span>
+<span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #707183;">(</span><span style="color: #7388d6;">(</span>cin &gt;&gt; c1, cin &gt;&gt; c2<span style="color: #7388d6;">)</span>, c1 == c2<span style="color: #707183;">)</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better, but possibly still too complicated</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">c1</span>, <span style="color: #000000;">c2</span>; cin &gt;&gt; c1 &gt;&gt; c2 &amp;&amp; c1 == c2;<span style="color: #707183;">)</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: if i and j are not aliased</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = ++i + ++j;
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: if i != j and i != k</span>
+v<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span> = v<span style="color: #707183;">[</span>j<span style="color: #707183;">]</span> + v<span style="color: #707183;">[</span>k<span style="color: #707183;">]</span>;
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: multiple assignments "hidden" in subexpressions</span>
+x = a + <span style="color: #707183;">(</span>b = f<span style="color: #7388d6;">()</span><span style="color: #707183;">)</span> + <span style="color: #707183;">(</span>c = g<span style="color: #7388d6;">()</span><span style="color: #707183;">)</span> * 7;
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: relies on commonly misunderstood precedence rules</span>
+x = a &amp; b + c * d &amp;&amp; e ^ f == 7;
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: undefined behavior</span>
+x = x++ + x++ + ++x;
+</pre>
+</div>
+
+<p>
+有些表达式肯定是不好的（比如，他们依赖于未定义的行为）。其他的，就是太复杂，哪怕熟练的程序员也不能理解或在匆忙中忽视其中的问题。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+C++17 加强了求值顺序的规则（除了赋值操作，其他都是从左到右，不规定函数参数的求值顺序），但是不变的实事是，复杂表达式很容易误解。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+程序员应该会使用最基本的表达式规则。
+</p>
+
+<p>
+比如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">x = k * y + z;             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">t1</span> = k * y;           <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: unnecessarily verbose</span>
+x = t1 + z;
+
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>0 &lt;= x &amp;&amp; x &lt; max<span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">t1</span> = 0 &lt;= x;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: unnecessarily verbose</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">t2</span> = x &lt; max;
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">t1</span> &amp;&amp; <span style="color: #000000;">t2</span><span style="color: #707183;">)</span>            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+比较麻烦。到底多复杂的表达式算太复杂？一个语句进行一次计算也容易导致误解。
+</p>
+
+<p>
+需要考虑的事情：
+</p>
+<ul class="org-ul">
+<li>副作用：对多个非局部变量产生副作用的操作。尤其是副作用分散在多个不同的子表达式中。</li>
+<li>改写别名变量。</li>
+<li>多余 N 个操作符。N = 多少？</li>
+<li>基于晦涩的优先级规则。</li>
+<li>使用未定义的行为。</li>
+<li>使用不同实现定义的不同行为。</li>
+</ul>
