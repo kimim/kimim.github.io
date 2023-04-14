@@ -1,0 +1,72 @@
+---
+layout: post
+title: CppCoreGuidelines ES.41 如果不确定操作符优先级，添加括号
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If in doubt about operator precedence, parenthesize&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+避免错误。可读性。并非每个人都记得操作符优先级表格。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">flag</span> = 2;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span> = flag;
+
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">a</span> &amp; <span style="color: #000000;">flag</span> != 0<span style="color: #707183;">)</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: means a&amp;(flag != 0)</span>
+</pre>
+</div>
+
+
+<p>
+注意：
+</p>
+
+<p>
+我们建议程序员熟悉算术操作符、逻辑操作符的优先级顺序。但是针对位操作符和其他操作符混合在一起的运算，建议添加括号。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">a</span> &amp; <span style="color: #000000;">flag</span><span style="color: #7388d6;">)</span> != 0<span style="color: #707183;">)</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: works as intended</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+你应该清楚哪些情况不要添加多余的括号，比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>a &lt; 0 || a &lt;= max<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记位操作符和其他操作符混用的情况</li>
+<li>标记赋值操作符不在最左边的情况</li>
+</ul>

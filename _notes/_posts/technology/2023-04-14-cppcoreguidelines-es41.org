@@ -1,0 +1,49 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.41 如果不确定操作符优先级，添加括号
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If in doubt about operator precedence, parenthesize"
+
+理由
+
+避免错误。可读性。并非每个人都记得操作符优先级表格。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+const unsigned int flag = 2;
+unsigned int a = flag;
+
+if (a & flag != 0)  // bad: means a&(flag != 0)
+#+end_src
+
+
+注意：
+
+我们建议程序员熟悉算术操作符、逻辑操作符的优先级顺序。但是针对位操作符
+和其他操作符混合在一起的运算，建议添加括号。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+if ((a & flag) != 0)  // OK: works as intended
+#+end_src
+
+
+注意
+
+你应该清楚哪些情况不要添加多余的括号，比如：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+if (a < 0 || a <= max) {
+    // ...
+}
+#+end_src
+
+
+强化
+- 标记位操作符和其他操作符混用的情况
+- 标记赋值操作符不在最左边的情况
+
+

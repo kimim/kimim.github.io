@@ -4,7 +4,6 @@ title: CppCoreGuidelines Enum.4 为了安全且简单的使用，基于枚举值
 categories: [technology]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
@@ -28,7 +27,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span> <span style="color: #707183;">{</span> <span style="color: #000000;">mon</span>, <span style="color: #000000;">tue</span>, <span style="color: #000000;">wed</span>, <span style="color: #000000;">thu</span>, <span style="color: #000000;">fri</span>, <span style="color: #000000;">sat</span>, <span style="color: #000000;">sun</span> <span style="color: #707183;">}</span>;
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span> <span style="color: #707183;">{</span> <span style="color: #000000;">mon</span>, <span style="color: #000000;">tue</span>, <span style="color: #000000;">wed</span>, <span style="color: #000000;">thu</span>, <span style="color: #000000;">fri</span>, <span style="color: #000000;">sat</span>, <span style="color: #000000;">sun</span> <span style="color: #707183;">}</span>;
 
 <span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">++</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span>&amp; <span style="color: #000000;">d</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
@@ -39,7 +38,7 @@ tags: [CppCoreGuidelines]
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span> <span style="color: #000000;">today</span> = <span style="color: #110099;">Day</span>::sat;
     <span style="color: #000000; font-style: italic; text-decoration: underline;">Day</span> <span style="color: #000000;">tomorrow</span> = ++today;
-    cout &lt;&lt; tomorrow;
+    cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;(</span>tomorrow<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -50,7 +49,7 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-这里用了 <code>statc_cast</code> 看起来不太优美。但是：
+这里用了<code>statc_cast</code>看起来不太优美。但是：
 </p>
 
 <div class="org-src-container">
@@ -62,7 +61,7 @@ tags: [CppCoreGuidelines]
 </div>
 
 <p>
-这里 ++ 的使用，会导致无限递归。要么使用 switch 实现，但这样代码又太多。
+这里<code>++</code>的使用，会导致无限递归。要么使用 <code>switch</code> 实现，但这样代码又太多。
 </p>
 
 

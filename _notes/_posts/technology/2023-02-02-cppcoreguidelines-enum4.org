@@ -1,11 +1,7 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines Enum.4 为了安全且简单的使用，基于枚举值定义操作
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines Enum.4 为了安全且简单的使用，基于枚举值定义操作
+#+categories: technology
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
@@ -20,7 +16,7 @@ tags: [CppCoreGuidelines]
 例子
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
-enum Day { mon, tue, wed, thu, fri, sat, sun };
+enum class Day { mon, tue, wed, thu, fri, sat, sun };
 
 Day& operator++(Day& d)
 {
@@ -31,7 +27,7 @@ int main()
 {
     Day today = Day::sat;
     Day tomorrow = ++today;
-    cout << tomorrow;
+    cout << static_cast<int>(tomorrow);
 }
 #+end_src
 
@@ -47,7 +43,7 @@ Day& operator++(Day& d)
 }
 #+end_src
 
-这里 ++ 的使用，会导致无限递归。要么使用 switch 实现，但这样代码又太多。
+这里 ~++~ 的使用，会导致无限递归。要么使用 ~switch~ 实现，但这样代码又太多。
 
 
 强化
