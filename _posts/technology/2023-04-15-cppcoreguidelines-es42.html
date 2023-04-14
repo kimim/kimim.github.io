@@ -1,0 +1,376 @@
+---
+layout: post
+title: CppCoreGuidelines ES.42 确保指针的使用简单明了
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Keep use of pointers simple and straightforward&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+复杂的指针操作是导致故障的根源。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+请使用<code>gsl::span</code>。指针应该只指向一个对象。指针的数值计算很容易出错误，是大量严重 bug 和安全隐患的根源。用 <code>span</code>就能以边界检测、类型安全的方式访问数组数据。如果我们通过常量访问已知边界长度的数组，编译器能够帮助我们验证数组下标是否合法。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">count</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>count &lt; 2<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">q</span> = p + 1;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">ptrdiff_t</span> <span style="color: #000000;">d</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span>;
+    d = <span style="color: #7388d6;">(</span>p - &amp;n<span style="color: #7388d6;">)</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    d = <span style="color: #7388d6;">(</span>q - p<span style="color: #7388d6;">)</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span> = *p++;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>count &lt; 6<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;
+
+    p<span style="color: #7388d6;">[</span>4<span style="color: #7388d6;">]</span> = 1;          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+
+    p<span style="color: #7388d6;">[</span>count - 1<span style="color: #7388d6;">]</span> = 2;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+
+    use<span style="color: #7388d6;">(</span>&amp;p<span style="color: #909183;">[</span>0<span style="color: #909183;">]</span>, 3<span style="color: #7388d6;">)</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">a</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BETTER: use span in the function declaration</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>a.size<span style="color: #909183;">()</span> &lt; 2<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span> = a<span style="color: #7388d6;">[</span>0<span style="color: #7388d6;">]</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">q</span> = a.subspan<span style="color: #7388d6;">(</span>1<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>a.size<span style="color: #909183;">()</span> &lt; 6<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;
+
+    a<span style="color: #7388d6;">[</span>4<span style="color: #7388d6;">]</span> = 1;          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+
+    a<span style="color: #7388d6;">[</span>a.size<span style="color: #909183;">()</span> - 1<span style="color: #7388d6;">]</span> = 2;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+
+    use<span style="color: #7388d6;">(</span>a.data<span style="color: #909183;">()</span>, 3<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+对于用变量作为下标访问数组的操作，不管是工具还是程序员都很难验证其正确性与安全性。 <code>span</code> 在运行时会被边界检测，就能以类型安全的方式访问数组数据。<code>at()</code>是另一个解决方案，可以确保单次访问是被边界检测的。如果需要迭代器访问数组数据，请使用从数组的 <code>span</code> 生成的迭代器。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">array</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, 10<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">pos</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    a<span style="color: #7388d6;">[</span>pos / 2<span style="color: #7388d6;">]</span> = 1; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+    a<span style="color: #7388d6;">[</span>pos - 1<span style="color: #7388d6;">]</span> = 2; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+    a<span style="color: #7388d6;">[</span>-1<span style="color: #7388d6;">]</span> = 3;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD (but easily caught by tools) -- no</span>
+                  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">replacement, just don't do this</span>
+    a<span style="color: #7388d6;">[</span>10<span style="color: #7388d6;">]</span> = 4;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD (but easily caught by tools) -- no</span>
+                  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">replacement, just don't do this</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+好例子
+</p>
+
+<p>
+使用 <code>span</code> ：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, 10<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">pos</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">A1: Change parameter type to use span</span>
+<span style="color: #707183;">{</span>
+    a<span style="color: #7388d6;">[</span>pos / 2<span style="color: #7388d6;">]</span> = 1; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    a<span style="color: #7388d6;">[</span>pos - 1<span style="color: #7388d6;">]</span> = 2; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">array</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, 10<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">arr</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">pos</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">A2: Add local span and use that</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">a</span> = <span style="color: #7388d6;">{</span>arr.data<span style="color: #909183;">()</span>, pos<span style="color: #7388d6;">}</span>;
+    a<span style="color: #7388d6;">[</span>pos / 2<span style="color: #7388d6;">]</span> = 1; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    a<span style="color: #7388d6;">[</span>pos - 1<span style="color: #7388d6;">]</span> = 2; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+使用 <code>at()</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f3</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">array</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, 10<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">pos</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ALTERNATIVE B: Use at() for access</span>
+<span style="color: #707183;">{</span>
+    at<span style="color: #7388d6;">(</span>a, pos / 2<span style="color: #7388d6;">)</span> = 1; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    at<span style="color: #7388d6;">(</span>a, pos - 1<span style="color: #7388d6;">)</span> = 2; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arr</span><span style="color: #7388d6;">[</span>COUNT<span style="color: #7388d6;">]</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; COUNT; ++i<span style="color: #7388d6;">)</span>
+        arr<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> = i; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, cannot use non-constant indexer</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+好例子
+</p>
+
+<p>
+使用 <code>span</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">COUNT</span> = 10;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arr</span><span style="color: #7388d6;">[</span>COUNT<span style="color: #7388d6;">]</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">av</span> = arr;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; COUNT; ++i<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        av<span style="color: #909183;">[</span>i<span style="color: #909183;">]</span> = i;
+        cout &lt;&lt; av<span style="color: #909183;">[</span>i<span style="color: #909183;">]</span> &lt;&lt; <span style="color: #2A00FF;">", "</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f1<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
+</pre>
+
+
+<p>
+使用 <code>span</code> 和带范围的 <code>for</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">COUNT</span> = 10;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1a</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+     <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arr</span><span style="color: #7388d6;">[</span>COUNT<span style="color: #7388d6;">]</span>;
+     <span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, COUNT<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">av</span> = arr;
+     <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0;
+     <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">e</span> : av<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>         
+         e = i++;
+         cout &lt;&lt; e &lt;&lt; <span style="color: #2A00FF;">", "</span>;
+     <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f1a<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
+</pre>
+
+
+
+<p>
+使用<code>at()</code>访问
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">COUNT</span> = 10;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arr</span><span style="color: #7388d6;">[</span>COUNT<span style="color: #7388d6;">]</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; COUNT; ++i<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        at<span style="color: #909183;">(</span>arr, i<span style="color: #909183;">)</span> = i;
+        cout &lt;&lt; at<span style="color: #909183;">(</span>arr, i<span style="color: #909183;">)</span> &lt;&lt; <span style="color: #2A00FF;">", "</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f2<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
+</pre>
+
+
+<p>
+使用带范围的 <code>for</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">COUNT</span> = 10;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f3</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arr</span><span style="color: #7388d6;">[</span>COUNT<span style="color: #7388d6;">]</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">e</span> : arr<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+         e = i++;
+         cout &lt;&lt; e &lt;&lt; <span style="color: #2A00FF;">", "</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f3<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
+</pre>
+
+
+
+
+<p>
+注意
+</p>
+
+<p>
+工具可以用<code>at()</code>替换掉用动态索引访问数组的代码：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #707183;">[</span>10<span style="color: #707183;">]</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">j</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    a<span style="color: #7388d6;">[</span>i + j<span style="color: #7388d6;">]</span> = 12;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, could be rewritten as ...</span>
+    at<span style="color: #7388d6;">(</span>a, i + j<span style="color: #7388d6;">)</span> = 12;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK -- bounds-checked</span>
+    cout &lt;&lt; at<span style="color: #7388d6;">(</span>a, i + j<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f<span style="color: #7388d6;">(</span>2, 3<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+12
+</pre>
+
+
+
+<p>
+例子
+</p>
+
+<p>
+如果用指针传递数组，则没有机会进行边界检测了。所以尽量避免。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">[</span>5<span style="color: #7388d6;">]</span>;
+    g<span style="color: #7388d6;">(</span>a<span style="color: #7388d6;">)</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: are we trying to pass an array?</span>
+    g<span style="color: #7388d6;">(</span>&amp;a<span style="color: #909183;">[</span>0<span style="color: #909183;">]</span><span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: passing one object</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+如果你要传递一个数组，可以这样写：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #000000;">length</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">old (dangerous) code</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g1</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">av</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BETTER: get g() changed.</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">[</span>5<span style="color: #7388d6;">]</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">av</span> = a;
+
+    g<span style="color: #7388d6;">(</span>av.data<span style="color: #909183;">()</span>, av.size<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, if you have no choice</span>
+    g1<span style="color: #7388d6;">(</span>a<span style="color: #7388d6;">)</span>;                     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK -- no decay here, instead use</span>
+                               <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">implicit span ctor</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记计算结果为指针类型，针对指针的算术操作。</li>
+<li>标记索引下标不是有效范围内的常量，且针对表达式或数组类变量的下标操作。</li>
+<li>标记隐式地将数组类型转换成指针的操作。</li>
+</ul>
+
+<p>
+此规则是边界安全规则集的一部分。 
+</p>
