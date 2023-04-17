@@ -1,0 +1,89 @@
+---
+layout: post
+title: CppCoreGuidelines ES.44 代码的正确与否不应该基于函数参数的求值顺序
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t depend on order of evaluation of function arguments&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+因为函数参数的求值顺序是未定义的行为。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+C++17 强化了求值顺序规则：一般都是从左到右，除了赋值操作是从右到左。但是没有定义函数参数列表的求值顺序规则。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> cout &lt;&lt; <span style="color: #2A00FF;">"a= "</span> &lt;&lt; a &lt;&lt; <span style="color: #2A00FF;">", b= "</span> &lt;&lt; b; <span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f<span style="color: #7388d6;">(</span>++i, ++i<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+a= 2, b= 1
+</pre>
+
+
+<p>
+在C++17之前，以上代码行为是未定义的。所以任何结果都有可能，比如 <code>f(2,
+2)</code> 。从C++17开始，以上代码不能有未定义行为，但是没有指明哪个参数先求值。所以 <code>f</code> 的调用可能成了<code>f(1, 2)</code>也可能是<code>f(2, 1)</code>，但是不同编译器可以自由选择以哪种方式求值。
+</p>
+
+<p>
+例子
+</p>
+
+<p>
+重载操作符可能导致求值顺序问题：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">f1<span style="color: #707183;">()</span>-&gt;m<span style="color: #707183;">(</span>f2<span style="color: #7388d6;">()</span><span style="color: #707183;">)</span>;          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">m(f1(), f2())</span>
+cout &lt;&lt; f1<span style="color: #707183;">()</span> &lt;&lt; f2<span style="color: #707183;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">operator&lt;&lt;(operator&lt;&lt;(cout, f1()), f2())</span>
+</pre>
+</div>
+
+<p>
+在C++17中，这个例子按照预期求值：从左到右。赋值操作从右到左。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">f1<span style="color: #707183;">()</span> = f2<span style="color: #707183;">()</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">undefined behavior in C++14; in C++17, f2() is</span>
+                <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">evaluated before f1()</span>
+
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+好的代码分析工具能够提出告警
+</p>
