@@ -1,0 +1,43 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.45 避免“魔数”，用符号常量
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid “magic constants”; use symbolic constants"
+
+理由
+
+表达式中嵌入的常数很容易被忽视，经常很难理解。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+for (int m = 1; m <= 12; ++m)   // don't: magic constant 12
+    cout << month[m] << '\n';
+#+end_src
+
+不一定大家都知道一年有 12 个月，分别是 1 到 12。
+
+更好的例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+// months are indexed 1..12
+constexpr int first_month = 1;
+constexpr int last_month = 12;
+
+for (int m = first_month; m <= last_month; ++m)   // better
+    cout << month[m] << '\n';
+#+end_src
+
+更加好的方法，不暴露常量：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+for (auto m : month)
+    cout << m << '\n';
+#+end_src
+
+强化
+
+标记代码中的数值，除了 ~0~ ， ~1~ ， ~nullptr~ ， ~\n~ ， ~""~ 

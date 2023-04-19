@@ -1,0 +1,67 @@
+---
+layout: post
+title: CppCoreGuidelines ES.45 避免“魔数”，用符号常量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid “magic constants”; use symbolic constants&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+表达式中嵌入的常数很容易被忽视，经常很难理解。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m</span> = 1; m &lt;= 12; ++m<span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't: magic constant 12</span>
+    cout &lt;&lt; month<span style="color: #707183;">[</span>m<span style="color: #707183;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+</pre>
+</div>
+
+<p>
+不一定大家都知道一年有 12 个月，分别是 1 到 12。
+</p>
+
+<p>
+更好的例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">months are indexed 1..12</span>
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">first_month</span> = 1;
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">last_month</span> = 12;
+
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m</span> = first_month; m &lt;= last_month; ++m<span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better</span>
+    cout &lt;&lt; month<span style="color: #707183;">[</span>m<span style="color: #707183;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+</pre>
+</div>
+
+<p>
+更加好的方法，不暴露常量：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">m</span> : month<span style="color: #707183;">)</span>
+    cout &lt;&lt; m &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+标记代码中的数值，除了 <code>0</code> ， <code>1</code> ， <code>nullptr</code> ， <code>\n</code> ， <code>""</code> 
+</p>
