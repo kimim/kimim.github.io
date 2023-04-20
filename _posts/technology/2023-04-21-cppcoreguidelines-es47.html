@@ -1,0 +1,45 @@
+---
+layout: post
+title: CppCoreGuidelines ES.47 用 nullptr，不要用 0 或 NULL
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>nullptr</code> rather than 0 or <code>NULL</code>&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性。减少出人意料： <code>nullptr</code> 不会和 <code>int</code> 混淆在一起。 <code>nullptr</code> 也是一种完整定义的类型。所以不太会被推演成错误的东西。 <code>NULL</code> 和 <code>0</code> 则很容易被当成数值。
+</p>
+
+<p>
+例子
+</p>
+
+<p>
+考虑：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>*<span style="color: #707183;">)</span>;
+f<span style="color: #707183;">(</span>0<span style="color: #707183;">)</span>;         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">call f(int)</span>
+f<span style="color: #707183;">(</span><span style="color: #110099;">nullptr</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">call f(char*)</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+标记所有以 <code>NULL</code> 和 <code>0</code> 作为指针的地方。工具可能可以进行简单的代码调整。
+</p>

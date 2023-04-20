@@ -1,0 +1,29 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.47 用 nullptr，不要用 0 或 NULL
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~nullptr~ rather than 0 or ~NULL~"
+
+理由
+
+可读性。减少出人意料： ~nullptr~ 不会和 ~int~ 混淆在一起。 ~nullptr~ 也是一
+种完整定义的类型。所以不太会被推演成错误的东西。 ~NULL~ 和 ~0~ 则很容易被
+当成数值。
+
+例子
+
+考虑：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f(int);
+void f(char*);
+f(0);         // call f(int)
+f(nullptr);   // call f(char*)
+#+end_src
+
+强化
+
+标记所有以 ~NULL~ 和 ~0~ 作为指针的地方。工具可能可以进行简单的代码调整。
