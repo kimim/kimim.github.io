@@ -1,0 +1,163 @@
+---
+layout: post
+title: CppCoreGuidelines ES.46 避免那些导致精度损失的变窄、截断数值类型转换
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid lossy (narrowing, truncating) arithmetic conversions&rdquo;
+</p>
+
+<p>
+坏例子
+</p>
+
+<p>
+变窄类型转换操作
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span> = 7.9;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = d;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: narrowing: i becomes 7</span>
+cout &lt;&lt; d &lt;&lt; <span style="color: #2A00FF;">", "</span> &lt;&lt; i &lt;&lt; endl;
+i = <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">)</span> d;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: we're going to claim this is still not explicit enough</span>
+cout &lt;&lt; d &lt;&lt; <span style="color: #2A00FF;">", "</span> &lt;&lt; i &lt;&lt; endl;
+</pre>
+</div>
+
+<pre class="example">
+7.9, 7
+7.9, 7
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000;">y</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">c1</span> = x;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: narrowing</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">c2</span> = y;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: narrowing</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">c3</span> = d;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: narrowing</span>
+    cout &lt;&lt; c1 &lt;&lt; <span style="color: #2A00FF;">", "</span> &lt;&lt; c2 &lt;&lt; <span style="color: #2A00FF;">", "</span> &lt;&lt; c3;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f<span style="color: #7388d6;">(</span>10099, 1000000099, 9999990.999999<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+s, c, v
+</pre>
+
+
+
+
+<p>
+注意
+</p>
+
+<p>
+指南支持库 GSL 提供<code>narrow_cast</code>操作和 <code>narrow</code> 操作。如果允许数值丢失，那么可以用<code>narrow_cast</code>；如果认为数值丢失是一种错误，那么用 <code>narrow</code> 操作，如果类型转换的过程中数值丢失，它会抛出<code>narrow_error</code>。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span> = 7.9;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d2</span> = 8.0;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">{}</span>;
+i = <span style="color: #110099;">gsl</span>::narrow_cast<span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;(</span>d<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK (you asked for it): narrowing: i becomes 7</span>
+cout &lt;&lt; <span style="color: #2A00FF;">"gsl::narrow_cast&lt;int&gt;("</span> &lt;&lt; d &lt;&lt; <span style="color: #2A00FF;">") = "</span> &lt;&lt;  i &lt;&lt; endl;
+<span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #707183;">{</span>
+    i = <span style="color: #110099;">gsl</span>::narrow<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;(</span>d2<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; <span style="color: #2A00FF;">"gsl::narrow&lt;int&gt;("</span> &lt;&lt; fixed &lt;&lt; setprecision<span style="color: #7388d6;">(</span>1<span style="color: #7388d6;">)</span>
+         &lt;&lt; d2 &lt;&lt; <span style="color: #2A00FF;">") = "</span> &lt;&lt; i &lt;&lt; endl;
+    i = <span style="color: #110099;">gsl</span>::narrow<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;(</span>d<span style="color: #7388d6;">)</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: throws narrowing_error</span>
+<span style="color: #707183;">}</span> <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::narrowing_error&amp; e<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout &lt;&lt; e.what<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+gsl::narrow_cast&lt;int&gt;(7.9) = 7
+gsl::narrow&lt;int&gt;(8.0) = 8
+std::exception
+</pre>
+
+
+
+<p>
+负数浮点类型也可以用 gsl 类型转换操作：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span> = -7.9;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000;">u</span> = 0;
+
+u = d;                               <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: narrowing</span>
+cout &lt;&lt; u &lt;&lt; endl;
+
+u = <span style="color: #110099;">gsl</span>::narrow_cast<span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span><span style="color: #707183;">&gt;(</span>d<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK (you asked for it): u</span>
+                                     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">becomes 4294967289</span>
+cout &lt;&lt; <span style="color: #2A00FF;">"gsl::narrow_cast&lt;int&gt;("</span> &lt;&lt; d &lt;&lt; <span style="color: #2A00FF;">") = "</span> &lt;&lt;  u &lt;&lt; endl;
+
+<span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #707183;">{</span>
+    u = <span style="color: #110099;">gsl</span>::narrow<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span><span style="color: #7388d6;">&gt;(</span>d<span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: throws narrowing_error</span>
+<span style="color: #707183;">}</span> <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::narrowing_error&amp; e<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout &lt;&lt; e.what<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+4294967289
+gsl::narrow_cast&lt;int&gt;(-7.9) = 4294967289
+std::exception
+</pre>
+
+
+
+<p>
+注意
+</p>
+
+<p>
+此规则不适用于转换到布尔型的某些特殊操作：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>ptr<span style="color: #707183;">)</span> do_something<span style="color: #707183;">(</span>*ptr<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: ptr is used as a condition</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #000000;">b</span> = ptr;                  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: narrowing</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+好的分析工具能检测到所有窄转换操作。然而，把所有窄转换都打上标记，可能会导致太多误报。
+</p>
+
+
+<p>
+建议
+</p>
+
+<p>
+标记所有从浮点型到整型的类型转换。也包括浮点到 char，双精度型到 int。
+</p>
+
+<p>
+标记所有 <code>long</code> 到 <code>char</code> 的类型转换。
+</p>
+
+<p>
+函数参数出现窄类型转换也很值得怀疑！
+</p>
