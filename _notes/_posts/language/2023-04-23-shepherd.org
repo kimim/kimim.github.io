@@ -1,0 +1,35 @@
+#+LAYOUT: post
+#+TITLE: 单词本：shepherd
+#+TAGS: English
+#+CATEGORIES: language
+
+一般在大一点的研发组织，都会设立 PMO 项目管理办公室，PMI Agile
+[[cite:&pmi2017agile]] 中，是这样描述 PMO 的：
+
+The PMO exists to *shepherd* business value throughout the
+organization.
+
+PMO 的存在是为了引领业务价值。这里用了作为动词形式的 shepherd。作为名
+词，这个词的意思是牧羊人。
+
+事实上，shepherd 的前半部分 shep 是 sheep 绵羊的比较古老的写法。而
+herd 则是牧人。合起来，就是绵羊牧人。
+
+这里还要注意一下， shepherd 中的 h 是不发音的，读若 sheperd。
+
+在另一本产品管理的小册子中，Jim Semick 写道 The product roadmap and
+product backlog serve distinct but complementary roles in helping a
+product manager *shepherd* a product from early strategic
+conceptualization all the way through development and market release.
+
+这里 shepherd 也引伸为引领、指引、推进的意思。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
