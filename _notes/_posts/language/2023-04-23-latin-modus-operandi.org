@@ -12,9 +12,9 @@ It is reasonable to assume that the same actors will follow a similar
 *modus operandi* in their attacks, and in particular will use the same
 software exploits to break into their victims' systems.
 
-这里 modus operandi 的意思是“特殊做法”。这个词本来是拉丁语中“操作方法”
-的意思。modus 是方法，operandi 是操作。合起来是操作方法。但是，在英语
-里，这个普普通通的操作方法有了特殊做法的意思。
+这里 modus operandi 的意思是“特殊做法”、作案手段。这个词本来是拉丁语中
+“操作方法”的意思。modus 是方法，operandi 是操作。合起来是操作方法。但
+是，在英语里，这个普普通通的操作方法有了特殊做法的意思。
 
 这就好像，我们古文中说的“道术”，道就是规律、道理。术就是技术、方法。合
 起来其实就是操作方法的意思吧。但是，因为有了历史的沉淀，道术的意思就很
@@ -23,8 +23,8 @@ software exploits to break into their victims' systems.
 
 OT:ICEFALL [[cite:&vedere2022oticefall]] 探寻了很多 OT 技术中的不安全漏洞，
 提到：Abusing insecure-by-design native capabilities of OT equipment
-is the preferred modus operandi of real-world ICS attackers. OT 设备本
-身的不安全设计成了 ICS 攻击者经常利用来进行攻击的特殊方法。
+is the preferred *modus operandi* of real-world ICS attackers. OT 设备本
+身的不安全设计成了 ICS 攻击者经常利用来进行攻击的作案手段。
 
 与 modus 相关单词还有比如 incommode 添麻烦，比如 We do not ask others
 to be faultless, we only ask their faults should not *incommode* to our
