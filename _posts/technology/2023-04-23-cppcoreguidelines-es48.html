@@ -1,0 +1,131 @@
+---
+layout: post
+title: CppCoreGuidelines ES.48 避免类型转换
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid casts&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+类型转换容易导致错误、导致代码优化不可靠。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span> = 2;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">long</span>*<span style="color: #707183;">)</span>&amp;d;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">q</span> = <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">long</span>*<span style="color: #707183;">)</span>&amp;d;
+cout &lt;&lt; d &lt;&lt; <span style="color: #2A00FF;">' '</span> &lt;&lt; *p &lt;&lt; <span style="color: #2A00FF;">' '</span> &lt;&lt; *q &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+</pre>
+</div>
+
+<pre class="example">
+2 0 4611686018427387904
+</pre>
+
+
+<p>
+不同实现，以上代码的输出也不一样。
+</p>
+
+<p>
+如果中间修改，结果更加奇怪：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span> = 2;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">long</span>*<span style="color: #707183;">)</span>&amp;d;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">q</span> = <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">long</span>*<span style="color: #707183;">)</span>&amp;d;
+*q = 666;
+cout &lt;&lt; d &lt;&lt; <span style="color: #2A00FF;">' '</span> &lt;&lt; *p &lt;&lt; <span style="color: #2A00FF;">' '</span> &lt;&lt; *q &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+</pre>
+</div>
+
+<pre class="example">
+3.29048e-321 666 666
+</pre>
+
+
+<p>
+很奇怪吧，好在还没有导致程序崩溃。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+程序员用上类型转换，往往都觉得这是自己想要做的，觉得这样写代码更容易读。事实上，他们违背了使用数值的通用规则。重载解析或者模板实例化往往能够帮你选择合适的函数。如果没有重载或模板实例化，可能需要去实现这些，而非进行局部修理（类型转换）。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+对于系统开发语言来说，类型转换也是必不可少的。比如，除了类型转换，还有什么把设备寄存器的地址存入指针？但是，总的来说，类型转换的使用还是严重过度了。是代码错误很主要的来源。
+</p>
+
+<p>
+如果你感觉需要很多类型转换，那么，你肯定遇到很根本的设计问题。
+</p>
+
+<p>
+类型规则集禁止使用<code>reinterpret_cast</code>和 C 风格的类型转换。
+</p>
+
+<p>
+不要把<code>[[nodiscard]]</code>返回值强制转换成 <code>void</code> 。如果你确实有意要抹掉返回值？如果代码评审和你都觉得忽略返回值是需要的。那么可以使用<code>std::ignore =</code>来消除编译器警告。这个方式更简单、可移植，也更容易通过 grep 搜索到。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #707183;">[</span><span style="color: #7388d6;">[</span>nodiscard<span style="color: #7388d6;">]</span><span style="color: #707183;">]</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_value</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> 42; <span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">std</span>::ignore = get_value<span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">no warning now: warning: ignoring</span>
+                               <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">return value of 'int get_value()',</span>
+                               <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">declared with attribute 'nodiscard'</span>
+                               <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">[-Wunused-result]</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+强制类型转换用的优点过度。现代C++提供规则和机制避免在大部分情况下使用强制类型转换。比如：
+</p>
+
+<ul class="org-ul">
+<li>使用模板</li>
+<li>使用 <code>std::variant</code></li>
+<li>使用定义良好的、安全、隐式指针类型转换</li>
+<li>使用<code>std::ignore =</code>忽略<code>[[nodiscard]]</code>返回值</li>
+</ul>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记 C 风格的强制类型转换，包括转换成 <code>void</code> 的情况</li>
+<li>标记函数形式的强制类型转换<code>Type(value)</code>。使用<code>Type{value}</code>，这个方式可以避免变窄转换。</li>
+<li>标记源和目标类型一样的指针类型转换</li>
+<li>标记可以隐式转换的显示的指针类型转换</li>
+</ul>
