@@ -1,0 +1,225 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.50 不要强制类型转换掉 const
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t cast away ~const~"
+
+理由
+
+通过强制类型转换把 ~const~ 去掉，其实只是制造了一种变量可变的假象。如果
+实际变量是个常变量，但是你通过强制类型转换去掉了 ~const~ ，然后去修改它，
+结果是未定义的行为。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f(const int& x)
+{
+    const_cast<int&>(x) = 42;   // BAD
+}
+
+static int i = 0;
+static const int j = 0;
+
+int main()
+{
+    f(i); // silent side effect
+    cout << "i = " << i <<"\n";
+    f(j); // undefined behavior
+    cout << "j = " << j <<"\n";
+    return EXIT_SUCCESS;
+}
+#+end_src
+
+#+RESULTS:
+: i = 42
+
+
+例子
+
+有时候，你可能会考虑利用 ~const_cast~ 避免重复代码。比如，两个访问函数，
+分别对应常量和非常量方式访问。
+
+比如以下这种情况：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class Bar;
+
+class Foo {
+public:
+    // BAD, duplicates logic
+    Bar& get_bar()
+    {
+        /* complex logic around getting a non-const reference to my_bar */
+    }
+
+    const Bar& get_bar() const
+    {
+        /* same complex logic around getting a const reference to my_bar */
+    }
+private:
+    Bar my_bar;
+};
+#+end_src
+
+为了避免代码重复，一般可以让非常量访问的函数调用常量访问的函数。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class Foo {
+public:
+    // not great, non-const calls const version but resorts to
+    // const_cast
+    Bar& get_bar()
+    {
+        return const_cast<Bar&>(static_cast<const Foo&>(*this).get_bar());
+    }
+    const Bar& get_bar() const
+    {
+        /* the complex logic around getting a const reference to my_bar */
+    }
+private:
+    Bar my_bar;
+};
+#+end_src
+
+如果实现正确，这个模式还是安全可行的。因为发起调用的函数保管一个非-const
+的对象。但是不够完美。
+
+另外一个办法，就是把共用部分的代码放进一个辅助函数里，把这个辅助函数设
+置成模板，这样就不需要 ~const_cast~ 也能推导出两个版本：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class Foo {
+public:                         // good
+          Bar& get_bar()       { return get_bar_impl(*this); }
+    const Bar& get_bar() const { return get_bar_impl(*this); }
+private:
+    Bar my_bar;
+
+    template<class T>           // good, deduces whether T is const or non-const
+    static auto& get_bar_impl(T& t)
+        { /* the complex logic around getting a possibly-const
+           ,* reference to my_bar */
+        }
+};
+#+end_src
+
+注意，不要在模板函数中放太多不相关的代码，不然会导致代码膨胀。比如说，
+后期如果发现有一些共用代码不需要做成模板，就可以提取出来，各自调用，而
+不要放进模板函数。这样可以降低生成重复的代码。
+
+
+例外
+
+在调用 ~const~ 不正确的函数时候，你可能会把 ~const~ 强制转换掉。最好把这些
+函数限制在一个 ~inline~ 的 ~const~ 正确的函数中，把类型转换限制在一个地方。
+
+例子
+
+有时候，把 ~const~ 转换掉是为了临时更新某个不可变对象。例子有：缓存
+caching、备忘 memoization、以及预计算 precomputation。不过，处理这些例
+子的更好的方法是使用 ~mutable~ 或间接访问。
+
+考虑把之前耗费资源的操作计算的结果保存起来使用：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int compute(int x); // compute a value for x; assume this to be costly
+
+class Cache {   // some type implementing a cache for an int->int operation
+public:
+    pair<bool, int> find(int x) const;   // is there a value for x?
+    void set(int x, int v);             // make y the value for x
+    // ...
+private:
+    // ...
+};
+
+class X {
+public:
+    int get_val(int x)
+    {
+        auto p = cache.find(x);
+        if (p.first) return p.second;
+        int val = compute(x);
+        cache.set(x, val); // insert value for x
+        return val;
+    }
+    // ...
+private:
+    Cache cache;
+};
+#+end_src
+
+这里 ~get_val()~ 逻辑上是个常数，所以我们可能想要把它设置为 ~const~ 成员。
+但是，依然需要修改 ~cache~ ，所以人们经常用到 ~const_cast~ ：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class X {   // Suspicious solution based on casting
+public:
+    int get_val(int x) const
+    {
+        auto p = cache.find(x);
+        if (p.first) return p.second;
+        int val = compute(x);
+        const_cast<Cache&>(cache).set(x, val);   // ugly
+        return val;
+    }
+    // ...
+private:
+    Cache cache;
+};
+#+end_src
+
+幸运的是，有更好的方案：把 ~cache~ 设置为 ~mutable~ 。这样，就算对象 ~X~ 是
+个 ~const~ ，你依然能修改 ~cache~ 。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class X {   // better solution
+public:
+    int get_val(int x) const
+    {
+        auto p = cache.find(x);
+        if (p.first) return p.second;
+        int val = compute(x);
+        cache.set(x, val);
+        return val;
+    }
+    // ...
+private:
+    mutable Cache cache;
+};
+#+end_src
+
+
+An alternative solution would be to store a pointer to the cache:
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class X {   // OK, but slightly messier solution
+public:
+    int get_val(int x) const
+    {
+        auto p = cache->find(x);
+        if (p.first) return p.second;
+        int val = compute(x);
+        cache->set(x, val);
+        return val;
+    }
+    // ...
+private:
+    unique_ptr<Cache> cache;
+};
+#+end_src
+
+这个解决方案更加灵活。但是需要显式地构造和析构 ~*cache~ 。
+
+不管什么情况，我们都需要确保多线程执行的时候， ~cache~ 线程安全，可能需
+要用到 ~std::mutex~ 。
+
+
+强化
+
+- 标注 ~const_casts~
+- 此规则适用于类型安全指南集合

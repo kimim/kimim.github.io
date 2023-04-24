@@ -1,0 +1,273 @@
+---
+layout: post
+title: CppCoreGuidelines ES.50 不要强制类型转换掉 const
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t cast away <code>const</code>&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+通过强制类型转换把 <code>const</code> 去掉，其实只是制造了一种变量可变的假象。如果实际变量是个常变量，但是你通过强制类型转换去掉了 <code>const</code> ，然后去修改它，结果是未定义的行为。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>&amp; <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">const_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>&amp;<span style="color: #7388d6;">&gt;(</span>x<span style="color: #7388d6;">)</span> = 42;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0;
+<span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">j</span> = 0;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f<span style="color: #7388d6;">(</span>i<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">silent side effect</span>
+    cout &lt;&lt; <span style="color: #2A00FF;">"i = "</span> &lt;&lt; i &lt;&lt;<span style="color: #2A00FF;">"\n"</span>;
+    f<span style="color: #7388d6;">(</span>j<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">undefined behavior</span>
+    cout &lt;&lt; <span style="color: #2A00FF;">"j = "</span> &lt;&lt; j &lt;&lt;<span style="color: #2A00FF;">"\n"</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+i = 42
+</pre>
+
+
+
+<p>
+例子
+</p>
+
+<p>
+有时候，你可能会考虑利用<code>const_cast</code>避免重复代码。比如，两个访问函数，分别对应常量和非常量方式访问。
+</p>
+
+<p>
+比如以下这种情况：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, duplicates logic</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span>&amp; <span style="color: #0000ff; font-weight: bold;">get_bar</span><span style="color: #7388d6;">()</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">complex logic around getting a non-const reference to my_bar</span><span style="color: #3F7F5F;"> */</span>
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span>&amp; <span style="color: #0000ff; font-weight: bold;">get_bar</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">same complex logic around getting a const reference to my_bar</span><span style="color: #3F7F5F;"> */</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span> <span style="color: #000000;">my_bar</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+为了避免代码重复，一般可以让非常量访问的函数调用常量访问的函数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">not great, non-const calls const version but resorts to</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">const_cast</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span>&amp; <span style="color: #0000ff; font-weight: bold;">get_bar</span><span style="color: #7388d6;">()</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">const_cast</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span>&amp;<span style="color: #909183;">&gt;(</span><span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #709870;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp;<span style="color: #709870;">&gt;(</span>*<span style="color: #7F0055; font-weight: bold;">this</span><span style="color: #709870;">)</span>.get_bar<span style="color: #709870;">()</span><span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span>&amp; <span style="color: #0000ff; font-weight: bold;">get_bar</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">the complex logic around getting a const reference to my_bar</span><span style="color: #3F7F5F;"> */</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span> <span style="color: #000000;">my_bar</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+如果实现正确，这个模式还是安全可行的。因为发起调用的函数保管一个非-const
+的对象。但是不够完美。
+</p>
+
+<p>
+另外一个办法，就是把共用部分的代码放进一个辅助函数里，把这个辅助函数设置成模板，这样就不需要<code>const_cast</code>也能推导出两个版本：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:                         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+          <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span>&amp; <span style="color: #0000ff; font-weight: bold;">get_bar</span><span style="color: #7388d6;">()</span>       <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> get_bar_impl<span style="color: #909183;">(</span>*<span style="color: #7F0055; font-weight: bold;">this</span><span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span>&amp; <span style="color: #0000ff; font-weight: bold;">get_bar</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> get_bar_impl<span style="color: #909183;">(</span>*<span style="color: #7F0055; font-weight: bold;">this</span><span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span> <span style="color: #000000;">my_bar</span>;
+
+    <span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>           <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good, deduces whether T is const or non-const</span>
+    <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #0000ff; font-weight: bold;">get_bar_impl</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp; <span style="color: #000000;">t</span><span style="color: #7388d6;">)</span>
+        <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">the complex logic around getting a possibly-const</span>
+<span style="color: #3F7F5F;">           * reference to my_bar</span><span style="color: #3F7F5F;"> */</span>
+        <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+注意，不要在模板函数中放太多不相关的代码，不然会导致代码膨胀。比如说，后期如果发现有一些共用代码不需要做成模板，就可以提取出来，各自调用，而不要放进模板函数。这样可以降低生成重复的代码。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+在调用 <code>const</code> 不正确的函数时候，你可能会把 <code>const</code> 强制转换掉。最好把这些函数限制在一个 <code>inline</code> 的 <code>const</code> 正确的函数中，把类型转换限制在一个地方。
+</p>
+
+<p>
+例子
+</p>
+
+<p>
+有时候，把 <code>const</code> 转换掉是为了临时更新某个不可变对象。例子有：缓存
+caching、备忘 memoization 、以及预计算 precomputation。不过，处理这些例子的更好的方法是使用 <code>mutable</code>或间接访问。
+</p>
+
+<p>
+考虑把之前耗费资源的操作计算的结果保存起来使用：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">compute</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">compute a value for x; assume this to be costly</span>
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Cache</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">some type implementing a cache for an int-&gt;int operation</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">pair</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">find</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">is there a value for x?</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">set</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">v</span><span style="color: #7388d6;">)</span>;             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">make y the value for x</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_val</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = cache.find<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>p.first<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> p.second;
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">val</span> = compute<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+        cache.set<span style="color: #909183;">(</span>x, val<span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">insert value for x</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> val;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Cache</span> <span style="color: #000000;">cache</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+这里<code>get_val()</code>逻辑上是个常数，所以我们可能想要把它设置为 <code>const</code> 成员。但是，依然需要修改 <code>cache</code> ，所以人们经常用到<code>const_cast</code>：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Suspicious solution based on casting</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_val</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = cache.find<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>p.first<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> p.second;
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">val</span> = compute<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">const_cast</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Cache</span>&amp;<span style="color: #909183;">&gt;(</span>cache<span style="color: #909183;">)</span>.set<span style="color: #909183;">(</span>x, val<span style="color: #909183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ugly</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> val;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Cache</span> <span style="color: #000000;">cache</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+幸运的是，有更好的方案：把 <code>cache</code> 设置为 <code>mutable</code> 。这样，就算对象 <code>X</code> 是个 <code>const</code> ，你依然能修改 <code>cache</code> 。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better solution</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_val</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = cache.find<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>p.first<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> p.second;
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">val</span> = compute<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+        cache.set<span style="color: #909183;">(</span>x, val<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">return</span> val;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #7F0055; font-weight: bold;">mutable</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Cache</span> <span style="color: #000000;">cache</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+An alternative solution would be to store a pointer to the cache:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, but slightly messier solution</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_val</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = cache-&gt;find<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>p.first<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> p.second;
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">val</span> = compute<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+        cache-&gt;set<span style="color: #909183;">(</span>x, val<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">return</span> val;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span>Cache<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">cache</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+这个解决方案更加灵活。但是需要显式地构造和析构<code>*cache</code>。
+</p>
+
+<p>
+不管什么情况，我们都需要确保多线程执行的时候， <code>cache</code> 线程安全，可能需要用到<code>std::mutex</code>。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标注 <code>const_casts</code></li>
+<li>此规则适用于类型安全指南集合</li>
+</ul>
