@@ -1,0 +1,91 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.49 如果需要强制类型转换，可以用带名字的转换
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If you must use a cast, use a named cast"
+
+理由
+
+可读性更好。可避免错误。比 C 风格或函数风格的转换更准确。可以让编译器
+捕捉某些错误。
+
+带名字的类型转换有：
+- ~static_cast~
+- ~const_cast~
+- ~reinterpret_cast~
+- ~dynamic_cast~
+- ~std::move~ ： ~move(x)~ 是一种从右值引用转为 ~x~ 的操作
+- ~std::forward~ ： ~forward<T>(x)~ 是一种依赖于类型 ~T~ 从右值或左值引用转成 ~x~ 的操作
+- ~gsl::narrow_cast~ ： ~narrow_cast<T>(x)~ 是一种 ~static_cast<T>(x)~
+- ~gsl::narrow~ ： ~narrow<T>(x)~ 是静态类型转换 ~static_cast<T>(x)~ ，并且
+  要么 ~static_cast<T>(x) == x~ ， 要么会抛出异常 ~narrowing_error~
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class B { /* ... */ };
+class D { /* ... */ };
+
+template<typename D> D* upcast(B* pb)
+{
+    D* pd0 = pb;                        // error: no implicit
+                                        // conversion from B* to D*
+    D* pd1 = (D*)pb;                    // legal, but what is done?
+    D* pd2 = static_cast<D*>(pb);       // error: D is not derived from B
+    D* pd3 = reinterpret_cast<D*>(pb);  // OK: on your head be it!
+    D* pd4 = dynamic_cast<D*>(pb);      // OK: return nullptr
+    // ...
+}
+#+end_src
+
+以上是来自真实世界的 bug， D 一开始是从 B 派生的，后来某个人重构了代码，
+D 不再是 B 的子类。 C 风格的强制类型转换是危险的，因为可以做任何类型转
+换，剥夺了任何防止错误的保护措施。
+
+
+注意
+
+如果类型转换不会导致丢失信息（比如从 ~float~ 转为 ~double~ ，从 ~int32~ 转为
+~int64~ ）可以考虑用花括号初始化。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+double d {some_float};
+int64_t i {some_int32};
+#+end_src
+
+这样写，可以表明是类型转换是有意为之。并且避免了可能导致精度丢失的转换。
+（如果是从 ~double~ 转为 ~float~ ，编译其会报错）。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+double x = 10.1;
+float f{x};
+#+end_src
+
+#+RESULTS:
+#+begin_example
+C-src-Qi3AYa.cpp: In function 'int main()':
+C-src-Qi3AYa.cpp:12:9: warning: narrowing conversion of 'x' from 'double' to 'float' [-Wnarrowing]
+   12 | float f{x};
+      |         ^
+#+end_example
+
+注意
+
+~reinterpret_cast~ 有时候是需要的，（比如，把机器地址转为指针），但是它
+并不类型安全。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+auto p = reinterpret_cast<Device_register>(0x800);  // inherently dangerous
+#+end_src
+
+
+强化
+
+- 标注所有 C 风格的强制类型转换，包括转到 ~void~
+- 标注函数风格的强制类型转换 ~Type(value)~ 。使用花括号 ~Type{value}~ ，不
+  会导致类型变窄。
+- 类型转换指南集禁用 ~reinterpret_cast~
+- 类型转换指南集警告针对数值类型使用 ~static_cast~ 

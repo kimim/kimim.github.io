@@ -1,0 +1,119 @@
+---
+layout: post
+title: CppCoreGuidelines ES.49 如果需要强制类型转换，可以用带名字的转换
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If you must use a cast, use a named cast&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性更好。可避免错误。比 C 风格或函数风格的转换更准确。可以让编译器捕捉某些错误。
+</p>
+
+<p>
+带名字的类型转换有：
+</p>
+<ul class="org-ul">
+<li><code>static_cast</code></li>
+<li><code>const_cast</code></li>
+<li><code>reinterpret_cast</code></li>
+<li><code>dynamic_cast</code></li>
+<li><code>std::move</code> ：<code>move(x)</code>是一种从右值引用转为 <code>x</code> 的操作</li>
+<li><code>std::forward</code> ：<code>forward&lt;T&gt;(x)</code>是一种依赖于类型 <code>T</code> 从右值或左值引用转成 <code>x</code> 的操作</li>
+<li><code>gsl::narrow_cast</code> ：<code>narrow_cast&lt;T&gt;(x)</code>是一种 <code>static_cast&lt;T&gt;(x)</code></li>
+<li><code>gsl::narrow</code> ：<code>narrow&lt;T&gt;(x)</code>是静态类型转换<code>static_cast&lt;T&gt;(x)</code>，并且要么<code>static_cast&lt;T&gt;(x) == x</code>， 要么会抛出异常 <code>narrowing_error</code></li>
+</ul>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #707183;">&gt;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>* <span style="color: #0000ff; font-weight: bold;">upcast</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>* <span style="color: #000000;">pb</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>* <span style="color: #000000;">pd0</span> = pb;                        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: no implicit</span>
+                                        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">conversion from B* to D*</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>* <span style="color: #000000;">pd1</span> = <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>*<span style="color: #7388d6;">)</span>pb;                    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">legal, but what is done?</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>* <span style="color: #000000;">pd2</span> = <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>*<span style="color: #7388d6;">&gt;(</span>pb<span style="color: #7388d6;">)</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: D is not derived from B</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>* <span style="color: #000000;">pd3</span> = <span style="color: #7F0055; font-weight: bold;">reinterpret_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>*<span style="color: #7388d6;">&gt;(</span>pb<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: on your head be it!</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>* <span style="color: #000000;">pd4</span> = <span style="color: #7F0055; font-weight: bold;">dynamic_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>*<span style="color: #7388d6;">&gt;(</span>pb<span style="color: #7388d6;">)</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: return nullptr</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+以上是来自真实世界的 bug ， D一开始是从 B 派生的，后来某个人重构了代码，
+D 不再是 B 的子类。 C 风格的强制类型转换是危险的，因为可以做任何类型转换，剥夺了任何防止错误的保护措施。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果类型转换不会导致丢失信息（比如从 <code>float</code> 转为 <code>double</code> ，从 <code>int32</code> 转为
+<code>int64</code> ）可以考虑用花括号初始化。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span> <span style="color: #707183;">{</span>some_float<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int64_t</span> <span style="color: #000000;">i</span> <span style="color: #707183;">{</span>some_int32<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+这样写，可以表明是类型转换是有意为之。并且避免了可能导致精度丢失的转换。（如果是从 <code>double</code> 转为 <code>float</code> ，编译其会报错）。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span> = 10.1;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">float</span> <span style="color: #000000;">f</span><span style="color: #707183;">{</span>x<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<pre class="example" id="org27a12e3">
+C-src-Qi3AYa.cpp: In function 'int main()':
+C-src-Qi3AYa.cpp:12:9: warning: narrowing conversion of 'x' from 'double' to 'float' [-Wnarrowing]
+   12 | float f{x};
+      |         ^
+</pre>
+
+<p>
+注意
+</p>
+
+<p>
+<code>reinterpret_cast</code> 有时候是需要的，（比如，把机器地址转为指针），但是它并不类型安全。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">reinterpret_cast</span><span style="color: #707183;">&lt;</span>Device_register<span style="color: #707183;">&gt;(</span>0x800<span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">inherently dangerous</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标注所有 C 风格的强制类型转换，包括转到 <code>void</code></li>
+<li>标注函数风格的强制类型转换<code>Type(value)</code>。使用花括号<code>Type{value}</code>，不会导致类型变窄。</li>
+<li>类型转换指南集禁用 <code>reinterpret_cast</code></li>
+<li>类型转换指南集警告针对数值类型使用 <code>static_cast</code></li>
+</ul>
