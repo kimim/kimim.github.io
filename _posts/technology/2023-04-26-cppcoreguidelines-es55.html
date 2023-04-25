@@ -1,0 +1,40 @@
+---
+layout: post
+title: CppCoreGuidelines ES.55 避免范围检测
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid the need for range checking&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+不会溢出的代码不溢出，（通常跑得更快）
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">x</span> : v<span style="color: #707183;">)</span>      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">print all elements of v</span>
+    cout &lt;&lt; x &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = find<span style="color: #707183;">(</span>v, x<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">find x in v</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>发现显式类型检测的代码，启发式的提供改进建议</li>
+</ul>
