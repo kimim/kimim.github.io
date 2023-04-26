@@ -1,0 +1,56 @@
+---
+layout: post
+title: CppCoreGuidelines ES.60 避免在资源管理函数外调用 new 和 delete
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid <code>new</code> and <code>delete</code> outside resource management functions&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+在应用代码中直接调用资源管理函数繁琐且容易出错。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+此规则也叫“No naked new”（没有裸露的 new）。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6;">[</span>n<span style="color: #7388d6;">]</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">n default constructed Xs</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">delete</span><span style="color: #7388d6;">[]</span> p;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+在省略出的代码可能导致后面的 <code>delete</code> 再也执行不到。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记裸露的 <code>new</code> 和 <code>delete</code></li>
+</ul>

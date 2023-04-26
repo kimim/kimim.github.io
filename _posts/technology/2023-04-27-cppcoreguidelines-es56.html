@@ -1,0 +1,218 @@
+---
+layout: post
+title: CppCoreGuidelines ES.56 只有需要显式的把对象移动到另一个作用域范围时才用 std::move()
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Write <code>std::move()</code> only when you need to explicitly move an object to
+another scope&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+相比 copy ，移动 move能避免重复，提升性能。
+</p>
+
+<p>
+移动完之后，留下的是一个空对象。这样就可能导致意外甚至危险情况。所以我们应该避免移动左值，因为左值可能后面会被访问。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+对于右值来说，移动是隐式的操作（比如函数的返回值）。所以，不要显式地写移动操作，导致代码复杂。编译器会自动进行优化。
+</p>
+
+<p>
+通常来说，遵循本文档中的指南编写代码，可以避免大部分显式使用<code>std::move</code>的情况：
+</p>
+<ul class="org-ul">
+<li>避免变量的作用域范围不必要的大</li>
+<li>编写篇幅短的函数</li>
+<li>返回本地变量</li>
+</ul>
+
+<p>
+显式移动操作用于把一个对象移动到另一个作用域范围。主要是传递数据到“地漏”函数，实现移动构造和移动赋值以及 swap 操作。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sink</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;&amp; <span style="color: #000000;">x</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">sink takes ownership of x</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">user</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">x</span>;
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: cannot bind an lvalue to a rvalue reference</span>
+    sink<span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: sink takes the contents of x, x must now be assumed to be</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">empty</span>
+    sink<span style="color: #7388d6;">(</span><span style="color: #110099;">std</span>::move<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">probably a mistake</span>
+    use<span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+通常，<code>std::move()</code>用于传递<code>&amp;&amp;</code>参数。并且在传递参数之后，对象就已经移出去，不要再读取该变量，直到赋予新值。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s1</span> = <span style="color: #2A00FF;">"supercalifragilisticexpialidocious"</span>;
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s2</span> = s1;             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok, takes a copy</span>
+    assert<span style="color: #7388d6;">(</span>s1 == <span style="color: #2A00FF;">"supercalifragilisticexpialidocious"</span><span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok</span>
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, if you want to keep using s1's value</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s3</span> = move<span style="color: #7388d6;">(</span>s1<span style="color: #7388d6;">)</span>;
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, assert will likely fail, s1 likely changed</span>
+    assert<span style="color: #7388d6;">(</span>s1 == <span style="color: #2A00FF;">"supercalifragilisticexpialidocious"</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example" id="org57c193c">
+Assertion failed: s1 == "supercalifragilisticexpialidocious"
+</pre>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sink</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span>widget<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">pass ownership of p to sink()</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">w</span> = make_unique<span style="color: #7388d6;">&lt;</span>widget<span style="color: #7388d6;">&gt;()</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    sink<span style="color: #7388d6;">(</span><span style="color: #110099;">std</span>::move<span style="color: #909183;">(</span>w<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;               <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok, give to sink()</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    sink<span style="color: #7388d6;">(</span>w<span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Error: unique_ptr is carefully designed so that you</span>
+                <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">cannot copy it</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+<code>std::move()</code> 只是假装把变量类型转换成<code>&amp;&amp;</code>。其本身不移动任何东西，而只是把一个对象标记成被移动的实体。编程语言本身知道哪些对象是可以移动的，尤其是函数的返回值，所以不需要添加多余的<code>std::move()</code>。
+</p>
+
+<p>
+不要仅仅因为你听说 <code>move</code> 效率更高而写<code>std::move()</code>。没有数据支撑，不要声明效率高。一般来说，没有什么理由的话，不要把代码搞的太复杂。绝对不要对 <code>const</code> 对象使用<code>std::move()</code>，其实只是悄悄的转成了一个副本。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">make_vector</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">result</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... load result with data</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">std</span>::move<span style="color: #7388d6;">(</span>result<span style="color: #7388d6;">)</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad; just write "return result;"</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+不要移动本地变量。因为语言默认本地变量是可移动。以上写法没有帮助，只会让编译器干预 RVO（返回值优化）过程，产生本地变量的一个不必要的引用别名。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v</span> = <span style="color: #110099;">std</span>::move<span style="color: #707183;">(</span>make_vector<span style="color: #7388d6;">()</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad; the std::move is</span>
+                                            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">entirely redundant</span>
+</pre>
+</div>
+
+<p>
+不要移动返回值，比如在<code>x = move(f())</code>中。编程语言知道返回值是一个临时对象，可以移动。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">mover</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;&amp; <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    call_something<span style="color: #7388d6;">(</span><span style="color: #110099;">std</span>::move<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok</span>
+    call_something<span style="color: #7388d6;">(</span><span style="color: #110099;">std</span>::forward<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #909183;">&gt;(</span>x<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, don't std::forward</span>
+                                          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">an rvalue reference</span>
+    call_something<span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;                    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">suspicious, why not std::move?</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">forwarder</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp;&amp; <span style="color: #000000;">t</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    call_something<span style="color: #7388d6;">(</span><span style="color: #110099;">std</span>::move<span style="color: #909183;">(</span>t<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, don't std::move a</span>
+                                          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">forwarding reference</span>
+    call_something<span style="color: #7388d6;">(</span><span style="color: #110099;">std</span>::forward<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #909183;">&gt;(</span>t<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok</span>
+    call_something<span style="color: #7388d6;">(</span>t<span style="color: #7388d6;">)</span>;                    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">suspicious, why not std::forward?</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记警告以下情况：
+<ul class="org-ul">
+<li><code>std::move(x)</code> ，其中 <code>x</code> 是右值，或这开发语言以右值对待的变量，包括从
+<code>std::move(local_variable)</code> 返回的值</li>
+<li>对于值返回的函数的返回结果进行移动操作 <code>std::move(f())</code></li>
+</ul></li>
+<li>标记警告接受<code>S&amp;&amp;</code>参数的函数，且该函数没有能接受左值<code>const S&amp;</code>的重载</li>
+<li>标记警告以<code>std::move</code>的方式传参给函数的情况。除了以下情况：
+<ul class="org-ul">
+<li>参数类型为<code>X&amp;&amp;</code>右值引用</li>
+<li>类型只能移动，且参数是值传递的</li>
+</ul></li>
+<li>标记警告<code>std::move</code>用于转发引用的情况（<code>T&amp;&amp;</code>中 <code>T</code> 为一个模板类型参数）。考虑使用 <code>std::forward</code></li>
+<li>标记警告除了从右值引用到非 <code>const</code> 传参中使用<code>std::move</code>的其他情况</li>
+<li>标记警告<code>std::forward</code>用于右值引用的情况（<code>X&amp;&amp;</code>中 <code>X</code> 不是模板类型参数）。考虑使用 <code>std::move</code></li>
+<li>标记警告除了转发引用之外的使用<code>std::forward</code>的情况</li>
+<li>标记警告一个对象是可能从别处移动来的，而下一个操作是 <code>const</code> 操作。应该首先有一个非 <code>const</code> 的动作。这个动作最好是赋值操作，该操作重置对象的值。</li>
+</ul>
