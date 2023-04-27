@@ -1,0 +1,709 @@
+---
+layout: post
+title: OPC UA 服务器的动态扩展方法
+tags: [opcua]
+categories: [technology]
+---
+<p>
+最近看到一个 PCT 国际标准，主要理念是根据OPC UA客户端的用户身份和证书信息确定能在服务器中访问的数据，通过负载均衡和服务编排动态创建 OPC
+UA 服务和地址空间数据，提供数据给客户端，从而可以提升OPC UA服务器扩展性。
+</p>
+
+<p>
+这个专利的整体方案如下：
+</p>
+
+
+<div id="orgfe15eee" class="figure">
+<p><div align="center"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   xml:space="preserve"
+   width="582.71997"
+   height="508.16"
+   viewBox="0 0 582.71997 508.16"
+   sodipodi:docname="OPC-UA-Load-Balance-Dynamic.pdf"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs6"><clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath16"><path
+         d="M 0,0 H 1820.8331 V 1586.5566 H 0 Z"
+         clip-rule="evenodd"
+         id="path14" /></clipPath><clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath28"><path
+         d="M 0,0 H 1820.8331 V 1583.5911 H 0 Z"
+         clip-rule="evenodd"
+         id="path26" /></clipPath></defs><sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0" /><g
+     id="g8"
+     inkscape:groupmode="layer"
+     inkscape:label="OPC-UA-Load-Balance-Dynamic"
+     transform="matrix(0.31999998,0,0,0.31999998,0,1.2704e-5)"><g
+       id="g10"><g
+         id="g12"
+         clip-path="url(#clipPath16)"><g
+           id="g18"
+           transform="scale(2.9655263)"><path
+             d="M 0,0 H 614 V 535 H 0 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path20" /></g></g></g><g
+       id="g22"><g
+         id="g24"
+         clip-path="url(#clipPath28)"><g
+           id="g30"
+           transform="matrix(2.9655263,0,0,2.9655263,1.4827632,1.4827632)"><path
+             d="m 246,466 h 120 v 60 H 246 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path32" /><path
+             d="m 246,466 h 120 v 60 H 246 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path34" /></g><g
+           id="g36"
+           transform="scale(2.9655561)"><text
+             transform="translate(252.29688,493)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:Arial;-inkscape-font-specification:ArialMT;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text40"><tspan
+               x="0 8.0039062 14.677734 20.677734 26.677734 33.351562 37.347656 44.021484 50.695312 57.369141 64.042969 67.376953 75.380859 81.380859 87.380859 90.714844 97.388672"
+               y="0"
+               sodipodi:role="line"
+               id="tspan38">Background System</tspan></text><text
+             transform="translate(281.98438,508)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text44"><tspan
+               x="0 12 24 36"
+               y="0"
+               sodipodi:role="line"
+               id="tspan42">后台系统</tspan></text></g><g
+           id="g46"
+           transform="matrix(2.9655263,0,0,2.9655263,1.4827632,1.4827632)"><path
+             d="m 241,366 47.16,94.31"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path48" /><path
+             d="m 290.5,465 -6.26001,-4.69 H 288.16 l 2.34,-3.13001 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path50" /><path
+             d="m 290.5,465 -6.26001,-4.69 H 288.16 l 2.34,-3.13001 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path52" /><path
+             d="m 166,306 h 120 v 60 H 166 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path54" /><path
+             d="m 166,306 h 120 v 60 H 166 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path56" /></g><g
+           id="g58"
+           transform="scale(2.9655561)"><text
+             transform="translate(183.65625,340)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:Arial;-inkscape-font-specification:ArialMT;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text62"><tspan
+               x="0 9.3339844 17.337891 26.003906 29.337891 38.003906 45.345703"
+               y="0"
+               sodipodi:role="line"
+               id="tspan60">OPC UA </tspan></text><text
+             transform="translate(232.33594,340)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text66"><tspan
+               x="0 12 24"
+               y="0"
+               sodipodi:role="line"
+               id="tspan64">服务器</tspan></text></g><g
+           id="g68"
+           transform="matrix(2.9655263,0,0,2.9655263,1.4827632,1.4827632)"><path
+             d="m 111,366 144.7,96.47"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path70" /><path
+             d="m 260.07001,465.38 -7.76001,-0.97 3.39,-1.94 0.49,-3.88 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path72" /><path
+             d="m 260.07001,465.38 -7.76001,-0.97 3.39,-1.94 0.49,-3.88 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path74" /><path
+             d="m 6,306 h 120 v 60 H 6 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path76" /><path
+             d="m 6,306 h 120 v 60 H 6 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path78" /></g><g
+           id="g80"
+           transform="scale(2.9655561)"><text
+             transform="translate(23.65625,340)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:Arial;-inkscape-font-specification:ArialMT;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text84"><tspan
+               x="0 9.3339844 17.337891 26.003906 29.337891 38.003906 45.345703"
+               y="0"
+               sodipodi:role="line"
+               id="tspan82">OPC UA </tspan></text><text
+             transform="translate(72.335938,340)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text88"><tspan
+               x="0 12 24"
+               y="0"
+               sodipodi:role="line"
+               id="tspan86">服务器</tspan></text></g><g
+           id="g90"
+           transform="matrix(2.9655263,0,0,2.9655263,1.4827632,1.4827632)"><path
+             d="m 371,366 -47.14999,94.31"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path92" /><path
+             d="m 321.5,465 v -7.82001 l 2.35001,3.13001 h 3.91 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path94" /><path
+             d="m 321.5,465 v -7.82001 l 2.35001,3.13001 h 3.91 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path96" /><path
+             d="m 326,306 h 120 v 60 H 326 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path98" /><path
+             d="m 326,306 h 120 v 60 H 326 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path100" /></g><g
+           id="g102"
+           transform="scale(2.9655561)"><text
+             transform="translate(343.65625,340)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:Arial;-inkscape-font-specification:ArialMT;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text106"><tspan
+               x="0 9.3339844 17.337891 26.003906 29.337891 38.003906 45.345703"
+               y="0"
+               sodipodi:role="line"
+               id="tspan104">OPC UA </tspan></text><text
+             transform="translate(392.33594,340)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text110"><tspan
+               x="0 12 24"
+               y="0"
+               sodipodi:role="line"
+               id="tspan108">服务器</tspan></text></g><g
+           id="g112"
+           transform="matrix(2.9655263,0,0,2.9655263,1.4827632,1.4827632)"><path
+             d="M 501.01001,366 356.29999,462.47"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path114" /><path
+             d="m 351.92999,465.38 3.89002,-6.79 0.47998,3.88 3.40002,1.94 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path116" /><path
+             d="m 351.92999,465.38 3.89002,-6.79 0.47998,3.88 3.40002,1.94 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path118" /><path
+             d="m 486,306 h 120 v 60 H 486 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path120" /><path
+             d="m 486,306 h 120 v 60 H 486 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path122" /></g><g
+           id="g124"
+           transform="scale(2.9655561)"><text
+             transform="translate(503.65625,340)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:Arial;-inkscape-font-specification:ArialMT;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text128"><tspan
+               x="0 9.3339844 17.337891 26.003906 29.337891 38.003906 45.345703"
+               y="0"
+               sodipodi:role="line"
+               id="tspan126">OPC UA </tspan></text><text
+             transform="translate(552.33594,340)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text132"><tspan
+               x="0 12 24"
+               y="0"
+               sodipodi:role="line"
+               id="tspan130">服务器</tspan></text></g><g
+           id="g134"
+           transform="matrix(2.9655263,0,0,2.9655263,1.4827632,1.4827632)"><path
+             d="M 261,206 116.3,302.47"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path136" /><path
+             d="m 111.93,305.38 3.88,-6.79 0.49,3.88 3.4,1.94 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path138" /><path
+             d="m 111.93,305.38 3.88,-6.79 0.49,3.88 3.4,1.94 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path140" /><path
+             d="m 291,206 -47.14999,94.31"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path142" /><path
+             d="m 241.5,305 v -7.82001 l 2.35001,3.13001 h 3.90998 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path144" /><path
+             d="m 241.5,305 v -7.82001 l 2.35001,3.13001 h 3.90998 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path146" /><path
+             d="m 321,206 47.16,94.31"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path148" /><path
+             d="m 370.5,305 -6.26001,-4.69 H 368.16 l 2.34,-3.13001 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path150" /><path
+             d="m 370.5,305 -6.26001,-4.69 H 368.16 l 2.34,-3.13001 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path152" /><path
+             d="m 351,206 144.70999,96.47"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path154" /><path
+             d="m 500.07001,305.38 -7.76001,-0.97 3.39999,-1.94 0.48001,-3.88 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path156" /><path
+             d="m 500.07001,305.38 -7.76001,-0.97 3.39999,-1.94 0.48001,-3.88 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path158" /><path
+             d="m 246,146 h 120 v 60 H 246 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path160" /><path
+             d="m 246,146 h 120 v 60 H 246 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path162" /></g><g
+           id="g164"
+           transform="scale(2.9655561)"><text
+             transform="translate(276,180)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text168"><tspan
+               x="0 12 24 36 48"
+               y="0"
+               sodipodi:role="line"
+               id="tspan166">负载均衡器</tspan></text></g><g
+           id="g170"
+           transform="matrix(2.9655263,0,0,2.9655263,1.4827632,1.4827632)"><path
+             d="m 117.43,66 131.64001,76.78999"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path172" /><path
+             d="m 253.61,145.44 -7.81,-0.51001 3.27001,-2.14 L 249.33,138.89 Z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path174" /><path
+             d="m 253.61,145.44 -7.81,-0.51001 3.27001,-2.14 L 249.33,138.89 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path176" /><path
+             d="M 6,6 H 126 V 66 H 6 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path178" /><path
+             d="M 6,6 H 126 V 66 H 6 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path180" /></g><g
+           id="g182"
+           transform="scale(2.9655561)"><text
+             transform="translate(23.65625,40)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:Arial;-inkscape-font-specification:ArialMT;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text186"><tspan
+               x="0 9.3339844 17.337891 26.003906 29.337891 38.003906 45.345703"
+               y="0"
+               sodipodi:role="line"
+               id="tspan184">OPC UA </tspan></text><text
+             transform="translate(72.335938,40)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text190"><tspan
+               x="0 12 24"
+               y="0"
+               sodipodi:role="line"
+               id="tspan188">客户端</tspan></text></g><g
+           id="g192"
+           transform="matrix(2.9655263,0,0,2.9655263,1.4827632,1.4827632)"><path
+             d="m 243.14999,66 42.55002,74.47"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path194" /><path
+             d="m 288.31,145.03 -6.51999,-4.34 3.91,-0.22 2.16999,-3.25 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path196" /><path
+             d="m 288.31,145.03 -6.51999,-4.34 3.91,-0.22 2.16999,-3.25 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path198" /><path
+             d="M 166,6 H 286 V 66 H 166 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path200" /><path
+             d="M 166,6 H 286 V 66 H 166 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path202" /></g><g
+           id="g204"
+           transform="scale(2.9655561)"><text
+             transform="translate(183.65625,40)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:Arial;-inkscape-font-specification:ArialMT;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text208"><tspan
+               x="0 9.3339844 17.337891 26.003906 29.337891 38.003906 45.345703"
+               y="0"
+               sodipodi:role="line"
+               id="tspan206">OPC UA </tspan></text><text
+             transform="translate(232.33594,40)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text212"><tspan
+               x="0 12 24"
+               y="0"
+               sodipodi:role="line"
+               id="tspan210">客户端</tspan></text></g><g
+           id="g214"
+           transform="matrix(2.9655263,0,0,2.9655263,1.4827632,1.4827632)"><path
+             d="M 368.85999,66 326.31,140.47"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path216" /><path
+             d="m 323.70001,145.03 0.42999,-7.81 2.18,3.25 3.89999,0.22 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path218" /><path
+             d="m 323.70001,145.03 0.42999,-7.81 2.18,3.25 3.89999,0.22 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path220" /><path
+             d="M 326,6 H 446 V 66 H 326 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path222" /><path
+             d="M 326,6 H 446 V 66 H 326 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path224" /></g><g
+           id="g226"
+           transform="scale(2.9655561)"><text
+             transform="translate(343.65625,40)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:Arial;-inkscape-font-specification:ArialMT;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text230"><tspan
+               x="0 9.3339844 17.337891 26.003906 29.337891 38.003906 45.345703"
+               y="0"
+               sodipodi:role="line"
+               id="tspan228">OPC UA </tspan></text><text
+             transform="translate(392.33594,40)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text234"><tspan
+               x="0 12 24"
+               y="0"
+               sodipodi:role="line"
+               id="tspan232">客户端</tspan></text></g><g
+           id="g236"
+           transform="matrix(2.9655263,0,0,2.9655263,1.4827632,1.4827632)"><path
+             d="m 494.57999,66 -131.65,76.78999"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path238" /><path
+             d="m 358.39999,145.44 4.28,-6.55 0.25,3.89999 3.28,2.14 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path240" /><path
+             d="m 358.39999,145.44 4.28,-6.55 0.25,3.89999 3.28,2.14 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path242" /><path
+             d="M 486,6 H 606 V 66 H 486 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path244" /><path
+             d="M 486,6 H 606 V 66 H 486 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path246" /></g><g
+           id="g248"
+           transform="scale(2.9655561)"><text
+             transform="translate(503.65625,40)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:Arial;-inkscape-font-specification:ArialMT;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text252"><tspan
+               x="0 9.3339844 17.337891 26.003906 29.337891 38.003906 45.345703"
+               y="0"
+               sodipodi:role="line"
+               id="tspan250">OPC UA </tspan></text><text
+             transform="translate(552.33594,40)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text256"><tspan
+               x="0 12 24"
+               y="0"
+               sodipodi:role="line"
+               id="tspan254">客户端</tspan></text></g></g></g></g></svg>
+</div>
+</p>
+</div>
+
+<p>
+在这个方案中，后台系统是数据源，它可以是中心化的数据分析服务器，给各个工厂提供数据，而每个工厂是一个客户端，只能访问有权限读取的数据。它也可以是其他数据服务器，每个客户端会访问数据服务器的一部分数据。
+</p>
+
+<p>
+具体实现来说，客户端通过网络中的多个OPC UA服务器实例访问后台系统数据。服务器动态生成地址空间，负载均衡器分发工作负载给各个服务器。专利中指出
+OPC UA 服务器都具有相似的功能和性能。因此，也可以通过容器的方式管理
+OPC UA 服务器。这时候，可以用多种容器编排的方式进行动态扩展。
+</p>
+
+<p>
+负载均衡器管理服务器的生命周期。如果每个服务器的负载都超出了额定能力，则创建一个新的服务器接受会话请求。如果某个服务器超出一定时间没有活跃会话，则被负载均衡器移除，以释放资源。
+</p>
+
+<p>
+对于均衡器来说，最佳的负载均衡机制就是把新的OPC UA客户端通讯会话转发到已建立的工作会话最少的服务端。其他的负载均衡机制还有以轮询（round
+robin）的方式分发客户端会话请求。
+</p>
+
+<p>
+为了简化负载均衡器的工作，提升其工作效率，OPC UA 服务器的性能可以通过添加新的实例的方式进行横向扩展。也就是说，每一个服务器都可以提供相同的地址空间信息。而所有这些地址空间信息都是通过一个共同的后端系统提供。然而，服务器不一定暴露完整的地址空间，可以根据客户端的需要提供地址空间的切片。而且这个切片也可以动态变化，以满足不同客户端的需求。服务端提供切片的依据可以是客户端用户凭证，或客户端应用证书。
+</p>
+
+
+<div id="org0d65b07" class="figure">
+<p><div align="center"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   xml:space="preserve"
+   width="302.72"
+   height="653.44"
+   viewBox="0 0 302.72 653.44"
+   sodipodi:docname="OPC-UA-Load-Balance-Dynamic-Flowchart.pdf"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs6"><clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath16"><path
+         d="M 0,0 H 945.83331 V 2041.4725 H 0 Z"
+         clip-rule="evenodd"
+         id="path14" /></clipPath><clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath28"><path
+         d="M 0,0 H 945.83331 V 2012.0989 H 0 Z"
+         clip-rule="evenodd"
+         id="path26" /></clipPath></defs><sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0" /><g
+     id="g8"
+     inkscape:groupmode="layer"
+     inkscape:label="OPC-UA-Load-Balance-Dynamic-Flowchart"
+     transform="matrix(0.31999998,0,0,0.31999998,0,1.9669333e-5)"><g
+       id="g10"><g
+         id="g12"
+         clip-path="url(#clipPath16)"><g
+           id="g18"
+           transform="scale(2.9373705)"><path
+             d="M 0,0 H 322 V 695 H 0 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path20" /></g></g></g><g
+       id="g22"><g
+         id="g24"
+         clip-path="url(#clipPath28)"><g
+           id="g30"
+           transform="matrix(2.9373705,0,0,2.9373705,1.4686853,1.4686853)"><path
+             d="m 106,66 v 53.63"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path32" /><path
+             d="m 106,124.88 -3.5,-7 3.5,1.75 3.5,-1.75 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path34" /><path
+             d="m 106,124.88 -3.5,-7 3.5,1.75 3.5,-1.75 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path36" /></g><g
+           id="g38"
+           transform="scale(2.9373705)"><path
+             d="m 156.0005,36 c 0,0.982548 -0.0803,1.96273 -0.24078,2.940544 -0.16049,0.977814 -0.40048,1.948551 -0.71997,2.912216 -0.31947,0.963669 -0.71689,1.915623 -1.19225,2.855862 -0.47537,0.940243 -1.02639,1.864239 -1.65307,2.771988 -0.62667,0.907757 -1.32598,1.794899 -2.09793,2.661426 -0.77196,0.866528 -1.61284,1.708271 -2.52263,2.525231 -0.90978,0.816959 -1.8841,1.605198 -2.92298,2.364715 -1.03886,0.759518 -2.13726,1.48666 -3.29521,2.181427 -1.15793,0.694767 -2.36983,1.35381 -3.63569,1.977127 -1.26587,0.623318 -2.57961,1.207917 -3.94121,1.753788 -1.36159,0.54588 -2.7645,1.050404 -4.20871,1.513573 -1.44422,0.463169 -2.92279,0.882752 -4.43572,1.258755 -1.51291,0.376007 -3.05291,0.706619 -4.61997,0.991836 -1.56707,0.285225 -3.15365,0.523674 -4.75977,0.715355 -1.60611,0.191689 -3.22401,0.335686 -4.8537,0.432 -1.62969,0.09631 -3.26333,0.144455 -4.90091,0.144455 -1.63757,0 -3.27121,-0.04815 -4.9009,-0.144455 -1.629694,-0.09631 -3.247606,-0.240311 -4.853723,-0.432 -1.60611,-0.191681 -3.192696,-0.43013 -4.759766,-0.715355 -1.567062,-0.285217 -3.107056,-0.615829 -4.61998,-0.991836 C 85.352707,63.340649 83.874138,62.921066 82.429924,62.457897 80.98571,61.994728 79.582802,61.490204 78.221199,60.944328 76.859604,60.398457 75.545876,59.813858 74.280006,59.19054 73.014145,58.567219 71.802238,57.908176 70.644302,57.213409 69.486366,56.518642 68.387955,55.7915 67.349083,55.031982 66.310211,54.272465 65.335884,53.484226 64.426094,52.667267 63.516308,51.850307 62.675438,51.008564 61.903484,50.142036 61.131538,49.275509 60.432224,48.388367 59.80555,47.48061 59.178879,46.572861 58.627861,45.648861 58.152496,44.708618 57.677135,43.768383 57.279713,42.816429 56.960236,41.85276 56.640766,40.889095 56.400776,39.918358 56.240265,38.940544 56.079754,37.96273 55.9995,36.982548 55.9995,36 c 0,-0.982544 0.08025,-1.962727 0.240765,-2.940544 0.160511,-0.977818 0.400501,-1.948559 0.719974,-2.912228 0.319477,-0.963667 0.716896,-1.915619 1.192257,-2.855856 0.475365,-0.940241 1.026383,-1.864238 1.653054,-2.771993 0.626674,-0.907755 1.325988,-1.794896 2.097934,-2.661425 0.771954,-0.866529 1.612824,-1.708273 2.52261,-2.52523 0.90979,-0.816958 1.884125,-1.605196 2.922997,-2.364714 1.038871,-0.75952 2.137275,-1.486661 3.295211,-2.181426 1.157936,-0.694765 2.369843,-1.353808 3.635704,-1.97713 1.26587,-0.623321 2.579598,-1.207918 3.941193,-1.753793 1.361603,-0.545872 2.764511,-1.050394 4.208725,-1.513563 1.444214,-0.4631691 2.922783,-0.8827562 4.435707,-1.2587614 1.512924,-0.3760042 3.052918,-0.7066154 4.619988,-0.9918332 1.56707,-0.2852177 3.153656,-0.5236697 4.759765,-0.7153554 1.606117,-0.1916852 3.224022,-0.3356809 4.853716,-0.4319873 1.62969,-0.096307 3.26333,-0.1444602 4.9009,-0.1444602 1.63758,0 3.27121,0.048153 4.9009,0.1444602 1.62969,0.096306 3.2476,0.2403017 4.85371,0.4319869 1.60612,0.1916852 3.1927,0.4301371 4.75976,0.7153549 1.56707,0.2852177 3.10707,0.615829 4.61998,0.9918332 1.51293,0.3760052 2.99149,0.7955923 4.4357,1.2587614 1.44422,0.4631699 2.84712,0.9676919 4.20871,1.5135639 1.36161,0.545875 2.67534,1.130472 3.94123,1.753793 1.26586,0.623322 2.47776,1.282365 3.63569,1.97713 1.15795,0.694765 2.25636,1.421906 3.29523,2.181426 1.03886,0.759518 2.01318,1.547756 2.92296,2.364714 0.90979,0.816957 1.75065,1.658701 2.52261,2.52523 0.77196,0.866529 1.47127,1.75367 2.09793,2.661425 0.62668,0.907755 1.17771,1.831752 1.65308,2.771993 0.47536,0.940237 0.87277,1.892189 1.19224,2.855856 0.31948,0.963669 0.55948,1.93441 0.71999,2.912228 0.16052,0.977817 0.24078,1.958 0.24078,2.940544 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path40" /><path
+             d="m 156.0005,36 c 0,0.982548 -0.0803,1.96273 -0.24078,2.940544 -0.16049,0.977814 -0.40048,1.948551 -0.71997,2.912216 -0.31947,0.963669 -0.71689,1.915623 -1.19225,2.855862 -0.47537,0.940243 -1.02639,1.864239 -1.65307,2.771988 -0.62667,0.907757 -1.32598,1.794899 -2.09793,2.661426 -0.77196,0.866528 -1.61284,1.708271 -2.52263,2.525231 -0.90978,0.816959 -1.8841,1.605198 -2.92298,2.364715 -1.03886,0.759518 -2.13726,1.48666 -3.29521,2.181427 -1.15793,0.694767 -2.36983,1.35381 -3.63569,1.977127 -1.26587,0.623318 -2.57961,1.207917 -3.94121,1.753788 -1.36159,0.54588 -2.7645,1.050404 -4.20871,1.513573 -1.44422,0.463169 -2.92279,0.882752 -4.43572,1.258755 -1.51291,0.376007 -3.05291,0.706619 -4.61997,0.991836 -1.56707,0.285225 -3.15365,0.523674 -4.75977,0.715355 -1.60611,0.191689 -3.22401,0.335686 -4.8537,0.432 -1.62969,0.09631 -3.26333,0.144455 -4.90091,0.144455 -1.63757,0 -3.27121,-0.04815 -4.9009,-0.144455 -1.629694,-0.09631 -3.247606,-0.240311 -4.853723,-0.432 -1.60611,-0.191681 -3.192696,-0.43013 -4.759766,-0.715355 -1.567062,-0.285217 -3.107056,-0.615829 -4.61998,-0.991836 C 85.352707,63.340649 83.874138,62.921066 82.429924,62.457897 80.98571,61.994728 79.582802,61.490204 78.221199,60.944328 76.859604,60.398457 75.545876,59.813858 74.280006,59.19054 73.014145,58.567219 71.802238,57.908176 70.644302,57.213409 69.486366,56.518642 68.387955,55.7915 67.349083,55.031982 66.310211,54.272465 65.335884,53.484226 64.426094,52.667267 63.516308,51.850307 62.675438,51.008564 61.903484,50.142036 61.131538,49.275509 60.432224,48.388367 59.80555,47.48061 59.178879,46.572861 58.627861,45.648861 58.152496,44.708618 57.677135,43.768383 57.279713,42.816429 56.960236,41.85276 56.640766,40.889095 56.400776,39.918358 56.240265,38.940544 56.079754,37.96273 55.9995,36.982548 55.9995,36 c 0,-0.982544 0.08025,-1.962727 0.240765,-2.940544 0.160511,-0.977818 0.400501,-1.948559 0.719974,-2.912228 0.319477,-0.963667 0.716896,-1.915619 1.192257,-2.855856 0.475365,-0.940241 1.026383,-1.864238 1.653054,-2.771993 0.626674,-0.907755 1.325988,-1.794896 2.097934,-2.661425 0.771954,-0.866529 1.612824,-1.708273 2.52261,-2.52523 0.90979,-0.816958 1.884125,-1.605196 2.922997,-2.364714 1.038871,-0.75952 2.137275,-1.486661 3.295211,-2.181426 1.157936,-0.694765 2.369843,-1.353808 3.635704,-1.97713 1.26587,-0.623321 2.579598,-1.207918 3.941193,-1.753793 1.361603,-0.545872 2.764511,-1.050394 4.208725,-1.513563 1.444214,-0.4631691 2.922783,-0.8827562 4.435707,-1.2587614 1.512924,-0.3760042 3.052918,-0.7066154 4.619988,-0.9918332 1.56707,-0.2852177 3.153656,-0.5236697 4.759765,-0.7153554 1.606117,-0.1916852 3.224022,-0.3356809 4.853716,-0.4319873 1.62969,-0.096307 3.26333,-0.1444602 4.9009,-0.1444602 1.63758,0 3.27121,0.048153 4.9009,0.1444602 1.62969,0.096306 3.2476,0.2403017 4.85371,0.4319869 1.60612,0.1916852 3.1927,0.4301371 4.75976,0.7153549 1.56707,0.2852177 3.10707,0.615829 4.61998,0.9918332 1.51293,0.3760052 2.99149,0.7955923 4.4357,1.2587614 1.44422,0.4631699 2.84712,0.9676919 4.20871,1.5135639 1.36161,0.545875 2.67534,1.130472 3.94123,1.753793 1.26586,0.623322 2.47776,1.282365 3.63569,1.97713 1.15795,0.694765 2.25636,1.421906 3.29523,2.181426 1.03886,0.759518 2.01318,1.547756 2.92296,2.364714 0.90979,0.816957 1.75065,1.658701 2.52261,2.52523 0.77196,0.866529 1.47127,1.75367 2.09793,2.661425 0.62668,0.907755 1.17771,1.831752 1.65308,2.771993 0.47536,0.940237 0.87277,1.892189 1.19224,2.855856 0.31948,0.963669 0.55948,1.93441 0.71999,2.912228 0.16052,0.977817 0.24078,1.958 0.24078,2.940544 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path42" /></g><g
+           id="g44"
+           transform="scale(2.9373999)"><text
+             transform="translate(61,42)"
+             style="font-variant:normal;font-weight:normal;font-size:15px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text48"><tspan
+               x="0 15 30 45 60 75"
+               y="0"
+               sodipodi:role="line"
+               id="tspan46">收到服务请求</tspan></text></g><g
+           id="g50"
+           transform="matrix(2.9373705,0,0,2.9373705,1.4686853,1.4686853)"><path
+             d="m 106,296 v 63.64001"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path52" /><path
+             d="m 106,364.89001 -3.5,-7 3.5,1.75 3.5,-1.75 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path54" /><path
+             d="m 106,364.89001 -3.5,-7 3.5,1.75 3.5,-1.75 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path56" /></g><g
+           id="g58"
+           transform="scale(2.9373999)"><path
+             d="m 99,323 h 15 v 18 H 99 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path60" /><text
+             transform="translate(99,337)"
+             style="font-variant:normal;font-weight:normal;font-size:15px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text64"><tspan
+               x="0"
+               y="0"
+               id="tspan62">否</tspan></text></g><g
+           id="g66"
+           transform="matrix(2.9373705,0,0,2.9373705,1.4686853,1.4686853)"><path
+             d="m 131,271 h 175 v 370 l -93.63,0.01"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path68" /><path
+             d="m 207.12,641.01001 7,-3.5 -1.75,3.5 1.75,3.5 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path70" /><path
+             d="m 207.12,641.01001 7,-3.5 -1.75,3.5 1.75,3.5 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path72" /></g><g
+           id="g74"
+           transform="scale(2.9373999)"><path
+             d="m 299,410 h 15 v 18 h -15 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path76" /><text
+             transform="translate(299,424)"
+             style="font-variant:normal;font-weight:normal;font-size:15px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text80"><tspan
+               x="0"
+               y="0"
+               id="tspan78">是</tspan></text></g><g
+           id="g82"
+           transform="scale(2.9373705)"><path
+             d="m 106,246 25,25 -25,25 -25,-25 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path84" /><path
+             d="m 106,246 25,25 -25,25 -25,-25 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path86" /></g><g
+           id="g88"
+           transform="matrix(2.9373705,0,0,2.9373705,1.4686853,1.4686853)"><path
+             d="m 106,196 v 43.63"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path90" /><path
+             d="m 106,244.88 -3.5,-7 3.5,1.75 3.5,-1.75 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path92" /><path
+             d="m 106,244.88 -3.5,-7 3.5,1.75 3.5,-1.75 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path94" /></g><g
+           id="g96"
+           transform="scale(2.9373705)"><path
+             d="m 13,126 h 186 c 0.45963,0 0.91484,0.0448 1.36563,0.1345 0.45078,0.0897 0.88849,0.22245 1.31313,0.39834 0.42463,0.17589 0.82803,0.39151 1.21019,0.64685 0.38217,0.25537 0.73576,0.54555 1.06079,0.87056 0.32499,0.32499 0.61519,0.67859 0.87054,1.06074 0.25534,0.38217 0.47096,0.78557 0.64687,1.21021 0.17589,0.42465 0.30867,0.86238 0.39833,1.31317 0.0897,0.45079 0.1345,0.90599 0.13452,1.36563 v 56 c -2e-5,0.45963 -0.0448,0.91483 -0.13452,1.36562 -0.0897,0.45079 -0.22244,0.88848 -0.39833,1.31312 -0.17591,0.42465 -0.39153,0.82807 -0.64687,1.21024 -0.25535,0.38217 -0.54555,0.73576 -0.87054,1.06076 -0.32503,0.32499 -0.67862,0.61519 -1.06078,0.87054 -0.38217,0.25534 -0.78557,0.47096 -1.2102,0.64685 -0.42464,0.17589 -0.86235,0.30867 -1.31313,0.39835 -0.45079,0.0897 -0.906,0.1345 -1.36563,0.13452 H 13 c -0.459627,-2e-5 -0.914839,-0.0448 -1.365634,-0.13452 -0.450794,-0.0897 -0.888512,-0.22246 -1.313151,-0.39835 -0.42464,-0.17589 -0.8280424,-0.39152 -1.2102073,-0.64688 -0.382165,-0.25534 -0.7357502,-0.54552 -1.0607557,-0.87051 -0.3250051,-0.325 -0.6151853,-0.67859 -0.8705407,-1.06076 C 6.9243569,192.50681 6.708734,192.10339 6.5328426,191.67876 6.3569508,191.25412 6.2241707,190.81641 6.1345024,190.36562 6.0448337,189.91483 5.9999995,189.45963 6,189 v -56 c -5e-7,-0.45964 0.044833,-0.91484 0.1345019,-1.36563 0.089669,-0.45079 0.2224489,-0.88852 0.3983407,-1.31317 0.1758914,-0.42464 0.3915143,-0.82804 0.6468692,-1.21021 0.2553549,-0.38215 0.5455351,-0.73575 0.8705402,-1.06074 0.3250055,-0.32501 0.6785898,-0.61519 1.0607547,-0.87056 0.382165,-0.25534 0.7855683,-0.47096 1.2102083,-0.64685 0.424639,-0.17589 0.862357,-0.30867 1.313152,-0.39834 C 12.085162,126.04483 12.540373,126 13,126 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path98" /><path
+             d="m 13,126 h 186 c 0.45963,0 0.91484,0.0448 1.36563,0.1345 0.45078,0.0897 0.88849,0.22245 1.31313,0.39834 0.42463,0.17589 0.82803,0.39151 1.21019,0.64685 0.38217,0.25537 0.73576,0.54555 1.06079,0.87056 0.32499,0.32499 0.61519,0.67859 0.87054,1.06074 0.25534,0.38217 0.47096,0.78557 0.64687,1.21021 0.17589,0.42465 0.30867,0.86238 0.39833,1.31317 0.0897,0.45079 0.1345,0.90599 0.13452,1.36563 v 56 c -2e-5,0.45963 -0.0448,0.91483 -0.13452,1.36562 -0.0897,0.45079 -0.22244,0.88848 -0.39833,1.31312 -0.17591,0.42465 -0.39153,0.82807 -0.64687,1.21024 -0.25535,0.38217 -0.54555,0.73576 -0.87054,1.06076 -0.32503,0.32499 -0.67862,0.61519 -1.06078,0.87054 -0.38217,0.25534 -0.78557,0.47096 -1.2102,0.64685 -0.42464,0.17589 -0.86235,0.30867 -1.31313,0.39835 -0.45079,0.0897 -0.906,0.1345 -1.36563,0.13452 H 13 c -0.459627,-2e-5 -0.914839,-0.0448 -1.365634,-0.13452 -0.450794,-0.0897 -0.888512,-0.22246 -1.313151,-0.39835 -0.42464,-0.17589 -0.8280424,-0.39152 -1.2102073,-0.64688 -0.382165,-0.25534 -0.7357502,-0.54552 -1.0607557,-0.87051 -0.3250051,-0.325 -0.6151853,-0.67859 -0.8705407,-1.06076 C 6.9243569,192.50681 6.708734,192.10339 6.5328426,191.67876 6.3569508,191.25412 6.2241707,190.81641 6.1345024,190.36562 6.0448337,189.91483 5.9999995,189.45963 6,189 v -56 c -5e-7,-0.45964 0.044833,-0.91484 0.1345019,-1.36563 0.089669,-0.45079 0.2224489,-0.88852 0.3983407,-1.31317 0.1758914,-0.42464 0.3915143,-0.82804 0.6468692,-1.21021 0.2553549,-0.38215 0.5455351,-0.73575 0.8705402,-1.06074 0.3250055,-0.32501 0.6785898,-0.61519 1.0607547,-0.87056 0.382165,-0.25534 0.7855683,-0.47096 1.2102083,-0.64685 0.424639,-0.17589 0.862357,-0.30867 1.313152,-0.39834 C 12.085162,126.04483 12.540373,126 13,126 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path100" /></g><g
+           id="g102"
+           transform="scale(2.9373999)"><text
+             transform="translate(31,167)"
+             style="font-variant:normal;font-weight:normal;font-size:15px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text106"><tspan
+               x="0 15 30 45 60 75 90 105 120 135"
+               y="0"
+               sodipodi:role="line"
+               id="tspan104">地址空间是否实例化？</tspan></text></g><g
+           id="g108"
+           transform="matrix(2.9373705,0,0,2.9373705,1.4686853,1.4686853)"><path
+             d="m 106,436 v 43.64001"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path110" /><path
+             d="m 106,484.89001 -3.5,-7 3.5,1.75 3.5,-1.75 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path112" /><path
+             d="m 106,484.89001 -3.5,-7 3.5,1.75 3.5,-1.75 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path114" /></g><g
+           id="g116"
+           transform="scale(2.9373705)"><path
+             d="m 13,366 h 186 c 0.45963,0 0.91484,0.0448 1.36563,0.13449 0.45078,0.0897 0.88849,0.22244 1.31313,0.39832 0.42463,0.17587 0.82803,0.39151 1.21019,0.64691 0.38217,0.25534 0.73576,0.54553 1.06079,0.87051 0.32499,0.32501 0.61519,0.67859 0.87054,1.06073 0.25534,0.38217 0.47096,0.78559 0.64687,1.21021 0.17589,0.42465 0.30867,0.86236 0.39833,1.31314 0.0897,0.45083 0.1345,0.90606 0.13452,1.36569 v 56 c -2e-5,0.45959 -0.0448,0.91479 -0.13452,1.36557 -0.0897,0.45078 -0.22244,0.88849 -0.39833,1.31314 -0.17591,0.42465 -0.39153,0.82806 -0.64687,1.21024 -0.25535,0.38217 -0.54555,0.73578 -0.87054,1.06079 -0.32503,0.32498 -0.67862,0.61517 -1.06078,0.87051 -0.38217,0.25537 -0.78557,0.47101 -1.2102,0.64688 -0.42464,0.17591 -0.86235,0.30869 -1.31313,0.39835 C 199.91484,435.95517 199.45963,436 199,436 H 13 c -0.459627,0 -0.914839,-0.0448 -1.365634,-0.13449 -0.450794,-0.0897 -0.888512,-0.22247 -1.313151,-0.39838 -0.42464,-0.17587 -0.8280424,-0.39151 -1.2102073,-0.64688 C 8.7288427,434.56491 8.3752575,434.27472 8.050252,433.94974 7.7252469,433.62473 7.4350667,433.27112 7.1797113,432.88895 6.9243569,432.50677 6.708734,432.10339 6.5328426,431.67874 6.3569508,431.25409 6.2241707,430.81638 6.1345024,430.3656 6.0448337,429.91479 5.9999995,429.45959 6,429 v -56 c -5e-7,-0.45963 0.044833,-0.91486 0.1345019,-1.36566 0.089669,-0.45078 0.2224489,-0.88852 0.3983407,-1.31317 0.1758914,-0.42462 0.3915143,-0.82801 0.6468692,-1.21018 0.2553549,-0.38217 0.5455351,-0.73575 0.8705402,-1.06076 0.3250055,-0.32498 0.6785898,-0.61517 1.0607547,-0.87054 0.382165,-0.25537 0.7855683,-0.47101 1.2102083,-0.64688 0.424639,-0.17588 0.862357,-0.30866 1.313152,-0.39832 C 12.085162,366.04483 12.540373,366 13,366 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path118" /><path
+             d="m 13,366 h 186 c 0.45963,0 0.91484,0.0448 1.36563,0.13449 0.45078,0.0897 0.88849,0.22244 1.31313,0.39832 0.42463,0.17587 0.82803,0.39151 1.21019,0.64691 0.38217,0.25534 0.73576,0.54553 1.06079,0.87051 0.32499,0.32501 0.61519,0.67859 0.87054,1.06073 0.25534,0.38217 0.47096,0.78559 0.64687,1.21021 0.17589,0.42465 0.30867,0.86236 0.39833,1.31314 0.0897,0.45083 0.1345,0.90606 0.13452,1.36569 v 56 c -2e-5,0.45959 -0.0448,0.91479 -0.13452,1.36557 -0.0897,0.45078 -0.22244,0.88849 -0.39833,1.31314 -0.17591,0.42465 -0.39153,0.82806 -0.64687,1.21024 -0.25535,0.38217 -0.54555,0.73578 -0.87054,1.06079 -0.32503,0.32498 -0.67862,0.61517 -1.06078,0.87051 -0.38217,0.25537 -0.78557,0.47101 -1.2102,0.64688 -0.42464,0.17591 -0.86235,0.30869 -1.31313,0.39835 C 199.91484,435.95517 199.45963,436 199,436 H 13 c -0.459627,0 -0.914839,-0.0448 -1.365634,-0.13449 -0.450794,-0.0897 -0.888512,-0.22247 -1.313151,-0.39838 -0.42464,-0.17587 -0.8280424,-0.39151 -1.2102073,-0.64688 C 8.7288427,434.56491 8.3752575,434.27472 8.050252,433.94974 7.7252469,433.62473 7.4350667,433.27112 7.1797113,432.88895 6.9243569,432.50677 6.708734,432.10339 6.5328426,431.67874 6.3569508,431.25409 6.2241707,430.81638 6.1345024,430.3656 6.0448337,429.91479 5.9999995,429.45959 6,429 v -56 c -5e-7,-0.45963 0.044833,-0.91486 0.1345019,-1.36566 0.089669,-0.45078 0.2224489,-0.88852 0.3983407,-1.31317 0.1758914,-0.42462 0.3915143,-0.82801 0.6468692,-1.21018 0.2553549,-0.38217 0.5455351,-0.73575 0.8705402,-1.06076 0.3250055,-0.32498 0.6785898,-0.61517 1.0607547,-0.87054 0.382165,-0.25537 0.7855683,-0.47101 1.2102083,-0.64688 0.424639,-0.17588 0.862357,-0.30866 1.313152,-0.39832 C 12.085162,366.04483 12.540373,366 13,366 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path120" /></g><g
+           id="g122"
+           transform="scale(2.9373999)"><text
+             transform="translate(8.5,398)"
+             style="font-variant:normal;font-weight:normal;font-size:15px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text126"><tspan
+               x="0 15 30 45 60 75 90 105 120 135 150 165 180"
+               y="0"
+               sodipodi:role="line"
+               id="tspan124">地址空间是否有预存的信息模</tspan></text><text
+             transform="translate(91,416)"
+             style="font-variant:normal;font-weight:normal;font-size:15px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text130"><tspan
+               x="0 15"
+               y="0"
+               sodipodi:role="line"
+               id="tspan128">型？</tspan></text></g><g
+           id="g132"
+           transform="matrix(2.9373705,0,0,2.9373705,1.4686853,1.4686853)"><path
+             d="m 106,556.01001 v 43.63"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path134" /><path
+             d="m 106,604.89001 -3.5,-7 3.5,1.75 3.5,-1.75 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path136" /><path
+             d="m 106,604.89001 -3.5,-7 3.5,1.75 3.5,-1.75 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path138" /></g><g
+           id="g140"
+           transform="scale(2.9373705)"><path
+             d="m 13,486 h 186 c 0.45963,0 0.91484,0.0448 1.36563,0.13449 0.45078,0.0897 0.88849,0.22244 1.31313,0.39835 0.42463,0.17587 0.82803,0.39148 1.21019,0.64682 0.38217,0.25534 0.73576,0.54553 1.06079,0.87057 0.32499,0.32498 0.61519,0.67856 0.87054,1.06073 0.25534,0.38217 0.47096,0.78559 0.64687,1.21024 0.17589,0.42462 0.30867,0.86233 0.39833,1.31314 0.0897,0.4508 0.1345,0.90603 0.13452,1.36566 v 56 c -2e-5,0.45959 -0.0448,0.91479 -0.13452,1.36554 -0.0897,0.45081 -0.22244,0.88855 -0.39833,1.31317 -0.17591,0.42462 -0.39153,0.82806 -0.64687,1.21021 -0.25535,0.3822 -0.54555,0.73577 -0.87054,1.06079 -0.32503,0.32501 -0.67862,0.61517 -1.06078,0.87048 -0.38217,0.25543 -0.78557,0.47107 -1.2102,0.64691 -0.42464,0.17591 -0.86235,0.30872 -1.31313,0.39838 C 199.91484,555.95514 199.45963,556 199,556 H 13 c -0.459627,0 -0.914839,-0.0449 -1.365634,-0.13452 -0.450794,-0.0897 -0.888512,-0.22247 -1.313151,-0.39838 -0.42464,-0.17584 -0.8280424,-0.39148 -1.2102073,-0.64691 C 8.7288427,554.56488 8.3752575,554.27472 8.050252,553.94971 7.7252469,553.62469 7.4350667,553.27112 7.1797113,552.88892 6.9243569,552.50677 6.708734,552.10333 6.5328426,551.67871 6.3569508,551.25409 6.2241707,550.81635 6.1345024,550.36554 6.0448337,549.91479 5.9999995,549.45959 6,549 v -56 c -5e-7,-0.45963 0.044833,-0.91486 0.1345019,-1.36566 0.089669,-0.45081 0.2224489,-0.88852 0.3983407,-1.31314 0.1758914,-0.42465 0.3915143,-0.82804 0.6468692,-1.21021 0.2553549,-0.38217 0.5455351,-0.73578 0.8705402,-1.06076 0.3250055,-0.32504 0.6785898,-0.6152 1.0607547,-0.87054 0.382165,-0.25537 0.7855683,-0.47101 1.2102083,-0.64688 0.424639,-0.17588 0.862357,-0.30866 1.313152,-0.39832 C 12.085162,486.04483 12.540373,486 13,486 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path142" /><path
+             d="m 13,486 h 186 c 0.45963,0 0.91484,0.0448 1.36563,0.13449 0.45078,0.0897 0.88849,0.22244 1.31313,0.39835 0.42463,0.17587 0.82803,0.39148 1.21019,0.64682 0.38217,0.25534 0.73576,0.54553 1.06079,0.87057 0.32499,0.32498 0.61519,0.67856 0.87054,1.06073 0.25534,0.38217 0.47096,0.78559 0.64687,1.21024 0.17589,0.42462 0.30867,0.86233 0.39833,1.31314 0.0897,0.4508 0.1345,0.90603 0.13452,1.36566 v 56 c -2e-5,0.45959 -0.0448,0.91479 -0.13452,1.36554 -0.0897,0.45081 -0.22244,0.88855 -0.39833,1.31317 -0.17591,0.42462 -0.39153,0.82806 -0.64687,1.21021 -0.25535,0.3822 -0.54555,0.73577 -0.87054,1.06079 -0.32503,0.32501 -0.67862,0.61517 -1.06078,0.87048 -0.38217,0.25543 -0.78557,0.47107 -1.2102,0.64691 -0.42464,0.17591 -0.86235,0.30872 -1.31313,0.39838 C 199.91484,555.95514 199.45963,556 199,556 H 13 c -0.459627,0 -0.914839,-0.0449 -1.365634,-0.13452 -0.450794,-0.0897 -0.888512,-0.22247 -1.313151,-0.39838 -0.42464,-0.17584 -0.8280424,-0.39148 -1.2102073,-0.64691 C 8.7288427,554.56488 8.3752575,554.27472 8.050252,553.94971 7.7252469,553.62469 7.4350667,553.27112 7.1797113,552.88892 6.9243569,552.50677 6.708734,552.10333 6.5328426,551.67871 6.3569508,551.25409 6.2241707,550.81635 6.1345024,550.36554 6.0448337,549.91479 5.9999995,549.45959 6,549 v -56 c -5e-7,-0.45963 0.044833,-0.91486 0.1345019,-1.36566 0.089669,-0.45081 0.2224489,-0.88852 0.3983407,-1.31314 0.1758914,-0.42465 0.3915143,-0.82804 0.6468692,-1.21021 0.2553549,-0.38217 0.5455351,-0.73578 0.8705402,-1.06076 0.3250055,-0.32504 0.6785898,-0.6152 1.0607547,-0.87054 0.382165,-0.25537 0.7855683,-0.47101 1.2102083,-0.64688 0.424639,-0.17588 0.862357,-0.30866 1.313152,-0.39832 C 12.085162,486.04483 12.540373,486 13,486 Z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path144" /></g><g
+           id="g146"
+           transform="scale(2.9373999)"><text
+             transform="translate(53.5,527)"
+             style="font-variant:normal;font-weight:normal;font-size:15px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text150"><tspan
+               x="0 15 30 45 60 75 90"
+               y="0"
+               sodipodi:role="line"
+               id="tspan148">实例化地址空间</tspan></text></g><g
+           id="g152"
+           transform="scale(2.9373705)"><path
+             d="m 13,606.01001 h 186 c 0.45963,0 0.91484,0.0448 1.36563,0.13446 0.45078,0.0897 0.88849,0.22241 1.31313,0.39832 0.42463,0.17584 0.82803,0.39148 1.21019,0.64691 0.38217,0.25531 0.73576,0.54553 1.06079,0.87054 0.32499,0.32495 0.61519,0.67853 0.87054,1.06073 0.25534,0.38214 0.47096,0.78559 0.64687,1.21021 0.17589,0.42462 0.30867,0.86236 0.39833,1.31317 0.0897,0.45074 0.1345,0.906 0.13452,1.36566 v 56 c -2e-5,0.45959 -0.0448,0.91479 -0.13452,1.3656 -0.0897,0.45074 -0.22244,0.88849 -0.39833,1.31311 -0.17591,0.42462 -0.39153,0.82806 -0.64687,1.21021 -0.25535,0.38214 -0.54555,0.73577 -0.87054,1.06079 -0.32503,0.32495 -0.67862,0.61511 -1.06078,0.87048 -0.38217,0.25531 -0.78557,0.47095 -1.2102,0.64685 -0.42464,0.1759 -0.86235,0.30872 -1.31313,0.39838 -0.45079,0.0897 -0.906,0.13452 -1.36563,0.13458 H 13 c -0.459627,-6e-5 -0.914839,-0.0449 -1.365634,-0.13458 -0.450794,-0.0897 -0.888512,-0.22248 -1.313151,-0.39838 -0.42464,-0.1759 -0.8280424,-0.39154 -1.2102073,-0.64685 C 8.7288427,674.57483 8.3752575,674.28467 8.050252,673.95972 7.7252469,673.6347 7.4350667,673.28107 7.1797113,672.89893 6.9243569,672.51678 6.708734,672.11334 6.5328426,671.68872 6.3569508,671.2641 6.2241707,670.82635 6.1345024,670.37561 6.0448337,669.9248 5.9999995,669.4696 6,669.01001 v -56 c -5e-7,-0.45966 0.044833,-0.91492 0.1345019,-1.36566 0.089669,-0.45081 0.2224489,-0.88855 0.3983407,-1.31317 0.1758914,-0.42462 0.3915143,-0.82807 0.6468692,-1.21021 0.2553549,-0.3822 0.5455351,-0.73578 0.8705402,-1.06073 0.3250055,-0.32501 0.6785898,-0.61523 1.0607547,-0.8706 0.382165,-0.25537 0.7855683,-0.47101 1.2102083,-0.64685 0.424639,-0.17591 0.862357,-0.30866 1.313152,-0.39832 0.450795,-0.0897 0.906006,-0.13446 1.365633,-0.13446 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path154" /><path
+             d="m 13,606.01001 h 186 c 0.45963,0 0.91484,0.0448 1.36563,0.13446 0.45078,0.0897 0.88849,0.22241 1.31313,0.39832 0.42463,0.17584 0.82803,0.39148 1.21019,0.64691 0.38217,0.25531 0.73576,0.54553 1.06079,0.87054 0.32499,0.32495 0.61519,0.67853 0.87054,1.06073 0.25534,0.38214 0.47096,0.78559 0.64687,1.21021 0.17589,0.42462 0.30867,0.86236 0.39833,1.31317 0.0897,0.45074 0.1345,0.906 0.13452,1.36566 v 56 c -2e-5,0.45959 -0.0448,0.91479 -0.13452,1.3656 -0.0897,0.45074 -0.22244,0.88849 -0.39833,1.31311 -0.17591,0.42462 -0.39153,0.82806 -0.64687,1.21021 -0.25535,0.38214 -0.54555,0.73577 -0.87054,1.06079 -0.32503,0.32495 -0.67862,0.61511 -1.06078,0.87048 -0.38217,0.25531 -0.78557,0.47095 -1.2102,0.64685 -0.42464,0.1759 -0.86235,0.30872 -1.31313,0.39838 -0.45079,0.0897 -0.906,0.13452 -1.36563,0.13458 H 13 c -0.459627,-6e-5 -0.914839,-0.0449 -1.365634,-0.13458 -0.450794,-0.0897 -0.888512,-0.22248 -1.313151,-0.39838 -0.42464,-0.1759 -0.8280424,-0.39154 -1.2102073,-0.64685 C 8.7288427,674.57483 8.3752575,674.28467 8.050252,673.95972 7.7252469,673.6347 7.4350667,673.28107 7.1797113,672.89893 6.9243569,672.51678 6.708734,672.11334 6.5328426,671.68872 6.3569508,671.2641 6.2241707,670.82635 6.1345024,670.37561 6.0448337,669.9248 5.9999995,669.4696 6,669.01001 v -56 c -5e-7,-0.45966 0.044833,-0.91492 0.1345019,-1.36566 0.089669,-0.45081 0.2224489,-0.88855 0.3983407,-1.31317 0.1758914,-0.42462 0.3915143,-0.82807 0.6468692,-1.21021 0.2553549,-0.3822 0.5455351,-0.73578 0.8705402,-1.06073 0.3250055,-0.32501 0.6785898,-0.61523 1.0607547,-0.8706 0.382165,-0.25537 0.7855683,-0.47101 1.2102083,-0.64685 0.424639,-0.17591 0.862357,-0.30866 1.313152,-0.39832 0.450795,-0.0897 0.906006,-0.13446 1.365633,-0.13446 z"
+             style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+             id="path156" /></g><g
+           id="g158"
+           transform="scale(2.9373999)"><text
+             transform="translate(31,647)"
+             style="font-variant:normal;font-weight:normal;font-size:15px;font-family:'Microsoft YaHei';-inkscape-font-specification:MicrosoftYaHei;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text162"><tspan
+               x="0 15 30 45 60 75 90 105 120 135"
+               y="0"
+               sodipodi:role="line"
+               id="tspan160">发送服务请求给客户端</tspan></text></g></g></g></g></svg>
+</div>
+</p>
+</div>
+
+<p>
+以上流程图就是均衡器响应OPC UA客户端请求的过程。
+</p>
+
+<p>
+均衡器收到来自客户端的服务请求，查询是否有服务器能提供地址空间实例，如果没有，则根据客户端的请求动态地创建地址空间实例。
+</p>
+
+<p>
+如果没有，就自动扩展OPC UA服务器资源。动态管理OPC UA提供的地址空间（Address Space）。动态创建的地址空间发送地址空间请求到后端系统，并且从接收来自后端的地址空间信息。
+</p>
+
+<p>
+负载均衡器是客户端和服务器之间的一个透明路由，在以下任何情况下，客户端不与服务器建立直接连接，只通过负载均衡器与服务器建立连接，包括
+</p>
+<ul class="org-ul">
+<li>建立会话、</li>
+<li>会话操作、</li>
+<li>会话结束。</li>
+</ul>
+
+<p>
+负载均衡器则只负责转发客户端和服务器之间的通讯，不关心通信内容。
+</p>
+
+
+<p>
+这个专利的应用价值：
+</p>
+<ul class="org-ul">
+<li>通过多个服务器保障平滑的功能扩展</li>
+<li>可以利用服务编排工具满足零停机（zero downtime）需求</li>
+<li>通过自动添加服务器满足服务性能要求，且不影响已经建立的链接</li>
+</ul>
