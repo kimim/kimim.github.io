@@ -1,0 +1,55 @@
+---
+layout: post
+title: CppCoreGuidelines ES.61 用 delete[] 删除数组，用 delete 删除非数组
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Delete arrays using <code>delete[]</code> and non-arrays using <code>delete</code>&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+这条是开发语言要求的。搞错了的话会导致资源释放错误，内存错乱。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6;">[</span>n<span style="color: #7388d6;">]</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">n default constructed Xs</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">delete</span> p;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: just delete the object p, rather than delete</span>
+                <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the array p[]</span>
+<span style="color: #707183;">}</span>
+
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+这个例子还违背了“no naked new”规则。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>如果 <code>new</code> 和 <code>delete</code> 在同一个作用域范围，可以标记错误。</li>
+<li>如果 <code>new</code> 和 <code>delete</code> 在构造/析构函数对中，可以标记错误。</li>
+</ul>

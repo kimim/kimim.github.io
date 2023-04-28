@@ -1,0 +1,35 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.61 用 delete[] 删除数组，用 delete 删除非数组
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Delete arrays using ~delete[]~ and non-arrays using ~delete~"
+
+理由
+
+这条是开发语言要求的。搞错了的话会导致资源释放错误，内存错乱。
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f(int n)
+{
+    auto p = new X[n];   // n default constructed Xs
+    // ...
+    delete p;   // error: just delete the object p, rather than delete
+                // the array p[]
+}
+
+#+end_src
+
+注意
+
+这个例子还违背了“no naked new”规则。
+
+
+强化
+- 如果 ~new~ 和 ~delete~ 在同一个作用域范围，可以标记错误。
+- 如果 ~new~ 和 ~delete~ 在构造/析构函数对中，可以标记错误。  
