@@ -1,0 +1,40 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.62 不要在不同数组间比较指针
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t compare pointers into different arrays"
+
+理由
+
+此类操作的结果是未定义的。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f()
+{
+    int a1[7];
+    int a2[9];
+    cout << "&a1[5] = " << &a1[5] << "\n&a2[7] = " << &a2[7];
+
+    if (&a1[5] < &a2[7]) { }       // bad: undefined
+    if (0 < &a1[5] - &a2[7]) { }   // bad: undefined
+}
+int main()
+{
+    f();
+    return EXIT_SUCCESS;
+}
+#+end_src
+
+#+RESULTS:
+: &a1[5] = 0x9ee79ffa94
+: &a2[7] = 0x9ee79ffa6c
+
+
+注意
+
+此例子有很多问题！

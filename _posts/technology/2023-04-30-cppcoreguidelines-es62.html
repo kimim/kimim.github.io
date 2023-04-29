@@ -1,0 +1,58 @@
+---
+layout: post
+title: CppCoreGuidelines ES.62 不要在不同数组间比较指针
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t compare pointers into different arrays&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+此类操作的结果是未定义的。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a1</span><span style="color: #7388d6;">[</span>7<span style="color: #7388d6;">]</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a2</span><span style="color: #7388d6;">[</span>9<span style="color: #7388d6;">]</span>;
+    cout &lt;&lt; <span style="color: #2A00FF;">"&amp;a1[5] = "</span> &lt;&lt; &amp;a1<span style="color: #7388d6;">[</span>5<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">"\n&amp;a2[7] = "</span> &lt;&lt; &amp;a2<span style="color: #7388d6;">[</span>7<span style="color: #7388d6;">]</span>;
+
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>&amp;a1<span style="color: #909183;">[</span>5<span style="color: #909183;">]</span> &lt; &amp;a2<span style="color: #909183;">[</span>7<span style="color: #909183;">]</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: undefined</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>0 &lt; &amp;a1<span style="color: #909183;">[</span>5<span style="color: #909183;">]</span> - &amp;a2<span style="color: #909183;">[</span>7<span style="color: #909183;">]</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: undefined</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    f<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+&amp;a1[5] = 0x9ee79ffa94
+&amp;a2[7] = 0x9ee79ffa6c
+</pre>
+
+
+
+<p>
+注意
+</p>
+
+<p>
+此例子有很多问题！
+</p>
