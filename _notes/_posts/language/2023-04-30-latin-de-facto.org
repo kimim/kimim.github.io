@@ -1,0 +1,42 @@
+#+LAYOUT: post
+#+TITLE: 单词本：de facto
+#+TAGS: English Latin
+#+CATEGORIES: language
+
+最近杭州博物馆开始了一个西方银器特展“盛宴：18至20世纪西方银器展”。展示
+了这一时期华丽的欧美金银器具。
+
+在展厅的介绍中有这么一段介绍，其中写道：The royal households and noble
+lineages became the *de facto* ruling class and spawned a complete
+political and economic ancient régime. 王室和贵族血统成了实际上的统治
+阶层。
+
+这个 *de facto* 源自拉丁语，意思就是 in fact，in reality，就是一种道义上
+正确，但是法律上并没有完全规定的事实。 de 在法语和拉丁语中都是 of，
+from 的意思。所以字面意思 de facto 就是根据事实。
+
+之前，我们也学习了另一个法语词组 [[http://kimi.im/2022-04-05-english-de-rigueur][de rigueur]]，意思是礼节上需要。跟这个
+*de facto* 的构造比较相似。
+
+在 Armis 安全研究团队发现 Schneider Electric PLC 的安全漏洞
+[[cite:&armis2021]] 的一篇文章中，介绍 Modbus 的时候也用到了 *de facto* ：
+Modbus is the *de facto* standard for controlling PLCs in SCADA systems.
+It was first published by Modicon (now Schneider Electric) in 1979. 即，
+Modbus 现场总线是 PLC 和 SCADA 系统的事实标准。
+
+再来看看相关的用法：
+- de facto standard 约定俗成的标准
+- de facto recognition 事实上的承认
+- de facto marriage 事实婚姻
+- de facto control 实际上的控制
+- de facto relationship 事实婚姻伴侣关系
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
