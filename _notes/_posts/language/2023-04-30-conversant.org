@@ -1,0 +1,31 @@
+#+LAYOUT: post
+#+TITLE: 单词本：conversant
+#+TAGS: English
+#+CATEGORIES: language
+
+在看 PMI Agile [[cite:&pmi2017agile]] 的时候，读到：In order to support
+project-specific needs, the PMO needs to be *conversant* in several
+competencies beyond project management itself, because different
+projects require distinct capabilities. 为了支持项目的需求，除了项目
+管理之外，PMO 还需要熟悉着不同的技能。因为不同的项目需要不同的能力。
+
+这里 conversant 是熟悉、亲近、精通的意思。这个词来自拉丁语，本意应该是
+围绕着某个事情转的意思。com/con 是 together，一起的意思。versant 则源
+自 vertere，就是旋转的意思。围着某个事情转的人，那一定是对某样东西特别
+熟悉，特别亲近，特别精通了。
+
+美国工业互联网联盟的一篇关于边缘计算的白皮书 [[cite:&iic2019edge]] 中，也
+用到了 conversant 这个词：An engineer *conversant* with oil and gas, for
+example, may know nothing about energy generated from diesel and solar
+to supply the edge nodes at the oil wells. 这里是说，一个熟悉石油天然
+气的工程师，可能根本不知道油田里边缘计算节点的能源是来自柴油机和太阳能。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
