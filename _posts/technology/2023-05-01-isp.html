@@ -1,0 +1,100 @@
+---
+layout: post
+title: 接口隔离原则，Interface Segregation Principle，ISP
+tags: [programming]
+categories: [technology]
+---
+<p>
+软件工程领域，有一个概念叫 SOLID 。SOLID是五个面向对象设计原则的首字母缩写。最早由Robert C. Martin在其 2000 年的论文《Design Principles
+and Design Patterns》中提出的。
+</p>
+
+<p>
+其中，I 原则指的是 Interface Segregation Principle，接口隔离原则，简称
+ISP。
+</p>
+
+<p>
+ISP 是这么表述的：“Clients should not be forced to depend upon
+interfaces that they do not use.” 不应该强迫对象的用户依赖于它不需要的接口。也就是说，为了使用某个功能，客户/用户不应该被强制使用超出该功能的接口。那么，要避免这种情况，就需要把过大的接口拆分成粒度更小的接口。
+</p>
+
+<p>
+比如我们要设计一个闹钟，闹钟其实有多种功能：可以读取当前时间，可以设置闹铃时间。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">AlarmClock</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">time_t</span> <span style="color: #0000ff; font-weight: bold;">readTime</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">setAlarm</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">time_t</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+然后，我们又定义了一个 TimeReporter，它其实只关心时间，它并不需要知道怎么设置闹铃时间。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">TimeReporter</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">reportTime</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">AlarmClock</span>&amp; <span style="color: #000000;">c</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        announceTime<span style="color: #909183;">(</span>c.readTime<span style="color: #709870;">()</span><span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+另一个，AlarmSetter 用来设置闹钟闹铃：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">AlarmSetter</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">setClockAlarm</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">AlarmClock</span>&amp; <span style="color: #000000;">c</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">time_t</span>&amp; <span style="color: #000000;">t</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        c.setAlarm<span style="color: #909183;">(</span>t<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+这就导致了 AlarmSetter 和 TimeReporter 依赖所有 AlarmClock 的接口。
+AlarmClock 的任意一个接口改动，都会影响前两者的实现。
+</p>
+
+<p>
+ISP 原则就要求 AlarmClock 应该实现两个接口，分别是 Clock 和 Alarm，这样两个不同功能的接口就分离开互相不影响。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Clock</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">time_t</span> <span style="color: #0000ff; font-weight: bold;">readTime</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Alarm</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">setAlarm</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">time_t</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">AlarmClock</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Clock</span>, <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Alarm</span> <span style="color: #707183;">{</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">TimeReporter</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">reportTime</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Clock</span>&amp; <span style="color: #000000;">c</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        announceTime<span style="color: #909183;">(</span>c.readTime<span style="color: #709870;">()</span><span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">AlarmSetter</span> <span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">setClockAlarm</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Alarm</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">time_t</span>&amp; <span style="color: #000000;">t</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        a.setAlarm<span style="color: #909183;">(</span>t<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
