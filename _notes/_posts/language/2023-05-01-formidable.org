@@ -1,0 +1,39 @@
+#+LAYOUT: post
+#+TITLE: 单词本：formidable
+#+TAGS: English
+#+CATEGORIES: language
+
+虽然还不是 CEO，但也是要时刻准备。说不定，哪一天就有机会了。
+
+在《CEO Excellence》[[cite:&dewar2022ceo]] 有一句话：
+
+A CEO’s most *formidable* challenges include interacting with the board
+of directors. 让 CEO 最难对付的挑战，包括跟董事会交涉。
+
+尽管与董事会交涉很难，但是，对于 CEO 来说与董事会交涉很重要的事情，正
+如 Doug Baker 说的 “The board is a great tool to help the business
+succeed, if you know how to invite them in.”
+
+这里 *formidable* 看起来好像是 form + able，难道是“可形成的”之类的意思。
+其实呢，它是来自法语 formidable，再往上追溯，是拉丁语 formidabilis，而
+formidare，意思是害怕。所以 *formidable* 的意思和形状什么没关系，而是：
+可怕的，令人敬畏的；（形状、数量）巨大的；难对付的。
+
+在 IEEE 软件密集型系统架构设计 [[cite:&ieee1471]] 中，描述软件密集型系统的
+设计、构建、部署和演进过程中依然存在着巨大的风险和苦难时，也用到了这个
+单词：Despite significant efforts to improve engineering practices and
+technologies, software-intensive systems continue to present
+*formidable* risks and difficulties in their design, construction,
+deployment, and evolution. 尽管在工程实践上投入了大量的精力，软件密集
+型系统的设计、构造、部署和演化过程依然持续的经历巨大的风险和困难。
+
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
