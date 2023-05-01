@@ -1,0 +1,352 @@
+---
+layout: post
+title: CppCoreGuidelines ES.64 用 T{e} 方式进行构造
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use the <code>T{e}</code> notation for construction&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>T{e}</code> 构造语法显式地表明这里需要进行构造。<code>T{e}</code>构造语法不允许变窄构造。
+<code>T{e}</code> 是用于从 <code>e</code> 构造类型 <code>T</code> 唯一安全且通用的表达式。类型转换语法 <code>T(e)</code>
+和<code>(T)e</code>要么不安全，要么不常用。
+</p>
+
+<p>
+例子
+</p>
+
+<p>
+对于内置类型，这个构造语句能避免变窄转换和重解释（ reinterpretation ）。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">ch</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000;">lng</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x1</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">{</span>ch<span style="color: #7388d6;">}</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, but redundant</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x2</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">{</span>d<span style="color: #7388d6;">}</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: double-&gt;int narrowing; use a cast</span>
+                          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">if you need to</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x3</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">{</span>p<span style="color: #7388d6;">}</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: pointer to-&gt;int; use a</span>
+                          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">reinterpret_cast if you really need to</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x4</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">{</span>lng<span style="color: #7388d6;">}</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: long long-&gt;int narrowing; use a</span>
+                          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">cast if you need to</span>
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y1</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">(</span>ch<span style="color: #7388d6;">)</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, but redundant</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y2</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">(</span>d<span style="color: #7388d6;">)</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: double-&gt;int narrowing; use a cast if</span>
+                          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">you need to</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y3</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">)</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: pointer to-&gt;int; use a</span>
+                          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">reinterpret_cast if you really need to</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y4</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">(</span>lng<span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: long long-&gt;int narrowing; use a cast</span>
+                          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">if you need to</span>
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">z1</span> = <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span>ch;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, but redundant</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">z2</span> = <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span>d;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: double-&gt;int narrowing; use a cast if</span>
+                          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">you need to</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">z3</span> = <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span>p;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: pointer to-&gt;int; use a</span>
+                          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">reinterpret_cast if you really need to</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">z4</span> = <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span>lng;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: long long-&gt;int narrowing; use a cast</span>
+                          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">if you need to</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+在整型和指针之间用<code>T(e)</code>或 <code>(T)e</code> 操作的结果不同实现会不一样，是实现定义的行为。而且在不同系统平台，整型和指针位数不一样，代码也不可移植。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+避免类型转换（显式的类型转换），如果你实在需要，请使用带类型名的转换。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果意图很明确，<code>T{e}</code>中的 <code>T</code> 可以去掉。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">complex</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">complex</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #7388d6;">&gt;</span><span style="color: #707183;">)</span>;
+
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">z</span> = f<span style="color: #707183;">(</span><span style="color: #7388d6;">{</span>2*pi, 1<span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+构造符号是最通用的初始化符号。
+</p>
+
+<p>
+例外
+</p>
+
+<p>
+<code>std::vector</code> 和其他容器是在我们有<code>{}</code>作为构造符号之前定义的。
+</p>
+
+<p>
+考虑
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">vs</span> <span style="color: #707183;">{</span>10<span style="color: #707183;">}</span>;                           <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ten empty strings</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">vi1</span> <span style="color: #707183;">{</span>1, 2, 3, 4, 5, 6, 7, 8, 9, 10<span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ten elements 1..10</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">vi2</span> <span style="color: #707183;">{</span>10<span style="color: #707183;">}</span>;                             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">one element with</span>
+                                                  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the value 10</span>
+</pre>
+</div>
+
+<p>
+我们怎么得到一个初始化了 10 个整型的 <code>vector</code> ？
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v3</span><span style="color: #707183;">(</span>10<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ten elements with value 0</span>
+</pre>
+</div>
+
+<p>
+这里使用<code>()</code>表示元素的个数，是从上世纪 80 年代就有的约定俗成，很难改变。但是这里还是有一个设计错误：对于容器来说，元素类型和元素个数很容易混淆。我们必须解决这个含糊不清的设计。通常的解决办法是把<code>{10}</code>作为一个只有一个元素的列表，而<code>(10)</code>作为容器大小。
+</p>
+
+<p>
+这个错误不可在新的代码中出现。我们可以定义一个类型来表示元素个数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Count</span> <span style="color: #707183;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span>; <span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Vector</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Count</span> <span style="color: #000000;">n</span><span style="color: #7388d6;">)</span>;                     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">n default-initialized elements</span>
+    <span style="color: #0000ff; font-weight: bold;">Vector</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">initializer_list</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #909183;">&gt;</span> <span style="color: #000000;">init</span><span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">init.size() elements</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v1</span><span style="color: #707183;">{</span>10<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v2</span><span style="color: #707183;">{</span>Count<span style="color: #7388d6;">{</span>10<span style="color: #7388d6;">}</span><span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Count</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v3</span><span style="color: #707183;">{</span>Count<span style="color: #7388d6;">{</span>10<span style="color: #7388d6;">}</span><span style="color: #707183;">}</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">yes, there is still a very minor problem</span>
+</pre>
+</div>
+
+<p>
+这样，主要问题是找到一个合适的名字来命名 <code>Count</code> 。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记 C 风格的<code>(T)e</code>和函数式风格的<code>T(e)</code>类型转换。
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+对无效指针取值操作是未定义的行为。比如 <code>nullptr</code> 。通常会导致程序立即出错，得到错误结果，或者内存出错。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+这条规则是很明显的，很重要的语言规则。但是很难遵循。需要好的编码风格，语言库支持，还有静态代码检测来规避。这是C++类型模型和资源安全方面主要的讨论点。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = 0;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span> = &amp;x;
+
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>condition<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span> = 0;
+        p = &amp;y;
+    <span style="color: #7388d6;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">invalidates p</span>
+
+    *p = 42;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, p might be invalid if the branch was</span>
+                        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">taken</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这里，如果运行了条件判断分支，指针 p 的值可能变得无效。解决这个问题的方法是扩展指针指向的对象的生命周期。或者缩短指针的生命周期（将取值操作移动到指针指向的对象的生命周期结束之前）。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = 0;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span> = &amp;x;
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span> = 0;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>condition<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        p = &amp;y;
+    <span style="color: #7388d6;">}</span>
+
+    *p = 42;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, p points to x or y and both are still in scope</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+很遗憾，大多数指针无效问题都很难找到，很难解决。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = *p; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: how do we know that p is valid?</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+市面上有大量此类代码，经过大量测试，大部分还能工作，但是孤立来看，很难判断 p 是不是一个 <code>nullptr</code> 。结果就是，这种情况是大量错误的来源。有很多方法可以解决这个潜在问题。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">deal with nullptr</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!p<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">deal with nullptr (allocate, return, throw, make p point to</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">something, whatever</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = *p;
+<span style="color: #707183;">}</span>
+
+</pre>
+</div>
+
+<p>
+测试 <code>nullptr</code> 时，有 2 个潜在问题：
+</p>
+<ol class="org-ol">
+<li>当我们找到 <code>nullptr</code> 的时候，我们不是很确定应该怎么处理，这种测试有时候是多余的，或者代价很高。</li>
+<li>也不确定这里的测试是避免错误，还是本来就是代码逻辑的一部分。</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">state that p is not supposed to be nullptr</span>
+<span style="color: #707183;">{</span>
+    assert<span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = *p;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这样做只是在编译分析过程中引入一些计算代价。而且当C++支持合约（ contract ）的时候，处理的会更好。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f3</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">state that p is not supposed to be nullptr</span>
+    <span style="color: #707183;">[</span><span style="color: #7388d6;">[</span>expects: p<span style="color: #7388d6;">]</span><span style="color: #707183;">]</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = *p;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+我们也可以用<code>gsl::not_null</code>来确保参数 <code>p</code> 不能是 <code>nullptr</code> ：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">not_null</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = *p;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这些方法只是处理了 <code>nullptr</code> ，但是记住，还有很多情况会得到一个无效的指针：
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">old code, doesn't use owner</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">delete</span> p;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">()</span>        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">old code: uses naked new</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">q</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">{</span>7<span style="color: #7388d6;">}</span>;
+    f<span style="color: #7388d6;">(</span>q<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = *q; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: dereferences invalid pointer</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #7388d6;">(</span>10<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span> = &amp;v<span style="color: #7388d6;">[</span>5<span style="color: #7388d6;">]</span>;
+    v.push_back<span style="color: #7388d6;">(</span>99<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">could reallocate v's elements</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = *p; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: dereferences potentially invalid pointer</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+此规则是安全生命周期规则集的一部分。
+</p>
+
+<ul class="org-ul">
+<li>标记指针取值操作，且离开指针指向的对象作用域范围</li>
+<li>标记指针取值操作，且指针可能指向了 <code>nullptr</code></li>
+<li>标记指针取值操作，且指针可能通过 <code>delete</code> 被设置无效了</li>
+<li>标记指针取值操作，且指针指向的容器元素可能已经无效了</li>
+</ul>

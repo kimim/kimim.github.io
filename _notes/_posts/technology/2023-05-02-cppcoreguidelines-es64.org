@@ -1,0 +1,268 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.64 用 T{e} 方式进行构造
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use the ~T{e}~ notation for construction"
+
+理由
+
+~T{e}~ 构造语法显式地表明这里需要进行构造。 ~T{e}~ 构造语法不允许变窄构造。
+~T{e}~ 是用于从 ~e~ 构造类型 ~T~ 唯一安全且通用的表达式。类型转换语法 ~T(e)~
+和 ~(T)e~ 要么不安全，要么不常用。
+
+例子
+
+对于内置类型，这个构造语句能避免变窄转换和重解释（reinterpretation）。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void use(char ch, int i, double d, char* p, long long lng)
+{
+    int x1 = int{ch};     // OK, but redundant
+    int x2 = int{d};      // error: double->int narrowing; use a cast
+                          // if you need to
+    int x3 = int{p};      // error: pointer to->int; use a
+                          // reinterpret_cast if you really need to
+    int x4 = int{lng};    // error: long long->int narrowing; use a
+                          // cast if you need to
+
+    int y1 = int(ch);     // OK, but redundant
+    int y2 = int(d);      // bad: double->int narrowing; use a cast if
+                          // you need to
+    int y3 = int(p);      // bad: pointer to->int; use a
+                          // reinterpret_cast if you really need to
+    int y4 = int(lng);    // bad: long long->int narrowing; use a cast
+                          // if you need to
+
+    int z1 = (int)ch;     // OK, but redundant
+    int z2 = (int)d;      // bad: double->int narrowing; use a cast if
+                          // you need to
+    int z3 = (int)p;      // bad: pointer to->int; use a
+                          // reinterpret_cast if you really need to
+    int z4 = (int)lng;    // bad: long long->int narrowing; use a cast
+                          // if you need to
+}
+#+end_src
+
+在整型和指针之间用 ~T(e)~ 或 ~(T)e~ 操作的结果不同实现会不一样，是实现定义
+的行为。而且在不同系统平台，整型和指针位数不一样，代码也不可移植。
+
+
+注意
+
+避免类型转换（显式的类型转换），如果你实在需要，请使用带类型名的转换。
+
+
+注意
+
+如果意图很明确， ~T{e}~ 中的 ~T~ 可以去掉。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+complex<double> f(complex<double>);
+
+auto z = f({2*pi, 1});
+#+end_src
+
+注意
+
+构造符号是最通用的初始化符号。
+
+例外
+
+~std::vector~ 和其他容器是在我们有 ~{}~ 作为构造符号之前定义的。
+
+考虑
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+vector<string> vs {10};                           // ten empty strings
+vector<int> vi1 {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};  // ten elements 1..10
+vector<int> vi2 {10};                             // one element with
+                                                  // the value 10
+#+end_src
+
+我们怎么得到一个初始化了 10 个整型的 ~vector~ ？
+
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+vector<int> v3(10); // ten elements with value 0
+#+end_src
+
+这里使用 ~()~ 表示元素的个数，是从上世纪 80 年代就有的约定俗成，很难改变。
+但是这里还是有一个设计错误：对于容器来说，元素类型和元素个数很容易混淆。
+我们必须解决这个含糊不清的设计。通常的解决办法是把 ~{10}~ 作为一个只有一
+个元素的列表，而 ~(10)~ 作为容器大小。
+
+这个错误不可在新的代码中出现。我们可以定义一个类型来表示元素个数：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+struct Count { int n; };
+
+template<typename T>
+class Vector {
+public:
+    Vector(Count n);                     // n default-initialized elements
+    Vector(initializer_list<T> init);    // init.size() elements
+    // ...
+};
+
+Vector<int> v1{10};
+Vector<int> v2{Count{10}};
+Vector<Count> v3{Count{10}};    // yes, there is still a very minor problem
+#+end_src
+
+这样，主要问题是找到一个合适的名字来命名 ~Count~ 。
+
+强化
+
+标记 C 风格的 ~(T)e~ 和函数式风格的 ~T(e)~ 类型转换。
+
+
+理由
+
+对无效指针取值操作是未定义的行为。比如 ~nullptr~ 。通常会导致程序立即出
+错，得到错误结果，或者内存出错。
+
+注意
+
+这条规则是很明显的，很重要的语言规则。但是很难遵循。需要好的编码风格，
+语言库支持，还有静态代码检测来规避。这是 C++ 类型模型和资源安全方面主要
+的讨论点。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f()
+{
+    int x = 0;
+    int* p = &x;
+
+    if (condition()) {
+        int y = 0;
+        p = &y;
+    } // invalidates p
+
+    ,*p = 42;            // BAD, p might be invalid if the branch was
+                        // taken
+}
+#+end_src
+
+这里，如果运行了条件判断分支，指针 p 的值可能变得无效。解决这个问题的
+方法是扩展指针指向的对象的生命周期。或者缩短指针的生命周期（将取值操作
+移动到指针指向的对象的生命周期结束之前）。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f1()
+{
+    int x = 0;
+    int* p = &x;
+
+    int y = 0;
+    if (condition()) {
+        p = &y;
+    }
+
+    *p = 42;            // OK, p points to x or y and both are still in scope
+}
+#+end_src
+
+很遗憾，大多数指针无效问题都很难找到，很难解决。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f(int* p)
+{
+    int x = *p; // BAD: how do we know that p is valid?
+}
+#+end_src
+
+市面上有大量此类代码，经过大量测试，大部分还能工作，但是孤立来看，很难
+判断 p 是不是一个 ~nullptr~ 。结果就是，这种情况是大量错误的来源。有很多
+方法可以解决这个潜在问题。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f1(int* p) // deal with nullptr
+{
+    if (!p) {
+        // deal with nullptr (allocate, return, throw, make p point to
+        // something, whatever
+    }
+    int x = *p;
+}
+
+#+end_src
+
+测试 ~nullptr~ 时，有 2 个潜在问题：
+1. 当我们找到 ~nullptr~ 的时候，我们不是很确定应该怎么处理，这种测试有时
+   候是多余的，或者代价很高。
+2. 也不确定这里的测试是避免错误，还是本来就是代码逻辑的一部分。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f2(int* p) // state that p is not supposed to be nullptr
+{
+    assert(p);
+    int x = *p;
+}
+#+end_src
+
+这样做只是在编译分析过程中引入一些计算代价。而且当 C++ 支持合约
+（contract）的时候，处理的会更好。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f3(int* p) // state that p is not supposed to be nullptr
+    [[expects: p]]
+{
+    int x = *p;
+}
+#+end_src
+
+我们也可以用 ~gsl::not_null~ 来确保参数 ~p~ 不能是 ~nullptr~ ：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f(not_null<int*> p)
+{
+    int x = *p;
+}
+#+end_src
+
+这些方法只是处理了 ~nullptr~ ，但是记住，还有很多情况会得到一个无效的指针：
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f(int* p)  // old code, doesn't use owner
+{
+    delete p;
+}
+
+void g()        // old code: uses naked new
+{
+    auto q = new int{7};
+    f(q);
+    int x = *q; // BAD: dereferences invalid pointer
+}
+#+end_src
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f()
+{
+    vector<int> v(10);
+    int* p = &v[5];
+    v.push_back(99); // could reallocate v's elements
+    int x = *p; // BAD: dereferences potentially invalid pointer
+}
+#+end_src
+
+强化
+
+此规则是安全生命周期规则集的一部分。
+
+- 标记指针取值操作，且离开指针指向的对象作用域范围
+- 标记指针取值操作，且指针可能指向了 ~nullptr~
+- 标记指针取值操作，且指针可能通过 ~delete~ 被设置无效了
+- 标记指针取值操作，且指针指向的容器元素可能已经无效了
