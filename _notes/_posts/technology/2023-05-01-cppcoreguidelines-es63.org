@@ -1,0 +1,58 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.63 不要进行对象切片
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t slice"
+
+理由
+
+所谓的切片，就是在赋值或初始化的时候，只 copy 对象的一部分数据。因为对
+象要整体考虑，这种情况经常导致错误。在某些情况，会导致奇怪的结果。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class Shape { /* ... */ };
+class Circle : public Shape { /* ... */ Point c; int r; };
+
+Circle c {{0, 0}, 42};
+Shape s {c};    // copy construct only the Shape part of Circle
+s = c;          // or copy assign only the Shape part of Circle
+
+void assign(const Shape& src, Shape& dest)
+{
+    dest = src;
+}
+Circle c2 {{1, 1}, 43};
+assign(c, c2);   // oops, not the whole state is transferred
+assert(c == c2); // if we supply copying, we should also provide comparison,
+                 // but this will likely return false
+#+end_src
+
+以上代码的结果是无意义的，因为圆心和半径部分没用从 c 复制到 s。为了避
+免这种情况方式，第一步在基类 Shape 的定义中禁止这种操作。
+
+
+其他选项
+
+如果你确实需要切片 slice，你可以显式地定义这个操作。从而避免代码读者产
+生疑惑。比如：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class Smiley : public Circle {
+  public:
+    Circle copy_circle();
+    // ...
+};
+
+Smiley sm { /* ... */ };
+Circle c1 {sm};  // ideally prevented by the definition of Circle
+Circle c2 {sm.copy_circle()};
+#+end_src
+
+强化
+
+- 对于产生切片的地方发出警告
