@@ -1,0 +1,45 @@
+#+LAYOUT: post
+#+TITLE: 单词本：culprit
+#+TAGS: English Français
+#+CATEGORIES: language
+
+Rich Hickey 关于 Clojure 编程语言的历史一文 [[cite:&hickey2020history]] 在
+讨论到 Clojure 内置的 map 数据结构能解决大部分信息系统数据处理的问题时，
+写道：I should note that the same problems often arise with
+traditional SQL database systems, where tables are the
+fully-enumerated *culprits*, and column and table names are not first
+class, nullability is a fixed decision, sparseness and openness are
+problematic, etc.
+
+这里 *cultprit* 是罪魁祸首的意思。
+
+再比如 Because code logic was the first suspected *culprit*, we spent a
+significant amount of labor and time investigating and resolving the
+issue. 因为人们总是认为代码逻辑错误是首先值得怀疑的罪魁祸首，所以我们
+花费了大量时间调研分析逻辑问题。
+
+其实，这个 culprit 是由 cul prit，两个词合起来的。说起这个词组的源头，
+要从诺曼人入侵英格兰说起。1066年10月哈斯丁斯一役，英军败绩，英国国王哈
+罗德战死。诺曼底公爵威廉加冕为王，称威廉一世（1066-1087年）。自此以后，
+英国的贵族语言通行法语。直到14世纪英语转为官方语言之后，法律用于还是沿
+用法语。（果然是名副其实的“法”语）。那时候，一个罪犯如果要辩护自己无罪
+的时候，公诉人会回复说： Cupable, prest d'averrer nostre bille. 翻译过
+来大概是“我们坚信他有罪，我已经准备提供证据”。然后，在法律文案中，经常
+缩写为 cul prit。时间久了，就联在一起，意思也转变成了罪魁祸首了。
+
+我们看到古法语的 prest 是“准备好”的意思，现在在法语中，也变成了 prêt。
+比如 prêt à manger，准备好吃饭了。
+
+culpable 的意思是有罪的、应受责备的。来自拉丁语 culpa 责罚，谴责。同源
+的还有 exculpate 免受责罚。inculpate 使获罪。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
+
