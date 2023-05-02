@@ -1,0 +1,61 @@
+#+LAYOUT: post
+#+TITLE: 单词本：esoteric
+#+TAGS: English
+#+CATEGORIES: language
+
+工业软件国产化这个事情最近很热门。在芯片电路设计领域，EDA 软件就是很重
+要的一款工业行业软件。
+
+有人这么写到： If you think the lack of engineers is a problem in
+other areas, consider the electronic design automation (EDA)
+space. It’s an *esoteric* field with just a few key suppliers and an
+extremely high barrier to entry for both individuals and startups. 如
+果你觉得在别的领域缺少工程师是个大问题。那么考虑一下 EDA 软件领域，这
+是一个极其深奥的领域，只有少数个别供应商，进入的门槛也很高。
+
+这段话里，用到了 esoteric，意思是只有内行才懂的，难领略的；限于少数人
+的，限于小圈子的，秘传的，机密的，深奥的。
+
+其实，这个词是来自希腊语，εσωτερικός。εσωτερικός 在希腊语里是 internal
+内部的意思。前缀 eso 跟 en，in 都是同源的。
+
+Clojure 作者 Rich Hickey 的文章 "A history of Clojure" 中写道 Nubank
+公司大量使用 Clojure 时，写道：Nubank uses Datomic as its
+database. “We’re a functional programming shop not in terms of really
+*esoteric* concepts, but just in terms of the basic immutability,
+idempotence, declarative format, small functions, pure
+functions. Clojure is an interesting choice because it’s very
+simple. We’re able to write actually quite a large system at this
+point without having any single piece of it that is difficult to
+understand.” Nubank 是一个函数式编程工作室，他们没有用到很深奥的概念，
+而只是用了函数式编程的一些基础概念，比如不可变性、等幂性、声明式格式、
+小函数、纯函数等。
+
+RISC-V 规格书 [[cite:&waterman2019risc]] 也用到了这个词：The standard
+extension prefixes avoid spurious incompatibilities in the encoding of
+core functionality, while allowing custom packing of more *esoteric*
+extensions. 标准的扩展前缀避免了核心功能的不合理的不兼容性，同时又允许
+更多定制的深奥的扩展。
+
+esoteric 对应的名词是 esoterica，意思是秘传的事物，或者是上不了台面的
+低俗刊物。
+
+与 esoteric 相反的是 exoteric，意思是外界的、开放的、通俗的、外行、局
+外人。这里我们看到 eso 是 in 的希腊语词根，而 exo 则是 out 的词根。所
+以分别表示内行和外行。
+
+exoteric 对应的名词则为 exoterica，意思是大众化的通俗的观念、大众化的
+通俗的作品、大众化的通俗的理论。
+
+大概为了区分这两个词，esoteric 读作 [ˌiːsəˈterɪk] 而 exoteric 读作
+[ˌeksəʊˈterɪk]。区分度还是有些大的。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
