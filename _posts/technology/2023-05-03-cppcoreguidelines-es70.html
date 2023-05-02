@@ -1,0 +1,70 @@
+---
+layout: post
+title: CppCoreGuidelines ES.70 如果有的选，选择 switch 语句，而不要选择 if 语句
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer a switch-statement to an if-statement when there is a choice&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<ul class="org-ul">
+<li>可读性更好。</li>
+<li>效率更高。 <code>switch</code> 是跟常数进行比较，通常比一组if then else效率更好</li>
+<li><code>switch</code> 可以支持更好的代码审查。比如，是不是所有 <code>enum</code> 的值都覆盖了。如果不是，那么，是不是有一个 <code>default</code></li>
+</ul>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #7388d6;">(</span>n<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> 0:
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">case</span> 7:
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">default</span>:
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+相比较：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>n == 0<span style="color: #7388d6;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: if-then-else chain comparing against a set</span>
+                  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">of constants</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>n == 7<span style="color: #7388d6;">)</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记处理多个常数值的if then else链</li>
+</ul>

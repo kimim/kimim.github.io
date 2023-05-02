@@ -1,0 +1,52 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.70 如果有的选，选择 switch 语句，而不要选择 if 语句
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer a switch-statement to an if-statement when there is a choice"
+
+理由
+
+- 可读性更好。
+- 效率更高。 ~switch~ 是跟常数进行比较，通常比一组 if then else 效率更好
+- ~switch~ 可以支持更好的代码审查。比如，是不是所有 ~enum~ 的值都覆盖了。
+  如果不是，那么，是不是有一个 ~default~
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void use(int n)
+{
+    switch (n) {   // good
+    case 0:
+        // ...
+        break;
+    case 7:
+        // ...
+        break;
+    default:
+        // ...
+        break;
+    }
+}
+#+end_src
+
+相比较：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void use2(int n)
+{
+    if (n == 0)   // bad: if-then-else chain comparing against a set
+                  // of constants
+        // ...
+    else if (n == 7)
+        // ...
+}
+#+end_src
+
+
+强化
+
+- 标记处理多个常数值的 if then else 链
