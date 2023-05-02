@@ -58,15 +58,18 @@ ISP 原则就要求 AlarmClock 应该实现两个接口，分别是 Clock 和 Al
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
 class Clock {
   public:
-    time_t readTime() const;
+    virtual time_t readTime() const;
 };
 
 class Alarm {
   public:
-    void setAlarm(time_t);
+    virtual void setAlarm(time_t);
 };
 
 class AlarmClock : public Clock, public Alarm {
+  public:
+    time_t readTime() const;
+    void setAlarm(time_t);
 };
 
 class TimeReporter {
