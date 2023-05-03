@@ -3,28 +3,27 @@
 #+TAGS: English Latin
 #+CATEGORIES: language
 
-
 Rich Hickey 写的 Clojure 历史一文 [[cite:&hickey2020history]] 中画了一个统
-计图，Figure 7 shows the *triumvirate* of functional programming, the
+计图， Figure 7 shows the *triumvirate* of functional programming, the
 Lisp REPL-driven development experience, and host platform access are
-most valued. 图 7 中显式了函数式编程的三巨头，其中 Lisp REPL 驱动开发
+most valued. 图 7 中显式了函数式编程的三巨头， 其中 Lisp REPL 驱动开发
 体验和宿主平台访问是最受关注的。
 
 这里 Rich 用了 triumvirate 来指代 Clojure 函数式编程语言中的三个主要特
 色。
 
-triumvirate 源自拉丁语，trium 是三个的意思，而 virate 则来自 vir 男人
-或者英雄。所以 triumvirate 是 三个伟大的男人的意思。历史上，古罗马有三
-头执政制度，第二个三头政权是 Antony, Octavian, 和 Lepidus。
+triumvirate 源自拉丁语， trium 是三个的意思， 而 virate 则来自 vir 男
+人或者英雄。所以 triumvirate 是 三个伟大的男人的意思。历史上， 古罗马
+有三头执政制度， 第二个三头政权是 Antony, Octavian, 和 Lepidus。
 
-在信息安全知识体系 [[cite:&cybok1.1.0]] 中，也用 triumvirate 指代数据信息
-安全的三个重要方面，即传输中的数据，存储的数据以及计算中的数据：
+在信息安全知识体系 [[cite:&cybok1.1.0]] 中， 也用 triumvirate 指代数据信息
+安全的三个重要方面， 即传输中的数据， 存储的数据以及计算中的数据：
 Keeping in mind this *triumvirate* - data in transit, data at rest, data
 under computation — can be useful when understanding what to expect in
 terms of the security, performance and maturity of systems using
 cryptography.
 
-源自拉丁语 vir 的单词还有 virtue 美德，好像后来也指妇女的贞德。其实这
+源自拉丁语 vir 的单词还有 virtue 美德， 好像后来也指妇女的贞德。其实这
 个词本来应该指男人的品德吧。 virile 的意思是男性的、男子气概的、刚健的。
 virilization 则表示女性的男性化。
 

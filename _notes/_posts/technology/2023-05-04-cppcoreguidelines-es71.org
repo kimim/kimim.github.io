@@ -1,0 +1,72 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.71 首选带范围的 for
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer a range-for-statement to a for-statement when there is a choice"
+
+理由
+
+可读性更好。避免错误。效率高。
+
+比如
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+for (gsl::index i = 0; i < v.size(); ++i)   // bad
+    cout << v[i] << '\n';
+
+for (auto p = v.begin(); p != v.end(); ++p)   // bad
+    cout << *p << '\n';
+
+for (auto& x : v)    // OK
+    cout << x << '\n';
+
+for (gsl::index i = 1; i < v.size(); ++i) // touches two elements:
+                                          // can't be a range-for
+    cout << v[i] + v[i - 1] << '\n';
+
+for (gsl::index i = 0; i < v.size(); ++i) // possible side effect:
+                                          // can't be a range-for
+    cout << f(v, &v[i]) << '\n';
+
+for (gsl::index i = 0; i < v.size(); ++i) { // body messes with loop
+                                            // variable: can't be a
+                                            // range-for
+    if (i % 2 != 0)
+        cout << v[i] << '\n'; // output odd elements
+}
+#+end_src
+
+好的程序员或静态代码分析工具能发现 ~f(v, &v[i])~ 是否导致副作用， 从而确
+定循环是否可以重写。
+
+在循环体重对循环变量进行判断特殊处理， 这种情况最好能避免。
+
+注意
+
+不要在带范围的 for 循环中使用代价高的循环变量复制操作。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+for (string s : vs) // ...
+#+end_src
+
+这样会导致每次循环都复制一份 vs 的元素到 s。
+
+最好写成
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+for (string& s : vs) // ...
+#+end_src
+
+更好的办法是， 如果循环中不修改循环变量的值的话， 就再添加一个 ~const~
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+for (const string& s : vs) // ...
+#+end_src
+
+强化
+
+检查循环，如果循环只是处理一遍循环序列的每一个元素，且没有对循环变量的
+副作用操作，可以将循环重写为带范围的 for 循环。
