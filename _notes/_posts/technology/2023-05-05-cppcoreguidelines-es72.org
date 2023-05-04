@@ -1,0 +1,47 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.72 如果明显有一个循环变量，for 比 while 语句更好
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer a for-statement to a while-statement when there is an obvious loop variable"
+
+理由
+
+可读性：循环的完整逻辑在最前面就明了。可以限制循环变量的范围。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export :results output
+std::vector<int> vec{1, 2, 3, 4, 5};
+for (gsl::index i = 0; i < vec.size(); i++) {
+    std::cout << vec[i] << "\n";
+}
+#+end_src
+
+#+RESULTS:
+: 1
+: 2
+: 3
+: 4
+: 5
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+std::vector<int> vec{1, 2, 3, 4, 5};
+int i = 0;
+while (i < vec.size()) {
+    std::cout << vec[i] << "\n";
+    i++;
+}
+#+end_src
+
+#+RESULTS:
+: 1
+: 2
+: 3
+: 4
+: 5
