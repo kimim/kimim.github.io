@@ -1,0 +1,46 @@
+#+LAYOUT: post
+#+TITLE: 单词本：canary in the coal mine
+#+TAGS: English
+#+CATEGORIES: language
+
+《大萧条》一书中写道房贷和次级贷款是经济好坏的晴雨表：Housing and
+subprime loans were the proverbial *canary in the coal mine*, but the
+real problem was that investors took on too much risk across the
+board.
+
+这里，作者用 canary in the coal mine 来表示危险的征兆、晴雨表。那么为
+什么 canary 金丝雀这种可爱的小鸟可以放到煤矿里做危险的征兆呢？
+
+携带金丝雀到煤矿这种做法最早可以追溯到 1911 年，因为煤矿中经常会产生有
+毒的一氧化碳毒气，而金丝雀对一氧化碳敏感，会最先产生中毒症状。
+
+有个叫约翰·斯科特·霍尔丹（John Scott Haldane）的人，经过一番研究之后，
+推荐在煤矿中使用金丝雀检测一氧化碳和其他有毒气体。
+
+所以那时候，矿工会带着金丝雀进入煤矿采矿，如果一氧化碳浓度太高，金丝雀
+可以及时警告危险，工人们就能及时避免危险。另外，那时候，矿工们也把这种
+可爱金丝雀当作宠物，闲暇时候逗着玩。
+
+再举个例子：
+
+5 月 5 日的金融新闻说 Nvidia 营收下降是公司业绩下滑的警告。记者用了“煤
+矿中的金丝雀唱响了一阵警告”这种一语双关的用法：
+
+Nvidia Stock: This *Canary in the Coal Mine* Is Singing a Warning
+
+Maybe Nvidia knocks it out of the park, and the stock continues
+roaring higher -- it wouldn't be the first time I was wrong. But the
+*canary in the coal mine* is singing a tune, and investors should at
+least listen.
+
+当然，后来有了一氧化碳检测传感器之后，就不太用得到金丝雀了。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
