@@ -1,0 +1,59 @@
+---
+layout: post
+title: CppCoreGuidelines ES.73 如果循环变量不明显，则 while 比 for 更恰当
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer a <code>while</code>-statement to a <code>for</code>-statement when there is no obvious loop variable&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+更好的可读性。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">events</span> = 0;
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span>; wait_for_event<span style="color: #7388d6;">()</span>; ++events<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, confusing</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这个事件循环看起来很误导群众，因为事件的计数跟循环条件
+<code>wait_for_event()</code> 没什么关系。
+</p>
+
+<p>
+最好写成：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">events</span> = 0;
+<span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #707183;">(</span>wait_for_event<span style="color: #7388d6;">()</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better</span>
+    ++events;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>对于 <code>for</code> 初始值和 <code>for</code> 增量中，与 <code>for</code> 条件无关的情况进行标记。</li>
+</ul>

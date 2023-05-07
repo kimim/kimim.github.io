@@ -1,0 +1,38 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.73 如果循环变量不明显，则 while 比 for 更恰当
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer a ~while~-statement to a ~for~-statement when there is no obvious loop variable"
+
+理由
+
+更好的可读性。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int events = 0;
+for (; wait_for_event(); ++events) {  // bad, confusing
+    // ...
+}
+#+end_src
+
+这个事件循环看起来很误导群众，因为事件的计数跟循环条件
+~wait_for_event()~ 没什么关系。
+
+最好写成：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int events = 0;
+while (wait_for_event()) {      // better
+    ++events;
+    // ...
+}
+#+end_src
+
+强化
+
+- 对于 ~for~ 初始值和 ~for~ 增量中，与 ~for~ 条件无关的情况进行标记。
