@@ -3,10 +3,10 @@
 #+TAGS: English
 #+CATEGORIES: language
 
-《大萧条》一书中写道房贷和次级贷款是经济好坏的晴雨表：Housing and
-subprime loans were the proverbial *canary in the coal mine*, but the
-real problem was that investors took on too much risk across the
-board.
+《大萧条》 [[cite:&cowen2011stagnation]] 一书中写道房贷和次级贷款是经济好
+坏的晴雨表：Housing and subprime loans were the proverbial *canary in
+the coal mine*, but the real problem was that investors took on too
+much risk across the board.
 
 这里，作者用 canary in the coal mine 来表示危险的征兆、晴雨表。那么为
 什么 canary 金丝雀这种可爱的小鸟可以放到煤矿里做危险的征兆呢？
