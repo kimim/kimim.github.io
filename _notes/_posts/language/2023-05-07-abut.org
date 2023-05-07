@@ -1,0 +1,63 @@
+#+LAYOUT: post
+#+TITLE: 单词本：abut
+#+TAGS: English
+#+CATEGORIES: language
+
+今年 4 月 23 日世界读书日的时候，用 5 本闲置的书去八角杯咖啡能换任意一
+杯咖啡。于是我找了 5 本书去换了一杯，味道还不错。
+
+但是，八角杯咖啡的英文名字 Abutlamb 我就不太看得懂。于是专门查了下。这
+个 abut 是副词附近、临近的意思。而 lamb 则是小羊羔。那么合起来或许是靠
+近小羊羔？
+
+我查阅了八角杯的介绍，或许可以每个月去试试限定款咖啡：
+
+Abutlamb 八角杯咖啡以复古文艺美式工业风营造文艺聚集地。Abutlamb 八角杯
+咖啡店中提供了多种精选咖啡豆，而咖啡单大致以意式咖啡和滤泡式咖啡为主。
+除经典产品线外，八角杯，还结合季节风物和杭州本土文化，以月为单位推出一
+款限定咖啡。如曾推出的杭·绿豆糕拿铁、迟桂花拿铁、麻麻黑拿铁等多款限定
+产品。
+
+在 ISO 的自动标识体系标准 [[cite:&isoiec16022]] 中也用到了这个单词 For
+larger symbols with more than one data region, the mapping matrix
+equates to an area the size of the *abutted* data regions.
+
+For example, the 36 x 36 format symbol has four 16 x 16 data regions
+which *abut* to create a mapping matrix 32 x 32.
+
+在国际标准中， abut 是用作动词，指相邻的数据区域。
+
+对了，4 月 23 日是世界读书日，也是西班牙作家塞万提斯的纪念日。
+
+塞万提斯的生活有够惨的：
+
+1569 年发表最初的几首诗，开始军旅生涯，1571 年参加了勒班陀战役。左手在
+战斗中被打残，由此落得了“勒班陀残臂人”的绰号。
+
+1574—1575 年辗转于意大利的撒丁、热那亚、那不勒斯和西西里，在乘“太阳号”
+船赴西班牙途中被非洲柏柏尔族人的三只海盗船俘虏，送到阿尔及尔。后被家人
+用五百金盾赎回。
+
+1583 年由于手头拮据，及其左手残废而无晋升机会，被迫离开军队。
+
+1591—1592 年辗转于村落之间采购军需品，后被诬告为帐目不清，身陷囹圄。
+
+1597 年被人指控为私吞钱财，再次入狱，三个月左右蒙恩获释。期间，官差丢
+失，为了糊口度日，他为别人跑腿，拉纤，沿街叫卖布匹。
+
+1605 年《唐·吉诃德》上卷出版，一年之内再版六次。不料又卷入一场官司中，
+同姐妹、女儿和外甥女一起在牢房中度过了几天。事实澄清后获释。
+
+1616 年身患严重水肿，患病期间仍然对生活充满了乐观精神。此间，他为他的
+小说《佩西莱斯和塞西斯蒙达》写了《向莱穆斯伯爵致辞》，五天后， 即 4 月
+23 日逝世于马德里。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
