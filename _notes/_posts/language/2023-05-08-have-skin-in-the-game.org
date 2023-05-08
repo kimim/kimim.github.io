@@ -1,0 +1,27 @@
+#+LAYOUT: post
+#+TITLE: 单词本：have skin in the game
+#+TAGS: English
+#+CATEGORIES: language
+
+我在读敏捷开发中产品负责人的介绍时，读到这段：
+
+Provided a Product Owner is making the promise that they intend to
+keep themselves (i.e., they *have skin in the game*), then they might
+issue some kind of forward plan.
+
+这里， have skin in the game 的意思是“有切身利益”的意思。通常用于财务
+投资领域。这个说法最早是股神巴菲特提出的。有一次，股神建议企业的高级管
+理人员应该买一些自己公司的股票，从而使自己的个人利益与公司成败挂钩
+（have skin in the game）。
+
+再举个例子：If you want someone to make efficient choices, they have
+to *have a little skin in the game*. 如果你希望某个人能高效决策，那么最
+好让 他参与其中，有切身利益。
+
+再比如最近的苏丹武装冲突，俄罗斯的瓦格纳集团参与其中。金融情报机构的国
+际合作组织“埃格蒙特集团”的一则新闻中就用到:
+
+Russia, and Wagner, unlike Europe, *have skin in the Sudan game*.
+
+格纳集团致力于确保俄罗斯在苏丹的两个切身利益：第一个是金矿开采，第二个
+是获得红海的海军基地。
