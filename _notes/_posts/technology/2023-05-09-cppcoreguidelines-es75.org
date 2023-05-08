@@ -1,0 +1,32 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.75 避免 do 语句
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid ~do~-statements"
+
+理由
+
+可读性，避免出错。循环的结束条件在最后（很容易疏忽），并且循环条件在一
+开始没有进行检测。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int x;
+do {
+    cin >> x;
+    // ...
+} while (x < 0);
+#+end_src
+
+注意
+
+确实也有很多例子证明 ~do~ 语句能清晰表达程序意图，但是 bug 也很多。
+
+强化
+
+标记使用 ~do~ 语句的地方。

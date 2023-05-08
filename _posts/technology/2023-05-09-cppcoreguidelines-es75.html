@@ -1,0 +1,51 @@
+---
+layout: post
+title: CppCoreGuidelines ES.75 避免 do 语句
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid <code>do</code>-statements&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性，避免出错。循环的结束条件在最后（很容易疏忽），并且循环条件在一开始没有进行检测。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
+<span style="color: #7F0055; font-weight: bold;">do</span> <span style="color: #707183;">{</span>
+    cin &gt;&gt; x;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span> <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #707183;">(</span>x &lt; 0<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+确实也有很多例子证明 <code>do</code> 语句能清晰表达程序意图，但是 bug 也很多。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记使用 <code>do</code> 语句的地方。
+</p>
