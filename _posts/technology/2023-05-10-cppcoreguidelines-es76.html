@@ -1,0 +1,76 @@
+---
+layout: post
+title: CppCoreGuidelines ES.76 避免 goto
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid <code>goto</code>&rdquo;
+</p>
+
+<p>
+理由 
+</p>
+
+<p>
+可读性好，避免错误。 <code>goto</code> 是机器产生的代码，除了 <code>goto</code> 还有其他更好的适合人类的控制结构。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+从内层循环跳出的时候，还是会用得到 <code>goto</code> 。但是一般总是向前跳转。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; imax; ++i<span style="color: #707183;">)</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">j</span> = 0; j &lt; jmax; ++j<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>a<span style="color: #909183;">[</span>i<span style="color: #909183;">][</span>j<span style="color: #909183;">]</span> &gt; elem_max<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">goto</span> <span style="color: #110099;">finished</span>;
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #707183;">}</span>
+<span style="color: #110099;">finished</span>:
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+</pre>
+</div>
+
+<p>
+坏例子
+</p>
+
+<p>
+有很多这样的例子，大量的代码用了 C 的 goto-exit 习语：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+        <span style="color: #7F0055; font-weight: bold;">goto</span> <span style="color: #110099;">exit</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+        <span style="color: #7F0055; font-weight: bold;">goto</span> <span style="color: #110099;">exit</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #110099;">exit</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... common cleanup code ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+其实这是一种析构函数的临时模拟。最好还是把你用到的资源封装到对象中，通过析构函数做清理工作。如果因为某些原因，无法通过析构函数完成所有的清理工作，可以考虑用 <code>gsl::finally()</code> 。这个方法比 goto-exit 更可靠。
+</p>
+
+
+<p>
+强化 
+</p>
+
+<p>
+标记用到 <code>goto</code> 的地方。或者，能够标记除了从嵌套循环跳出语句之外的所有 <code>goto</code>
+</p>

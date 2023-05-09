@@ -1,0 +1,54 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.76 避免 goto
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid ~goto~"
+
+理由 
+
+可读性好，避免错误。 ~goto~ 是机器产生的代码，除了 ~goto~ 还有其他更好的适
+合人类的控制结构。
+
+
+例外
+
+从内层循环跳出的时候，还是会用得到 ~goto~ 。但是一般总是向前跳转。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+for (int i = 0; i < imax; ++i)
+    for (int j = 0; j < jmax; ++j) {
+        if (a[i][j] > elem_max) goto finished;
+        // ...
+    }
+finished:
+// ...
+#+end_src
+
+坏例子
+
+有很多这样的例子，大量的代码用了 C 的 goto-exit 习语：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f()
+{
+    // ...
+        goto exit;
+    // ...
+        goto exit;
+    // ...
+exit:
+    // ... common cleanup code ...
+}
+#+end_src
+
+其实这是一种析构函数的临时模拟。最好还是把你用到的资源封装到对象中，通
+过析构函数做清理工作。如果因为某些原因，无法通过析构函数完成所有的清理
+工作，可以考虑用 ~gsl::finally()~ 。这个方法比 goto-exit 更可靠。
+
+
+强化 
+
+标记用到 ~goto~ 的地方。或者，能够标记除了从嵌套循环跳出语句之外的所有 ~goto~
