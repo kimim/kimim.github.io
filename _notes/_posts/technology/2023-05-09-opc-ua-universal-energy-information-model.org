@@ -1,0 +1,39 @@
+#+LAYOUT: post
+#+TITLE: 基于 OPC UA 统一能源信息模型
+#+TAGS: opcua energy
+#+CATEGORIES: technology
+
+最近看到德国汉堡 Helmut Schmidt 大学亚历山大·费教授团队的一篇论文，讨
+论怎么通过 OPC UA 构建统一的能源信息管理系统。
+
+整体架构是这样子的：
+
+[[./images/Universal-Energy-Information-Model.drawio.svg]]
+
+能源管理应用通过 OPC UA 或 MQTT 遥测多种现场设备，支持 IO-Link、Modbus
+TCP、PROFIBUS DP、PROFINET 等协议。 为了能够在上层应用层获取统一结构的
+数据，边缘层将多种协议的能源设备数据转换为 O PC UA 信息模型。然后上层应
+用就能够在边缘层查询需要订阅的信息，一旦建立订阅关系，就通过 MQTT 这种
+Pub/Sub 协议传输变量。
+
+本文的要点有这几个：
+1. 如何妥善处理现场多种类型设备多源异构的总线协议
+2. 如何在边缘侧进行语义映射
+3. 如何结合 OPC UA 和 MQTT
+
+
+现场设备有两种情况，一种是原始数据，需要手工建立这些测量数据到 OPC UA
+信息模型的映射，还有一种是基于 OPC UA 伙伴协议。对于后者，目前
+PROFIenergy，sercos Energy，CIP Energy 等现场总线的能源规范集是有对应
+的 OPC UA CS，这样就可以根据 Nodeset 文件建立数据映射。
+
+数据映射的过程是通过边缘所谓的 UEIM 统一能源信息模型进行关联。主要用到
+了 OPC UA 信息模型中的测量数据类型（MeasuremetnValueType），包含了工程
+单元、精度类型、精度范围、测量标识、设备资源标识等。
+
+因为 MQTT 并不提供数据的语义模型，只有订阅主题 Topic，所以首先在能源应
+用与边缘之间建立客户端/服务端通道，读取 OPC UA 地址空间信息模型，然后
+以 MQTT 订阅主题传输测量数据。
+
+工业物联网设备，则是通过 MQTT 传输到能源管理平台，通过 MQTT-OPC UA 网
+关转为 OPC UA 地址空间信息提供给应用程序读取。
