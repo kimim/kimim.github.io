@@ -10,7 +10,7 @@
 理由
 
 总是以 ~break~ 结束有语句的 ~case~ 。不小心漏掉 ~break~ 是很常见的 bug。故意
-设置的 fallthrough 会导致维护灾难。必须显示说明且尽量少用。
+设置的 fallthrough 会导致维护灾难。必须清晰说明且尽量少用。
 
 例子
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
