@@ -1,0 +1,106 @@
+---
+layout: post
+title: CppCoreGuidelines ES.77 在循环中尽量少用 break 和 continue
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Minimize the use of <code>break</code> and <code>continue</code> in loops&rdquo;
+</p>
+
+<p>
+理由 
+</p>
+
+<p>
+我们很容易在复杂一些的循环体中，忽视掉  <code>break</code> 和 <code>continue</code> 语句。尤其是在 <code>switch</code> 和循环一起用的时候，这时候，很容易丢掉 <code>switch</code> <code>case</code> 的 <code>break</code> 。
+</p>
+
+<p>
+比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">switch</span><span style="color: #707183;">(</span>x<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">case</span> 1 :
+    <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span><span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">some condition</span><span style="color: #3F7F5F;"> */</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7388d6;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Oops! break switch or break while intended?</span>
+<span style="color: #7F0055; font-weight: bold;">case</span> 2 :
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">break</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+通常，如果循环中需要 <code>break</code> ，可以考虑是否增加一个算法函数。这样，
+<code>break</code> 处可以用 <code>return</code> 替代。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">//</span><span style="color: #3F7F5F;">Original code: break inside loop</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use1</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span>T<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">vec</span> = <span style="color: #7388d6;">{</span><span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">initialized with some values</span><span style="color: #3F7F5F;"> */</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">value</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">item</span> : vec<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span><span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">some condition</span><span style="color: #3F7F5F;">*/</span><span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            value = item;
+            <span style="color: #7F0055; font-weight: bold;">break</span>;
+        <span style="color: #909183;">}</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">then do something with value</span><span style="color: #3F7F5F;"> */</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #3F7F5F;">//</span><span style="color: #3F7F5F;">BETTER: create a function and return inside loop</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #0000ff; font-weight: bold;">search</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span> &amp;<span style="color: #000000;">vec</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> &amp;<span style="color: #000000;">item</span> : vec<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span><span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">some condition</span><span style="color: #3F7F5F;">*/</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> item;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> T<span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">//</span><span style="color: #3F7F5F;">default value</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use2</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">vec</span> = <span style="color: #7388d6;">{</span><span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">initialized with some values</span><span style="color: #3F7F5F;"> */</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">value</span> = search<span style="color: #7388d6;">(</span>vec<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">then do something with value</span><span style="color: #3F7F5F;"> */</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+通常在循环中，用到 <code>continue</code> 的地方可以通过 <code>if</code> 语句清晰的表达：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">item</span> : vec<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>item%2 == 0<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">continue</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>item == 5<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">continue</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>item &gt; 10<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">continue</span>;
+    <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">do something with item</span><span style="color: #3F7F5F;"> */</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">item</span> : vec<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">GOOD</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>item%2 != 0 &amp;&amp; item != 5 &amp;&amp; item &lt;= 10<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">do something with item</span><span style="color: #3F7F5F;"> */</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果你确实需要从循环跳出，那么一般来说，用 <code>break</code> 比修改循环变量，或者使用 <code>goto</code> 要更佳。
+</p>

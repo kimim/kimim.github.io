@@ -1,0 +1,85 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.77 在循环中尽量少用 break 和 continue
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Minimize the use of ~break~ and ~continue~ in loops"
+
+理由 
+
+我们很容易在复杂一些的循环体中，忽视掉  ~break~ 和 ~continue~ 语句。尤其是在 ~switch~ 和循环一起用的时候，这时候，很容易丢掉 ~switch~ ~case~ 的 ~break~ 。
+
+比如：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+switch(x) {
+case 1 :
+    while (/* some condition */) {
+        // ...
+    break;
+    } // Oops! break switch or break while intended?
+case 2 :
+    // ...
+    break;
+}
+#+end_src
+
+通常，如果循环中需要 ~break~ ，可以考虑是否增加一个算法函数。这样，
+~break~ 处可以用 ~return~ 替代。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+//Original code: break inside loop
+void use1()
+{
+    std::vector<T> vec = {/* initialized with some values */};
+    T value;
+    for (const T item : vec) {
+        if (/* some condition*/) {
+            value = item;
+            break;
+        }
+    }
+    /* then do something with value */
+}
+
+//BETTER: create a function and return inside loop
+T search(const std::vector<T> &vec)
+{
+    for (const T &item : vec) {
+        if (/* some condition*/) return item;
+    }
+    return T(); //default value
+}
+
+void use2()
+{
+    std::vector<T> vec = {/* initialized with some values */};
+    T value = search(vec);
+    /* then do something with value */
+}
+#+end_src
+
+通常在循环中，用到 ~continue~ 的地方可以通过 ~if~ 语句清晰的表达：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+for (int item : vec) {  // BAD
+    if (item%2 == 0) continue;
+    if (item == 5) continue;
+    if (item > 10) continue;
+    /* do something with item */
+}
+
+for (int item : vec) {  // GOOD
+    if (item%2 != 0 && item != 5 && item <= 10) {
+        /* do something with item */
+    }
+}
+#+end_src
+
+
+注意
+
+如果你确实需要从循环跳出，那么一般来说，用 ~break~ 比修改循环变量，或者
+使用 ~goto~ 要更佳。
