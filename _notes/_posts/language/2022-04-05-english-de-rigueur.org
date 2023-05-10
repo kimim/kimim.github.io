@@ -1,13 +1,9 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: 单词本：de rigueur
-categories: [language]
-tags: [Français]
----
-#+END_EXPORT
+#+layout: post
+#+title: 单词本：de rigueur
+#+categories: language
+#+tags: Français
 
-在17、18世纪，在英国、美国的年轻人中，流行一种叫Grand Tour of Europe的
+在 17、18 世纪，在英国、美国的年轻人中，流行一种叫 Grand Tour of Europe 的
 欧洲游学活动。他们去意大利、法国这些地方待上四年，学习语言、建筑、地理、
 文化知识。
 
@@ -27,13 +23,18 @@ rigueur 就是法语里的 rigour 严格的意思。de rigueur 在法语里的�
 
 例句：
 
+Messaging analysis and associate e-mail infrastructure are *de rigueur*
+for coping with the fact that 95%+ of e-mail on the Internet is
+illicit. 电子邮件的消息分析是处理 互联网邮件的礼节需要。以为 95% 以上
+的电子邮件都是违法不正当的。
+
 Dark sunglasses are de rigueur these days. 黑墨镜是当下的社交礼节必需
 品。
 
 Perthnow 2022-03-31: Modern technology, combined with a post-pandemic
 shift in habits, means it's now de rigueur for people to work from
-coffee shops.[fn:1] 现代科技，加上后疫情时代形成的习惯，意味着在咖啡馆工作是
-人们社交礼节的需要。
+coffee shops.[fn:1] 现代科技，加上后疫情时代形成的习惯，意味着在咖啡馆
+工作是人们社交礼节的需要。
 
 总结：
 - de rigueur 社交礼节需要的
