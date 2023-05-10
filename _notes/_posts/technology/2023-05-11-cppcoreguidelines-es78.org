@@ -1,0 +1,77 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.78 不要在 switch 语句中使用默认向下执行机制
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t rely on implicit fallthrough in ~switch~ statements"
+
+理由
+
+总是以 ~break~ 结束有语句的 ~case~ 。不小心漏掉 ~break~ 是很常见的 bug。故意
+设置的 fallthrough 会导致维护灾难。必须显示说明且尽量少用。
+
+例子
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+switch (eventType) {
+case Information:
+    update_status_bar();
+    break;
+case Warning:
+    write_event_log();
+    // Bad - implicit fallthrough
+case Error:
+    display_error_window();
+    break;
+}
+#+end_src
+
+多个 ~case~ 共用一个执行语句段是可以的。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+switch (x) {
+case 'a':
+case 'b':
+case 'f':
+    do_something(x);
+    break;
+}
+#+end_src
+
+从 ~case~ 中返回的话，也可以不用加 ~break~ 
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+switch (x) {
+case 'a':
+    return 1;
+case 'b':
+    return 2;
+case 'c':
+    return 3;
+
+}
+#+end_src
+
+
+例外
+
+如果实际需要 fallthrough 机制，可以显式的用 ~[[fallthrough]]~ 标记说明：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+switch (eventType) {
+case Information:
+    update_status_bar();
+    break;
+case Warning:
+    write_event_log();
+    [[fallthrough]];
+case Error:
+    display_error_window();
+    break;
+}
+#+end_src
+
+强化
+
+标记所有隐式 fallthrough 的非空 ~case~

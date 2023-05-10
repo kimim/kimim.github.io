@@ -1,0 +1,103 @@
+---
+layout: post
+title: CppCoreGuidelines ES.78 不要在 switch 语句中使用默认向下执行机制
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t rely on implicit fallthrough in <code>switch</code> statements&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+总是以 <code>break</code> 结束有语句的 <code>case</code> 。不小心漏掉 <code>break</code> 是很常见的 bug。故意设置的 fallthrough 会导致维护灾难。必须显示说明且尽量少用。
+</p>
+
+<p>
+例子
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #707183;">(</span>eventType<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">case</span> Information:
+    update_status_bar<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">break</span>;
+<span style="color: #7F0055; font-weight: bold;">case</span> Warning:
+    write_event_log<span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad - implicit fallthrough</span>
+<span style="color: #7F0055; font-weight: bold;">case</span> Error:
+    display_error_window<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">break</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+多个 <code>case</code> 共用一个执行语句段是可以的。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #707183;">(</span>x<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #2A00FF;">'a'</span>:
+<span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #2A00FF;">'b'</span>:
+<span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #2A00FF;">'f'</span>:
+    do_something<span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">break</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+从 <code>case</code> 中返回的话，也可以不用加 <code>break</code> 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #707183;">(</span>x<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #2A00FF;">'a'</span>:
+    <span style="color: #7F0055; font-weight: bold;">return</span> 1;
+<span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #2A00FF;">'b'</span>:
+    <span style="color: #7F0055; font-weight: bold;">return</span> 2;
+<span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #2A00FF;">'c'</span>:
+    <span style="color: #7F0055; font-weight: bold;">return</span> 3;
+
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+例外
+</p>
+
+<p>
+如果实际需要 fallthrough 机制，可以显式的用 <code>[[fallthrough]]</code> 标记说明：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #707183;">(</span>eventType<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">case</span> Information:
+    update_status_bar<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">break</span>;
+<span style="color: #7F0055; font-weight: bold;">case</span> Warning:
+    write_event_log<span style="color: #7388d6;">()</span>;
+    <span style="color: #7388d6;">[</span><span style="color: #909183;">[</span>fallthrough<span style="color: #909183;">]</span><span style="color: #7388d6;">]</span>;
+<span style="color: #7F0055; font-weight: bold;">case</span> Error:
+    display_error_window<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">break</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+标记所有隐式 fallthrough 的非空 <code>case</code>
+</p>
