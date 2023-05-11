@@ -1,0 +1,86 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.79 只用 default 处理共用的逻辑
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~default~ to handle common cases (only)"
+
+理由
+
+代码清晰度。增加发现潜在错误的机会。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+enum E { a, b, c, d };
+
+void f1(E x)
+{
+    switch (x) {
+    case a:
+        do_something();
+        break;
+    case b:
+        do_something_else();
+        break;
+    default:
+        take_the_default_action();
+        break;
+    }
+}
+#+end_src
+
+这段代码很清晰的说明，x 为 a、b 的时候，需要特殊操作，其他默认情况则在
+~default~ 标签下。
+
+
+例子
+
+如果你只处理特殊的条件，没有默认的逻辑，怎么办？这时候，最好添加一个空
+的 ~default~ 段，不然别人不知道你是不是处理完全了所有的情况。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f2(E x)
+{
+    switch (x) {
+    case a:
+        do_something();
+        break;
+    case b:
+        do_something_else();
+        break;
+    default:
+        // do nothing for the rest of the cases
+        break;
+    }
+}
+#+end_src
+
+
+如果你去掉 ~default~ ，其他维护人员或编译器就会认为你已经把各种情况都考
+虑进去了：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f2(E x)
+{
+    switch (x) {
+    case a:
+        do_something();
+        break;
+    case b:
+    case c:
+        do_something_else();
+        break;
+    }
+}
+#+end_src
+
+你有没有漏掉 ~x == d~ 的情况？有时候，当你增加了枚举值的时候，很容易忘记
+添加响应的处理逻辑。这时候，就可能出麻烦了。
+
+
+强化
+
+标记在 ~switch~ 语句处理枚举的地方，没有处理所有枚举值，且没有 ~default~ 的情况。

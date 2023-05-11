@@ -1,0 +1,111 @@
+---
+layout: post
+title: CppCoreGuidelines ES.79 只用 default 处理共用的逻辑
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>default</code> to handle common cases (only)&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+代码清晰度。增加发现潜在错误的机会。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">E</span> <span style="color: #707183;">{</span> <span style="color: #000000;">a</span>, <span style="color: #000000;">b</span>, <span style="color: #000000;">c</span>, <span style="color: #000000;">d</span> <span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">E</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> a:
+        do_something<span style="color: #909183;">()</span>;
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">case</span> b:
+        do_something_else<span style="color: #909183;">()</span>;
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">default</span>:
+        take_the_default_action<span style="color: #909183;">()</span>;
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这段代码很清晰的说明，x 为 a、b 的时候，需要特殊操作，其他默认情况则在
+<code>default</code> 标签下。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+如果你只处理特殊的条件，没有默认的逻辑，怎么办？这时候，最好添加一个空的 <code>default</code> 段，不然别人不知道你是不是处理完全了所有的情况。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">E</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> a:
+        do_something<span style="color: #909183;">()</span>;
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">case</span> b:
+        do_something_else<span style="color: #909183;">()</span>;
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">default</span>:
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">do nothing for the rest of the cases</span>
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+如果你去掉 <code>default</code> ，其他维护人员或编译器就会认为你已经把各种情况都考虑进去了：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">E</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> a:
+        do_something<span style="color: #909183;">()</span>;
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">case</span> b:
+    <span style="color: #7F0055; font-weight: bold;">case</span> c:
+        do_something_else<span style="color: #909183;">()</span>;
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+你有没有漏掉 <code>x == d</code> 的情况？有时候，当你增加了枚举值的时候，很容易忘记添加响应的处理逻辑。这时候，就可能出麻烦了。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记在 <code>switch</code> 语句处理枚举的地方，没有处理所有枚举值，且没有 <code>default</code> 的情况。
+</p>
