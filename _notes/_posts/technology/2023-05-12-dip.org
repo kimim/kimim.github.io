@@ -1,0 +1,158 @@
+#+LAYOUT: post
+#+TITLE: 依赖倒置原则，Dependence Inversion Principle，DIP
+#+TAGS: programming
+#+CATEGORIES: technology
+
+软件工程领域，有一个概念叫 SOLID。SOLID 是五个面向对象设计原则的首字母
+缩写。最早由 Robert C. Martin 在其 2000 年的论文《Design Principles
+and Design Patterns》中提出的。
+
+其中，D 原则指的是 Dependence Inversion Principle，依赖倒置原则，简称
+DIP。
+
+DIP 是这么表述的：
+
+1) High level modules should not depend upon low level modules. Both
+   should depend upon abstractions. \\
+   上层模块不应该依赖于底层模块。都应该依赖于抽象。
+2) Abstractions should not depend upon details. Details should depend upon abstractions. \\
+   抽象不应该依赖于细节。细节应该依赖于抽象。
+
+
+那么，为什么叫依赖倒置呢？
+
+因为传统的架构设计，顶层设计拆分到下层模块实现，下层模块又基于底层模块。
+像这样：
+
+#+name: copy-program
+#+begin_src plantuml :output-dir images :file copy-program.svg :cmdline -charset utf-8 :eval no-export :exports both
+[Copy] -- [ReadKeyboard]
+[Copy] -- [WritePrinter]
+#+end_src
+
+#+ATTR_LATEX: :scale 0.7
+#+RESULTS: copy-program
+[[file:images/copy-program.svg]]
+
+这个例子中，有个 Copy 任务，它做的事情是把键盘敲入的字符传输到打印机打
+印出来。那么 C++ 代码实现可能是这个样子：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void Copy () {
+    int c;
+    while ((c = ReadKeyboard()) != EOF) {
+        WritePrinter(c);
+    }
+}
+#+end_src
+
+如果后面，我们又要把键盘敲进的字符写到磁盘里：
+
+#+name: copy-program-v2
+#+begin_src plantuml :output-dir images :file copy-program-v2.svg :cmdline -charset utf-8 :eval no-export :exports both
+[Copy] -- [ReadKeyboard]
+[Copy] -- [WritePrinter]
+[Copy] -- [WriteDisk]
+#+end_src
+
+#+ATTR_LATEX: :scale 0.7
+#+RESULTS: copy-program-v2
+[[file:images/copy-program-v2.svg]]
+
+这时候，代码可以这么写：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+enum class OutputDevice {printer, disk};
+void Copy(OutputDevice dev) {
+    int c;
+    while ((c = ReadKeyboard()) != EOF) {
+        if (dev == printer)
+            WritePrinter(c);
+        else
+            WriteDisk(c);
+    }
+}
+#+end_src
+
+如果输入、输出设备种类更多，这样实现的代码就越来越难维护。所以我们需要
+抽象机制，让依赖关系建立在抽象实体上：
+
+#+name: copy-program-v3
+#+begin_src plantuml :output-dir images :file copy-program-v3.svg :cmdline -charset utf-8 :eval no-export :exports both
+hide members
+abstract class Reader
+abstract class Writer
+
+Copy o-- Reader
+Copy o-- Writer
+Reader <|-- KeyboardReader
+Reader <|-- VoiceReader
+Writer <|-- PrinterWriter
+Writer <|-- DiskWriter
+#+end_src
+
+#+ATTR_LATEX: :scale 0.7
+#+RESULTS: copy-program-v3
+[[file:images/copy-program-v3.svg]]
+
+代码实现如下。这时候，Copy 函数就不用关心 Reader 和 Writer 的具体实现，
+只依赖于抽象类的虚函数接口。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+class Reader
+{
+  public:
+    virtual int Read() = 0;
+};
+
+class Writer
+{
+  public:
+    virtual void Write(char) = 0;
+};
+
+void Copy(Reader& r, Writer& w)
+{
+    int c;
+    while((c=r.Read()) != EOF)
+        w.Write(c);
+}
+#+end_src
+
+在函数式编程语言中，DIP 原则也很普遍。比如 Clojure 的 ~map~ 函数，它不依
+赖于具体的数据类型，只关心抽象接口。 ~map~ 接受实现 ~clojure.lang.IFn~ 抽
+象的函数，处理实现可顺序访问，可 ~seq~ 的数据，也就是 ~seqable?~ 的数据对
+象。
+
+例如：
+
+#+begin_src clojure :results pp :exports both :eval no-export
+(map - [1 2 3])
+#+end_src
+
+#+RESULTS:
+: (-1 -2 -3)
+: 
+
+这里， ~-~ 函数实现了 ~clojure.lang.IFn~ ：
+
+#+begin_src clojure :results pp :exports both :eval no-export
+(instance? clojure.lang.IFn -)
+#+end_src
+
+#+RESULTS:
+: true
+: 
+
+而 ~vec~ ~[1 2 3]~ 则是 ~seqable~ 的：
+
+#+begin_src clojure :results pp :exports both :eval no-export
+(seqable? [1 2 3])
+#+end_src
+
+#+RESULTS:
+: true
+: 
+
+在 Clojure 中，DIP 原则用的很广泛，从而确保很多核心函数可以充分地在抽
+象层面重用。

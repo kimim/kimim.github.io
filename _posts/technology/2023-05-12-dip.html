@@ -1,0 +1,273 @@
+---
+layout: post
+title: 依赖倒置原则，Dependence Inversion Principle，DIP
+tags: [programming]
+categories: [technology]
+---
+<p>
+软件工程领域，有一个概念叫 SOLID。SOLID 是五个面向对象设计原则的首字母缩写。最早由 Robert C. Martin 在其 2000 年的论文《Design Principles
+and Design Patterns》中提出的。
+</p>
+
+<p>
+其中，D 原则指的是 Dependence Inversion Principle，依赖倒置原则，简称
+DIP。
+</p>
+
+<p>
+DIP 是这么表述的：
+</p>
+
+<ol class="org-ol">
+<li>High level modules should not depend upon low level modules. Both
+should depend upon abstractions. <br />
+上层模块不应该依赖于底层模块。都应该依赖于抽象。</li>
+<li>Abstractions should not depend upon details. Details should depend upon abstractions. <br />
+抽象不应该依赖于细节。细节应该依赖于抽象。</li>
+</ol>
+
+
+<p>
+那么，为什么叫依赖倒置呢？
+</p>
+
+<p>
+因为传统的架构设计，顶层设计拆分到下层模块实现，下层模块又基于底层模块。像这样：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-plantuml" id="orga0eb0b7"><span style="color: #707183;">[</span>Copy<span style="color: #707183;">]</span> <span style="color: #7F0055; font-weight: bold;">--</span> <span style="color: #707183;">[</span>ReadKeyboard<span style="color: #707183;">]</span>
+<span style="color: #707183;">[</span>Copy<span style="color: #707183;">]</span> <span style="color: #7F0055; font-weight: bold;">--</span> <span style="color: #707183;">[</span>WritePrinter<span style="color: #707183;">]</span>
+</pre>
+</div>
+
+
+<div id="orgf2eda0b" class="figure">
+<p><div align="center"><?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="168px" preserveAspectRatio="none" style="width:298px;height:168px;background:#FFFFFF;" version="1.1" viewBox="0 0 298 168" width="298px" zoomAndPan="magnify"><defs/><g><!--MD5=[f7065673e5e3aadd0e2d3c4432e92fdc]
+entity Copy--><g id="elem_Copy"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="73" x="118" y="7"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="171" y="12"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="169" y="14"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="169" y="18"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="33" x="133" y="41.5332">Copy</text></g><!--MD5=[d012659cd792d5f1905aab6fef5bc07c]
+entity ReadKeyboard--><g id="elem_ReadKeyboard"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="135" x="7" y="115"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="122" y="120"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="120" y="122"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="120" y="126"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="95" x="22" y="149.5332">ReadKeyboard</text></g><!--MD5=[a5c73c821fd996ec4dded17d8be1735e]
+entity WritePrinter--><g id="elem_WritePrinter"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="115" x="177" y="115"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="272" y="120"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="270" y="122"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="270" y="126"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="75" x="192" y="149.5332">WritePrinter</text></g><!--MD5=[b9f6fdcc5ffcf0aaa847362a19131062]
+link Copy to ReadKeyboard--><g id="link_Copy_ReadKeyboard"><path d="M137.14,55 C123.81,72.66 105.49,96.94 92.1,114.68 " fill="none" id="Copy-ReadKeyboard" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[3f9d472f710945c80c6082d6418b4027]
+link Copy to WritePrinter--><g id="link_Copy_WritePrinter"><path d="M171.86,55 C185.19,72.66 203.51,96.94 216.9,114.68 " fill="none" id="Copy-WritePrinter" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[6059be171d0757e1485bd95034312e5b]
+@startuml
+[Copy] - - [ReadKeyboard]
+[Copy] - - [WritePrinter]
+@enduml
+
+PlantUML version 1.2022.3beta3(Unknown compile time)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg></div>
+</p>
+</div>
+
+<p>
+这个例子中，有个 Copy 任务，它做的事情是把键盘敲入的字符传输到打印机打印出来。那么 C++ 代码实现可能是这个样子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">Copy</span> <span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">c</span>;
+    <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span><span style="color: #909183;">(</span>c = ReadKeyboard<span style="color: #709870;">()</span><span style="color: #909183;">)</span> != EOF<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        WritePrinter<span style="color: #909183;">(</span>c<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果后面，我们又要把键盘敲进的字符写到磁盘里：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-plantuml" id="org8908343"><span style="color: #707183;">[</span>Copy<span style="color: #707183;">]</span> <span style="color: #7F0055; font-weight: bold;">--</span> <span style="color: #707183;">[</span>ReadKeyboard<span style="color: #707183;">]</span>
+<span style="color: #707183;">[</span>Copy<span style="color: #707183;">]</span> <span style="color: #7F0055; font-weight: bold;">--</span> <span style="color: #707183;">[</span>WritePrinter<span style="color: #707183;">]</span>
+<span style="color: #707183;">[</span>Copy<span style="color: #707183;">]</span> <span style="color: #7F0055; font-weight: bold;">--</span> <span style="color: #707183;">[</span>WriteDisk<span style="color: #707183;">]</span>
+</pre>
+</div>
+
+
+<div id="orgf3f06e0" class="figure">
+<p><div align="center"><?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="168px" preserveAspectRatio="none" style="width:433px;height:168px;background:#FFFFFF;" version="1.1" viewBox="0 0 433 168" width="433px" zoomAndPan="magnify"><defs/><g><!--MD5=[f7065673e5e3aadd0e2d3c4432e92fdc]
+entity Copy--><g id="elem_Copy"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="73" x="198" y="7"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="251" y="12"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="249" y="14"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="249" y="18"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="33" x="213" y="41.5332">Copy</text></g><!--MD5=[d012659cd792d5f1905aab6fef5bc07c]
+entity ReadKeyboard--><g id="elem_ReadKeyboard"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="135" x="7" y="115"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="122" y="120"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="120" y="122"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="120" y="126"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="95" x="22" y="149.5332">ReadKeyboard</text></g><!--MD5=[a5c73c821fd996ec4dded17d8be1735e]
+entity WritePrinter--><g id="elem_WritePrinter"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="115" x="177" y="115"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="272" y="120"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="270" y="122"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="270" y="126"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="75" x="192" y="149.5332">WritePrinter</text></g><!--MD5=[5ade9657024523831a5bc3db15157f26]
+entity WriteDisk--><g id="elem_WriteDisk"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="100" x="327.5" y="115"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="407.5" y="120"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="405.5" y="122"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="405.5" y="126"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="60" x="342.5" y="149.5332">WriteDisk</text></g><!--MD5=[b9f6fdcc5ffcf0aaa847362a19131062]
+link Copy to ReadKeyboard--><g id="link_Copy_ReadKeyboard"><path d="M199.78,55 C173.04,72.72 136.22,97.11 109.43,114.86 " fill="none" id="Copy-ReadKeyboard" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[3f9d472f710945c80c6082d6418b4027]
+link Copy to WritePrinter--><g id="link_Copy_WritePrinter"><path d="M234.5,55 C234.5,72.66 234.5,96.94 234.5,114.68 " fill="none" id="Copy-WritePrinter" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[faa9166566ff25fb78c93a4e76cd2a92]
+link Copy to WriteDisk--><g id="link_Copy_WriteDisk"><path d="M265.53,55 C289.35,72.66 322.11,96.94 346.04,114.68 " fill="none" id="Copy-WriteDisk" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[a6789ce44686dfe2a0de11928782ebce]
+@startuml
+[Copy] - - [ReadKeyboard]
+[Copy] - - [WritePrinter]
+[Copy] - - [WriteDisk]
+@enduml
+
+PlantUML version 1.2022.3beta3(Unknown compile time)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg></div>
+</p>
+</div>
+
+<p>
+这时候，代码可以这么写：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">OutputDevice</span> <span style="color: #707183;">{</span><span style="color: #000000;">printer</span>, <span style="color: #000000;">disk</span><span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">Copy</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">OutputDevice</span> <span style="color: #000000;">dev</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">c</span>;
+    <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span><span style="color: #909183;">(</span>c = ReadKeyboard<span style="color: #709870;">()</span><span style="color: #909183;">)</span> != EOF<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>dev == printer<span style="color: #909183;">)</span>
+            WritePrinter<span style="color: #909183;">(</span>c<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">else</span>
+            WriteDisk<span style="color: #909183;">(</span>c<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果输入、输出设备种类更多，这样实现的代码就越来越难维护。所以我们需要抽象机制，让依赖关系建立在抽象实体上：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-plantuml" id="org4183035"><span style="color: #7F0055; font-weight: bold;">hide</span> members
+<span style="color: #000000; font-style: italic; text-decoration: underline;">abstract</span> class Reader
+<span style="color: #000000; font-style: italic; text-decoration: underline;">abstract</span> class Writer
+
+Copy <span style="color: #7F0055; font-weight: bold;">o--</span> Reader
+Copy <span style="color: #7F0055; font-weight: bold;">o--</span> Writer
+Reader <span style="color: #7F0055; font-weight: bold;">&lt;|--</span> KeyboardReader
+Reader <span style="color: #7F0055; font-weight: bold;">&lt;|--</span> VoiceReader
+Writer <span style="color: #7F0055; font-weight: bold;">&lt;|--</span> PrinterWriter
+Writer <span style="color: #7F0055; font-weight: bold;">&lt;|--</span> DiskWriter
+</pre>
+</div>
+
+
+<div id="org4a4da10" class="figure">
+<p><div align="center"><?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="230px" preserveAspectRatio="none" style="width:582px;height:230px;background:#FFFFFF;" version="1.1" viewBox="0 0 582 230" width="582px" zoomAndPan="magnify"><defs/><g><!--MD5=[e86a4777f2c0372cf9fb3cd047e1466e]
+class Reader--><g id="elem_Reader"><rect codeLine="2" fill="#F1F1F1" height="32" id="Reader" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="79" x="199.5" y="99"/><ellipse cx="214.5" cy="115" fill="#A9DCDF" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M216.6875,116.7656 L212.5469,116.7656 L212.125,117.7969 L212.5469,117.7969 Q213.1563,117.7969 213.4219,118.0313 Q213.6875,118.2656 213.6875,118.6563 Q213.6875,119.0313 213.4219,119.2656 Q213.1563,119.5 212.5469,119.5 L210.25,119.5 Q209.6406,119.5 209.3906,119.2656 Q209.125,119.0313 209.125,118.6406 Q209.125,118.2656 209.4063,118.0313 Q209.6719,117.7813 210.2969,117.7969 L212.9688,111.1406 L211.8594,111.1406 Q211.25,111.1406 210.9844,110.9063 Q210.7188,110.6719 210.7188,110.2813 Q210.7188,109.9063 210.9844,109.6719 Q211.25,109.4375 211.8594,109.4375 L215.5313,109.4375 L218.9219,117.7969 Q219.5156,117.7969 219.7031,117.9375 Q220.0938,118.2031 220.0938,118.6563 Q220.0938,119.0313 219.8281,119.2656 Q219.5781,119.5 218.9688,119.5 L216.6719,119.5 Q216.0625,119.5 215.7969,119.2656 Q215.5313,119.0313 215.5313,118.6406 Q215.5313,118.2656 215.7969,118.0313 Q216.0625,117.7969 216.6719,117.7969 L217.0938,117.7969 L216.6875,116.7656 Z M215.9688,115.0625 L214.6094,111.6875 L213.2344,115.0625 L215.9688,115.0625 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="47" x="228.5" y="120.7285">Reader</text></g><!--MD5=[86cfdc25119a3a20e0664f11a0f5b002]
+class Writer--><g id="elem_Writer"><rect codeLine="3" fill="#F1F1F1" height="32" id="Writer" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="71" x="351.5" y="99"/><ellipse cx="366.5" cy="115" fill="#A9DCDF" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M368.6875,116.7656 L364.5469,116.7656 L364.125,117.7969 L364.5469,117.7969 Q365.1563,117.7969 365.4219,118.0313 Q365.6875,118.2656 365.6875,118.6563 Q365.6875,119.0313 365.4219,119.2656 Q365.1563,119.5 364.5469,119.5 L362.25,119.5 Q361.6406,119.5 361.3906,119.2656 Q361.125,119.0313 361.125,118.6406 Q361.125,118.2656 361.4063,118.0313 Q361.6719,117.7813 362.2969,117.7969 L364.9688,111.1406 L363.8594,111.1406 Q363.25,111.1406 362.9844,110.9063 Q362.7188,110.6719 362.7188,110.2813 Q362.7188,109.9063 362.9844,109.6719 Q363.25,109.4375 363.8594,109.4375 L367.5313,109.4375 L370.9219,117.7969 Q371.5156,117.7969 371.7031,117.9375 Q372.0938,118.2031 372.0938,118.6563 Q372.0938,119.0313 371.8281,119.2656 Q371.5781,119.5 370.9688,119.5 L368.6719,119.5 Q368.0625,119.5 367.7969,119.2656 Q367.5313,119.0313 367.5313,118.6406 Q367.5313,118.2656 367.7969,118.0313 Q368.0625,117.7969 368.6719,117.7969 L369.0938,117.7969 L368.6875,116.7656 Z M367.9688,115.0625 L366.6094,111.6875 L365.2344,115.0625 L367.9688,115.0625 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="39" x="380.5" y="120.7285">Writer</text></g><!--MD5=[610e044baa5809942c5058657fa8e1e8]
+class Copy--><g id="elem_Copy"><rect fill="#F1F1F1" height="32" id="Copy" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="65" x="280.5" y="7"/><ellipse cx="295.5" cy="23" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M298.2656,18.875 Q298.4219,18.6563 298.6094,18.5469 Q298.7969,18.4375 299.0156,18.4375 Q299.3906,18.4375 299.625,18.7031 Q299.8594,18.9531 299.8594,19.5625 L299.8594,21.0156 Q299.8594,21.625 299.625,21.8906 Q299.3906,22.1563 299.0156,22.1563 Q298.6719,22.1563 298.4688,21.9531 Q298.2656,21.7656 298.1563,21.25 Q298.1094,20.8906 297.9219,20.7031 Q297.5938,20.3281 296.9844,20.1094 Q296.375,19.8906 295.75,19.8906 Q294.9844,19.8906 294.3438,20.2188 Q293.7188,20.5469 293.2188,21.2969 Q292.7344,22.0469 292.7344,23.0781 L292.7344,24.1719 Q292.7344,25.4063 293.625,26.2344 Q294.5156,27.0469 296.1094,27.0469 Q297.0469,27.0469 297.7031,26.7969 Q298.0938,26.6406 298.5156,26.2031 Q298.7813,25.9375 298.9219,25.8594 Q299.0781,25.7813 299.2813,25.7813 Q299.6094,25.7813 299.8594,26.0469 Q300.125,26.2969 300.125,26.6406 Q300.125,26.9844 299.7813,27.3906 Q299.2813,27.9688 298.4844,28.2969 Q297.4063,28.75 296.1094,28.75 Q294.5938,28.75 293.3906,28.125 Q292.4063,27.625 291.7188,26.5625 Q291.0313,25.4844 291.0313,24.2031 L291.0313,23.0469 Q291.0313,21.7188 291.6406,20.5781 Q292.2656,19.4219 293.3594,18.8125 Q294.4531,18.1875 295.6875,18.1875 Q296.4219,18.1875 297.0625,18.3594 Q297.7188,18.5156 298.2656,18.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="33" x="309.5" y="28.7285">Copy</text></g><!--MD5=[c68246172ee93dba2402bd022e16b90e]
+class KeyboardReader--><g id="elem_KeyboardReader"><rect fill="#F1F1F1" height="32" id="KeyboardReader" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="140" x="7" y="191"/><ellipse cx="22" cy="207" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M24.7656,202.875 Q24.9219,202.6563 25.1094,202.5469 Q25.2969,202.4375 25.5156,202.4375 Q25.8906,202.4375 26.125,202.7031 Q26.3594,202.9531 26.3594,203.5625 L26.3594,205.0156 Q26.3594,205.625 26.125,205.8906 Q25.8906,206.1563 25.5156,206.1563 Q25.1719,206.1563 24.9688,205.9531 Q24.7656,205.7656 24.6563,205.25 Q24.6094,204.8906 24.4219,204.7031 Q24.0938,204.3281 23.4844,204.1094 Q22.875,203.8906 22.25,203.8906 Q21.4844,203.8906 20.8438,204.2188 Q20.2188,204.5469 19.7188,205.2969 Q19.2344,206.0469 19.2344,207.0781 L19.2344,208.1719 Q19.2344,209.4063 20.125,210.2344 Q21.0156,211.0469 22.6094,211.0469 Q23.5469,211.0469 24.2031,210.7969 Q24.5938,210.6406 25.0156,210.2031 Q25.2813,209.9375 25.4219,209.8594 Q25.5781,209.7813 25.7813,209.7813 Q26.1094,209.7813 26.3594,210.0469 Q26.625,210.2969 26.625,210.6406 Q26.625,210.9844 26.2813,211.3906 Q25.7813,211.9688 24.9844,212.2969 Q23.9063,212.75 22.6094,212.75 Q21.0938,212.75 19.8906,212.125 Q18.9063,211.625 18.2188,210.5625 Q17.5313,209.4844 17.5313,208.2031 L17.5313,207.0469 Q17.5313,205.7188 18.1406,204.5781 Q18.7656,203.4219 19.8594,202.8125 Q20.9531,202.1875 22.1875,202.1875 Q22.9219,202.1875 23.5625,202.3594 Q24.2188,202.5156 24.7656,202.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="108" x="36" y="212.7285">KeyboardReader</text></g><!--MD5=[d9700bdc20a4e8d9dca2d6993be9ea80]
+class VoiceReader--><g id="elem_VoiceReader"><rect fill="#F1F1F1" height="32" id="VoiceReader" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="114" x="182" y="191"/><ellipse cx="197" cy="207" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M199.7656,202.875 Q199.9219,202.6563 200.1094,202.5469 Q200.2969,202.4375 200.5156,202.4375 Q200.8906,202.4375 201.125,202.7031 Q201.3594,202.9531 201.3594,203.5625 L201.3594,205.0156 Q201.3594,205.625 201.125,205.8906 Q200.8906,206.1563 200.5156,206.1563 Q200.1719,206.1563 199.9688,205.9531 Q199.7656,205.7656 199.6563,205.25 Q199.6094,204.8906 199.4219,204.7031 Q199.0938,204.3281 198.4844,204.1094 Q197.875,203.8906 197.25,203.8906 Q196.4844,203.8906 195.8438,204.2188 Q195.2188,204.5469 194.7188,205.2969 Q194.2344,206.0469 194.2344,207.0781 L194.2344,208.1719 Q194.2344,209.4063 195.125,210.2344 Q196.0156,211.0469 197.6094,211.0469 Q198.5469,211.0469 199.2031,210.7969 Q199.5938,210.6406 200.0156,210.2031 Q200.2813,209.9375 200.4219,209.8594 Q200.5781,209.7813 200.7813,209.7813 Q201.1094,209.7813 201.3594,210.0469 Q201.625,210.2969 201.625,210.6406 Q201.625,210.9844 201.2813,211.3906 Q200.7813,211.9688 199.9844,212.2969 Q198.9063,212.75 197.6094,212.75 Q196.0938,212.75 194.8906,212.125 Q193.9063,211.625 193.2188,210.5625 Q192.5313,209.4844 192.5313,208.2031 L192.5313,207.0469 Q192.5313,205.7188 193.1406,204.5781 Q193.7656,203.4219 194.8594,202.8125 Q195.9531,202.1875 197.1875,202.1875 Q197.9219,202.1875 198.5625,202.3594 Q199.2188,202.5156 199.7656,202.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="82" x="211" y="212.7285">VoiceReader</text></g><!--MD5=[e5c43a7b379a1466681f869fd576f699]
+class PrinterWriter--><g id="elem_PrinterWriter"><rect fill="#F1F1F1" height="32" id="PrinterWriter" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="112" x="331" y="191"/><ellipse cx="346" cy="207" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M348.7656,202.875 Q348.9219,202.6563 349.1094,202.5469 Q349.2969,202.4375 349.5156,202.4375 Q349.8906,202.4375 350.125,202.7031 Q350.3594,202.9531 350.3594,203.5625 L350.3594,205.0156 Q350.3594,205.625 350.125,205.8906 Q349.8906,206.1563 349.5156,206.1563 Q349.1719,206.1563 348.9688,205.9531 Q348.7656,205.7656 348.6563,205.25 Q348.6094,204.8906 348.4219,204.7031 Q348.0938,204.3281 347.4844,204.1094 Q346.875,203.8906 346.25,203.8906 Q345.4844,203.8906 344.8438,204.2188 Q344.2188,204.5469 343.7188,205.2969 Q343.2344,206.0469 343.2344,207.0781 L343.2344,208.1719 Q343.2344,209.4063 344.125,210.2344 Q345.0156,211.0469 346.6094,211.0469 Q347.5469,211.0469 348.2031,210.7969 Q348.5938,210.6406 349.0156,210.2031 Q349.2813,209.9375 349.4219,209.8594 Q349.5781,209.7813 349.7813,209.7813 Q350.1094,209.7813 350.3594,210.0469 Q350.625,210.2969 350.625,210.6406 Q350.625,210.9844 350.2813,211.3906 Q349.7813,211.9688 348.9844,212.2969 Q347.9063,212.75 346.6094,212.75 Q345.0938,212.75 343.8906,212.125 Q342.9063,211.625 342.2188,210.5625 Q341.5313,209.4844 341.5313,208.2031 L341.5313,207.0469 Q341.5313,205.7188 342.1406,204.5781 Q342.7656,203.4219 343.8594,202.8125 Q344.9531,202.1875 346.1875,202.1875 Q346.9219,202.1875 347.5625,202.3594 Q348.2188,202.5156 348.7656,202.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="80" x="360" y="212.7285">PrinterWriter</text></g><!--MD5=[16b31d7c187becadea07d13bfcecb8c4]
+class DiskWriter--><g id="elem_DiskWriter"><rect fill="#F1F1F1" height="32" id="DiskWriter" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="97" x="478.5" y="191"/><ellipse cx="493.5" cy="207" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M496.2656,202.875 Q496.4219,202.6563 496.6094,202.5469 Q496.7969,202.4375 497.0156,202.4375 Q497.3906,202.4375 497.625,202.7031 Q497.8594,202.9531 497.8594,203.5625 L497.8594,205.0156 Q497.8594,205.625 497.625,205.8906 Q497.3906,206.1563 497.0156,206.1563 Q496.6719,206.1563 496.4688,205.9531 Q496.2656,205.7656 496.1563,205.25 Q496.1094,204.8906 495.9219,204.7031 Q495.5938,204.3281 494.9844,204.1094 Q494.375,203.8906 493.75,203.8906 Q492.9844,203.8906 492.3438,204.2188 Q491.7188,204.5469 491.2188,205.2969 Q490.7344,206.0469 490.7344,207.0781 L490.7344,208.1719 Q490.7344,209.4063 491.625,210.2344 Q492.5156,211.0469 494.1094,211.0469 Q495.0469,211.0469 495.7031,210.7969 Q496.0938,210.6406 496.5156,210.2031 Q496.7813,209.9375 496.9219,209.8594 Q497.0781,209.7813 497.2813,209.7813 Q497.6094,209.7813 497.8594,210.0469 Q498.125,210.2969 498.125,210.6406 Q498.125,210.9844 497.7813,211.3906 Q497.2813,211.9688 496.4844,212.2969 Q495.4063,212.75 494.1094,212.75 Q492.5938,212.75 491.3906,212.125 Q490.4063,211.625 489.7188,210.5625 Q489.0313,209.4844 489.0313,208.2031 L489.0313,207.0469 Q489.0313,205.7188 489.6406,204.5781 Q490.2656,203.4219 491.3594,202.8125 Q492.4531,202.1875 493.6875,202.1875 Q494.4219,202.1875 495.0625,202.3594 Q495.7188,202.5156 496.2656,202.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="65" x="507.5" y="212.7285">DiskWriter</text></g><!--MD5=[bc51155a0bfc765cb07074edec72a9d7]
+reverse link Copy to Reader--><g id="link_Copy_Reader"><path codeLine="5" d="M292,49.54 C278.88,65.5 262.43,85.5 251.37,98.96 " fill="none" id="Copy-backto-Reader" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="300.45,39.27,293.5497,41.3643,292.8289,48.5392,299.7292,46.445,300.45,39.27" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[369b5eb0453c6ffc5e421eaa44b4f5b8]
+reverse link Copy to Writer--><g id="link_Copy_Writer"><path codeLine="6" d="M334,49.54 C347.12,65.5 363.57,85.5 374.63,98.96 " fill="none" id="Copy-backto-Writer" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="325.55,39.27,326.2708,46.445,333.1711,48.5392,332.4503,41.3643,325.55,39.27" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[a593589358843ac7f3acf584c8650ea7]
+reverse link Reader to KeyboardReader--><g id="link_Reader_KeyboardReader"><path codeLine="7" d="M194.24,140.87 C165.37,156.91 128.76,177.24 104.2,190.89 " fill="none" id="Reader-backto-KeyboardReader" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="191,134.66,211.88,131.06,197.8,146.9,191,134.66" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[5c2b6e51819601c0f8fb50b8c92d3fc2]
+reverse link Reader to VoiceReader--><g id="link_Reader_VoiceReader"><path codeLine="8" d="M239,151.61 C239,165.31 239,180.22 239,190.96 " fill="none" id="Reader-backto-VoiceReader" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="232,151.27,239,131.27,246,151.27,232,151.27" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[6fcda4408732c7ea6dbaa519d9413fc9]
+reverse link Writer to PrinterWriter--><g id="link_Writer_PrinterWriter"><path codeLine="9" d="M387,151.61 C387,165.31 387,180.22 387,190.96 " fill="none" id="Writer-backto-PrinterWriter" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="380,151.27,387,131.27,394,151.27,380,151.27" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[589d8a21fd0bbee131c03ad1e6f759d8]
+reverse link Writer to DiskWriter--><g id="link_Writer_DiskWriter"><path codeLine="10" d="M427.48,142.02 C452.13,157.87 482.77,177.57 503.49,190.89 " fill="none" id="Writer-backto-DiskWriter" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="423.47,147.77,410.43,131.06,431.04,135.99,423.47,147.77" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[eeb83188ba709ede5a5269386b024635]
+@startuml
+hide members
+abstract class Reader
+abstract class Writer
+
+Copy o- - Reader
+Copy o- - Writer
+Reader <|- - KeyboardReader
+Reader <|- - VoiceReader
+Writer <|- - PrinterWriter
+Writer <|- - DiskWriter
+@enduml
+
+PlantUML version 1.2022.3beta3(Unknown compile time)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg></div>
+</p>
+</div>
+
+<p>
+代码实现如下。这时候，Copy 函数就不用关心 Reader 和 Writer 的具体实现，只依赖于抽象类的虚函数接口。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Reader</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">Read</span><span style="color: #7388d6;">()</span> = 0;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Writer</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">Write</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span><span style="color: #7388d6;">)</span> = 0;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">Copy</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Reader</span>&amp; <span style="color: #000000;">r</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Writer</span>&amp; <span style="color: #000000;">w</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">c</span>;
+    <span style="color: #7F0055; font-weight: bold;">while</span><span style="color: #7388d6;">(</span><span style="color: #909183;">(</span>c=r.Read<span style="color: #709870;">()</span><span style="color: #909183;">)</span> != EOF<span style="color: #7388d6;">)</span>
+        w.Write<span style="color: #7388d6;">(</span>c<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+在函数式编程语言中，DIP 原则也很普遍。比如 Clojure 的 <code>map</code> 函数，它不依赖于具体的数据类型，只关心抽象接口。 <code>map</code> 接受实现 <code>clojure.lang.IFn</code> 抽象的函数，处理实现可顺序访问，可 <code>seq</code> 的数据，也就是 <code>seqable?</code> 的数据对象。
+</p>
+
+<p>
+例如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">map</span> - <span style="color: #7388d6;">[</span>1 2 3<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+(-1 -2 -3)
+
+</pre>
+
+
+<p>
+这里， <code>-</code> 函数实现了 <code>clojure.lang.IFn</code> ：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">instance?</span> clojure.lang.IFn -<span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+true
+
+</pre>
+
+
+<p>
+而 <code>vec</code> <code>[1 2 3]</code> 则是 <code>seqable</code> 的：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">seqable?</span> <span style="color: #7388d6;">[</span>1 2 3<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+true
+
+</pre>
+
+
+<p>
+在 Clojure 中，DIP 原则用的很广泛，从而确保很多核心函数可以充分地在抽象层面重用。
+</p>

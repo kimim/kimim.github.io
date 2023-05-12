@@ -3,6 +3,13 @@
 #+TAGS: programming
 #+CATEGORIES: technology
 
+#+begin_quote
+夫道未始有封，言未始有常，為是而有畛也。請言其畛：有左，有右，有倫，有
+義，有分，有辯，有競，有爭，此之謂八德。
+
+《庄子·齐物论》
+#+end_quote
+
 软件工程领域，有一个概念叫 SOLID。SOLID 是五个面向对象设计原则的首字母
 缩写。最早由 Robert C. Martin 在其 2000 年的论文《Design Principles
 and Design Patterns》中提出的。
