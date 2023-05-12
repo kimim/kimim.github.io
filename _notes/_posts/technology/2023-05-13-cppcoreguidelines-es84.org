@@ -1,0 +1,37 @@
+#+layout: post
+#+title: CppCoreGuidelines 不要声明匿名局部变量
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t try to declare a local variable with no name"
+
+理由
+
+不存在这种东西。对人类来说是一个没有名字的变量，对编译器来说是一个语句，
+构造了临时变量，马上有离开作用域范围，销毁了变量。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f()
+{
+    lock_guard<mutex>{mx};   // Bad
+    // ...
+}
+#+end_src
+
+这里声明了一个没名字的 ~lock_guard~ 对象，然后在分号处马上离开了其作用域
+范围。这是个很常见的错误。这个例子会导致很难发现的竞争条件（race
+condition）。
+
+
+注意
+
+未命名的函数参数是 OK 的。
+
+
+强化
+
+标记所有导致临时变量的语句。

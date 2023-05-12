@@ -1,0 +1,57 @@
+---
+layout: post
+title: CppCoreGuidelines 不要声明匿名局部变量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t try to declare a local variable with no name&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+不存在这种东西。对人类来说是一个没有名字的变量，对编译器来说是一个语句，构造了临时变量，马上有离开作用域范围，销毁了变量。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span><span style="color: #7388d6;">&lt;</span>mutex<span style="color: #7388d6;">&gt;{</span>mx<span style="color: #7388d6;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这里声明了一个没名字的 <code>lock_guard</code> 对象，然后在分号处马上离开了其作用域范围。这是个很常见的错误。这个例子会导致很难发现的竞争条件（race
+condition）。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+未命名的函数参数是 OK 的。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记所有导致临时变量的语句。
+</p>
