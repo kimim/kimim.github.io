@@ -25,7 +25,7 @@ DIP 是这么表述的：
 像这样：
 
 #+name: copy-program
-#+begin_src plantuml :output-dir images :file copy-program.svg :cmdline -charset utf-8 :eval no-export :exports both
+#+begin_src plantuml :output-dir images :file copy-program.svg :cmdline -charset utf-8 :eval no-export :exports results
 [Copy] -- [ReadKeyboard]
 [Copy] -- [WritePrinter]
 #+end_src
@@ -49,7 +49,7 @@ void Copy () {
 如果后面，我们又要把键盘敲进的字符写到磁盘里：
 
 #+name: copy-program-v2
-#+begin_src plantuml :output-dir images :file copy-program-v2.svg :cmdline -charset utf-8 :eval no-export :exports both
+#+begin_src plantuml :output-dir images :file copy-program-v2.svg :cmdline -charset utf-8 :eval no-export :exports results
 [Copy] -- [ReadKeyboard]
 [Copy] -- [WritePrinter]
 [Copy] -- [WriteDisk]
@@ -78,7 +78,7 @@ void Copy(OutputDevice dev) {
 抽象机制，让依赖关系建立在抽象实体上：
 
 #+name: copy-program-v3
-#+begin_src plantuml :output-dir images :file copy-program-v3.svg :cmdline -charset utf-8 :eval no-export :exports both
+#+begin_src plantuml :output-dir images :file copy-program-v3.svg :cmdline -charset utf-8 :eval no-export :exports results
 hide members
 abstract class Reader
 abstract class Writer

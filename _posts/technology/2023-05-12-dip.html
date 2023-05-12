@@ -35,14 +35,8 @@ should depend upon abstractions. <br />
 因为传统的架构设计，顶层设计拆分到下层模块实现，下层模块又基于底层模块。像这样：
 </p>
 
-<div class="org-src-container">
-<pre class="src src-plantuml" id="orga0eb0b7"><span style="color: #707183;">[</span>Copy<span style="color: #707183;">]</span> <span style="color: #7F0055; font-weight: bold;">--</span> <span style="color: #707183;">[</span>ReadKeyboard<span style="color: #707183;">]</span>
-<span style="color: #707183;">[</span>Copy<span style="color: #707183;">]</span> <span style="color: #7F0055; font-weight: bold;">--</span> <span style="color: #707183;">[</span>WritePrinter<span style="color: #707183;">]</span>
-</pre>
-</div>
 
-
-<div id="orgf2eda0b" class="figure">
+<div id="org65cb725" class="figure">
 <p><div align="center"><?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="168px" preserveAspectRatio="none" style="width:298px;height:168px;background:#FFFFFF;" version="1.1" viewBox="0 0 298 168" width="298px" zoomAndPan="magnify"><defs/><g><!--MD5=[f7065673e5e3aadd0e2d3c4432e92fdc]
 entity Copy--><g id="elem_Copy"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="73" x="118" y="7"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="171" y="12"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="169" y="14"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="169" y="18"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="33" x="133" y="41.5332">Copy</text></g><!--MD5=[d012659cd792d5f1905aab6fef5bc07c]
 entity ReadKeyboard--><g id="elem_ReadKeyboard"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="135" x="7" y="115"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="122" y="120"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="120" y="122"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="120" y="126"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="95" x="22" y="149.5332">ReadKeyboard</text></g><!--MD5=[a5c73c821fd996ec4dded17d8be1735e]
@@ -83,15 +77,8 @@ Country: US
 如果后面，我们又要把键盘敲进的字符写到磁盘里：
 </p>
 
-<div class="org-src-container">
-<pre class="src src-plantuml" id="org8908343"><span style="color: #707183;">[</span>Copy<span style="color: #707183;">]</span> <span style="color: #7F0055; font-weight: bold;">--</span> <span style="color: #707183;">[</span>ReadKeyboard<span style="color: #707183;">]</span>
-<span style="color: #707183;">[</span>Copy<span style="color: #707183;">]</span> <span style="color: #7F0055; font-weight: bold;">--</span> <span style="color: #707183;">[</span>WritePrinter<span style="color: #707183;">]</span>
-<span style="color: #707183;">[</span>Copy<span style="color: #707183;">]</span> <span style="color: #7F0055; font-weight: bold;">--</span> <span style="color: #707183;">[</span>WriteDisk<span style="color: #707183;">]</span>
-</pre>
-</div>
 
-
-<div id="orgf3f06e0" class="figure">
+<div id="org4da13cf" class="figure">
 <p><div align="center"><?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="168px" preserveAspectRatio="none" style="width:433px;height:168px;background:#FFFFFF;" version="1.1" viewBox="0 0 433 168" width="433px" zoomAndPan="magnify"><defs/><g><!--MD5=[f7065673e5e3aadd0e2d3c4432e92fdc]
 entity Copy--><g id="elem_Copy"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="73" x="198" y="7"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="251" y="12"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="249" y="14"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="249" y="18"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="33" x="213" y="41.5332">Copy</text></g><!--MD5=[d012659cd792d5f1905aab6fef5bc07c]
 entity ReadKeyboard--><g id="elem_ReadKeyboard"><rect fill="#F1F1F1" height="47.6094" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="135" x="7" y="115"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="122" y="120"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="120" y="122"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="120" y="126"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="95" x="22" y="149.5332">ReadKeyboard</text></g><!--MD5=[a5c73c821fd996ec4dded17d8be1735e]
@@ -139,22 +126,8 @@ Country: US
 如果输入、输出设备种类更多，这样实现的代码就越来越难维护。所以我们需要抽象机制，让依赖关系建立在抽象实体上：
 </p>
 
-<div class="org-src-container">
-<pre class="src src-plantuml" id="org4183035"><span style="color: #7F0055; font-weight: bold;">hide</span> members
-<span style="color: #000000; font-style: italic; text-decoration: underline;">abstract</span> class Reader
-<span style="color: #000000; font-style: italic; text-decoration: underline;">abstract</span> class Writer
 
-Copy <span style="color: #7F0055; font-weight: bold;">o--</span> Reader
-Copy <span style="color: #7F0055; font-weight: bold;">o--</span> Writer
-Reader <span style="color: #7F0055; font-weight: bold;">&lt;|--</span> KeyboardReader
-Reader <span style="color: #7F0055; font-weight: bold;">&lt;|--</span> VoiceReader
-Writer <span style="color: #7F0055; font-weight: bold;">&lt;|--</span> PrinterWriter
-Writer <span style="color: #7F0055; font-weight: bold;">&lt;|--</span> DiskWriter
-</pre>
-</div>
-
-
-<div id="org4a4da10" class="figure">
+<div id="orgee89931" class="figure">
 <p><div align="center"><?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="230px" preserveAspectRatio="none" style="width:582px;height:230px;background:#FFFFFF;" version="1.1" viewBox="0 0 582 230" width="582px" zoomAndPan="magnify"><defs/><g><!--MD5=[e86a4777f2c0372cf9fb3cd047e1466e]
 class Reader--><g id="elem_Reader"><rect codeLine="2" fill="#F1F1F1" height="32" id="Reader" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="79" x="199.5" y="99"/><ellipse cx="214.5" cy="115" fill="#A9DCDF" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M216.6875,116.7656 L212.5469,116.7656 L212.125,117.7969 L212.5469,117.7969 Q213.1563,117.7969 213.4219,118.0313 Q213.6875,118.2656 213.6875,118.6563 Q213.6875,119.0313 213.4219,119.2656 Q213.1563,119.5 212.5469,119.5 L210.25,119.5 Q209.6406,119.5 209.3906,119.2656 Q209.125,119.0313 209.125,118.6406 Q209.125,118.2656 209.4063,118.0313 Q209.6719,117.7813 210.2969,117.7969 L212.9688,111.1406 L211.8594,111.1406 Q211.25,111.1406 210.9844,110.9063 Q210.7188,110.6719 210.7188,110.2813 Q210.7188,109.9063 210.9844,109.6719 Q211.25,109.4375 211.8594,109.4375 L215.5313,109.4375 L218.9219,117.7969 Q219.5156,117.7969 219.7031,117.9375 Q220.0938,118.2031 220.0938,118.6563 Q220.0938,119.0313 219.8281,119.2656 Q219.5781,119.5 218.9688,119.5 L216.6719,119.5 Q216.0625,119.5 215.7969,119.2656 Q215.5313,119.0313 215.5313,118.6406 Q215.5313,118.2656 215.7969,118.0313 Q216.0625,117.7969 216.6719,117.7969 L217.0938,117.7969 L216.6875,116.7656 Z M215.9688,115.0625 L214.6094,111.6875 L213.2344,115.0625 L215.9688,115.0625 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="47" x="228.5" y="120.7285">Reader</text></g><!--MD5=[86cfdc25119a3a20e0664f11a0f5b002]
 class Writer--><g id="elem_Writer"><rect codeLine="3" fill="#F1F1F1" height="32" id="Writer" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="71" x="351.5" y="99"/><ellipse cx="366.5" cy="115" fill="#A9DCDF" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M368.6875,116.7656 L364.5469,116.7656 L364.125,117.7969 L364.5469,117.7969 Q365.1563,117.7969 365.4219,118.0313 Q365.6875,118.2656 365.6875,118.6563 Q365.6875,119.0313 365.4219,119.2656 Q365.1563,119.5 364.5469,119.5 L362.25,119.5 Q361.6406,119.5 361.3906,119.2656 Q361.125,119.0313 361.125,118.6406 Q361.125,118.2656 361.4063,118.0313 Q361.6719,117.7813 362.2969,117.7969 L364.9688,111.1406 L363.8594,111.1406 Q363.25,111.1406 362.9844,110.9063 Q362.7188,110.6719 362.7188,110.2813 Q362.7188,109.9063 362.9844,109.6719 Q363.25,109.4375 363.8594,109.4375 L367.5313,109.4375 L370.9219,117.7969 Q371.5156,117.7969 371.7031,117.9375 Q372.0938,118.2031 372.0938,118.6563 Q372.0938,119.0313 371.8281,119.2656 Q371.5781,119.5 370.9688,119.5 L368.6719,119.5 Q368.0625,119.5 367.7969,119.2656 Q367.5313,119.0313 367.5313,118.6406 Q367.5313,118.2656 367.7969,118.0313 Q368.0625,117.7969 368.6719,117.7969 L369.0938,117.7969 L368.6875,116.7656 Z M367.9688,115.0625 L366.6094,111.6875 L365.2344,115.0625 L367.9688,115.0625 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="39" x="380.5" y="120.7285">Writer</text></g><!--MD5=[610e044baa5809942c5058657fa8e1e8]
