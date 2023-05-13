@@ -10,13 +10,14 @@ hence, it is easier for the programmer to convert it into an actual
 program.
 
 那么，算法这个词是怎么来的呢？故事要从公元 780 年说起，这一年，波斯帝
-国大呼罗珊诞生了一位数学家，名叫阿尔·花拉子模（Abu Abdulloh Muhammad
-ibn Muso al-Xorazmiy）。
+国大呼罗珊地区的花剌子模诞生了一位数学家，名叫阿尔·花拉子模（Abu
+Abdulloh Muhammad ibn Muso al-Xorazmiy）。花剌子模位于当时波斯帝国的东
+部，现为乌兹别克花拉子模州。
 
-他写了本书叫《代数学》（Kitab al-Jabr wa-l-Muqabala）是第一本解决一次
-方程及一元二次方程的系统著作，他因而被称为代数的创造者。所以，英语中的
-algebra 就是从 al-Jabr 转来的。al-jabr 是解决一元二次方程的两个办法之
-一。
+阿尔·花剌子模写了本书叫《代数学》（Kitab al-Jabr wa-l-Muqabala）是第一
+本解决一次方程及一元二次方程的系统著作，他因而被称为代数的创造者。所以，
+英语中的 algebra 就是从 al-Jabr 转来的。al-jabr 是解决一元二次方程的两
+个办法之一。
 
 而 algorithm 则是从 algoritmi 演化而来。Algoritmi 是花剌子模的阿拉伯文
 Al-khwarizmi 转变而来。意思是来自（al）花剌子模（Xorazmiy）的人。
