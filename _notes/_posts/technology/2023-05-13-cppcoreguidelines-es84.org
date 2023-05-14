@@ -1,5 +1,5 @@
 #+layout: post
-#+title: CppCoreGuidelines 不要声明匿名局部变量
+#+title: CppCoreGuidelines ES.84 不要声明匿名局部变量
 #+categories: technology
 #+tags: CppCoreGuidelines
 
