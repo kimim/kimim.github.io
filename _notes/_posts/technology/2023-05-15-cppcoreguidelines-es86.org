@@ -1,0 +1,40 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.86 不要在 for 循环内修改循环控制变量
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid modifying loop control variables inside the body of raw for-loops"
+
+理由
+
+必须事先理顺如何正确执行循环。在循环迭代表达式或循环体内修改循环计数器，
+会导致时不时出现惊讶和 bug。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+for (int i = 0; i < 10; ++i) {
+    // no updates to i -- ok
+}
+
+for (int i = 0; i < 10; ++i) {
+    //
+    if (/* something */) ++i; // BAD
+    //
+}
+
+bool skip = false;
+for (int i = 0; i < 10; ++i) {
+    if (skip) { skip = false; continue; }
+    //
+    if (/* something */) skip = true;  // Better: using two variables
+                                       // for two concepts.
+    //
+}
+#+end_src
+
+强化
+
+标记在循环控制迭代表达式或循环体内出现的更新变量（非 ~const~ 使用）的情况。

@@ -1,0 +1,55 @@
+---
+layout: post
+title: CppCoreGuidelines ES.86 不要在 for 循环内修改循环控制变量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid modifying loop control variables inside the body of raw for-loops&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+必须事先理顺如何正确执行循环。在循环迭代表达式或循环体内修改循环计数器，会导致时不时出现惊讶和 bug。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; 10; ++i<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">no updates to i -- ok</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; 10; ++i<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">//</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">something</span><span style="color: #3F7F5F;"> */</span><span style="color: #7388d6;">)</span> ++i; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD</span>
+    <span style="color: #3F7F5F;">//</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #000000;">skip</span> = <span style="color: #110099;">false</span>;
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; 10; ++i<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>skip<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> skip = <span style="color: #110099;">false</span>; <span style="color: #7F0055; font-weight: bold;">continue</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">//</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">something</span><span style="color: #3F7F5F;"> */</span><span style="color: #7388d6;">)</span> skip = <span style="color: #110099;">true</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Better: using two variables</span>
+                                       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">for two concepts.</span>
+    <span style="color: #3F7F5F;">//</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+标记在循环控制迭代表达式或循环体内出现的更新变量（非 <code>const</code> 使用）的情况。
+</p>
