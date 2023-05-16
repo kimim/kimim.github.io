@@ -1,0 +1,45 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.100 有符号、无符号类型不要混合在一起计算
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t mix signed and unsigned arithmetic"
+
+理由
+
+避免错误的结果。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int x = -3;
+unsigned int y = 7;
+
+cout << x - y << '\n';  // unsigned result, possibly 4294967286
+cout << x + y << '\n';  // unsigned result: 4
+cout << x * y << '\n';  // unsigned result, possibly 4294967275
+#+end_src
+
+#+RESULTS:
+: 4294967286
+: 4
+: 4294967275
+
+
+比较难设计出一个实际例子。
+
+注意
+
+很不幸，C++ 用有符号整型做数组下标，而标准库则在容器类中用无符号整型做
+数组下标。这就违背了一致性原则。请使用 ~gsl::index~ 做下标。
+
+
+强化
+
+编译器能鉴别某些警告。
+
+（为避免过多干扰）不要警告标记以下混用符号/无符号比较的情况：
+- 其中一个参数是 ~sizeoff~ 或调用容器的 ~.size()~ 函数，而另一个做比较的参
+  数是 ~ptrdiff_t~
