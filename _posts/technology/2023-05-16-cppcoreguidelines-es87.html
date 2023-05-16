@@ -1,0 +1,151 @@
+---
+layout: post
+title: CppCoreGuidelines ES.87 不要在判断条件中添加多余的 ~==~ 或 ~!=~
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t add redundant <code>==</code> or <code>!=</code> to conditions&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+这样可以避免累赘，规避某些导致出错的时机。提升统一和惯例的风格
+</p>
+
+<p>
+例子
+</p>
+
+<p>
+根据定义，条件是指在 <code>if</code> 语句、 <code>while</code> 语句、 <code>for</code> 语句判断 <code>true</code> 或 <code>false</code>
+的地方。数值与 0 比较，指针值与 <code>nullptr</code> 比较。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">These all mean "if p is not nullptr"</span>
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>p<span style="color: #707183;">)</span> <span style="color: #707183;">{</span> ... <span style="color: #707183;">}</span>            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>p != 0<span style="color: #707183;">)</span> <span style="color: #707183;">{</span> ... <span style="color: #707183;">}</span>       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">redundant !=0, bad: don't use 0 for pointers</span>
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>p != <span style="color: #110099;">nullptr</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> ... <span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">redundant !=nullptr, not recommended</span>
+</pre>
+</div>
+
+<p>
+通常， <code>if (p)</code> 的意思是 p 是否合法有效，能直接表明程序员的意图，而 <code>if
+(p != nullptr)</code> 则显得有些多余。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+此规则尤其适用于某种表达一个逻辑条件的声明。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">execute if ps points to a kind of Circle, good</span>
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">pc</span> = <span style="color: #7F0055; font-weight: bold;">dynamic_cast</span><span style="color: #7388d6;">&lt;</span>Circle<span style="color: #7388d6;">&gt;(</span>ps<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> ... <span style="color: #707183;">}</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">not recommended</span>
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">pc</span> = <span style="color: #7F0055; font-weight: bold;">dynamic_cast</span><span style="color: #7388d6;">&lt;</span>Circle<span style="color: #7388d6;">&gt;(</span>ps<span style="color: #7388d6;">)</span>; pc != <span style="color: #110099;">nullptr</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> ... <span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<p>
+注意，逻辑条件会隐式地转成 <code>bool</code> 值。比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>; cin &gt;&gt; s; <span style="color: #707183;">)</span> v.push_back<span style="color: #707183;">(</span>s<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+这里调用了 <code>istream</code> 的 <code>operator bool()</code>
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+整型数值与 0 比较并不多余。理由是，整型通常有多个合理的值，0 只是其中一个可能的值。而指针和 <code>bool</code> 值则不一样。对于整型来说，0 通常意味着成功执行。所以，还是清晰表明这种判断为好。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>i<span style="color: #7388d6;">)</span>            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">suspect</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>i == success<span style="color: #7388d6;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">possibly better</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+请记住，整型可以有大于两个的有效值。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">if</span><span style="color: #707183;">(</span>strcmp<span style="color: #7388d6;">(</span>p1, p2<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> ... <span style="color: #707183;">}</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">are the two C-style strings equal? (mistake!)</span>
+</pre>
+</div>
+
+<p>
+这是常见的初级错误。如果你是用 C 风格的字符串，你必须熟悉 <code>&lt;cstring&gt;</code> 中的函数。以上例子等价于：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">if</span><span style="color: #707183;">(</span>strcmp<span style="color: #7388d6;">(</span>p1, p2<span style="color: #7388d6;">)</span> != 0<span style="color: #707183;">)</span> <span style="color: #707183;">{</span> ... <span style="color: #707183;">}</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">are the two C-style strings equal? (mistake!)</span>
+</pre>
+</div>
+
+<p>
+依然是错误的判断。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+相反情况用否定表达式更直白：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">These all mean "if p is nullptr"</span>
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>!p<span style="color: #707183;">)</span> <span style="color: #707183;">{</span> ... <span style="color: #707183;">}</span>           <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>p == 0<span style="color: #707183;">)</span> <span style="color: #707183;">{</span> ... <span style="color: #707183;">}</span>       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">redundant == 0, bad: don't use 0 for pointers</span>
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>p == <span style="color: #110099;">nullptr</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> ... <span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">redundant == nullptr, not recommended</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+容易，只要检查在逻辑条件中是否有多余的 <code>!=</code> 和 <code>==</code>
+</p>

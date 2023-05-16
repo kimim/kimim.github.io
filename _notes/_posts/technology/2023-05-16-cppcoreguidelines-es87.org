@@ -1,0 +1,102 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.87 不要在判断条件中添加多余的 ~==~ 或 ~!=~
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t add redundant ~==~ or ~!=~ to conditions"
+
+理由
+
+这样可以避免累赘，规避某些导致出错的时机。提升统一和惯例的风格
+
+例子
+
+根据定义，条件是指在 ~if~ 语句、 ~while~ 语句、 ~for~ 语句判断 ~true~ 或 ~false~
+的地方。数值与 0 比较，指针值与 ~nullptr~ 比较。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+// These all mean "if p is not nullptr"
+if (p) { ... }            // good
+if (p != 0) { ... }       // redundant !=0, bad: don't use 0 for pointers
+if (p != nullptr) { ... } // redundant !=nullptr, not recommended
+#+end_src
+
+通常， ~if (p)~ 的意思是 p 是否合法有效，能直接表明程序员的意图，而 ~if
+(p != nullptr)~ 则显得有些多余。
+
+
+例子
+
+此规则尤其适用于某种表达一个逻辑条件的声明。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+// execute if ps points to a kind of Circle, good
+if (auto pc = dynamic_cast<Circle>(ps)) { ... }
+// not recommended
+if (auto pc = dynamic_cast<Circle>(ps); pc != nullptr) { ... }
+#+end_src
+
+
+例子
+
+注意，逻辑条件会隐式地转成 ~bool~ 值。比如：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+for (string s; cin >> s; ) v.push_back(s);
+#+end_src
+
+这里调用了 ~istream~ 的 ~operator bool()~
+
+
+注意
+
+整型数值与 0 比较并不多余。理由是，整型通常有多个合理的值，0 只是其中
+一个可能的值。而指针和 ~bool~ 值则不一样。对于整型来说，0 通常意味着成功
+执行。所以，还是清晰表明这种判断为好。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void f(int i)
+{
+    if (i)            // suspect
+    // ...
+    if (i == success) // possibly better
+    // ...
+}
+#+end_src
+
+请记住，整型可以有大于两个的有效值。
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+if(strcmp(p1, p2)) { ... }
+// are the two C-style strings equal? (mistake!)
+#+end_src
+
+这是常见的初级错误。如果你是用 C 风格的字符串，你必须熟悉 ~<cstring>~ 中
+的函数。以上例子等价于：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+if(strcmp(p1, p2) != 0) { ... }
+// are the two C-style strings equal? (mistake!)
+#+end_src
+
+依然是错误的判断。
+
+注意
+
+相反情况用否定表达式更直白：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+// These all mean "if p is nullptr"
+if (!p) { ... }           // good
+if (p == 0) { ... }       // redundant == 0, bad: don't use 0 for pointers
+if (p == nullptr) { ... } // redundant == nullptr, not recommended
+#+end_src
+
+强化
+
+容易，只要检查在逻辑条件中是否有多余的 ~!=~ 和 ~==~
