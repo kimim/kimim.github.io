@@ -1,0 +1,39 @@
+---
+layout: post
+title: CppCoreGuidelines ES.101 在进行比特位操作的时候用无符号类型
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use unsigned types for bit manipulation&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+无符号类型支持比特位操作，不会因为符号位导致出乎意料的情况。
+</p>
+
+<p>
+比如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">x</span> = 0b1010'1010;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">y</span> = ~x;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">y == 0b0101'0101;</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+无符号类型在求模运算的时候也很有用。当你要进行求模运算，如果你需要依赖于 wraparound 行为请添加必要的注释说明。大部分程序员都会对此类代码很吃惊。
+</p>

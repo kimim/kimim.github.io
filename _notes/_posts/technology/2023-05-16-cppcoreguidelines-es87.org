@@ -1,5 +1,5 @@
 #+layout: post
-#+title: CppCoreGuidelines ES.87 不要在判断条件中添加多余的 ~==~ 或 ~!=~
+#+title: CppCoreGuidelines ES.87 不要在判断条件中添加多余的 == 或 !=
 #+categories: technology
 #+tags: CppCoreGuidelines
 
