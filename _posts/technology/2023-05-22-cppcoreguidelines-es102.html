@@ -1,0 +1,120 @@
+---
+layout: post
+title: CppCoreGuidelines ES.102 数值计算用有符号类型
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use signed types for arithmetic&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+因为大部分算术运算默认是有符号类型的。 当 <code>y &gt; x</code> 时 <code>x - y</code> 会产生负数。除了某些特殊情况，比如求模运算，可能需要无符号类型。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+无符号类型的算术运算可能会导致你不期望的结果。尤其是混用了有符号与无符号类型的运算：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>, <span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T2</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #0000ff; font-weight: bold;">subtract</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T2</span> <span style="color: #000000;">y</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> x - y;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">test</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">s</span> = 5;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">us</span> = 5;
+    cout &lt;&lt; subtract<span style="color: #7388d6;">(</span>s, 7<span style="color: #7388d6;">)</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-2</span>
+    cout &lt;&lt; subtract<span style="color: #7388d6;">(</span>us, 7u<span style="color: #7388d6;">)</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">4294967294</span>
+    cout &lt;&lt; subtract<span style="color: #7388d6;">(</span>s, 7u<span style="color: #7388d6;">)</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-2</span>
+    cout &lt;&lt; subtract<span style="color: #7388d6;">(</span>us, 7<span style="color: #7388d6;">)</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">4294967294</span>
+    cout &lt;&lt; subtract<span style="color: #7388d6;">(</span>s, us + 2<span style="color: #7388d6;">)</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-2</span>
+    cout &lt;&lt; subtract<span style="color: #7388d6;">(</span>us, s + 2<span style="color: #7388d6;">)</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">4294967294</span>
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    test<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+-2
+4294967294
+-2
+4294967294
+-2
+4294967294
+</pre>
+
+
+<p>
+这里，我们很清楚发生了什么。但是如果写成 <code>us - (s + 2)</code> 或者 <code>s += 2;
+...; us - s</code> ，你很可能就不知道为什么结果会是 4294967294。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+如果确实需要求模运算，可以用无符号类型。但是注意写明注释，尤其当可能产生一些数值溢出行为的时候。这种代码会让程序员感到意外。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+标准库使用无符号类型作为下标。而内置数组类型则用有符号类型作为下标。这方面产生惊讶和 bug 在所难免：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #707183;">[</span>10<span style="color: #707183;">]</span>;
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; 10; ++i<span style="color: #707183;">)</span> a<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span> = i;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #707183;">(</span>10<span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">compares signed to unsigned; some compilers warn, but we should not</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">index</span> <span style="color: #000000;">i</span> = 0; i &lt; v.size<span style="color: #7388d6;">()</span>; ++i<span style="color: #707183;">)</span> v<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span> = i;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a2</span><span style="color: #707183;">[</span>-2<span style="color: #707183;">]</span>;         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: negative size</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, but the number of ints (4294967294) is so large that we should</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">get an exception</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v2</span><span style="color: #707183;">(</span>-2<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+用 <code>gsl::index</code> 做下标。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记混用有符号和无符号类型的算术计算</li>
+<li>标记无符号类型的计算结果复制给有符号类型或打印成有符号类型</li>
+<li>标记用负数作为容器下标的地方</li>
+<li>不要标记有符号类型与无符号类型混合比值的地方，不然会有太多噪音。比如：其中一个参数是 <code>sizeof</code> 或容器的 <code>.size()</code> ，而另一个参数是 <code>ptrdiff_t</code></li>
+</ul>
