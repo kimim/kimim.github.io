@@ -1,0 +1,56 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.103 不要产生溢出
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t overflow"
+
+理由
+
+溢出会使得你的数值算法毫无意义。把数值增加到上限之外会导致内存损坏以及
+未定义的行为。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int a[10];
+a[10] = 7;   // bad, array bounds overflow
+
+for (int n = 0; n <= 10; ++n)
+    a[n] = 9;   // bad, array bounds overflow
+#+end_src
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int n = numeric_limits<int>();
+int m = n + 1;   // bad, numeric overflow
+#+end_src
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int area(int h, int w) { return h * w; }
+
+int main()
+{
+    auto a = area(10'000'000, 100'000'000);   // bad, numeric overflow
+    cout << a;
+    return EXIT_SUCCESS;
+}
+#+end_src
+
+#+RESULTS:
+: -1530494976
+
+例外
+
+如果需要求模运算，可以使用无符号类型。
+
+
+其他情况：对于允许某些额外开销的关键应用，可以使用检查范围的整型，以及
+浮点类型。

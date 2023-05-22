@@ -1,0 +1,80 @@
+---
+layout: post
+title: CppCoreGuidelines ES.103 不要产生溢出
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t overflow&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+溢出会使得你的数值算法毫无意义。把数值增加到上限之外会导致内存损坏以及未定义的行为。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #707183;">[</span>10<span style="color: #707183;">]</span>;
+a<span style="color: #707183;">[</span>10<span style="color: #707183;">]</span> = 7;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, array bounds overflow</span>
+
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span> = 0; n &lt;= 10; ++n<span style="color: #707183;">)</span>
+    a<span style="color: #707183;">[</span>n<span style="color: #707183;">]</span> = 9;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, array bounds overflow</span>
+</pre>
+</div>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span> = numeric_limits<span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;()</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m</span> = n + 1;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, numeric overflow</span>
+</pre>
+</div>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">area</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">h</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">w</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> h * w; <span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">a</span> = area<span style="color: #7388d6;">(</span>10'000'000, 100'000'000<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, numeric overflow</span>
+    cout &lt;&lt; a;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+-1530494976
+</pre>
+
+
+<p>
+例外
+</p>
+
+<p>
+如果需要求模运算，可以使用无符号类型。
+</p>
+
+
+<p>
+其他情况：对于允许某些额外开销的关键应用，可以使用检查范围的整型，以及浮点类型。
+</p>
