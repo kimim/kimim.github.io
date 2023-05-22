@@ -1,0 +1,32 @@
+#+LAYOUT: post
+#+TITLE: 单词本：ammunition
+#+TAGS: English
+#+CATEGORIES: language
+
+工业控制系统紧急响应小组 ICS-CERT 发布了一份恶意软件趋势白皮书
+[[cite:&icscert2016trends]]，讨论到注入测试软件的时候，提到，如果这些测试
+软件被坏人利用，实际上可能会成为攻击武器：
+
+While these tools have real-world application for testing the
+resiliency of the network against malicious actors, these resources
+pose a real danger due to their exposure of live *ammunition* when in
+the hands of an attacker.
+
+这里有个单词 ammunition，意思是军火, 弹药。事实上，这个词是从法语学过
+来的时候，拼写错误产生的。法语里的 la munition 被英国人听到后，拼写成
+了 ammunition。而 munition 其实是军需品的意思。
+
+至于 munition，则来自拉丁语 moénia, moénium，意思是城墙。大概是用来防
+御敌人的。现在法语里的墙就是 mur，不知道是不是也从这个拉丁语单词传过来
+的。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
+
