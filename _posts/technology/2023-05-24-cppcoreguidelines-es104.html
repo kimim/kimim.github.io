@@ -1,0 +1,44 @@
+---
+layout: post
+title: CppCoreGuidelines ES.104 避免向下溢出
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t underflow&rdquo;
+</p>
+
+<p>
+理由 
+</p>
+
+<p>
+减到最小值以下，会导致内存错误以及未定义的行为。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #707183;">[</span>10<span style="color: #707183;">]</span>;
+a<span style="color: #707183;">[</span>-2<span style="color: #707183;">]</span> = 7;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span> = 101;
+<span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #707183;">(</span>n--<span style="color: #707183;">)</span>
+    a<span style="color: #707183;">[</span>n - 1<span style="color: #707183;">]</span> = 9;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad (twice)</span>
+</pre>
+</div>
+
+
+<p>
+例外
+</p>
+
+<p>
+如果需要求模运算，可以用无符号类型。
+</p>

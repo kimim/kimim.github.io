@@ -1,0 +1,28 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.104 避免向下溢出
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t underflow"
+
+理由 
+
+减到最小值以下，会导致内存错误以及未定义的行为。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int a[10];
+a[-2] = 7;   // bad
+
+int n = 101;
+while (n--)
+    a[n - 1] = 9;   // bad (twice)
+#+end_src
+
+
+例外
+
+如果需要求模运算，可以用无符号类型。
