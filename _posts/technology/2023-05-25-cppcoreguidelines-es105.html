@@ -1,0 +1,107 @@
+---
+layout: post
+title: CppCoreGuidelines ES.105 不要除以整数 0
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t divide by integer zero&rdquo;
+</p>
+
+<p>
+理由 
+</p>
+
+<p>
+结果未定义，或者可能导致程序崩溃。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+也包括 <code>%</code> 运算。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">divide</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, should be checked (e.g., in a precondition)</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> a / b;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">divide</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good, address via precondition (and replace with contracts once</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">C++ gets them)</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> a / b;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    cout &lt;&lt; divide<span style="color: #7388d6;">(</span>8, 2<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+4
+</pre>
+
+
+<p>
+如果 divide 函数的第二个参数是 0，编译会出错：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">divide</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good, address via using double instead</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> a / b;
+<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    cout &lt;&lt; divide<span style="color: #7388d6;">(</span>1.0, 0<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> EXIT_SUCCESS;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+inf
+</pre>
+
+
+<p>
+double 类型除法的结果会产生一个无穷大结果。
+</p>
+
+<p>
+其他情况：对于可以接受额外开销的关键应用，可以使用检查范围的整型，或浮点类型。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记整数除以 0 的情况
+</p>

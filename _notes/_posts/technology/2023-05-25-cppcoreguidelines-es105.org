@@ -1,0 +1,73 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.105 不要除以整数 0
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t divide by integer zero"
+
+理由 
+
+结果未定义，或者可能导致程序崩溃。
+
+注意
+
+也包括 ~%~ 运算。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int divide(int a, int b)
+{
+    // BAD, should be checked (e.g., in a precondition)
+    return a / b;
+}
+#+end_src
+
+
+好例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export :results output
+int divide(int a, int b)
+{
+    // good, address via precondition (and replace with contracts once
+    // C++ gets them)
+    return a / b;
+}
+int main()
+{
+    cout << divide(8, 2);
+    return EXIT_SUCCESS;
+}
+#+end_src
+
+#+RESULTS:
+: 4
+
+如果 divide 函数的第二个参数是 0，编译会出错：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+double divide(double a, double b)
+{
+    // good, address via using double instead
+    return a / b;
+}
+int main()
+{
+    cout << divide(1.0, 0);
+    return EXIT_SUCCESS;
+}
+#+end_src
+
+#+RESULTS:
+: inf
+
+double 类型除法的结果会产生一个无穷大结果。
+
+其他情况：对于可以接受额外开销的关键应用，可以使用检查范围的整型，或浮点类型。
+
+
+强化
+
+标记整数除以 0 的情况
