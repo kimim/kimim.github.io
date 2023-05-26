@@ -1,0 +1,120 @@
+---
+layout: post
+title: CppCoreGuidelines ES.106 避免赋值负数给无符号类型
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t try to avoid negative values by using <code>unsigned</code>&rdquo;
+</p>
+
+<p>
+理由 
+</p>
+
+<p>
+选择无符号类型意味着很多整型的行为将被改变，包括求模运算、抑制针对溢出的相关警告、产生有符号无符号类型混用的错误等。使用无符号类型并不能避免产生负数值的可能。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">u1</span> = -2;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Valid: the value of u1 is 4294967294</span>
+cout &lt;&lt; <span style="color: #2A00FF;">"u1 = "</span> &lt;&lt; u1 &lt;&lt; <span style="color: #2A00FF;">"\n"</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i1</span> = -2;
+cout &lt;&lt; <span style="color: #2A00FF;">"i1 = "</span> &lt;&lt; i1 &lt;&lt; <span style="color: #2A00FF;">"\n"</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">u2</span> = i1;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Valid: the value of u2 is 4294967294</span>
+cout &lt;&lt; <span style="color: #2A00FF;">"u2 = "</span> &lt;&lt; u2 &lt;&lt; <span style="color: #2A00FF;">"\n"</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i2</span> = u2;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Valid: the value of i2 is -2</span>
+cout &lt;&lt; <span style="color: #2A00FF;">"i2 = "</span> &lt;&lt; i2 &lt;&lt; <span style="color: #2A00FF;">"\n"</span>;
+</pre>
+</div>
+
+<pre class="example">
+u1 = 4294967294
+i1 = -2
+u2 = 4294967294
+i2 = -2
+</pre>
+
+
+<p>
+此类数值构造过程很合法，却很难发现实际代码中的问题。是现实世界大部分问题的来源。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #0000ff; font-weight: bold;">area</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000;">height</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000;">width</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> height*width; <span style="color: #707183;">}</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">height</span>;
+    height = 2;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">a</span> = area<span style="color: #7388d6;">(</span>height, 2<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">if the input is -2 a becomes 4294967292</span>
+    cout &lt;&lt; a &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">b</span> = area<span style="color: #7388d6;">(</span>height, -2<span style="color: #7388d6;">)</span>;
+    cout &lt;&lt; b &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+4
+4294967292
+</pre>
+
+
+<p>
+记住，-1 赋值给无符号整型时，变成了一个最大的无符号整型。并且，因为无符号计算是求模计算，乘法不会导致向上溢出，只会截去高位，变回小一些的数。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000;">max</span> = 100000;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">"accidental typo", I mean to say 10'000</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">short</span> <span style="color: #000000;">x</span> = 100;
+<span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #707183;">(</span>x &lt; max<span style="color: #707183;">)</span> x += 100; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">infinite loop</span>
+</pre>
+</div>
+
+<p>
+如果 x 是一个有符号的 short 类型，编译器会产生关于未定义的溢出警告。
+</p>
+
+
+<p>
+其他方案
+</p>
+<ul class="org-ul">
+<li>使用有符号整型，并检查 <code>x &gt;= 0</code></li>
+<li>使用一个正整数</li>
+<li>使用整数类型的某个局部范围</li>
+<li><code>assert(-1 &lt; x)</code></li>
+</ul>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Positive</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">val</span>;
+    <span style="color: #0000ff; font-weight: bold;">Positive</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> :val<span style="color: #7388d6;">{</span>x<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span> Assert<span style="color: #909183;">(</span>0 &lt; x<span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">operator</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> val; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Positive</span> <span style="color: #000000;">arg</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> arg; <span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">r1</span> = f<span style="color: #707183;">(</span>2<span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">r2</span> = f<span style="color: #707183;">(</span>-2<span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">throws</span>
+</pre>
+</div>

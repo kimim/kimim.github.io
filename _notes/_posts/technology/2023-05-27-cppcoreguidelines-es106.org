@@ -1,0 +1,91 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.106 避免赋值负数给无符号类型
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t try to avoid negative values by using ~unsigned~"
+
+理由 
+
+选择无符号类型意味着很多整型的行为将被改变，包括求模运算、抑制针对溢出
+的相关警告、产生有符号无符号类型混用的错误等。使用无符号类型并不能避免
+产生负数值的可能。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+unsigned int u1 = -2;   // Valid: the value of u1 is 4294967294
+cout << "u1 = " << u1 << "\n";
+int i1 = -2;
+cout << "i1 = " << i1 << "\n";
+unsigned int u2 = i1;   // Valid: the value of u2 is 4294967294
+cout << "u2 = " << u2 << "\n";
+int i2 = u2;            // Valid: the value of i2 is -2
+cout << "i2 = " << i2 << "\n";
+#+end_src
+
+#+RESULTS:
+: u1 = 4294967294
+: i1 = -2
+: u2 = 4294967294
+: i2 = -2
+
+此类数值构造过程很合法，却很难发现实际代码中的问题。是现实世界大部分问
+题的来源。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+unsigned area(unsigned height, unsigned width) { return height*width; }
+// ...
+int main()
+{
+    int height;
+    height = 2;
+    auto a = area(height, 2);   // if the input is -2 a becomes 4294967292
+    cout << a << '\n';
+    auto b = area(height, -2);
+    cout << b << '\n';
+}
+#+end_src
+
+#+RESULTS:
+: 4
+: 4294967292
+
+记住，-1 赋值给无符号整型时，变成了一个最大的无符号整型。并且，因为无
+符号计算是求模计算，乘法不会导致向上溢出，只会截去高位，变回小一些的数。
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+unsigned max = 100000;    // "accidental typo", I mean to say 10'000
+unsigned short x = 100;
+while (x < max) x += 100; // infinite loop
+#+end_src
+
+如果 x 是一个有符号的 short 类型，编译器会产生关于未定义的溢出警告。
+
+
+其他方案
+- 使用有符号整型，并检查 ~x >= 0~
+- 使用一个正整数
+- 使用整数类型的某个局部范围
+- ~assert(-1 < x)~
+
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+struct Positive {
+    int val;
+    Positive(int x) :val{x} { Assert(0 < x); }
+    operator int() { return val; }
+};
+
+int f(Positive arg) { return arg; }
+
+int r1 = f(2);
+int r2 = f(-2);  // throws
+#+end_src
