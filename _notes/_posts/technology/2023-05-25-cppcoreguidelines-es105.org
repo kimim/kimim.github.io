@@ -33,6 +33,7 @@ int divide(int a, int b)
 {
     // good, address via precondition (and replace with contracts once
     // C++ gets them)
+    Expects(b != 0);
     return a / b;
 }
 int main()
@@ -41,9 +42,6 @@ int main()
     return EXIT_SUCCESS;
 }
 #+end_src
-
-#+RESULTS:
-: 4
 
 如果 divide 函数的第二个参数是 0，编译会出错：
 

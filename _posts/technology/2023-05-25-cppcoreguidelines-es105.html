@@ -51,6 +51,7 @@ tags: [CppCoreGuidelines]
 <span style="color: #707183;">{</span>
     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good, address via precondition (and replace with contracts once</span>
     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">C++ gets them)</span>
+    Expects<span style="color: #7388d6;">(</span>b != 0<span style="color: #7388d6;">)</span>;
     <span style="color: #7F0055; font-weight: bold;">return</span> a / b;
 <span style="color: #707183;">}</span>
 <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
@@ -60,11 +61,6 @@ tags: [CppCoreGuidelines]
 <span style="color: #707183;">}</span>
 </pre>
 </div>
-
-<pre class="example">
-4
-</pre>
-
 
 <p>
 如果 divide 函数的第二个参数是 0，编译会出错：

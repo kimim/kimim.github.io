@@ -1,0 +1,29 @@
+#+LAYOUT: post
+#+TITLE: 单词本：grok
+#+TAGS: English
+#+CATEGORIES: language
+
+在 Robert Heinlein 的一本科幻小说《Stranger in a Strange Land》中有一
+个叫 Valentine Michael Smith 的人，他出生在去往火星的飞船上。但是任务
+失败了。等到很久以后，人们发现了唯一的幸存者 Smith，并把他带回地球。
+Smith 认为自己是个火星人，还讲火星话，其中 Heinlein 发明了一个词 grok，
+意思是“彻底的理解”，“凭直觉深刻了解”，“心意相通”。
+
+我们来看看例句：
+
+Markov's idea is actually pretty simple — but its simplicity is often
+obstructed by thick layers of mathematical formulas and formal
+definitions. Few people actually *grok* it.
+（http://filiph.github.io/markov/）
+
+
+这里说马尔可夫模型的思想其实很简单，但是因为隐藏在层层数学公式之中，导
+致很多人无法彻底理解。
+
+It is a kind of strict flowchart language that only allows you to do
+it in one way, which may be bad for some, but it helps how fast you
+can *grok* it when you understand the simple rules.
+（https://news.ycombinator.com/item?id=36021495）
+
+这里说的是一种严格的流程图语言 Dragon 语言，如果你懂得其简单的规则，就
+能快速理解。
