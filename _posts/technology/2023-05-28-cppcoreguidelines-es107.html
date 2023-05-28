@@ -1,0 +1,95 @@
+---
+layout: post
+title: CppCoreGuidelines ES.107 不要用无符号类型做下标，使用 gsl::index
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t use <code>unsigned</code> for subscripts, prefer <code>gsl::index</code>&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+避免有混淆符号、无符号类型。允许编译器进行更好的优化、更好的错误检测。避免使用 auto 和 int 的出错陷阱。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">vec</span> = <span style="color: #3F7F5F;">/*</span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;">*/</span>;
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">might not be big enough</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; vec.size<span style="color: #7388d6;">()</span>; i += 2<span style="color: #707183;">)</span>
+    cout &lt;&lt; vec<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">risk wraparound</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000;">i</span> = 0; i &lt; vec.size<span style="color: #7388d6;">()</span>; i += 2<span style="color: #707183;">)</span>               
+    cout &lt;&lt; vec<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">might not be big enough</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">i</span> = 0; i &lt; vec.size<span style="color: #7388d6;">()</span>; i += 2<span style="color: #707183;">)</span>                   
+    cout &lt;&lt; vec<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">verbose</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #110099;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">size_type</span> <span style="color: #000000;">i</span> = 0; i &lt; vec.size<span style="color: #7388d6;">()</span>; i += 2<span style="color: #707183;">)</span> 
+    cout &lt;&lt; vec<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bug</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">i</span> = vec.size<span style="color: #7388d6;">()</span>-1; i &gt;= 0; i -= 2<span style="color: #707183;">)</span>                
+    cout &lt;&lt; vec<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">might not be big enough</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = vec.size<span style="color: #7388d6;">()</span>-1; i &gt;= 0; i -= 2<span style="color: #707183;">)</span>                 
+    cout &lt;&lt; vec<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+</pre>
+</div>
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">vec</span> = <span style="color: #3F7F5F;">/*</span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;">*/</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">index</span> <span style="color: #000000;">i</span> = 0; i &lt; vec.size<span style="color: #7388d6;">()</span>; i += 2<span style="color: #707183;">)</span>
+    cout &lt;&lt; vec<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">index</span> <span style="color: #000000;">i</span> = vec.size<span style="color: #7388d6;">()</span>-1; i &gt;= 0; i -= 2<span style="color: #707183;">)</span>
+    cout &lt;&lt; vec<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+内置数组类型允许使用有符号整型下标。标准库容器使用无符号整型下标。所以目前并没有完美的兼容方案。除非未来某一天标准库容器改用有符号整型下标。由于有符号、无符号混合计算存在某些问题，最好固定使用 <code>gsl::index</code> 。
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_container</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #7388d6; font-weight: bold;">[]</span><span style="color: #7388d6;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">index</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">not unsigned</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+其他方案：
+</p>
+<ul class="org-ul">
+<li>使用算法函数</li>
+<li>使用带范围的 for</li>
+<li>使用迭代器/指针</li>
+</ul>

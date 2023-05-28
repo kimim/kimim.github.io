@@ -1,0 +1,72 @@
+#+layout: post
+#+title: CppCoreGuidelines ES.107 不要用无符号类型做下标，使用 gsl::index
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t use ~unsigned~ for subscripts, prefer ~gsl::index~"
+
+理由
+
+避免有混淆符号、无符号类型。允许编译器进行更好的优化、更好的错误检测。
+避免使用 auto 和 int 的出错陷阱。
+
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+vector<int> vec = /*...*/;
+
+// might not be big enough
+for (int i = 0; i < vec.size(); i += 2)
+    cout << vec[i] << '\n';
+// risk wraparound
+for (unsigned i = 0; i < vec.size(); i += 2)               
+    cout << vec[i] << '\n';
+// might not be big enough
+for (auto i = 0; i < vec.size(); i += 2)                   
+    cout << vec[i] << '\n';
+// verbose
+for (vector<int>::size_type i = 0; i < vec.size(); i += 2) 
+    cout << vec[i] << '\n';
+// bug
+for (auto i = vec.size()-1; i >= 0; i -= 2)                
+    cout << vec[i] << '\n';
+// might not be big enough
+for (int i = vec.size()-1; i >= 0; i -= 2)                 
+    cout << vec[i] << '\n';
+#+end_src
+
+好例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+vector<int> vec = /*...*/;
+// OK
+for (gsl::index i = 0; i < vec.size(); i += 2)
+    cout << vec[i] << '\n';
+// OK
+for (gsl::index i = vec.size()-1; i >= 0; i -= 2)
+    cout << vec[i] << '\n';
+#+end_src
+
+注意
+
+内置数组类型允许使用有符号整型下标。标准库容器使用无符号整型下标。所以目前并没有完美的兼容方案。除非未来某一天标准库容器改用有符号整型下标。由于有符号、无符号混合计算存在某些问题，最好固定使用 ~gsl::index~ 。
+
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template<typename T>
+struct My_container {
+public:
+    // ...
+    T& operator[](gsl::index i);    // not unsigned
+    // ...
+};
+#+end_src
+
+
+其他方案：
+- 使用算法函数
+- 使用带范围的 for
+- 使用迭代器/指针
