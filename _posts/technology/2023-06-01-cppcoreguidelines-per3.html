@@ -1,0 +1,35 @@
+---
+layout: post
+title: CppCoreGuidelines Per.3 非性能关键之处，无需优化
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t optimize something that’s not performance critical&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+优化非性能关键之处，于程序性能无大改善。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+若程序大部分时间等待网络或用户响应，则优化内存计算并无效用。
+</p>
+
+<p>
+换言之，若程序的 4% 处理时间计算 A，40% 的时间计算 B，则提升 A 的 50%
+性能，只相当于提升 B 的 5% 性能。（你若不知在 A 和 B 分配了多少时间，请查阅 <a href="./2023-05-29-cppcoreguidelines-per1">Per.1</a>，<a href="./2023-05-30-cppcoreguidelines-per2">Per.2</a>）
+</p>
