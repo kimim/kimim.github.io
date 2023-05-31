@@ -1,0 +1,12 @@
+#+layout: post
+#+title: CppCoreGuidelines Per.2 不要过早的进行优化
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t optimize prematurely"
+
+理由
+
+深度优化的代码通常比未优化的代码更庞大、更难进行修改。
