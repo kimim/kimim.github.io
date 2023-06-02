@@ -1,0 +1,12 @@
+#+layout: post
+#+title: CppCoreGuidelines Per.5 底层代码不一定比高层代码快
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t assume that low-level code is necessarily faster than high-level code"
+
+理由
+
+底层代码有时候限制了优化。优化器有时候能优化上层代码，且极其显著。
