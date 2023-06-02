@@ -1,0 +1,58 @@
+---
+layout: post
+title: CppCoreGuidelines Per.4 复杂代码并不一定比简单代码快
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t assume that complicated code is necessarily faster than simple code&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+简单代码也能很快。优化器有时能优化简单代码，且极其显著。
+</p>
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">clear expression of intent, fast execution</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">uint8_t</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #707183;">(</span>100000<span style="color: #707183;">)</span>;
+
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">c</span> : v<span style="color: #707183;">)</span>
+    c = ~c;
+</pre>
+</div>
+
+<p>
+目的明确，速度极快。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">intended to be faster, but is often slower</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">uint8_t</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #707183;">(</span>100000<span style="color: #707183;">)</span>;
+
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #000000;">i</span> = 0; i &lt; v.size<span style="color: #7388d6;">()</span>; i += <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span>uint64_t<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">uint64_t</span>&amp; <span style="color: #000000;">quad_word</span> = *<span style="color: #7F0055; font-weight: bold;">reinterpret_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">uint64_t</span>*<span style="color: #7388d6;">&gt;(</span>&amp;v<span style="color: #909183;">[</span>i<span style="color: #909183;">]</span><span style="color: #7388d6;">)</span>;
+    quad_word = ~quad_word;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+想要更快，经常很慢。
+</p>
