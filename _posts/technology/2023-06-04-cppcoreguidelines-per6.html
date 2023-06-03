@@ -1,0 +1,39 @@
+---
+layout: post
+title: CppCoreGuidelines Per.6 没有测量不要声明性能
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t make claims about performance without measurements&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+性能领域充满了神话传说和民间科学。现代硬件和优化器违背朴素的假设。甚至专家也会大吃一惊。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+很难获得好的性能测评，有时候需要专业工具。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+使用 Unix time 或标准库 <code>&lt;chrono&gt;</code> 做一些简单的小测评，能够消除一些明显的神话传说。如果无法精确测量整个系统，至少可以尝试测量一些关键操作和算法。Profiler 工具能够找到系统中的性能关键路径。你经常会大吃一惊。
+</p>
