@@ -1,0 +1,246 @@
+#+layout: post
+#+title: CppCoreGuidelines Per.7 设计之初就要考虑优化
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Design to enable optimization"
+
+理由
+
+因为我们经常需要优化最初的设计。因为设计之初没有考虑后期优化的代码，很
+难进行修改。
+
+
+来自 C (以及 C++) 标准的例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+void qsort (void* base, size_t num, size_t size,
+            int (*compar)(const void*, const void*));
+#+end_src
+
+你什么时候对内存排序过？实际上，我们会给一个序列排序，这个序列一般保存
+在一个容器中。然而， ~qsort~ 丢掉很多信息（比如元素类型），强制用户额外
+提供已经知道的信息（如元素大小），强制用户写额外的代码（如比较 ~double~
+的函数）。这意味着程序员额外的工作量，容易出错，减少了编译器进行优化所
+需要的信息。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+double data[100];
+// ... fill a ...
+
+// 100 chunks of memory of sizeof(double) starting at
+// address data using the order defined by compare_doubles
+qsort(data, 100, sizeof(double), compare_doubles);
+#+end_src
+
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+ 
+int compare_ints(const void* a, const void* b)
+{
+    int arg1 = *(const int*)a;
+    int arg2 = *(const int*)b;
+    return (arg1 > arg2) - (arg1 < arg2);
+}
+ 
+int main(void)
+{
+    int ints[] = { 3, 1, 4, -15, 9, 26, 5, -3, -5 };
+    int size = sizeof ints / sizeof *ints;
+ 
+    qsort(ints, size, sizeof(int), compare_ints);
+ 
+    for (int i = 0; i < size; i++) {
+        printf("%d ", ints[i]);
+    }
+ 
+    printf("\n");
+}
+#+end_src
+
+#+RESULTS:
+: -15 -5 -3 1 3 4 5 9 26 
+
+从接口设计角度看， ~qsort~ 丢掉了很多有用的信息。
+
+也可以用 C++ lambda 函数：
+
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+#include <array>
+#include <iostream> 
+
+int main(void)
+{
+    std::array ints{ 3, 1, 4, -15, 9, 26, 5, -3, -5 };
+ 
+    qsort(ints.data(),
+          ints.size(),
+          sizeof(decltype(ints)::value_type),
+          [](const void* a, const void *b) {
+          int arg1 = *static_cast<const int*>(a);
+          int arg2 = *static_cast<const int*>(b);
+          return (arg1 > arg2) - (arg1 < arg2);
+          });
+ 
+    for (const auto& i : ints)
+        std::cout << i << " ";
+    std::cout << std::endl;
+}
+#+end_src
+
+#+RESULTS:
+: -15 -5 -3 1 3 4 5 9 26 
+
+
+我们可以在 C++98 中做的更好：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template<typename Iter>
+    void sort(Iter b, Iter e);  // sort [b:e)
+
+sort(data, data + 100);
+#+end_src
+
+
+这里，我们用到编译器知道的数组大小，元素类型以及 ~double~ 的对比方法。
+
+
+在 C++20 中，我们可以做的更好：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+// sortable specifies that c must be a
+// random-access sequence of elements comparable with <
+void sort(sortable auto& c);
+
+sort(c);
+#+end_src
+
+关键是要给好的设计实现提供足够的信息。从这个角度看，这个排序接口仍然存
+在缺陷：它依赖于元素自身所定义的小于比较操作符。
+
+为了接口完整，我们需要比较函数版本 2，接受比较条件：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+// compare elements of c using r
+template<random_access_range R, class C> requires sortable<R, C>
+void sort(R&& r, C c);
+#+end_src
+
+标准库函数提供多种 sort 函数。
+
+
+注意
+
+不成熟的优化，是万恶之源。但这并不是轻视性能的理由。在设计之初还是要考
+虑如何在未来能改进性能。建立以下这些习惯，可以获得效率更高、可维护、可
+优化的代码。s，可以考虑：
+- 信息传递：选择清晰的接口，传递足够的信息，用于未来改进实现方案。注意，
+  我们通过提供的接口传递信息。
+- 紧凑的数据：默认使用紧凑的数据，比如 ~std::vector~ 。通过系统化的方式
+  访问数据。如果你需要一个链接结构，尝试设计接口，让用户无法看到结构内
+  部的细节。
+- 函数参数传递/返回：区分可变数据与不可变数据。不要让用户承担管理数据
+  资源的重担。使用约定俗成的方式传递信息。不寻常的、“优化”的方式传递数
+  据会导致重新实现的时候问题复杂化。
+- 抽象：但不要过度通用化设计。一个设计如果像考虑面面俱到，各种可能（不
+  正确的使用情况），延迟设计决策（使用编译时或运行时分支判断），通常会
+  导致复杂的、臃肿的、费解的设计。从一个具体例子进行抽象通用化设计，通
+  用化设计的过程中保证运行效率。不要基于不切实际的未来需求进行抽象。理
+  想情况是零负担的抽象。
+- 程序库：使用接口设计良好的程序库。如果没有程序库可以使用，开发自己的
+  库。从好的库模仿设计接口。标准库函数就是好的榜样。
+- 隔离：把你的代码从杂乱的、老式的代码中隔离开，提供一个好的接口进行访
+  问。有时候称作给有用且必须的杂乱代码提供“提供一个包装”。不要让坏的设
+  计蔓延到你的代码中。
+
+
+例子
+
+考虑：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template<class ForwardIterator, class T>
+bool binary_search(ForwardIterator first, ForwardIterator last, const T& val);
+#+end_src
+
+~binary_search(begin(c), end(c), 7)~ 会告诉你 7 是否在 ~c~ 中。但是不能告
+诉你 7 在哪里，有几个 7。
+
+有时候，只要返回最少的信息就够了（比如 ~true~ 与 ~false~ ）。但是好的接口
+能返回需要的信息。所以，标准库函数也能做到这些。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template<class ForwardIterator, class T>
+ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T& val);
+#+end_src
+
+~lower_bound~ 返回首个符合条件的迭代器。如果没有的话，则返回首个大于 ~val~
+的位置。或者如果找不到的话，就返回最后一个位置。
+
+然而， ~lower_bound~ 返回的信息对大多数使用场景来说，还是不太够。所以，
+标准库中还有其他函数：
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+template<class ForwardIterator, class T>
+pair<ForwardIterator, ForwardIterator>
+equal_range(ForwardIterator first, ForwardIterator last, const T& val);
+#+end_src
+
+~equal_range~ 返回一对迭代器，分别表示第一个符合条件的位置，以及最后一个
+符合条件的位置的后一个位置。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+vector<int> c{0, 2, 3, 4, 7, 7, 7, 8, 9};
+auto r = equal_range(begin(c), end(c), 7);
+for (auto p = r.first; p != r.second; ++p)
+    cout << *p << '\n';
+#+end_src
+
+#+RESULTS:
+: 7
+: 7
+: 7
+
+很显然，这三个接口都是基于相似的代码实现的。他们知识三种方式展示了基础
+的二分搜索算法的结构。从返回执行结果（“make simple things simple!”）到
+返回额外信息（“don't hide useful information”）。很显然，要设计出这样
+的接口，需要经验和领域知识。
+
+
+注意
+
+不要只是简单地从你第一次了解的实现和使用场景构建接口。当你初次实现完成
+后，回顾一下，是否需要改进。一旦部署使用，其中的错误就很难调整了。
+（1-10-100 规则：设计中的错误，花费 1 小时修改，集成后，可能需要 10 小
+时，发布部署后，可能需要 100 小时才能修改好）。
+
+注意
+
+效率并不意味着底层代码。高层代码不一定运行慢、代码臃肿。
+
+任何事情都有成本。不要太纠结于成本（现代计算机已经很快了），但是还是需
+要对成本的数量级有个大致概念。比如，你大致知道内存访问、函数调用、字符
+串比较、系统调用、硬盘访问、消息网络传输的性能开销。
+
+
+注意
+
+如果你只考虑到一种实现方案。你可能并没有满足某种实现稳定接口的东西。可
+能只是某些实现细节，但是请冷静思考一下。问自己一个很有用的问题：“如果
+这个操作通过多线程失信啊，会需要什么样的接口？向量化的接口？”
+
+
+注意
+
+此规则和“[[./2023-05-30-cppcoreguidelines-per2.org][不要过早的进行优化]]”并不相冲，而是互补。此规则鼓励开发人员以某
+种恰当的、成熟的方式，在需要的时候可以进行优化。
+
+
+强化
+
+可能可以关注有 ~void*~ 之类参数的函数，是否存在无法后期进行优化的情况。

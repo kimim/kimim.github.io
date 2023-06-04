@@ -1,0 +1,302 @@
+---
+layout: post
+title: CppCoreGuidelines Per.7 设计之初就要考虑优化
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Design to enable optimization&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+因为我们经常需要优化最初的设计。因为设计之初没有考虑后期优化的代码，很难进行修改。
+</p>
+
+
+<p>
+来自 C (以及 C++) 标准的例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">qsort</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>* <span style="color: #000000;">base</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #000000;">num</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #000000;">size</span>,
+            <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #7388d6;">(</span>*<span style="color: #0000ff; font-weight: bold;">compar</span><span style="color: #7388d6;">)(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>*, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>*<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+你什么时候对内存排序过？实际上，我们会给一个序列排序，这个序列一般保存在一个容器中。然而， <code>qsort</code> 丢掉很多信息（比如元素类型），强制用户额外提供已经知道的信息（如元素大小），强制用户写额外的代码（如比较 <code>double</code>
+的函数）。这意味着程序员额外的工作量，容易出错，减少了编译器进行优化所需要的信息。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">data</span><span style="color: #707183;">[</span>100<span style="color: #707183;">]</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... fill a ...</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">100 chunks of memory of sizeof(double) starting at</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">address data using the order defined by compare_doubles</span>
+qsort<span style="color: #707183;">(</span>data, 100, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #7388d6;">)</span>, compare_doubles<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">stdio.h</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">stdlib.h</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">limits.h</span><span style="color: #707183;">&gt;</span>
+ 
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">compare_ints</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>* <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>* <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arg1</span> = *<span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">)</span>a;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arg2</span> = *<span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">)</span>b;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7388d6;">(</span>arg1 &gt; arg2<span style="color: #7388d6;">)</span> - <span style="color: #7388d6;">(</span>arg1 &lt; arg2<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+ 
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">ints</span><span style="color: #7388d6;">[]</span> = <span style="color: #7388d6;">{</span> 3, 1, 4, -15, 9, 26, 5, -3, -5 <span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">size</span> = <span style="color: #7F0055; font-weight: bold;">sizeof</span> ints / <span style="color: #7F0055; font-weight: bold;">sizeof</span> *ints;
+ 
+    qsort<span style="color: #7388d6;">(</span>ints, size, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">)</span>, compare_ints<span style="color: #7388d6;">)</span>;
+ 
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 0; i &lt; size; i++<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        printf<span style="color: #909183;">(</span><span style="color: #2A00FF;">"%d "</span>, ints<span style="color: #709870;">[</span>i<span style="color: #709870;">]</span><span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+ 
+    printf<span style="color: #7388d6;">(</span><span style="color: #2A00FF;">"\n"</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+-15 -5 -3 1 3 4 5 9 26 
+</pre>
+
+
+<p>
+从接口设计角度看， <code>qsort</code> 丢掉了很多有用的信息。
+</p>
+
+<p>
+也可以用 C++ lambda 函数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">array</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span> 
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">array</span> <span style="color: #000000;">ints</span><span style="color: #7388d6;">{</span> 3, 1, 4, -15, 9, 26, 5, -3, -5 <span style="color: #7388d6;">}</span>;
+ 
+    qsort<span style="color: #7388d6;">(</span>ints.data<span style="color: #909183;">()</span>,
+          ints.size<span style="color: #909183;">()</span>,
+          <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">decltype</span><span style="color: #709870;">(</span>ints<span style="color: #709870;">)</span>::value_type<span style="color: #909183;">)</span>,
+          <span style="color: #909183;">[](</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>* <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> *<span style="color: #000000;">b</span><span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+          <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arg1</span> = *<span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #709870;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #709870;">&gt;(</span>a<span style="color: #709870;">)</span>;
+          <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arg2</span> = *<span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #709870;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #709870;">&gt;(</span>b<span style="color: #709870;">)</span>;
+          <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #709870;">(</span>arg1 &gt; arg2<span style="color: #709870;">)</span> - <span style="color: #709870;">(</span>arg1 &lt; arg2<span style="color: #709870;">)</span>;
+          <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+ 
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">i</span> : ints<span style="color: #7388d6;">)</span>
+        <span style="color: #110099;">std</span>::cout &lt;&lt; i &lt;&lt; <span style="color: #2A00FF;">" "</span>;
+    <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #110099;">std</span>::endl;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+-15 -5 -3 1 3 4 5 9 26 
+</pre>
+
+
+
+<p>
+我们可以在 C++98 中做的更好：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span><span style="color: #707183;">&gt;</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sort</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">b</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">e</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">sort [b:e)</span>
+
+sort<span style="color: #707183;">(</span>data, data + 100<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+这里，我们用到编译器知道的数组大小，元素类型以及 <code>double</code> 的对比方法。
+</p>
+
+
+<p>
+在 C++20 中，我们可以做的更好：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">sortable specifies that c must be a</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">random-access sequence of elements comparable with &lt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sort</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">sortable</span> <span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">c</span><span style="color: #707183;">)</span>;
+
+sort<span style="color: #707183;">(</span>c<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+关键是要给好的设计实现提供足够的信息。从这个角度看，这个排序接口仍然存在缺陷：它依赖于元素自身所定义的小于比较操作符。
+</p>
+
+<p>
+为了接口完整，我们需要比较函数版本 2，接受比较条件：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">compare elements of c using r</span>
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">random_access_range</span> <span style="color: #000000;">R</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">C</span><span style="color: #707183;">&gt;</span> <span style="color: #7F0055; font-weight: bold;">requires</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">sortable</span><span style="color: #707183;">&lt;</span>R, <span style="color: #000000; font-style: italic; text-decoration: underline;">C</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sort</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">R</span>&amp;&amp; <span style="color: #000000;">r</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">C</span> <span style="color: #000000;">c</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+标准库函数提供多种 sort 函数。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+不成熟的优化，是万恶之源。但这并不是轻视性能的理由。在设计之初还是要考虑如何在未来能改进性能。建立以下这些习惯，可以获得效率更高、可维护、可优化的代码。s，可以考虑：
+</p>
+<ul class="org-ul">
+<li>信息传递：选择清晰的接口，传递足够的信息，用于未来改进实现方案。注意，我们通过提供的接口传递信息。</li>
+<li>紧凑的数据：默认使用紧凑的数据，比如 <code>std::vector</code> 。通过系统化的方式访问数据。如果你需要一个链接结构，尝试设计接口，让用户无法看到结构内部的细节。</li>
+<li>函数参数传递/返回：区分可变数据与不可变数据。不要让用户承担管理数据资源的重担。使用约定俗成的方式传递信息。不寻常的、“优化”的方式传递数据会导致重新实现的时候问题复杂化。</li>
+<li>抽象：但不要过度通用化设计。一个设计如果像考虑面面俱到，各种可能（不正确的使用情况），延迟设计决策（使用编译时或运行时分支判断），通常会导致复杂的、臃肿的、费解的设计。从一个具体例子进行抽象通用化设计，通用化设计的过程中保证运行效率。不要基于不切实际的未来需求进行抽象。理想情况是零负担的抽象。</li>
+<li>程序库：使用接口设计良好的程序库。如果没有程序库可以使用，开发自己的库。从好的库模仿设计接口。标准库函数就是好的榜样。</li>
+<li>隔离：把你的代码从杂乱的、老式的代码中隔离开，提供一个好的接口进行访问。有时候称作给有用且必须的杂乱代码提供“提供一个包装”。不要让坏的设计蔓延到你的代码中。</li>
+</ul>
+
+
+<p>
+例子
+</p>
+
+<p>
+考虑：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ForwardIterator</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #0000ff; font-weight: bold;">binary_search</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ForwardIterator</span> <span style="color: #000000;">first</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">ForwardIterator</span> <span style="color: #000000;">last</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp; <span style="color: #000000;">val</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+<code>binary_search(begin(c), end(c), 7)</code> 会告诉你 7 是否在 <code>c</code> 中。但是不能告诉你 7 在哪里，有几个 7。
+</p>
+
+<p>
+有时候，只要返回最少的信息就够了（比如 <code>true</code> 与 <code>false</code> ）。但是好的接口能返回需要的信息。所以，标准库函数也能做到这些。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ForwardIterator</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">ForwardIterator</span> <span style="color: #0000ff; font-weight: bold;">lower_bound</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ForwardIterator</span> <span style="color: #000000;">first</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">ForwardIterator</span> <span style="color: #000000;">last</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp; <span style="color: #000000;">val</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+<code>lower_bound</code> 返回首个符合条件的迭代器。如果没有的话，则返回首个大于 <code>val</code>
+的位置。或者如果找不到的话，就返回最后一个位置。
+</p>
+
+<p>
+然而， <code>lower_bound</code> 返回的信息对大多数使用场景来说，还是不太够。所以，标准库中还有其他函数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ForwardIterator</span>, <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">pair</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ForwardIterator</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">ForwardIterator</span><span style="color: #707183;">&gt;</span>
+<span style="color: #0000ff; font-weight: bold;">equal_range</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ForwardIterator</span> <span style="color: #000000;">first</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">ForwardIterator</span> <span style="color: #000000;">last</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp; <span style="color: #000000;">val</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+<code>equal_range</code> 返回一对迭代器，分别表示第一个符合条件的位置，以及最后一个符合条件的位置的后一个位置。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">c</span><span style="color: #707183;">{</span>0, 2, 3, 4, 7, 7, 7, 8, 9<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">r</span> = equal_range<span style="color: #707183;">(</span>begin<span style="color: #7388d6;">(</span>c<span style="color: #7388d6;">)</span>, end<span style="color: #7388d6;">(</span>c<span style="color: #7388d6;">)</span>, 7<span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = r.first; p != r.second; ++p<span style="color: #707183;">)</span>
+    cout &lt;&lt; *p &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+</pre>
+</div>
+
+<pre class="example">
+7
+7
+7
+</pre>
+
+
+<p>
+很显然，这三个接口都是基于相似的代码实现的。他们知识三种方式展示了基础的二分搜索算法的结构。从返回执行结果（“make simple things simple!”）到返回额外信息（“don&rsquo;t hide useful information”）。很显然，要设计出这样的接口，需要经验和领域知识。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+不要只是简单地从你第一次了解的实现和使用场景构建接口。当你初次实现完成后，回顾一下，是否需要改进。一旦部署使用，其中的错误就很难调整了。（1-10-100 规则：设计中的错误，花费 1 小时修改，集成后，可能需要 10 小时，发布部署后，可能需要 100 小时才能修改好）。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+效率并不意味着底层代码。高层代码不一定运行慢、代码臃肿。
+</p>
+
+<p>
+任何事情都有成本。不要太纠结于成本（现代计算机已经很快了），但是还是需要对成本的数量级有个大致概念。比如，你大致知道内存访问、函数调用、字符串比较、系统调用、硬盘访问、消息网络传输的性能开销。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果你只考虑到一种实现方案。你可能并没有满足某种实现稳定接口的东西。可能只是某些实现细节，但是请冷静思考一下。问自己一个很有用的问题：“如果这个操作通过多线程失信啊，会需要什么样的接口？向量化的接口？”
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+此规则和“<a href="./2023-05-30-cppcoreguidelines-per2.html">不要过早的进行优化</a>”并不相冲，而是互补。此规则鼓励开发人员以某种恰当的、成熟的方式，在需要的时候可以进行优化。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+可能可以关注有 <code>void*</code> 之类参数的函数，是否存在无法后期进行优化的情况。
+</p>
