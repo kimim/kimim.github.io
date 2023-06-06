@@ -1,0 +1,13 @@
+#+layout: post
+#+title: CppCoreGuidelines Per.10 依托于类型系统进行自动优化
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Rely on the static type system"
+
+理由
+
+类型违规、弱类型（如 ~void*~ ）、底层代码（如操作序列中单独的字节）等行
+为会导致自动优化很难进行。简单代码通常比复杂代码更容易优化。
