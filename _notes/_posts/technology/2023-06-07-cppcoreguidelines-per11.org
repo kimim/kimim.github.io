@@ -1,0 +1,87 @@
+#+layout: post
+#+title: CppCoreGuidelines Per.11 把计算从运行时转移到编译时
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Move computation from run time to compile time"
+
+理由
+
+降低代码长度，减少运行时间。用常量避免数据竞争。捕获编译时错误，从而避
+免运行时的出错处理。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+double square(double d) { return d*d; }
+static double s2 = square(2);    // old-style: dynamic initialization
+
+constexpr double ntimes(double d, int n)   // assume 0 <= n
+{
+        double m = 1;
+        while (n--) m *= d;
+        return m;
+}
+constexpr double s3 {ntimes(2, 3)};  // modern-style: compile-time initialization
+#+end_src
+
+像这样给 s2 赋初值的情况很常见，有时候还会有比 ~square()~ 更复杂的情况。
+相比 s3 的初始化过程，存在这些问题：
+- 在运行时有一次额外的函数调用开销
+- s2 可能在初始化之前被其他现场访问过
+
+注意，对于常量，你不会遇到数据竞争情况。
+
+
+例子
+
+考虑以下一个常用技巧：在一个句柄中保存小对象，在堆中保存大对象。
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+constexpr int on_stack_max = 20;
+
+template<typename T>
+struct Scoped {     // store a T in Scoped
+        // ...
+    T obj;
+};
+
+template<typename T>
+struct On_heap {    // store a T on the free store
+        // ...
+        T* objp;
+};
+
+template<typename T>
+using Handle = typename std::conditional<(sizeof(T) <= on_stack_max),
+                    Scoped<T>,      // first alternative
+                    On_heap<T>      // second alternative
+               >::type;
+
+void f()
+{
+    Handle<double> v1;                   // the double goes on the stack
+    Handle<std::array<double, 200>> v2;  // the array goes on the free store
+    // ...
+}
+#+end_src
+
+假设 ~Scoped~ 和 ~On_heap~ 提供互相兼容的用户接口。此处，我们就可以在编译
+时计算出最合适的类型。另外，我们也有相似的技术，选择需要调用哪个函数。
+
+
+注意
+
+不要在编译时计算所有东西。显然，大部分的计算都依赖于输入值，所以不能全
+部转移到编译时。但是，另一点也值得注意，编译时的计算太复杂的话，会严重
+导致编译速度变慢，也影响调试效率。有时候，也会因为编译时的计算，影响代
+码性能。有一点，很少人知道，把一个计算过程分拆到子模块中，可能会导致指
+令缓存的效率变低。
+
+
+强化
+- 检查简单函数，是否可以做成 ~constexpr~
+- 检查调用某函数时，其参数都是常量的情况
+- 检查宏，是否可以写成 ~constexpr~

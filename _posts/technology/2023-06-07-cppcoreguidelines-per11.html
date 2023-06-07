@@ -1,0 +1,113 @@
+---
+layout: post
+title: CppCoreGuidelines Per.11 把计算从运行时转移到编译时
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Move computation from run time to compile time&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+降低代码长度，减少运行时间。用常量避免数据竞争。捕获编译时错误，从而避免运行时的出错处理。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">square</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> d*d; <span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">s2</span> = square<span style="color: #707183;">(</span>2<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">old-style: dynamic initialization</span>
+
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">ntimes</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assume 0 &lt;= n</span>
+<span style="color: #707183;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">m</span> = 1;
+        <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span>n--<span style="color: #7388d6;">)</span> m *= d;
+        <span style="color: #7F0055; font-weight: bold;">return</span> m;
+<span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">s3</span> <span style="color: #707183;">{</span>ntimes<span style="color: #7388d6;">(</span>2, 3<span style="color: #7388d6;">)</span><span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">modern-style: compile-time initialization</span>
+</pre>
+</div>
+
+<p>
+像这样给 s2 赋初值的情况很常见，有时候还会有比 <code>square()</code> 更复杂的情况。相比 s3 的初始化过程，存在这些问题：
+</p>
+<ul class="org-ul">
+<li>在运行时有一次额外的函数调用开销</li>
+<li>s2 可能在初始化之前被其他现场访问过</li>
+</ul>
+
+<p>
+注意，对于常量，你不会遇到数据竞争情况。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+考虑以下一个常用技巧：在一个句柄中保存小对象，在堆中保存大对象。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">on_stack_max</span> = 20;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Scoped</span> <span style="color: #707183;">{</span>     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">store a T in Scoped</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">obj</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">On_heap</span> <span style="color: #707183;">{</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">store a T on the free store</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">objp</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Handle</span> = <span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #110099;">std</span>::<span style="color: #110099;">conditional</span><span style="color: #707183;">&lt;</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span>T<span style="color: #909183;">)</span> &lt;= on_stack_max<span style="color: #7388d6;">)</span>,
+                    <span style="color: #000000; font-style: italic; text-decoration: underline;">Scoped</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>,      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">first alternative</span>
+                    <span style="color: #000000; font-style: italic; text-decoration: underline;">On_heap</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">second alternative</span>
+               <span style="color: #707183;">&gt;</span>::type;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Handle</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v1</span>;                   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the double goes on the stack</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Handle</span><span style="color: #7388d6;">&lt;</span><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">array</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span>, 200<span style="color: #909183;">&gt;</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v2</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the array goes on the free store</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+假设 <code>Scoped</code> 和 <code>On_heap</code> 提供互相兼容的用户接口。此处，我们就可以在编译时计算出最合适的类型。另外，我们也有相似的技术，选择需要调用哪个函数。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+不要在编译时计算所有东西。显然，大部分的计算都依赖于输入值，所以不能全部转移到编译时。但是，另一点也值得注意，编译时的计算太复杂的话，会严重导致编译速度变慢，也影响调试效率。有时候，也会因为编译时的计算，影响代码性能。有一点，很少人知道，把一个计算过程分拆到子模块中，可能会导致指令缓存的效率变低。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>检查简单函数，是否可以做成 <code>constexpr</code></li>
+<li>检查调用某函数时，其参数都是常量的情况</li>
+<li>检查宏，是否可以写成 <code>constexpr</code></li>
+</ul>
