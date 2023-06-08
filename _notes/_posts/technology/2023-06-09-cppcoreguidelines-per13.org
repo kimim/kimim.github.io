@@ -1,0 +1,10 @@
+#+layout: post
+#+title: CppCoreGuidelines Per.14 避免重复的间接访问
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Eliminate redundant indirections"
+
+此条未完待续。
