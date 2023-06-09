@@ -1,0 +1,10 @@
+#+layout: post
+#+title: CppCoreGuidelines Per.14 尽量减少内存分配释放的数量
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Minimize the number of allocations and deallocations"
+
+此条未完待续。
