@@ -1,5 +1,5 @@
 #+layout: post
-#+title: CppCoreGuidelines Per.14 避免重复的间接访问
+#+title: CppCoreGuidelines Per.13 避免重复的间接访问
 #+categories: technology
 #+tags: CppCoreGuidelines
 
