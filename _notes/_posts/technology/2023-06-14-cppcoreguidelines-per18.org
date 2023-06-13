@@ -1,0 +1,12 @@
+#+layout: post
+#+title: CppCoreGuidelines Per.18 空间即是时间
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Space is time"
+
+理由
+
+主要影响性能的是内存访问时间。
