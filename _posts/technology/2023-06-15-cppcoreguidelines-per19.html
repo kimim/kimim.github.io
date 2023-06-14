@@ -1,0 +1,44 @@
+---
+layout: post
+title: CppCoreGuidelines Per.19 以可推断的方式访问内存
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Access memory predictably&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+缓存效率对性能至关重要。缓存算法能较好优化简单的线性内存访问。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> matrix<span style="color: #707183;">[</span>rows<span style="color: #707183;">][</span><span style="color: #000000;">cols</span><span style="color: #707183;">]</span>;
+
+<span style="color: #3F7F5F;">// bad</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">c</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>; c <span style="color: #7F0055; font-weight: bold;">&lt;</span> cols; <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">c</span><span style="color: #707183;">)</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">r</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>; r <span style="color: #7F0055; font-weight: bold;">&lt;</span> rows; <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">r</span><span style="color: #707183;">)</span>
+        <span style="color: #000000;">sum</span> <span style="color: #7F0055; font-weight: bold;">+=</span> matrix<span style="color: #707183;">[</span>r<span style="color: #707183;">][</span>c<span style="color: #707183;">]</span>;
+
+<span style="color: #3F7F5F;">// good</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">r</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>; r <span style="color: #7F0055; font-weight: bold;">&lt;</span> rows; <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">r</span><span style="color: #707183;">)</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">c</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>; c <span style="color: #7F0055; font-weight: bold;">&lt;</span> cols; <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">c</span><span style="color: #707183;">)</span>
+        <span style="color: #000000;">sum</span> <span style="color: #7F0055; font-weight: bold;">+=</span> matrix<span style="color: #707183;">[</span>r<span style="color: #707183;">][</span>c<span style="color: #707183;">]</span>;
+</pre>
+</div>
+
+<p>
+二维数组在内存中以行为单位，平铺展开。所以以行为单位进行访问，可以利用缓存算法，优化性能。
+</p>

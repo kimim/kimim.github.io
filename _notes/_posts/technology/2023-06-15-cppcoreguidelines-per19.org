@@ -1,0 +1,31 @@
+#+layout: post
+#+title: CppCoreGuidelines Per.19 以可推断的方式访问内存
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Access memory predictably"
+
+理由
+
+缓存效率对性能至关重要。缓存算法能较好优化简单的线性内存访问。
+
+例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+int matrix[rows][cols];
+
+// bad
+for (int c = 0; c < cols; ++c)
+    for (int r = 0; r < rows; ++r)
+        sum += matrix[r][c];
+
+// good
+for (int r = 0; r < rows; ++r)
+    for (int c = 0; c < cols; ++c)
+        sum += matrix[r][c];
+#+end_src
+
+二维数组在内存中以行为单位，平铺展开。所以以行为单位进行访问，可以利用
+缓存算法，优化性能。
