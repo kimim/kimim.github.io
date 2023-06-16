@@ -1,0 +1,10 @@
+#+layout: post
+#+title: CppCoreGuidelines Per.30 避免在时间关键路径上切换程序上下文
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid context switches on the critical path"
+
+此条未完待续。
