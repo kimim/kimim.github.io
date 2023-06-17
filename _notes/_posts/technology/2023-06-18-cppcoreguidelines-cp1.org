@@ -1,0 +1,110 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.1 预先假定代码会是多线程程序的一部分
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Assume that your code will run as part of a multi-threaded program"
+
+理由
+
+目前没用到并发，很难确定未来某个时候会不会用到。比如：代码重用了。没用到线程的库在程序其他部分的使用了，而这些程序用到了线程。
+
+注意，此规则对于代码库来说比较重要，对于单独的应用相对还好。不过，随着时间推移，很多代码片段也会运行在某些多线程环境。
+
+坏例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+double cached_computation(int x)
+{
+    // bad: these statics cause data races in multi-threaded usage
+    static int cached_x = 0.0;
+    static double cached_result = COMPUTATION_OF_ZERO;
+
+    if (cached_x != x) {
+        cached_x = x;
+        cached_result = computation(x);
+    }
+    return cached_result;
+}
+#+end_src
+
+尽管 ~cached_computation~ 的计算在单线程环境下能很完美地工作。但是如果放
+到多线程环境，两个静态便利的结果就会产生数据竞争。于是，会有难以预料的
+行为结果了。
+
+#+begin_comment
+Although cached_computation works perfectly in a single-threaded environment, in a multi-threaded environment the two static variables result in data races and thus undefined behavior.
+#+end_comment
+
+好例子
+
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
+struct ComputationCache {
+    int cached_x = 0;
+    double cached_result = COMPUTATION_OF_ZERO;
+
+    double compute(int x) {
+        if (cached_x != x) {
+            cached_x = x;
+            cached_result = computation(x);
+        }
+        return cached_result;
+    }
+};
+#+end_src
+
+这段代码中， ~chached_x~ 是 ~ComputationCache~ 对象的成员数据，而不是静态
+的共享数据。这个代码重构把多线程的处理上升到调用代码的地方。如果调用此
+接口的程序是单线程程序，那么依然可以使用全局的 ~ComputationCache~ ，如果
+是多线程程序，那么你可能需要给每一个线程分配一个 ~ComputationCache~ 实例。
+这个重构后的函数，不在尝试管理 ~cached_x~ 的资源分配。这里应用到了单一责
+任原则（[[./2023-02-10-srp][Single Responsibility Principle, SRP]]）。
+
+#+begin_comment
+Here the cache is stored as member data of a ComputationCache object, rather than as shared static state. This refactoring essentially delegates the concern upward to the caller: a single-threaded program might still choose to have one global ComputationCache, while a multi-threaded program might have one ComputationCache instance per thread, or one per “context” for any definition of “context.” The refactored function no longer attempts to manage the allocation of cached_x. In that sense, this is an application of the Single Responsibility Principle.
+#+end_comment
+
+在这个典型的例子中，针对线程安全的代码重构，也同时提升了代码的可重用性。
+不难想象，一个单线程程序可能需要在程序的多个不同的部分用到多个
+~ComputationCache~ 实例，而不互相重置缓存的数据。
+
+#+begin_comment
+In this specific example, refactoring for thread-safety also improved reusability in single-threaded programs. It’s not hard to imagine that a single-threaded program might want two ComputationCache instances for use in different parts of the program, without having them overwrite each other’s cached data.
+#+end_comment
+
+还有其他一些支持线程安全的方式：
+
+#+begin_comment
+There are several other ways one might add thread-safety to code written for a standard multi-threaded environment (that is, one where the only form of concurrency is std::thread):
+#+end_comment
+
+- 不要把状态变量设置为 ~static~ 而是设置为 ~thread_local~
+- 添加并发控制，比如，通过一个静态的 ~std::mutex~ 保护对静态变量的访问
+- 添加编译开关，让非线程安全的代码在多线程环境无法编译或运行
+- 提供两个实现方案：一个用于单线程环境，一个用于多线程环境
+  
+#+begin_comment
+- Mark the state variables as thread_local instead of static.
+- Implement concurrency control, for example, protecting access to the two static variables with a static std::mutex.
+- Refuse to build and/or run in a multi-threaded environment.
+- Provide two implementations: one for single-threaded environments and another for multi-threaded environments.
+#+end_comment
+
+例外
+
+如果确定代码永远不会在多线程环境下执行的话，就可以不用考虑此条规则。
+
+#+begin_comment
+Code that is never run in a multi-threaded environment.
+#+end_comment
+
+注意：很多例子表明，一开始觉得不会在多线程环境中执行，而多年以后却需要
+支持多线程。这种程序通常会痛苦的发现需要很多精力避免数据竞争。所以，对
+于永远不会在多线程环境执行的代码，请明确进行标记，最好是添加编译或运行
+时保障机制，确保尽早发现可能出现的 bug。
+
+#+begin_comment
+Be careful: there are many examples where code that was “known” to never run in a multi-threaded program was run as part of a multi-threaded program, often years later. Typically, such programs lead to a painful effort to remove data races. Therefore, code that is never intended to run in a multi-threaded environment should be clearly labeled as such and ideally come with compile or run-time enforcement mechanisms to catch those usage bugs early.
+#+end_comment

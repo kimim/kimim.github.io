@@ -1,0 +1,101 @@
+---
+layout: post
+title: CppCoreGuidelines CP.1 预先假定代码会是多线程程序的一部分
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Assume that your code will run as part of a multi-threaded program&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+目前没用到并发，很难确定未来某个时候会不会用到。比如：代码重用了。没用到线程的库在程序其他部分的使用了，而这些程序用到了线程。
+</p>
+
+<p>
+注意，此规则对于代码库来说比较重要，对于单独的应用相对还好。不过，随着时间推移，很多代码片段也会运行在某些多线程环境。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #0000ff; font-weight: bold;">cached_computation</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// bad: these statics cause data races in multi-threaded usage</span>
+    <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">cached_x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0.0</span>;
+    <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #000000;">cached_result</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">COMPUTATION_OF_ZERO</span>;
+
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>cached_x <span style="color: #7F0055; font-weight: bold;">!=</span> x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000;">cached_x</span> <span style="color: #7F0055; font-weight: bold;">=</span> x;
+        <span style="color: #000000;">cached_result</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">computation</span><span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> cached_result;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+尽管 <code>cached_computation</code> 的计算在单线程环境下能很完美地工作。但是如果放到多线程环境，两个静态便利的结果就会产生数据竞争。于是，会有难以预料的行为结果了。
+</p>
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ComputationCache</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">cached_x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #000000; font-style: italic;">cached_result</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">COMPUTATION_OF_ZERO</span>;
+
+    <span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">compute</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>cached_x <span style="color: #7F0055; font-weight: bold;">!=</span> x<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            <span style="color: #000000;">cached_x</span> <span style="color: #7F0055; font-weight: bold;">=</span> x;
+            <span style="color: #000000;">cached_result</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">computation</span><span style="color: #709870;">(</span>x<span style="color: #709870;">)</span>;
+        <span style="color: #909183;">}</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> cached_result;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+这段代码中， <code>chached_x</code> 是 <code>ComputationCache</code> 对象的成员数据，而不是静态的共享数据。这个代码重构把多线程的处理上升到调用代码的地方。如果调用此接口的程序是单线程程序，那么依然可以使用全局的 <code>ComputationCache</code> ，如果是多线程程序，那么你可能需要给每一个线程分配一个 <code>ComputationCache</code> 实例。这个重构后的函数，不在尝试管理 <code>cached_x</code> 的资源分配。这里应用到了单一责任原则（<a href="./2023-02-10-srp">Single Responsibility Principle, SRP</a>）。
+</p>
+
+<p>
+在这个典型的例子中，针对线程安全的代码重构，也同时提升了代码的可重用性。不难想象，一个单线程程序可能需要在程序的多个不同的部分用到多个
+<code>ComputationCache</code> 实例，而不互相重置缓存的数据。
+</p>
+
+<p>
+还有其他一些支持线程安全的方式：
+</p>
+
+<ul class="org-ul">
+<li>不要把状态变量设置为 <code>static</code> 而是设置为 <code>thread_local</code></li>
+<li>添加并发控制，比如，通过一个静态的 <code>std::mutex</code> 保护对静态变量的访问</li>
+<li>添加编译开关，让非线程安全的代码在多线程环境无法编译或运行</li>
+<li>提供两个实现方案：一个用于单线程环境，一个用于多线程环境</li>
+</ul>
+
+<p>
+例外
+</p>
+
+<p>
+如果确定代码永远不会在多线程环境下执行的话，就可以不用考虑此条规则。
+</p>
+
+<p>
+注意：很多例子表明，一开始觉得不会在多线程环境中执行，而多年以后却需要支持多线程。这种程序通常会痛苦的发现需要很多精力避免数据竞争。所以，对于永远不会在多线程环境执行的代码，请明确进行标记，最好是添加编译或运行时保障机制，确保尽早发现可能出现的 bug。
+</p>
