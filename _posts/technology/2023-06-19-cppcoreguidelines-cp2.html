@@ -1,0 +1,149 @@
+---
+layout: post
+title: CppCoreGuidelines CP.2 避免数据竞争
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid data races&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+除非你确实做到了，不然的话，无法保证代码是否正确工作，一些莫名其妙的错误会一直在那。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+总归一句话，如果两个线程要同时访问同一个对象，在没有同步机制的情况下，至少一个线程是写线程（进行一些非 <code>const</code> 的操作），你就会遇到数据竞争的情况。
+</p>
+
+<p>
+坏例子
+</p>
+
+<p>
+有很多数据竞争的例子，不少目前还运行在产品软件中。一个简单的例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">get_id</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">id</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">1</span>;
+  <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #3a5fcd; font-weight: bold; font-style: italic; text-decoration: underline;">this_thread</span><span style="color: #3a5fcd; font-weight: bold;">::sleep_for</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #3a5fcd; font-weight: bold; font-style: italic; text-decoration: underline;">chrono</span><span style="color: #3a5fcd; font-weight: bold;">::milliseconds</span><span style="color: #909183;">(</span><span style="color: #110099;">30</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+  <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #000000;">id</span><span style="color: #7F0055; font-weight: bold;">++</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #0000ff; font-weight: bold;">t1</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">get_id</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #0000ff; font-weight: bold;">t2</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">get_id</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #0000ff; font-weight: bold;">t3</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">get_id</span><span style="color: #7388d6;">)</span>;
+    t1.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">join</span><span style="color: #7388d6;">()</span>;
+    t2.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">join</span><span style="color: #7388d6;">()</span>;
+    t3.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">join</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">get_id</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+3
+</pre>
+
+
+<p>
+此处的自增是数据竞争的一个例子。可能会出现以下这些错误：
+</p>
+
+<ul class="org-ul">
+<li>线程 A 加载 id 的值，然后操作系统从 A 切换到其他线程，在此过程，其他线程把 id 的值增加了 100 次，然后操作系统切换到 A，A 继续把增加的 id
+值 2 写入 id。</li>
+<li>也可能，线程 A 和 B 加载 id，同时增加 id 的值，这时候，A 和 B 得到的
+id 值是一样的。</li>
+</ul>
+
+<p>
+局部的静态变量是数据竞争的常见根源。
+</p>
+
+<p>
+坏例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fstream</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">fs</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">regex</span> <span style="color: #000000;">pattern</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">array</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">double</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">max</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">buf</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">sz</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">read_vec</span><span style="color: #7388d6;">(</span>fs, buf, max<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// read from fs into buf</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">s</span> <span style="color: #7388d6;">{</span>buf<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">h1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">async</span><span style="color: #7388d6;">(</span><span style="color: #909183;">[</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #909183;">]</span> <span style="color: #909183;">{</span> <span style="color: #3a5fcd; font-weight: bold;">sort</span><span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">execution</span>::par, s<span style="color: #709870;">)</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// spawn a task to sort</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">h2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">async</span><span style="color: #7388d6;">(</span><span style="color: #909183;">[</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #909183;">]</span> <span style="color: #909183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #3a5fcd; font-weight: bold;">find_all</span><span style="color: #709870;">(</span>buf, sz, pattern<span style="color: #709870;">)</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// spawn a task to find matches</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这里，我们发现 buf 的元素之间存在数据竞争（sort 会读取和写入数据）。所有的数据竞争都很讨厌。这里，我们发现程序栈中存在数据竞争。并非所有的数据竞争都是这么容易发觉的。
+</p>
+
+<p>
+坏例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// code not controlled by a lock</span>
+
+<span style="color: #7F0055; font-weight: bold;">unsigned</span> <span style="color: #000000;">val</span>;
+
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>val <span style="color: #7F0055; font-weight: bold;">&lt;</span> <span style="color: #110099;">5</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ... other thread can change val here ...</span>
+    <span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #7388d6;">(</span>val<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #110099;">0</span>: <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #110099;">1</span>: <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #110099;">2</span>: <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #110099;">3</span>: <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #110099;">4</span>: <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+因为编译器不知道 <code>val</code> 的值会被改变，所以，在编译实现的过程中，可能使用
+5 个地址的跳转表的方式实现。然后，如果 <code>val</code> 的值超出了 0 到 4 的范围的话，程序可能就跳转到某个错误的地方继续执行。实际上，更恐怖的是，通过检查生成的代码，你可能能设计出某个条件，让程序跳转到你想要执行的地方。这样就产生了一个安全漏洞。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+有些商业或开源的软件能尝试解决这个问题，但是，请注意，这会产生额外成本，也会有一些盲点。静态工具通常会产生很多误报，而运行时进行检测的工具又非常昂贵。我们希望有更好的工具。用多个工具，通常能比单个工具捕捉更多的问题。
+</p>
+
+<p>
+其他一些方式可以避免数据竞争：
+</p>
+
+<ul class="org-ul">
+<li>避免全局数据</li>
+<li>避免静态变量</li>
+<li>在程序栈中用更多具体类型，而不要指针传来传去</li>
+<li>用不可变数据，比如字面量（literal）、 <code>constexpr</code> 以及 <code>const</code></li>
+</ul>

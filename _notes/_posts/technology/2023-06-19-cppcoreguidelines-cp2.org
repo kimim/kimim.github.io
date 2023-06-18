@@ -1,0 +1,168 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.2 避免数据竞争
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid data races"
+
+理由
+
+除非你确实做到了，不然的话，无法保证代码是否正确工作，一些莫名其妙的错
+误会一直在那。
+
+#+begin_comment
+Unless you do, nothing is guaranteed to work and subtle errors will persist.
+#+end_comment
+
+注意
+
+总归一句话，如果两个线程要同时访问同一个对象，在没有同步机制的情况下，
+至少一个线程是写线程（进行一些非 ~const~ 的操作），你就会遇到数据竞争的
+情况。
+
+#+begin_comment
+In a nutshell, if two threads can access the same object concurrently (without synchronization), and at least one is a writer (performing a non-const operation), you have a data race. For further information of how to use synchronization well to eliminate data races, please consult a good book about concurrency (See Carefully study the literature).
+#+end_comment
+
+坏例子
+
+有很多数据竞争的例子，不少目前还运行在产品软件中。一个简单的例子：
+
+#+begin_comment
+There are many examples of data races that exist, some of which are running in production software at this very moment. One very simple example:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm> <thread>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int get_id()
+{
+  static int id = 1;
+  std::this_thread::sleep_for(std::chrono::milliseconds(30));
+  return id++;
+}
+int main()
+{
+    std::thread t1(get_id);
+    std::thread t2(get_id);
+    std::thread t3(get_id);
+    t1.join();
+    t2.join();
+    t3.join();
+    std::cout << get_id();
+}
+#+end_src
+
+#+RESULTS:
+: 3
+
+此处的自增是数据竞争的一个例子。可能会出现以下这些错误：
+
+#+begin_comment
+The increment here is an example of a data race. This can go wrong in many ways, including:
+#+end_comment
+
+- 线程 A 加载 id 的值，然后操作系统从 A 切换到其他线程，在此过程，其他
+  线程把 id 的值增加了 100 次，然后操作系统切换到 A，A 继续把增加的 id
+  值 2 写入 id。
+- 也可能，线程 A 和 B 加载 id，同时增加 id 的值，这时候，A 和 B 得到的
+  id 值是一样的。
+
+#+begin_comment
+- Thread A loads the value of id, the OS context switches A out for some period, during which other threads create hundreds of IDs. Thread A is then allowed to run again, and id is written back to that location as A’s read of id plus one.
+- Thread A and B load id and increment it simultaneously. They both get the same ID.
+#+end_comment
+
+局部的静态变量是数据竞争的常见根源。
+
+#+begin_comment
+Local static variables are a common source of data races.
+#+end_comment
+
+坏例子：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f(fstream& fs, regex pattern)
+{
+    array<double, max> buf;
+    int sz = read_vec(fs, buf, max);
+    // read from fs into buf
+    gsl::span<double> s {buf};
+    // ...
+    auto h1 = async([&] { sort(std::execution::par, s); });
+    // spawn a task to sort
+    // ...
+    auto h2 = async([&] { return find_all(buf, sz, pattern); });
+    // spawn a task to find matches
+    // ...
+}
+#+end_src
+
+这里，我们发现 buf 的元素之间存在数据竞争（sort 会读取和写入数据）。所
+有的数据竞争都很讨厌。这里，我们发现程序栈中存在数据竞争。并非所有的数
+据竞争都是这么容易发觉的。
+
+#+begin_comment
+Here, we have a (nasty) data race on the elements of buf (sort will both read and write). All data races are nasty. Here, we managed to get a data race on data on the stack. Not all data races are as easy to spot as this one.
+#+end_comment
+
+坏例子：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// code not controlled by a lock
+
+unsigned val;
+
+if (val < 5) {
+    // ... other thread can change val here ...
+    switch (val) {
+    case 0: // ...
+    case 1: // ...
+    case 2: // ...
+    case 3: // ...
+    case 4: // ...
+    }
+}
+#+end_src
+
+因为编译器不知道 ~val~ 的值会被改变，所以，在编译实现的过程中，可能使用
+5 个地址的跳转表的方式实现。然后，如果 ~val~ 的值超出了 0 到 4 的范围的
+话，程序可能就跳转到某个错误的地方继续执行。实际上，更恐怖的是，通过检
+查生成的代码，你可能能设计出某个条件，让程序跳转到你想要执行的地方。这
+样就产生了一个安全漏洞。
+
+#+begin_comment
+Now, a compiler that does not know that val can change will most likely implement that switch using a jump table with five entries. Then, a val outside the [0..4] range will cause a jump to an address that could be anywhere in the program, and execution would proceed there. Really, “all bets are off” if you get a data race. Actually, it can be worse still: by looking at the generated code you might be able to determine where the stray jump will go for a given value; this can be a security risk.
+#+end_comment
+
+强化
+
+有些商业或开源的软件能尝试解决这个问题，但是，请注意，这会产生额外成本，
+也会有一些盲点。静态工具通常会产生很多误报，而运行时进行检测的工具又非
+常昂贵。我们希望有更好的工具。用多个工具，通常能比单个工具捕捉更多的问
+题。
+
+#+begin_comment
+Some is possible, do at least something. There are commercial and open-source tools that try to address this problem, but be aware that solutions have costs and blind spots. Static tools often have many false positives and run-time tools often have a significant cost. We hope for better tools. Using multiple tools can catch more problems than a single one.
+#+end_comment
+
+其他一些方式可以避免数据竞争：
+
+#+begin_comment
+There are other ways you can mitigate the chance of data races:
+#+end_comment
+
+- 避免全局数据
+- 避免静态变量
+- 在程序栈中用更多具体类型，而不要指针传来传去
+- 用不可变数据，比如字面量（literal）、 ~constexpr~ 以及 ~const~
+  
+#+begin_comment
+- Avoid global data
+- Avoid static variables
+- More use of concrete types on the stack (and don’t pass pointers around too much)
+- More use of immutable data (literals, constexpr, and const)
+#+end_comment
