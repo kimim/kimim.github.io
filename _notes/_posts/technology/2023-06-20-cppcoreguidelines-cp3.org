@@ -1,0 +1,57 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.3 尽量减少可写数据的显式共享
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Minimize explicit sharing of writable data"
+
+理由
+
+如果你不共享可写数据，你就不会有数据竞争。你越少共享数据，越不容易忘记
+在数据访问进行同步。你越少共享数据，越不需要等待数据解锁。从而可以提升性能。
+
+#+begin_comment
+If you don’t share writable data, you can’t have a data race. The less sharing you do, the less chance you have to forget to synchronize access (and get data races). The less sharing you do, the less chance you have to wait on a lock (so performance can improve). 
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+bool validate(const vector<Reading>&);
+Graph<Temp_node> temperature_gradients(const vector<Reading>&);
+Image altitude_map(const vector<Reading>&);
+// ...
+
+void process_readings(const vector<Reading>& surface_readings)
+{
+    auto h1 = async([&] { if (!validate(surface_readings))
+                throw Invalid_data{}; });
+    auto h2 = async([&] { return temperature_gradients(surface_readings); });
+    auto h3 = async([&] { return altitude_map(surface_readings); });
+    // ...
+    h1.get();
+    auto v2 = h2.get();
+    auto v3 = h3.get();
+    // ...
+}
+#+end_src
+
+如果没有这些 ~const~, 我们就需要检查每一个异步调用的函数，是不是在使用
+~surface_readings~ 这个变量的时候存在数据竞争。一旦把 ~surface_readings~
+设置成 ~const~, 我们就只要关心函数本身的逻辑是否正确，不用担心数据竞争了。
+
+#+begin_comment
+Without those consts, we would have to review every asynchronously invoked function for potential data races on surface_readings. Making surface_readings be const (with respect to this function) allow reasoning using only the function body.
+#+end_comment
+
+注意
+
+我们可以安全高效地共享不可变数据。不需要锁机制。用常量的地方不存在数据
+竞争。
+
+#+begin_comment
+Immutable data can be safely and efficiently shared. No locking is needed: You can’t have a data race on a constant. See also CP.mess: Message Passing and CP.31: prefer pass by value. 
+#+end_comment

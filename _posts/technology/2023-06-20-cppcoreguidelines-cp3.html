@@ -1,0 +1,60 @@
+---
+layout: post
+title: CppCoreGuidelines CP.3 尽量减少可写数据的显式共享
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Minimize explicit sharing of writable data&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+如果你不共享可写数据，你就不会有数据竞争。你越少共享数据，越不容易忘记在数据访问进行同步。你越少共享数据，越不需要等待数据解锁。从而可以提升性能。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">bool</span> <span style="color: #0000ff; font-weight: bold;">validate</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Reading</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Graph</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Temp_node</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">temperature_gradients</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Reading</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Image</span> <span style="color: #0000ff; font-weight: bold;">altitude_map</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Reading</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// ...</span>
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">process_readings</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Reading</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">surface_readings</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">h1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">async</span><span style="color: #7388d6;">(</span><span style="color: #909183;">[</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #909183;">]</span> <span style="color: #909183;">{</span> <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">!</span><span style="color: #3a5fcd; font-weight: bold;">validate</span><span style="color: #907373;">(</span>surface_readings<span style="color: #907373;">)</span><span style="color: #709870;">)</span>
+                <span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Invalid_data</span><span style="color: #709870;">{}</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">h2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">async</span><span style="color: #7388d6;">(</span><span style="color: #909183;">[</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #909183;">]</span> <span style="color: #909183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #3a5fcd; font-weight: bold;">temperature_gradients</span><span style="color: #709870;">(</span>surface_readings<span style="color: #709870;">)</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">h3</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">async</span><span style="color: #7388d6;">(</span><span style="color: #909183;">[</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #909183;">]</span> <span style="color: #909183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #3a5fcd; font-weight: bold;">altitude_map</span><span style="color: #709870;">(</span>surface_readings<span style="color: #709870;">)</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    h1.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">get</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">v2</span> <span style="color: #7F0055; font-weight: bold;">=</span> h2.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">get</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">v3</span> <span style="color: #7F0055; font-weight: bold;">=</span> h3.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">get</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果没有这些 <code>const</code>, 我们就需要检查每一个异步调用的函数，是不是在使用
+<code>surface_readings</code> 这个变量的时候存在数据竞争。一旦把 <code>surface_readings</code>
+设置成 <code>const</code>, 我们就只要关心函数本身的逻辑是否正确，不用担心数据竞争了。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+我们可以安全高效地共享不可变数据。不需要锁机制。用常量的地方不存在数据竞争。
+</p>
