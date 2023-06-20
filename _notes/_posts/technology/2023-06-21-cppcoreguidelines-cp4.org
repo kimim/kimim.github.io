@@ -1,0 +1,44 @@
+#+layout: post
+#+title: CppCoreGuidelines  CP.4 以任务为视角考虑问题，而不是线程
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Think in terms of tasks, rather than threads"
+
+理由
+
+线程是技术实现上的概念，是以机器时间考虑问题。而任务则是应用术语，某些
+你想要做的事情，也有可能和其他任务并行执行。应用概念更容易进行分析。
+
+#+begin_comment
+A thread is an implementation concept, a way of thinking about the machine. A task is an application notion, something you’d like to do, preferably concurrently with other tasks. Application concepts are easier to reason about. 
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void some_fun(const std::string& msg)
+{
+    // bad: less expressive and more error-prone
+    std::thread publisher([=] { std::cout << msg; });
+
+    auto pubtask = std::async([=] { std::cout << msg; });  // OK
+    // ...
+    publisher.join();
+}
+
+#+end_src
+
+注意
+
+~async()~ 是个例外。这个标准库函数是底层、面向机器、线程+锁层级的。它是
+一个必要的基础功能。但是，我们必须提升其抽象层级：为了提高工作效率、提
+高可靠性、提高性能。这里是关于是否使用高层抽象/面向应用的库的一个争论
+点。如果可能，可以基于标准库函数构建。
+
+#+begin_comment
+With the exception of async(), the standard-library facilities are low-level, machine-oriented, threads-and-lock level. This is a necessary foundation, but we have to try to raise the level of abstraction: for productivity, for reliability, and for performance. This is a potent argument for using higher level, more applications-oriented libraries (if possible, built on top of standard-library facilities).
+#+end_comment

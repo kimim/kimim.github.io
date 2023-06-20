@@ -1,0 +1,47 @@
+---
+layout: post
+title: CppCoreGuidelines  CP.4 以任务为视角考虑问题，而不是线程
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Think in terms of tasks, rather than threads&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+线程是技术实现上的概念，是以机器时间考虑问题。而任务则是应用术语，某些你想要做的事情，也有可能和其他任务并行执行。应用概念更容易进行分析。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">some_fun</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">msg</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// bad: less expressive and more error-prone</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">publisher</span><span style="color: #7388d6;">(</span><span style="color: #909183;">[</span><span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #909183;">]</span> <span style="color: #909183;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> msg; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">pubtask</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #3a5fcd; font-weight: bold;">async</span><span style="color: #7388d6;">(</span><span style="color: #909183;">[</span><span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #909183;">]</span> <span style="color: #909183;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> msg; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// OK</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    publisher.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">join</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+<code>async()</code> 是个例外。这个标准库函数是底层、面向机器、线程+锁层级的。它是一个必要的基础功能。但是，我们必须提升其抽象层级：为了提高工作效率、提高可靠性、提高性能。这里是关于是否使用高层抽象/面向应用的库的一个争论点。如果可能，可以基于标准库函数构建。
+</p>
