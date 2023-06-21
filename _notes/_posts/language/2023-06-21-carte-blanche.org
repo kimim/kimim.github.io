@@ -1,0 +1,37 @@
+#+LAYOUT: post
+#+TITLE: 单词本：carte blanche
+#+TAGS: English Français
+#+CATEGORIES: language
+
+大概同事看我太闲，所以又让我负责中国研发中心的信息安全工作。所以，继续
+读一些信息安全相关资料。
+
+Just because a device is trusted and onboarded to a Fabric does not
+mean that it should have *carte blanche* access to all the features and
+functionality of all other devices on the Fabric.
+
+这句话是说，不要因为组织机构信任设备，安全部署了设备，这个设备就可以全
+权访问网络中的任何其他设备的功能。这里是说除了授权联网，还要进行权限管
+理。
+
+carte blanche 是从法语里传来的。字面意思是空白文件。法律意义上是全权委
+托、署名空白纸的意思。就是一个授权文件上面是空白的，只有授权人的署名。
+那么委托人就可以随便在上面写被授权的内容，就可以做任何事情了。
+
+再举几个例子：
+
+Le chorégraphe a *carte blanche* pour réinterpréter ce classique.  编舞
+有解释自己经典的自由权。
+
+Le directeur nous a donné *carte blanche* sur ce projet.  总监让我们全权
+负责本项目。
+
+德语 Blankovollmacht 也很形象，Eine Blankovollmacht ist eine
+umfassende, eventuell sogar allumfassende Vollmacht.  首先， die
+Vollmacht 的意思是授权代理，字面意思就是全部能做。Blank 就是法语的
+blanche ，空白的。合起来就是空白的全权委托。
+
+再比如印度的 TAG 展示的[[https://indiaeducationdiary.in/tech-avant-garde-to-showcase-project-carte-blanche-at-janbhagidari-event-g20-4th-education-summit-held-at-pune-2][一个项目]]，就用了 Carte Blanche 命名。
+
+TAG 公司的全称是 Tech Avant-Garde, [[./2023-05-11-avant-garde][avant-garde]] 正是我们不久前遇到过的
+单词，意思是先锋、前卫。

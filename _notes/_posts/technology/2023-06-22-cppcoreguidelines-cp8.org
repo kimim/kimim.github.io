@@ -1,0 +1,87 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.8 不要通过 volatile 进行同步处理
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t try to use ~volatile~ for synchronization"
+
+理由
+
+与其他语言不同，在 C++ 中， ~volatile~ 不提供原子性操作能力。不能在线程
+之间同步，不能防止编译器或硬件对指令重排序引起的问题。简单说，就是
+~volatile~ 不提供任何并行运算支持。
+
+#+begin_comment
+In C++, unlike some other languages, volatile does not provide atomicity, does not synchronize between threads, and does not prevent instruction reordering (neither compiler nor hardware). It simply has nothing to do with concurrency.
+#+end_comment
+
+坏例子
+
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int free_slots = max_slots; // current source of memory for objects
+
+Pool* use()
+{
+    if (int n = free_slots--) return &pool[n];
+}
+#+end_src
+
+这里，我们遇到一个问题：在单线程环境下，这段代码没有任何问题。但是如果
+多个线程执行这段代码，就会在 ~free_slots~ 这个变量上出现数据竞争情况。两
+个线程可能从 ~free_slots~ 得到一样的数值。所以，熟悉其他编程语言的人，可
+能会通过以下方法解决这个问题：
+
+#+begin_comment
+Here we have a problem: This is perfectly good code in a single-threaded program, but have two threads execute this and there is a race condition on free_slots so that two threads might get the same value and free_slots. That’s (obviously) a bad data race, so people trained in other languages might try to fix it like this:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+volatile int free_slots = max_slots; // current source of memory for objects
+
+Pool* use()
+{
+    if (int n = free_slots--) return &pool[n];
+}
+#+end_src
+
+然而，这样做并不能达到同步的效果：数据竞争仍然存在！
+
+C++ 提供的机制是 ~atomic~  类型：
+
+#+begin_comment
+This has no effect on synchronization: The data race is still there!
+
+The C++ mechanism for this is atomic types:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+atomic<int> free_slots = max_slots; // current source of memory for objects
+
+Pool* use()
+{
+    if (int n = free_slots--) return &pool[n];
+}
+#+end_src
+
+现在，这个操作是原子操作，而非分步骤的：读取-自减-写入，不然在操作过程
+中，其他线程可能在其中插入进行操作。
+
+#+begin_comment
+Now the -- operation is atomic, rather than a read-increment-write sequence where another thread might get in-between the individual operations.
+#+end_comment
+
+其他情况
+
+在复杂的例子中可以使用 ~mutex~
+
+#+begin_comment
+Use atomic types where you might have used volatile in some other language. Use a mutex for more complicated examples. See also
+
+(rare) proper uses of volatile
+#+end_comment
