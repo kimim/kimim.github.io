@@ -1,0 +1,64 @@
+#+LAYOUT: post
+#+TITLE: 单词本：wissen und kennen
+#+TAGS: Deutsch
+#+CATEGORIES: language
+
+德语中有两个动词，都是“知道”的意思。一个是 wissen, 另一个是 kennen.
+那么，都是怎么用的呢？
+
+首先，了解下它们的动词变位：
+
+wissen:
+- Ich weiß
+- Du weißt
+- Er/sie/es weiß
+- Wir wissen
+- Ihr wisst
+- Sie wissen
+- sie wissen
+
+kennen
+- Ich kenne
+- Du kennst
+- Er/sie/es kennt
+- Wir kennen
+- Ihr kennt
+- Sie kennen
+- sie kennen
+
+这里要注意，wissen 是个强变化动词，单数人称变位的时候，会有一点小小的
+变音，-iss 变成了 -eiß。
+
+wissen  用于对知识和事实的知道。比如：
+
+- Weißst du, wo mein Vater ist?
+- Ich weißst nicht, was ich sagen soll.
+- Was ich nicht weiß, macht mich nicht heiß.  我不知道的事情，不会令我
+  发热。这是个德语谚语，即无知无畏。
+
+kennen 则表示熟悉、认识。比如：
+
+- Kennt ihr dieses Lied?  你熟悉这首歌吗？
+- Sie kennt Kimi schon seit Jahren.  她认识 Kimi 好多年了。
+- Kennst du meinen Bruder?  你认识我哥哥吗？
+- Er kennt Hangzhou sehr gut.  他很熟悉杭州。
+
+再比如，这些句子中，两个词有些微妙的差异：
+
+- Kennst du den Weg? Weißt du, wohin der Weg läuft?  你熟悉这条路吗？
+  你知道这条路通往哪里？这里前面的问句问的是你对这条路是不是熟悉，后面
+  则是问这条路通向哪里的事实你知不知道。
+- Ich weiß den Weg dahin, aber ich kenne ihn nicht.  这个回答是说，我
+  知道这路会通往哪里的事实，但是我不熟悉这条路，我没走过或者我走得不多。
+- Kennst du den Autor des Buches? Weißst du den Autor des Buches?  第
+  一句是问你跟这些书的作者熟不熟悉。第二句则是问你知不知道这些书的作者
+  这个事实。
+
+
+但是，在德语里，会说一门语言则用 können, Ich kann gut Deutsch.  我很会
+德语。Ich kann kein Englisch.  我不会英语。
+
+说一个人熟悉某个领域则用 sich auskennen, 比如 Er kennt sich in der
+Chemie aus.  他知道熟知化学。
+
+Bis bald!
