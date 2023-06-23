@@ -1,0 +1,57 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.20 用 RAII, 不要用基础的 lock()/unlock()
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use RAII, never plain lock()/unlock()"
+
+理由
+
+避免因为锁没释放导致的诡异问题。
+
+#+begin_comment
+Avoids nasty errors from unreleased locks.
+#+end_comment
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+mutex mtx;
+
+void do_stuff()
+{
+    mtx.lock();
+    // ... do stuff ...
+    mtx.unlock();
+}
+
+#+end_src
+
+迟早的，会有人忘记那里有一个 ~mtx.unlock()~, 然后在之前加一个 ~return~ 或
+在执行代码中抛出个异常，或者其他什么东西。
+
+#+begin_comment
+Sooner or later, someone will forget the mtx.unlock(), place a return in the ... do stuff ..., throw an exception, or something.
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+mutex mtx;
+
+void do_stuff()
+{
+    unique_lock<mutex> lck {mtx};
+    // ... do stuff ...
+}
+#+end_src
+
+强化
+
+标记调用 ~lock()~ 和 ~unlock()~ 的代码。
+
+#+begin_comment
+Flag calls of member lock() and unlock(). ???
+#+end_comment

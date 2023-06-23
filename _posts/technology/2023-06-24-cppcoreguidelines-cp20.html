@@ -1,0 +1,61 @@
+---
+layout: post
+title: CppCoreGuidelines CP.20 用 RAII, 不要用基础的 lock()/unlock()
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use RAII, never plain lock()/unlock()&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+避免因为锁没释放导致的诡异问题。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000;">mtx</span>;
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">do_stuff</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    mtx.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">lock</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// ... do stuff ...</span>
+    mtx.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">unlock</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+
+</pre>
+</div>
+
+<p>
+迟早的，会有人忘记那里有一个 <code>mtx.unlock()</code>, 然后在之前加一个 <code>return</code> 或在执行代码中抛出个异常，或者其他什么东西。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000;">mtx</span>;
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">do_stuff</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_lock</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">lck</span> <span style="color: #7388d6;">{</span>mtx<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// ... do stuff ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+标记调用 <code>lock()</code> 和 <code>unlock()</code> 的代码。
+</p>
