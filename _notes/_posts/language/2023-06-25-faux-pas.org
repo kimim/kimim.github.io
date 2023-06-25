@@ -1,0 +1,44 @@
+#+LAYOUT: post
+#+TITLE: 单词本：faux pas
+#+TAGS: English Français
+#+CATEGORIES: language
+
+不久前看了 Digital Minimalism, 作者在分析为什么我们总是强制自己看手机
+消息通知的时候，说到：
+
+Our Paleolithic brain categorizes ignoring a newly arrived text the
+same as snubbing the tribe member trying to attract your attention by
+the communal fire: a potentially dangerous social *faux pas*.
+
+在旧石器时代，如果某个人怠慢了部落成员的社群篝火信号的话，会使一个危险
+的社会失礼行为。所以，人类的大脑会很紧张，不敢忽视手机上收到的社交媒体
+消息。
+
+也就是说，我们不敢疏忽他人发来的消息，是一种根深蒂固的自我保护意识。因
+为，在严重依赖于社群才能存活的旧石器时代，我们就已经习得了这样一种条件
+反射：万万不可怠慢社群成员，一旦脱离群体，所要面临的就是饥饿、黑暗、寒
+冷、野兽。所以，现代人一收到新的消息，大脑就会立即紧张，是不是有谁在找
+我，我不赶紧回复，找我的会不会觉得我无礼，以后不再接纳我。于是，就会立
+即拿起手机查看消息，回复消息。很快，时间就慢慢流逝了。
+
+这里 faux pas 是个法语词组。faux 是错误的，false 的意思，而 pas 则是脚
+步、step 的意思。比如 Faites deux pas en avant 往前走两步。faux pas 组
+合起来，就是走错的步伐，引申为失礼、失言、失态。
+
+比如：Every year numerous tourists fall foul of local customers
+failing to brush up on the cultural *faux pas* of the destinations they
+visit.  每年，好多游客违背当地风俗，造成文化上的失态。
+
+顺便整理几个 cultural faux pas:
+1. 在阿拉伯是不允许传紧身服的，尤其是去宗教场合。
+2. 梵蒂冈天主教教堂不要允许穿露肩、露肚脐、露大腿的衣服进去。
+3. 在英国，手心向内的 V 手势，有很强的挑衅意思，而在巴西，竖起大拇指表
+   示“你被戴绿帽了”。
+4. 泰国，头是神圣的，脚是肮脏的。不能用脚指人，不能碰人脑袋。
+5. 巴基斯坦，尊重老人极其重要，见面打招呼要站直、鞠躬。坐着跟老人打招
+   呼极其不礼貌。
+6. 称呼苏格兰人、爱尔兰人以及威尔士人为英国人 English 也很不礼貌。
+7. 尼泊尔不握手，要用合十礼（namaste）。
+8. 德国不可以提前祝别人生日快乐，可能会认为折寿，或者会导致活不到生日
+   那天。可见德国人很有忧患意识。他们有句谚语：Man soll den Tag nicht
+   vor dem Abend loben. 夜晚没到、莫赞整日。
