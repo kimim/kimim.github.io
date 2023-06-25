@@ -1,0 +1,76 @@
+---
+layout: post
+title: CppCoreGuidelines CP.22 保有一个锁的时候不要调用未知代码
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Never call unknown code while holding a lock (e.g., a callback)&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+如果你不知道某段代码做什么，你就可能遇到死锁。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">do_this</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">lck</span> <span style="color: #7388d6;">{</span>my_mutex<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// ... do something ...</span>
+    p<span style="color: #7F0055; font-weight: bold;">-&gt;</span><span style="color: #3a5fcd; font-weight: bold; font-style: italic;">act</span><span style="color: #7388d6;">(</span>my_data<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果你不知道 <code>Foo::act</code> 是做什么的，可能是一个虚函数，调用派生类的成员，而该派生类可能目前还没开发出来。也可能使递归调用 <code>do_this</code> 函数，导致
+<code>my_mutex</code> 死锁。可能会因为某个其他互斥锁而锁住了，不能在某个合理的时间内返回。也就会导致任何调用这个函数的其他地方产生延时。
+</p>
+
+<p>
+例子
+</p>
+
+<p>
+常见的有“调用未知代码”问题的例子是，调用一个函数，而这个函数尝试对同一个对象进行锁定使用。这类问题通常可以使用 <code>recursive_mutex</code> 解决。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">recursive_mutex</span> <span style="color: #000000;">my_mutex</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Action</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Action</span> <span style="color: #000000;">f</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_lock</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">recursive_mutex</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">lck</span> <span style="color: #7388d6;">{</span>my_mutex<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// ... do something ...</span>
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">this</span><span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// f will do something to *this</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果 <code>f()</code> 在 <code>*this</code> 进行操作，我们必须在调用前，保证对象的不变式。
+</p>
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记保有非递归互斥锁的时候，调用虚函数的情况。</li>
+<li>标记保有非递归互斥锁的时候，调用回调函数的情况。</li>
+</ul>

@@ -1,0 +1,77 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.22 保有一个锁的时候不要调用未知代码
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Never call unknown code while holding a lock (e.g., a callback)"
+
+理由
+
+如果你不知道某段代码做什么，你就可能遇到死锁。
+
+#+begin_comment
+If you don’t know what a piece of code does, you are risking deadlock.
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void do_this(Foo* p)
+{
+    lock_guard<mutex> lck {my_mutex};
+    // ... do something ...
+    p->act(my_data);
+    // ...
+}
+#+end_src
+
+如果你不知道 ~Foo::act~ 是做什么的，可能是一个虚函数，调用派生类的成员，
+而该派生类可能目前还没开发出来。也可能使递归调用 ~do_this~ 函数，导致
+~my_mutex~ 死锁。可能会因为某个其他互斥锁而锁住了，不能在某个合理的时间
+内返回。也就会导致任何调用这个函数的其他地方产生延时。
+
+#+begin_comment
+If you don’t know what Foo::act does (maybe it is a virtual function invoking a derived class member of a class not yet written), it might call do_this (recursively) and cause a deadlock on my_mutex. Maybe it will lock on a different mutex and not return in a reasonable time, causing delays to any code calling do_this.
+#+end_comment
+
+例子
+
+常见的有“调用未知代码”问题的例子是，调用一个函数，而这个函数尝试对同一
+个对象进行锁定使用。这类问题通常可以使用 ~recursive_mutex~ 解决。
+
+#+begin_comment
+A common example of the “calling unknown code” problem is a call to a function that tries to gain locked access to the same object. Such problem can often be solved by using a recursive_mutex. 
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+recursive_mutex my_mutex;
+
+template<typename Action>
+void do_something(Action f)
+{
+    unique_lock<recursive_mutex> lck {my_mutex};
+    // ... do something ...
+    f(this);    // f will do something to *this
+    // ...
+}
+#+end_src
+
+如果 ~f()~ 在 ~*this~ 进行操作，我们必须在调用前，保证对象的不变式。
+
+#+begin_comment
+If, as it is likely, f() invokes operations on *this, we must make sure that the object’s invariant holds before the call.
+#+end_comment
+
+强化
+
+- 标记保有非递归互斥锁的时候，调用虚函数的情况。
+- 标记保有非递归互斥锁的时候，调用回调函数的情况。
+
+#+begin_comment
+Flag calling a virtual function with a non-recursive mutex held
+Flag calling a callback with a non-recursive mutex held
+#+end_comment
