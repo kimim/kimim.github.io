@@ -1,0 +1,58 @@
+---
+layout: post
+title: CppCoreGuidelines CP.23 把 joining_thread 当作一个带作用域范围的容器
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Think of a joining thread as a scoped container&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+为了确保指针安全，避免泄露，我们要考虑下，在线程中用到了哪些指针。如果一个线程会自动 join，我们就可以安全传递这些线程作用域范围内的指针。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">99</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">glob</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">33</span>;
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">some_fct</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">77</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">joining_thread</span> <span style="color: #000000;">t0</span><span style="color: #7388d6;">(</span>f, <span style="color: #7F0055; font-weight: bold;">&amp;</span>x<span style="color: #7388d6;">)</span>;           <span style="color: #3F7F5F;">// OK</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">joining_thread</span> <span style="color: #0000ff; font-weight: bold;">t1</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">f</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">p</span><span style="color: #7388d6;">)</span>;            <span style="color: #3F7F5F;">// OK</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">joining_thread</span> <span style="color: #000000;">t2</span><span style="color: #7388d6;">(</span>f, <span style="color: #7F0055; font-weight: bold;">&amp;</span>glob<span style="color: #7388d6;">)</span>;        <span style="color: #3F7F5F;">// OK</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">q</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_unique</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span><span style="color: #110099;">99</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">joining_thread</span> <span style="color: #000000;">t3</span><span style="color: #7388d6;">(</span>f, q.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">get</span><span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;      <span style="color: #3F7F5F;">// OK</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+<p>
+<code>gsl::joining_thread</code> 是一个带有析构器，能 join 且不能 <code>detached()</code> 的线程。这里说的“OK”是指指针所指向的对象能在线程存活时间内一直有效。线程是否并行运行不会影响存活周期、指针所有权。可以把这些线程当作是在 <code>some_fct</code> 中调用的函数对象。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+保障 <code>joining_thread</code> 不被 <code>detach()</code> 。这样之后，就可以检查强化一般的生命周期和所有权规则。
+</p>

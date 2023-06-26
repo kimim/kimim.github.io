@@ -1,0 +1,67 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.23 把 joining_thread 当作一个带作用域范围的容器
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Think of a joining thread as a scoped container"
+
+理由
+
+为了确保指针安全，避免泄露，我们要考虑下，在线程中用到了哪些指针。如果
+一个线程会自动 join，我们就可以安全传递这些线程作用域范围内的指针。
+
+#+begin_comment
+To maintain pointer safety and avoid leaks, we need to consider what
+pointers are used by a thread. If a thread joins, we can safely pass
+pointers to objects in the scope of the thread and its enclosing
+scopes.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f(int* p)
+{
+    // ...
+    *p = 99;
+    // ...
+}
+int glob = 33;
+
+void some_fct(int* p)
+{
+    int x = 77;
+    joining_thread t0(f, &x);           // OK
+    joining_thread t1(f, p);            // OK
+    joining_thread t2(f, &glob);        // OK
+    auto q = make_unique<int>(99);
+    joining_thread t3(f, q.get());      // OK
+    // ...
+}
+#+end_src
+~gsl::joining_thread~ 是一个带有析构器，能 join 且不能 ~detached()~ 的线程。
+这里说的“OK”是指指针所指向的对象能在线程存活时间内一直有效。线程是否并
+行运行不会影响存活周期、指针所有权。可以把这些线程当作是在 ~some_fct~ 中
+调用的函数对象。
+
+#+begin_comment
+A gsl::joining_thread is a std::thread with a destructor that joins
+and that cannot be detached(). By “OK” we mean that the object will be
+in scope (“live”) for as long as a thread can use the pointer to
+it. The fact that threads run concurrently doesn’t affect the lifetime
+or ownership issues here; these threads can be seen as just a function
+object called from some_fct.
+#+end_comment
+
+强化
+
+保障 ~joining_thread~ 不被 ~detach()~ 。这样之后，就可以检查强化一般的生命
+周期和所有权规则。
+
+#+begin_comment
+Ensure that joining_threads don’t detach(). After that, the usual
+lifetime and ownership (for local objects) enforcement applies.
+#+end_comment
