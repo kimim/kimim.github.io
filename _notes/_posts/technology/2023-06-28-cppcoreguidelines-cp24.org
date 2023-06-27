@@ -1,0 +1,112 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.24 把一个线程当作是全局的容器
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Think of a thread as a global container"
+
+理由
+
+为了确保指针安全，避免泄露，我们要考虑线程中用到了什么指针。如果线程被
+分离（detach），我们就能安全的把指针传递给静态自由存储区对象。
+
+#+begin_comment
+To maintain pointer safety and avoid leaks, we need to consider what
+pointers are used by a thread. If a thread is detached, we can safely
+pass pointers to static and free store objects (only).
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f(int* p)
+{
+    // ...
+    *p = 99;
+    // ...
+}
+
+int glob = 33;
+
+void some_fct(int* p)
+{
+    int x = 77;
+    std::thread t0(f, &x);           // bad
+    std::thread t1(f, p);            // bad
+    std::thread t2(f, &glob);        // OK
+    auto q = make_unique<int>(99);
+    std::thread t3(f, q.get());      // bad
+    // ...
+    t0.detach();
+    t1.detach();
+    t2.detach();
+    t3.detach();
+    // ...
+}
+#+end_src
+
+这里的 OK 指的是只要线程用到指向这些对象的指针，这些对象都在作用域范围
+内。这里 bad 指的是一个线程可能会用到一个指针，而这个指针所指向的对象
+已经被销毁。线程并行运行并不影响这些指针的生存周期或者所有权。我们可以
+把这些线程当作是在 ~some_fct~ 中调用的函数对象。
+
+#+begin_comment
+By “OK” we mean that the object will be in scope (“live”) for as long
+as a thread can use the pointers to it. By “bad” we mean that a thread
+might use a pointer after the pointed-to object is destroyed. The fact
+that threads run concurrently doesn’t affect the lifetime or ownership
+issues here; these threads can be seen as just a function object
+called from some_fct.
+#+end_comment
+
+注意
+
+在分离的线程中使用静态存储的对象也可能存在问题：如果线程在程序结束之后，
+还在运行，可能会在对象销毁的时候同时在运行，这就出现访问该对象的竞争条
+件。
+
+#+begin_comment
+Even objects with static storage duration can be problematic if used
+from detached threads: if the thread continues until the end of the
+program, it might be running concurrently with the destruction of
+objects with static storage duration, and thus accesses to such
+objects might race.
+#+end_comment
+
+注意
+
+如果你不用 ~detach()~ 而且用 ~gsl::joining_thread~ 这条规则就显得有些多余
+了。不过把这里的代码转换成遵循那些指南规则的代码可能比较麻烦，或者甚至
+在某些第三方库中不太可能。在这种情况下，为了满足生存周期安全和类型安全
+来说，这条规则就很有必要。
+
+一般来说，无法判断是否执行了一个线程的 ~detach()~ ，不过一些简单案例还是
+很容易判断的。如果我们无法证明一个线程没 ~detach()~ ，我们必须假定它会被
+分离，继续在它被构建的范围之外存活。这样，就要针对线程使用到的对象的生
+存周期和所有权进行强化。
+
+#+begin_comment
+This rule is redundant if you don’t detach() and use
+gsl::joining_thread. However, converting code to follow those
+guidelines could be difficult and even impossible for third-party
+libraries. In such cases, the rule becomes essential for lifetime
+safety and type safety.
+
+In general, it is undecidable whether a detach() is executed for a
+thread, but simple common cases are easily detected. If we cannot
+prove that a thread does not detach(), we must assume that it does and
+that it outlives the scope in which it was constructed; After that,
+the usual lifetime and ownership (for global objects) enforcement
+applies.
+#+end_comment
+
+强化
+
+标记可能会被 ~detach()~  的线程使用了局部变量的情况。
+
+#+begin_comment
+Flag attempts to pass local variables to a thread that might detach().
+#+end_comment

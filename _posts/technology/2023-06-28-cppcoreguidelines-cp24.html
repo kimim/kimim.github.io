@@ -1,0 +1,85 @@
+---
+layout: post
+title: CppCoreGuidelines CP.24 把一个线程当作是全局的容器
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Think of a thread as a global container&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+为了确保指针安全，避免泄露，我们要考虑线程中用到了什么指针。如果线程被分离（detach），我们就能安全的把指针传递给静态自由存储区对象。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">99</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">glob</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">33</span>;
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">some_fct</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">77</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">t0</span><span style="color: #7388d6;">(</span>f, <span style="color: #7F0055; font-weight: bold;">&amp;</span>x<span style="color: #7388d6;">)</span>;           <span style="color: #3F7F5F;">// bad</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #0000ff; font-weight: bold;">t1</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">f</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">p</span><span style="color: #7388d6;">)</span>;            <span style="color: #3F7F5F;">// bad</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">t2</span><span style="color: #7388d6;">(</span>f, <span style="color: #7F0055; font-weight: bold;">&amp;</span>glob<span style="color: #7388d6;">)</span>;        <span style="color: #3F7F5F;">// OK</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">q</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_unique</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span><span style="color: #110099;">99</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">t3</span><span style="color: #7388d6;">(</span>f, q.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">get</span><span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;      <span style="color: #3F7F5F;">// bad</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    t0.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">detach</span><span style="color: #7388d6;">()</span>;
+    t1.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">detach</span><span style="color: #7388d6;">()</span>;
+    t2.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">detach</span><span style="color: #7388d6;">()</span>;
+    t3.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">detach</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这里的 OK 指的是只要线程用到指向这些对象的指针，这些对象都在作用域范围内。这里 bad 指的是一个线程可能会用到一个指针，而这个指针所指向的对象已经被销毁。线程并行运行并不影响这些指针的生存周期或者所有权。我们可以把这些线程当作是在 <code>some_fct</code> 中调用的函数对象。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+在分离的线程中使用静态存储的对象也可能存在问题：如果线程在程序结束之后，还在运行，可能会在对象销毁的时候同时在运行，这就出现访问该对象的竞争条件。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+如果你不用 <code>detach()</code> 而且用 <code>gsl::joining_thread</code> 这条规则就显得有些多余了。不过把这里的代码转换成遵循那些指南规则的代码可能比较麻烦，或者甚至在某些第三方库中不太可能。在这种情况下，为了满足生存周期安全和类型安全来说，这条规则就很有必要。
+</p>
+
+<p>
+一般来说，无法判断是否执行了一个线程的 <code>detach()</code> ，不过一些简单案例还是很容易判断的。如果我们无法证明一个线程没 <code>detach()</code> ，我们必须假定它会被分离，继续在它被构建的范围之外存活。这样，就要针对线程使用到的对象的生存周期和所有权进行强化。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记可能会被 <code>detach()</code>  的线程使用了局部变量的情况。
+</p>
