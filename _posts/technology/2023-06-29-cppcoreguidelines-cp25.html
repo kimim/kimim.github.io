@@ -1,0 +1,92 @@
+---
+layout: post
+title: CppCoreGuidelines CP.25 gsl::joining_thread 比 std::thread 好
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer <code>gsl::joining_thread</code> over <code>std::thread</code>&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>joining_thread</code> 会在线程作用域范围结束的时候联合（join）。分离的线程很难监控。很保证在分离的线程正确无误。
+</p>
+
+<p>
+坏例子
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"Hello "</span>; <span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">F</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> operator<span style="color: #7388d6;">()</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"parallel world "</span>; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">t1</span><span style="color: #7388d6;">{</span>f<span style="color: #7388d6;">}</span>;      <span style="color: #3F7F5F;">// f() executes in separate thread</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">t2</span><span style="color: #7388d6;">{</span><span style="color: #3a5fcd; font-weight: bold;">F</span><span style="color: #909183;">()</span><span style="color: #7388d6;">}</span>;    <span style="color: #3F7F5F;">// F()() executes in separate thread</span>
+<span style="color: #707183;">}</span>  <span style="color: #3F7F5F;">// spot the bugs</span>
+</pre>
+</div>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"Hello "</span>; <span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">F</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> operator<span style="color: #7388d6;">()</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"parallel world "</span>; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">t1</span><span style="color: #7388d6;">{</span>f<span style="color: #7388d6;">}</span>;      <span style="color: #3F7F5F;">// f() executes in separate thread</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #000000;">t2</span><span style="color: #7388d6;">{</span><span style="color: #3a5fcd; font-weight: bold;">F</span><span style="color: #909183;">()</span><span style="color: #7388d6;">}</span>;    <span style="color: #3F7F5F;">// F()() executes in separate thread</span>
+
+    t1.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">join</span><span style="color: #7388d6;">()</span>;
+    t2.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">join</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>  <span style="color: #3F7F5F;">// one bad bug left</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+把一直常存的线程设为全局，外层作用域，或放在自由存储区。不要 <code>detach()</code>
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+因为老的代码和第三方库都在用 <code>std::thread</code> ，此条规则很难遵循。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记使用了 <code>std::thread</code>  的地方：
+</p>
+<ul class="org-ul">
+<li>建议使用 <code>gsl::joining_thread</code>  或 C++20  的 <code>std::jthread</code></li>
+<li>如果线程要分离，建议所有权转移到外部作用域</li>
+<li>警告不确定线程是要联合还是分离</li>
+</ul>

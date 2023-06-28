@@ -1,0 +1,91 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.25 gsl::joining_thread 比 std::thread 好
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer ~gsl::joining_thread~ over ~std::thread~"
+
+理由
+
+~joining_thread~ 会在线程作用域范围结束的时候联合（join）。分离的线程很
+难监控。很保证在分离的线程正确无误。
+
+#+begin_comment
+A joining_thread is a thread that joins at the end of its
+scope. Detached threads are hard to monitor. It is harder to ensure
+absence of errors in detached threads (and potentially detached
+threads).
+#+end_comment
+
+坏例子
+
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f() { std::cout << "Hello "; }
+
+struct F {
+    void operator()() const { std::cout << "parallel world "; }
+};
+
+int main()
+{
+    std::thread t1{f};      // f() executes in separate thread
+    std::thread t2{F()};    // F()() executes in separate thread
+}  // spot the bugs
+#+end_src
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f() { std::cout << "Hello "; }
+
+struct F {
+    void operator()() const { std::cout << "parallel world "; }
+};
+
+int main()
+{
+    std::thread t1{f};      // f() executes in separate thread
+    std::thread t2{F()};    // F()() executes in separate thread
+
+    t1.join();
+    t2.join();
+}  // one bad bug left
+#+end_src
+
+注意
+
+把一直常存的线程设为全局，外层作用域，或放在自由存储区。不要 ~detach()~
+
+#+begin_comment
+Make “immortal threads” globals, put them in an enclosing scope, or
+put them on the free store rather than detach(). Don’t detach.
+#+end_comment
+
+注意
+
+因为老的代码和第三方库都在用 ~std::thread~ ，此条规则很难遵循。
+
+#+begin_comment
+Because of old code and third party libraries using std::thread, this
+rule can be hard to introduce.
+#+end_comment
+
+强化
+
+标记使用了 ~std::thread~  的地方：
+- 建议使用 ~gsl::joining_thread~  或 C++20  的 ~std::jthread~
+- 如果线程要分离，建议所有权转移到外部作用域
+- 警告不确定线程是要联合还是分离
+
+#+begin_comment
+Flag uses of std::thread:
+
+- Suggest use of gsl::joining_thread or C++20 std::jthread.
+- Suggest “exporting ownership” to an enclosing scope if it detaches.
+- Warn if it is not obvious whether a thread joins or detaches.
+#+end_comment
