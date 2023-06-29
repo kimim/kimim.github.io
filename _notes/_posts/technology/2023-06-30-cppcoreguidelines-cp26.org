@@ -1,0 +1,108 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.26 不要分离线程
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t detach() a thread"
+
+理由
+
+要让线程任务存活在其创建的作用域范围外的情况很常见，但是通过分离的方式
+实现，会很难监控线程、很难与分离的线程通信。尤其是，很难确保线程是否按
+照预期的方式结束，线程可能会存活超出预期的时间。
+
+#+begin_comment
+Often, the need to outlive the scope of its creation is inherent in
+the threads task, but implementing that idea by detach makes it harder
+to monitor and communicate with the detached thread. In particular, it
+is harder (though not impossible) to ensure that the thread completed
+as expected or lives for as long as expected.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void heartbeat();
+
+void use()
+{
+    std::thread t(heartbeat);             // don't join; heartbeat is
+                                          // meant to run forever
+    t.detach();
+    // ...
+}
+#+end_src
+
+这个例子展示了使用线程的很合理的方式。这种情况 ~detach()~ 用得很多。但是，
+有一个问题。我们如何监控这个分离的线程，看看它是存活的还是结束了。
+~heartbeat~ 线程可能出错，对于某些系统来说，丢失 ~heartbeat~ 可能是很严重
+的问题。所以，我们需要跟 ~heartbeat~ 线程通信，比如通过消息流，或者条件
+变量。
+
+#+begin_comment
+This is a reasonable use of a thread, for which detach() is commonly
+used. There are problems, though. How do we monitor the detached
+thread to see if it is alive? Something might go wrong with the
+heartbeat, and losing a heartbeat can be very serious in a system for
+which it is needed. So, we need to communicate with the heartbeat
+thread (e.g., through a stream of messages or notification events
+using a condition_variable).
+#+end_comment
+
+也可以把线程的放在创建的作用域范围外，这样就一直存活。
+
+#+begin_comment
+An alternative, and usually superior solution is to control its
+lifetime by placing it in a scope outside its point of creation (or
+activation).
+#+end_comment
+
+对于以下例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void heartbeat();
+
+gsl::joining_thread t(heartbeat);             // heartbeat is meant to
+                                              // run "forever"
+#+end_src
+
+~heartbeat~ 可能会出错，然后一直运行，比如出现硬件问题。
+
+#+begin_comment
+This heartbeat will (barring error, hardware problems, etc.) run for
+as long as the program does.
+#+end_comment
+
+有时候，我们需要分离创建和保管线程的时间点：
+
+#+begin_comment
+Sometimes, we need to separate the point of creation from the point of
+ownership:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void heartbeat();
+
+unique_ptr<gsl::joining_thread> tick_tock {nullptr};
+
+void use()
+{
+    // heartbeat is meant to run as long as tick_tock lives
+    tick_tock = make_unique<gsl::joining_thread>(heartbeat);
+    // ...
+}
+#+end_src
+
+
+强化
+
+标记 ~detach()~
+
+#+begin_comment
+Flag detach().
+#+end_comment

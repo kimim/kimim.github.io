@@ -1,0 +1,90 @@
+---
+layout: post
+title: CppCoreGuidelines CP.26 不要分离线程
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t detach() a thread&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+要让线程任务存活在其创建的作用域范围外的情况很常见，但是通过分离的方式实现，会很难监控线程、很难与分离的线程通信。尤其是，很难确保线程是否按照预期的方式结束，线程可能会存活超出预期的时间。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">heartbeat</span><span style="color: #707183;">()</span>;
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">thread</span> <span style="color: #0000ff; font-weight: bold;">t</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">heartbeat</span><span style="color: #7388d6;">)</span>;             <span style="color: #3F7F5F;">// don't join; heartbeat is</span>
+                                          <span style="color: #3F7F5F;">// meant to run forever</span>
+    t.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">detach</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这个例子展示了使用线程的很合理的方式。这种情况 <code>detach()</code> 用得很多。但是，有一个问题。我们如何监控这个分离的线程，看看它是存活的还是结束了。
+<code>heartbeat</code> 线程可能出错，对于某些系统来说，丢失 <code>heartbeat</code> 可能是很严重的问题。所以，我们需要跟 <code>heartbeat</code> 线程通信，比如通过消息流，或者条件变量。
+</p>
+
+<p>
+也可以把线程的放在创建的作用域范围外，这样就一直存活。
+</p>
+
+<p>
+对于以下例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">heartbeat</span><span style="color: #707183;">()</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">joining_thread</span> <span style="color: #0000ff; font-weight: bold;">t</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">heartbeat</span><span style="color: #707183;">)</span>;             <span style="color: #3F7F5F;">// heartbeat is meant to</span>
+                                              <span style="color: #3F7F5F;">// run "forever"</span>
+</pre>
+</div>
+
+<p>
+<code>heartbeat</code> 可能会出错，然后一直运行，比如出现硬件问题。
+</p>
+
+<p>
+有时候，我们需要分离创建和保管线程的时间点：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">heartbeat</span><span style="color: #707183;">()</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">joining_thread</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">tick_tock</span> <span style="color: #707183;">{</span><span style="color: #110099;">nullptr</span><span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// heartbeat is meant to run as long as tick_tock lives</span>
+    <span style="color: #000000;">tick_tock</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_unique</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">joining_thread</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span>heartbeat<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记 <code>detach()</code>
+</p>
