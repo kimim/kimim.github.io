@@ -1,0 +1,65 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.31 在线程间传递少量数据的时候，用值传递，不要用引用或指针
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Pass small amounts of data between threads by value, rather than by
+reference or pointer"
+
+理由
+
+少量数据值传递比共享成本低。因为共享需要某些锁机制。数据副本自然有各自
+的所有权，避免了可能存在的数据竞争。
+
+#+begin_comment
+A small amount of data is cheaper to copy and access than to share it
+using some locking mechanism. Copying naturally gives unique ownership
+(simplifies code) and eliminates the possibility of data races.
+#+end_comment
+
+注意
+
+很难精确定义“少量数据”。
+
+#+begin_comment
+Defining “small amount” precisely is impossible.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+string modify1(string);
+void modify2(string&);
+
+void fct(string& s)
+{
+    auto res = async(modify1, s);
+    async(modify2, s);
+}
+#+end_src
+
+~modify1~ 会复制 2 个字符串值。 ~modify2~ 不会。从另一个角度看， ~modify1~
+的实现和单线程代码的实现没什么差别。但是 ~modify2~ 的实现就需要某些锁机
+制来防止数据竞争。如果字符串很短，少于 10 个字符，调用 ~modify1~ 速度很
+快。其实大部分的成本在于线程切换。如果字符串很长，超出 100 万个字符，
+复制两次就不太好了。
+
+#+begin_comment
+The call of modify1 involves copying two string values; the call of
+modify2 does not. On the other hand, the implementation of modify1 is
+exactly as we would have written it for single-threaded code, whereas
+the implementation of modify2 will need some form of locking to avoid
+data races. If the string is short (say 10 characters), the call of
+modify1 can be surprisingly fast; essentially all the cost is in the
+thread switch. If the string is long (say 1,000,000 characters),
+copying it twice is probably not a good idea.
+#+end_comment
+
+#+begin_comment
+Note that this argument has nothing to do with async as such. It
+applies equally to considerations about whether to use message passing
+or shared memory.
+#+end_comment
