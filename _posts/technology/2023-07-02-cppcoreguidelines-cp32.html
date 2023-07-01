@@ -1,0 +1,32 @@
+---
+layout: post
+title: CppCoreGuidelines CP.32 在不关联的线程间共享所有权用 shared_ptr
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;To share ownership between unrelated threads use <code>shared_ptr</code>&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+如果线程不相关联（比如不在一个作用域范围，或一个在另一个的生命周期内），而且它们需要共享某些自由存储区的内存，这些内存空间后续需要删除。那么
+<code>shared_ptr</code> 是唯一能确保安全删除的方式。
+</p>
+
+
+<p>
+注意
+</p>
+<ul class="org-ul">
+<li>可以共享静态对象（比如全局的），因为它不属于任何线程，即无需某个线程负责删除它。</li>
+<li>一个自由存储区的对象，不需要删除的话，可以共享。</li>
+<li>一个对象术语某个线程，只要第二个线程存活时间不超过第一个个线程，也可以个安全的共享。</li>
+</ul>
