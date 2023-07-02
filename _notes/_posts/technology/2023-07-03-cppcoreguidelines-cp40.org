@@ -1,0 +1,16 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.40 减小上下文切换
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Minimize context switching"
+
+理由
+
+上下文切换成本高昂。
+
+#+begin_comment
+Context switches are expensive.
+#+end_comment
