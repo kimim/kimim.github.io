@@ -1,0 +1,21 @@
+#+LAYOUT: post
+#+TITLE: 单词本：auspice
+#+TAGS: English
+#+CATEGORIES: language
+
+上次，我游玩了云栖竹径之后，学到了一个新单词：[[./2023-04-05-auspicious][auspicious]], 这个是在云栖
+竹径公园入口的英文介绍中提到的：It is said that some *auspicious*
+colorful clouds came and lingered on here.
+
+昨天读大规模敏捷开发框架的时候，遇到了 auspice 这个词：
+
+Operating under the *auspices* of LPM, the LACE also plays a significant
+role in fostering operational excellence.
+
+这句话是说，Lean-Agile Center of Excellence 在 Lean Portfolio
+Management 的支持下，促进卓越运营。
+
+所以，在这句话里 auspice 的意思是“赞助、支持”。这和 auspice 的本意倒是
+有些关系。这个词源自 auspex 。在拉丁语中，auspex 是观察鸟的人、占卜者。
+大概因为，古代的人都是要一些大自然的吉兆，才会开展行动。所以 auspice
+就引申为支持、赞助了吧。
