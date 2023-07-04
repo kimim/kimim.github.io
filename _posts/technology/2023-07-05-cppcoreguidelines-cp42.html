@@ -1,0 +1,101 @@
+---
+layout: post
+title: CppCoreGuidelines CP.42  在 wait 中设置判断条件
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t wait without a condition&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+在 wait 中不设置判断条件的话，会发现线程醒来之后并没有任务要处理。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">condition_variable</span> <span style="color: #000000;">cv</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000;">mx</span>;
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">thread1</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">true</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// do some work ...</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">unique_lock</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #909183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">lock</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mx</span><span style="color: #909183;">)</span>;
+        cv.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">notify_one</span><span style="color: #909183;">()</span>;    <span style="color: #3F7F5F;">// wake other thread</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">thread2</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">true</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">unique_lock</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #909183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">lock</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mx</span><span style="color: #909183;">)</span>;
+        cv.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">wait</span><span style="color: #909183;">(</span>lock<span style="color: #909183;">)</span>;    <span style="color: #3F7F5F;">// might block forever</span>
+        <span style="color: #3F7F5F;">// do work ...</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这里，如果某个其他线程用掉了 <code>thread1</code> 的通知， <code>thread2</code> 会一直等待。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Sync_queue</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">put</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">val</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">put</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #000000;">val</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">get</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">val</span><span style="color: #7388d6;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000; font-style: italic;">mtx</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">condition_variable</span> <span style="color: #000000; font-style: italic;">cond</span>;    <span style="color: #3F7F5F;">// this controls access</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">list</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic;">q</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Sync_queue</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>::<span style="color: #0000ff; font-weight: bold;">put</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">val</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">lck</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mtx</span><span style="color: #7388d6;">)</span>;
+    q.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">push_back</span><span style="color: #7388d6;">(</span>val<span style="color: #7388d6;">)</span>;
+    cond.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">notify_one</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Sync_queue</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>::<span style="color: #0000ff; font-weight: bold;">get</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">val</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_lock</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">lck</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mtx</span><span style="color: #7388d6;">)</span>;
+    cond.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">wait</span><span style="color: #7388d6;">(</span>lck, <span style="color: #909183;">[</span><span style="color: #7F0055; font-weight: bold;">this</span><span style="color: #909183;">]</span> <span style="color: #909183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">!</span>q.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">empty</span><span style="color: #709870;">()</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// prevent spurious wakeup</span>
+    <span style="color: #000000;">val</span> <span style="color: #7F0055; font-weight: bold;">=</span> q.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">front</span><span style="color: #7388d6;">()</span>;
+    q.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">pop_front</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+现在，如果消息是空的，调用 <code>get()</code> 的线程会醒来，发现其他线程在它之前已经调用了 <code>geet()</code> ，那么这个线程会马上睡眠，继续等待。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记 wait 中没设置判断条件的情况。
+</p>
