@@ -1,0 +1,78 @@
+---
+layout: post
+title: CppCoreGuidelines CP.43 减少关键代码执行路径中时间的消耗
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Minimize time spent in a critical section&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+线程锁住互斥锁的时间越短，其他线程等待的时间也就越少。线程挂起和恢复的成本很高。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #707183;">()</span> <span style="color: #3F7F5F;">// bad</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_lock</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">lck</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">my_lock</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">do0</span><span style="color: #7388d6;">()</span>;  <span style="color: #3F7F5F;">// preparation: does not need lock</span>
+    <span style="color: #3a5fcd; font-weight: bold;">do1</span><span style="color: #7388d6;">()</span>;  <span style="color: #3F7F5F;">// transaction: needs locking</span>
+    <span style="color: #3a5fcd; font-weight: bold;">do2</span><span style="color: #7388d6;">()</span>;  <span style="color: #3F7F5F;">// cleanup: does not need locking</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这里，我们锁住互斥锁的时间有点太多了：我们不该在需要互斥锁之前锁住它。我们应该在不需要互斥锁的时候马上释放。我们可以这么改进：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #707183;">()</span> <span style="color: #3F7F5F;">// bad</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3a5fcd; font-weight: bold;">do0</span><span style="color: #7388d6;">()</span>;  <span style="color: #3F7F5F;">// preparation: does not need lock</span>
+    my_lock.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">lock</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">do1</span><span style="color: #7388d6;">()</span>;  <span style="color: #3F7F5F;">// transaction: needs locking</span>
+    my_lock.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">unlock</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">do2</span><span style="color: #7388d6;">()</span>;  <span style="color: #3F7F5F;">// cleanup: does not need locking</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+但是，这里违反了 RAII 规则，不太安全。我们可以添加一个代码块：
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #707183;">()</span> <span style="color: #3F7F5F;">// OK</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3a5fcd; font-weight: bold;">do0</span><span style="color: #7388d6;">()</span>;  <span style="color: #3F7F5F;">// preparation: does not need lock</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_lock</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #909183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">lck</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">my_lock</span><span style="color: #909183;">)</span>;
+        <span style="color: #3a5fcd; font-weight: bold;">do1</span><span style="color: #909183;">()</span>;  <span style="color: #3F7F5F;">// transaction: needs locking</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3a5fcd; font-weight: bold;">do2</span><span style="color: #7388d6;">()</span>;  <span style="color: #3F7F5F;">// cleanup: does not need locking</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+一般来说比较难。可以标记“裸露”的 <code>lock()</code> 和 <code>unlock()</code> 。
+</p>

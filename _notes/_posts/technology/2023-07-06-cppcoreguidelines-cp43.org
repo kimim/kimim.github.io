@@ -1,0 +1,82 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.43 减少关键代码执行路径中时间的消耗
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Minimize time spent in a critical section"
+
+理由
+
+线程锁住互斥锁的时间越短，其他线程等待的时间也就越少。线程挂起和恢复的
+成本很高。
+
+#+begin_comment
+The less time is spent with a mutex taken, the less chance that
+another thread has to wait, and thread suspension and resumption are
+expensive.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void do_something() // bad
+{
+    unique_lock<mutex> lck(my_lock);
+    do0();  // preparation: does not need lock
+    do1();  // transaction: needs locking
+    do2();  // cleanup: does not need locking
+}
+#+end_src
+
+这里，我们锁住互斥锁的时间有点太多了：我们不该在需要互斥锁之前锁住它。
+我们应该在不需要互斥锁的时候马上释放。我们可以这么改进：
+
+#+begin_comment
+Here, we are holding the lock for longer than necessary: We should not
+have taken the lock before we needed it and should have released it
+again before starting the cleanup. We could rewrite this to
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void do_something() // bad
+{
+    do0();  // preparation: does not need lock
+    my_lock.lock();
+    do1();  // transaction: needs locking
+    my_lock.unlock();
+    do2();  // cleanup: does not need locking
+}
+#+end_src
+
+但是，这里违反了 RAII 规则，不太安全。我们可以添加一个代码块：
+
+#+begin_comment
+But that compromises safety and violates the use RAII rule. Instead,
+add a block for the critical section:
+#+end_comment
+
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void do_something() // OK
+{
+    do0();  // preparation: does not need lock
+    {
+        unique_lock<mutex> lck(my_lock);
+        do1();  // transaction: needs locking
+    }
+    do2();  // cleanup: does not need locking
+}
+#+end_src
+
+强化
+
+一般来说比较难。可以标记“裸露”的 ~lock()~ 和 ~unlock()~ 。
+
+#+begin_comment
+Impossible in general. Flag “naked” lock() and unlock().
+#+end_comment
