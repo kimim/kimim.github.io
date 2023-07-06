@@ -1,0 +1,48 @@
+---
+layout: post
+title: CppCoreGuidelines CP.44  给 lock_guard, unique_lock 声明变量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Remember to name your <code>lock_guard</code> s and <code>unique_lock</code> s&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// global mutexes</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000;">m1</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000;">m2</span>;
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3a5fcd; font-weight: bold;">unique_lock</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span>m1<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// (A)</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #7388d6;">{</span>m2<span style="color: #7388d6;">}</span>; <span style="color: #3F7F5F;">// (B)</span>
+    <span style="color: #3F7F5F;">// do work in critical section ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+看起来很正常。但是是不对的。在 (A) 处， <code>m1</code> 是默认构造的局部
+<code>unique_lock</code> ，它会遮盖掉全局的 <code>::m1</code> 这样也就不会锁住 <code>::m1</code> 。在 (B) 处，构造了一个匿名的临时 <code>lock_guard</code> 并且锁住 <code>::m2</code> ，但是立即走出了作用域范围，马上释放了 <code>::m2</code> 。对于 <code>f()</code> 函数的其他部分来说，并没有锁住任何互斥锁。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记所有匿名的 <code>lock_guard</code> 和 <code>unique_lock</code>
+</p>
