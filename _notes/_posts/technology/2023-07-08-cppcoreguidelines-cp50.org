@@ -1,0 +1,45 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.50  互斥锁与其保护的数据同时定义，尽可能用 synchronized_value<T>
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Define a ~mutex~ together with the data it guards. Use ~synchronized_value<T>~ where possible"
+
+理由
+
+这样别人就很容易知道互斥锁要保护的数据是哪些。避免锁住错误的互斥锁，或
+没锁要锁的互斥锁。
+
+~synchronized_value<T>~ 可以保证数据带有一个互斥锁，并且在数据访问的时候，
+互斥锁正确的被锁住。
+
+#+begin_comment
+It should be obvious to a reader that the data is to be guarded and
+how. This decreases the chance of the wrong mutex being locked, or the
+mutex not being locked.
+
+Using a synchronized_value<T> ensures that the data has a mutex, and
+the right mutex is locked when the data is accessed. See the WG21
+proposal to add synchronized_value to a future TS or revision of the
+C++ standard.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+struct Record {
+    std::mutex m;   // take this mutex before accessing other members
+    // ...
+};
+
+class MyClass {
+    struct DataRecord {
+       // ...
+    };
+    synchronized_value<DataRecord> data; // Protect the data with a mutex
+};
+#+end_src
+

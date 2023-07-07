@@ -1,0 +1,44 @@
+---
+layout: post
+title: CppCoreGuidelines CP.50  互斥锁与其保护的数据同时定义，尽可能用 synchronized_value<T>
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Define a <code>mutex</code> together with the data it guards. Use <code>synchronized_value&lt;T&gt;</code> where possible&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+这样别人就很容易知道互斥锁要保护的数据是哪些。避免锁住错误的互斥锁，或没锁要锁的互斥锁。
+</p>
+
+<p>
+<code>synchronized_value&lt;T&gt;</code> 可以保证数据带有一个互斥锁，并且在数据访问的时候，互斥锁正确的被锁住。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000; font-style: italic;">m</span>;   <span style="color: #3F7F5F;">// take this mutex before accessing other members</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">MyClass</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">DataRecord</span> <span style="color: #7388d6;">{</span>
+       <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">synchronized_value</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">DataRecord</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic;">data</span>; <span style="color: #3F7F5F;">// Protect the data with a mutex</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
