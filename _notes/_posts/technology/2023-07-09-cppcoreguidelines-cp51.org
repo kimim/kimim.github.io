@@ -1,0 +1,97 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.51  协程的 lambda 中不要进行捕获
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Do not use capturing lambdas that are coroutines"
+
+理由
+
+捕获模式，对于普通 lambda 来说正确的情况，对于协程 lambda 来说问题很严
+重。应用协程的时候，在 lambda 捕获变量的话，会导致，在第一个悬挂点后，
+访问释放的变量。对于引用计数的智能指针、可复制的类型来说，都可能存在这
+个问题。
+
+捕获对象的 lambda 会给闭包对象分配存储。通常是在栈上。这些存储会因为被
+捕获的对象离开了作用域范围，而失效。当这些被捕获的对象离开作用域范围之
+后，闭包对象也会离开作用域范围。
+
+普通 lambda 这个时候会结束运行，所以并无太多问题。而协程 lambda 可能会
+从悬挂点回复继续执行，这时候如果闭包对象已经被析构了，访问这些对象就会
+导致访问已释放的内存错误。
+
+#+begin_comment
+Usage patterns that are correct with normal lambdas are hazardous with coroutine lambdas. The obvious pattern of capturing variables will result in accessing freed memory after the first suspension point, even for refcounted smart pointers and copyable types.
+
+A lambda results in a closure object with storage, often on the stack, that will go out of scope at some point. When the closure object goes out of scope the captures will also go out of scope. Normal lambdas will have finished executing by this time so it is not a problem. Coroutine lambdas may resume from suspension after the closure object has destructed and at that point all captures will be use-after-free memory access.
+#+end_comment
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int value = get_value();
+std::shared_ptr<Foo> sharedFoo = get_foo();
+{
+  const auto lambda = [value, sharedFoo]() -> std::future<void>
+  {
+    co_await something();
+    // "sharedFoo" and "value" have already been destroyed
+    // the "shared" pointer didn't accomplish anything
+  };
+  lambda();
+} // the lambda closure object has now gone out of scope
+#+end_src
+
+好些的例子
+
+通过值传递给 lambda。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int value = get_value();
+std::shared_ptr<Foo> sharedFoo = get_foo();
+{
+  // take as by-value parameter instead of as a capture
+  const auto lambda = [](auto sharedFoo, auto value) -> std::future<void>
+  {
+    co_await something();
+    // sharedFoo and value are still valid at this point
+  };
+  lambda(sharedFoo, value);
+} // the lambda closure object has now gone out of scope
+#+end_src
+
+最好的例子
+
+用函数做协程。
+
+#+begin_comment
+Use a function for coroutines.
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+std::future<void> Class::do_something(int value, std::shared_ptr<Foo> sharedFoo)
+{
+  co_await something();
+  // sharedFoo and value are still valid at this point
+}
+
+void SomeOtherFunction()
+{
+  int value = get_value();
+  std::shared_ptr<Foo> sharedFoo = get_foo();
+  do_something(value, sharedFoo);
+}
+#+end_src
+
+强化
+
+标记作为协程的 lambda, 且捕获列表不是空的情况。
+
+#+begin_comment
+Flag a lambda that is a coroutine and has a non-empty capture list.
+#+end_comment

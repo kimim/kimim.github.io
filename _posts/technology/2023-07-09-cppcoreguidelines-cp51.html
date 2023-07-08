@@ -1,0 +1,103 @@
+---
+layout: post
+title: CppCoreGuidelines CP.51  协程的 lambda 中不要进行捕获
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Do not use capturing lambdas that are coroutines&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+捕获模式，对于普通 lambda 来说正确的情况，对于协程 lambda 来说问题很严重。应用协程的时候，在 lambda 捕获变量的话，会导致，在第一个悬挂点后，访问释放的变量。对于引用计数的智能指针、可复制的类型来说，都可能存在这个问题。
+</p>
+
+<p>
+捕获对象的 lambda 会给闭包对象分配存储。通常是在栈上。这些存储会因为被捕获的对象离开了作用域范围，而失效。当这些被捕获的对象离开作用域范围之后，闭包对象也会离开作用域范围。
+</p>
+
+<p>
+普通 lambda 这个时候会结束运行，所以并无太多问题。而协程 lambda 可能会从悬挂点回复继续执行，这时候如果闭包对象已经被析构了，访问这些对象就会导致访问已释放的内存错误。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">value</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">get_value</span><span style="color: #707183;">()</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">sharedFoo</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">get_foo</span><span style="color: #707183;">()</span>;
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">lambda</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7388d6;">[</span>value, sharedFoo<span style="color: #7388d6;">]()</span> <span style="color: #7F0055; font-weight: bold;">-&gt;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">future</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">void</span><span style="color: #7388d6; font-weight: bold;">&gt;</span>
+  <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">co_await</span> <span style="color: #3a5fcd; font-weight: bold;">something</span><span style="color: #909183;">()</span>;
+    <span style="color: #3F7F5F;">// "sharedFoo" and "value" have already been destroyed</span>
+    <span style="color: #3F7F5F;">// the "shared" pointer didn't accomplish anything</span>
+  <span style="color: #7388d6;">}</span>;
+  <span style="color: #3a5fcd; font-weight: bold;">lambda</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// the lambda closure object has now gone out of scope</span>
+</pre>
+</div>
+
+<p>
+好些的例子
+</p>
+
+<p>
+通过值传递给 lambda。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">value</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">get_value</span><span style="color: #707183;">()</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">sharedFoo</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">get_foo</span><span style="color: #707183;">()</span>;
+<span style="color: #707183;">{</span>
+  <span style="color: #3F7F5F;">// take as by-value parameter instead of as a capture</span>
+  <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">lambda</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7388d6;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">sharedFoo</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">value</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">-&gt;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">future</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">void</span><span style="color: #7388d6; font-weight: bold;">&gt;</span>
+  <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">co_await</span> <span style="color: #3a5fcd; font-weight: bold;">something</span><span style="color: #909183;">()</span>;
+    <span style="color: #3F7F5F;">// sharedFoo and value are still valid at this point</span>
+  <span style="color: #7388d6;">}</span>;
+  <span style="color: #3a5fcd; font-weight: bold;">lambda</span><span style="color: #7388d6;">(</span>sharedFoo, value<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// the lambda closure object has now gone out of scope</span>
+</pre>
+</div>
+
+<p>
+最好的例子
+</p>
+
+<p>
+用函数做协程。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">future</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">void</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Class</span>::<span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">value</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">sharedFoo</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">co_await</span> <span style="color: #3a5fcd; font-weight: bold;">something</span><span style="color: #7388d6;">()</span>;
+  <span style="color: #3F7F5F;">// sharedFoo and value are still valid at this point</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">SomeOtherFunction</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">value</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">get_value</span><span style="color: #7388d6;">()</span>;
+  <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">sharedFoo</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">get_foo</span><span style="color: #7388d6;">()</span>;
+  <span style="color: #3a5fcd; font-weight: bold;">do_something</span><span style="color: #7388d6;">(</span>value, sharedFoo<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+标记作为协程的 lambda, 且捕获列表不是空的情况。
+</p>
