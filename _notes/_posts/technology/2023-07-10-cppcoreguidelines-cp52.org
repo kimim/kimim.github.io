@@ -1,0 +1,90 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.52  不要在线程挂起的地方保留锁或者其他同步原语
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Do not hold locks or other synchronization primitives across
+suspension points"
+
+注意，此处 primitive 在编程语言中是指：某个函数、操作符、或其他类型，
+内置在编程语言或操作系统中，为了满足程序的快速执行。并且，这些东西是无
+法通过开发语言单独实现的。primitive 一般有逻辑和算术运算符，加减乘除，
+或通过一组机器语言指令实现的功能，比如互斥锁、信号量之类。
+
+A function, operator, or type which is built into a programming
+language (or operating system), either for speed of execution or
+because it would be impossible to write it in the language.
+Primitives typically include the arithmetic and logical operations
+(plus, minus, and, or, etc.)  and are implemented by a small number of
+machine language instructions.
+
+所以，本文按照惯例，将 primitive 翻译为原语.
+
+理由
+
+不然会导致很危险的死锁。某些类型的等待操作会允许当前线程执行一些额外的
+工作，直到异步操作完成。如果这个线程保持某个锁，然后又执行一些操作，需
+要获取这个相同的锁，这就会导致死锁。因为该线程早已锁住这个锁。
+
+如果协程在别的线程中获取这个锁的话，就会导致未定义的执行结果。就算我们
+设定显式的返回到当前线程，也会因为抛出异常，而导致协程无法继续执行，这
+时候，这个获取的锁就没有销毁释放。
+
+#+begin_comment
+This pattern creates a significant risk of deadlocks. Some types of waits will allow the current thread to perform additional work until the asynchronous operation has completed. If the thread holding the lock performs work that requires the same lock then it will deadlock because it is trying to acquire a lock that it is already holding.
+
+If the coroutine completes on a different thread from the thread that acquired the lock then that is undefined behavior. Even with an explicit return to the original thread an exception might be thrown before coroutine resumes and the result will be that the lock guard is not destructed.
+#+end_comment
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+std::mutex g_lock;
+
+std::future<void> Class::do_something()
+{
+    std::lock_guard<std::mutex> guard(g_lock);
+    co_await something(); // DANGER: coroutine has suspended execution
+                          // while holding a lock
+    co_await somethingElse();
+}
+#+end_src
+
+好例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+std::mutex g_lock;
+
+std::future<void> Class::do_something()
+{
+    {
+        std::lock_guard<std::mutex> guard(g_lock);
+        // modify data protected by lock
+    }
+    co_await something(); // OK: lock has been released before
+                          // coroutine suspends
+    co_await somethingElse();
+}
+#+end_src
+
+注意
+
+这个模式的性能也不好。当程序执行到悬挂点 ~co_await~ 时，当前函数就停止执
+行，其他代码开始运行。可能这个协程会悬挂很长时间。这样，整个悬挂时间中，
+锁都是被锁着的，其他线程如果需要这个锁的话，就无法执行。
+
+#+begin_comment
+This pattern is also bad for performance. When a suspension point is reached, such as co_await, execution of the current function stops and other code begins to run. It may be a long period of time before the coroutine resumes. For that entire duration the lock will be held and cannot be acquired by other threads to perform work. 
+#+end_comment
+
+强化
+
+标记所有在协程悬挂点未释放的锁。
+
+#+begin_comment
+Flag all lock guards that are not destructed before a coroutine suspends.
+#+end_comment

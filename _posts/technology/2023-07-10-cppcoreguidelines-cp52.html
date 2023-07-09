@@ -1,0 +1,96 @@
+---
+layout: post
+title: CppCoreGuidelines CP.52  不要在线程挂起的地方保留锁或者其他同步原语
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Do not hold locks or other synchronization primitives across
+suspension points&rdquo;
+</p>
+
+<p>
+注意，此处 primitive 在编程语言中是指：某个函数、操作符、或其他类型，内置在编程语言或操作系统中，为了满足程序的快速执行。并且，这些东西是无法通过开发语言单独实现的。primitive 一般有逻辑和算术运算符，加减乘除，或通过一组机器语言指令实现的功能，比如互斥锁、信号量之类。
+</p>
+
+<p>
+A function, operator, or type which is built into a programming
+language (or operating system), either for speed of execution or
+because it would be impossible to write it in the language.
+Primitives typically include the arithmetic and logical operations
+(plus, minus, and, or, etc.)  and are implemented by a small number of
+machine language instructions.
+</p>
+
+<p>
+所以，本文按照惯例，将 primitive 翻译为原语.
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+不然会导致很危险的死锁。某些类型的等待操作会允许当前线程执行一些额外的工作，直到异步操作完成。如果这个线程保持某个锁，然后又执行一些操作，需要获取这个相同的锁，这就会导致死锁。因为该线程早已锁住这个锁。
+</p>
+
+<p>
+如果协程在别的线程中获取这个锁的话，就会导致未定义的执行结果。就算我们设定显式的返回到当前线程，也会因为抛出异常，而导致协程无法继续执行，这时候，这个获取的锁就没有销毁释放。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000;">g_lock</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">future</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">void</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Class</span>::<span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">guard</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">g_lock</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">co_await</span> <span style="color: #3a5fcd; font-weight: bold;">something</span><span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// DANGER: coroutine has suspended execution</span>
+                          <span style="color: #3F7F5F;">// while holding a lock</span>
+    <span style="color: #7F0055; font-weight: bold;">co_await</span> <span style="color: #3a5fcd; font-weight: bold;">somethingElse</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000;">g_lock</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">future</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">void</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Class</span>::<span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #909183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">guard</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">g_lock</span><span style="color: #909183;">)</span>;
+        <span style="color: #3F7F5F;">// modify data protected by lock</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">co_await</span> <span style="color: #3a5fcd; font-weight: bold;">something</span><span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// OK: lock has been released before</span>
+                          <span style="color: #3F7F5F;">// coroutine suspends</span>
+    <span style="color: #7F0055; font-weight: bold;">co_await</span> <span style="color: #3a5fcd; font-weight: bold;">somethingElse</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+这个模式的性能也不好。当程序执行到悬挂点 <code>co_await</code> 时，当前函数就停止执行，其他代码开始运行。可能这个协程会悬挂很长时间。这样，整个悬挂时间中，锁都是被锁着的，其他线程如果需要这个锁的话，就无法执行。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记所有在协程悬挂点未释放的锁。
+</p>
