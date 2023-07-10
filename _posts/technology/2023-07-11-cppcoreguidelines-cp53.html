@@ -1,0 +1,75 @@
+---
+layout: post
+title: CppCoreGuidelines CP.53  协程的参数不能通过引用传递
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Parameters to coroutines should not be passed by reference&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+一旦协程执行到悬挂点，比如 <code>co_wait</code> ，就会从同步代码段返回。在这个点之后，任何通过引用传递的参数都是空悬变量。任何其他地方访问这些引用变量都会产生未定义的行为结果，包括可能会写入自由区内存。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">future</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Class</span>::<span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">input</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">co_await</span> <span style="color: #3a5fcd; font-weight: bold;">something</span><span style="color: #7388d6;">()</span>;
+
+    <span style="color: #3F7F5F;">// DANGER: the reference to input may no longer be valid and may</span>
+    <span style="color: #3F7F5F;">// be freed memory</span>
+    <span style="color: #7F0055; font-weight: bold;">co_return</span> <span style="color: #7F0055; font-weight: bold;">*</span>input <span style="color: #7F0055; font-weight: bold;">+</span> <span style="color: #110099;">1</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">future</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Class</span>::<span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">input</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">co_await</span> <span style="color: #3a5fcd; font-weight: bold;">something</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">co_return</span> <span style="color: #7F0055; font-weight: bold;">*</span>input <span style="color: #7F0055; font-weight: bold;">+</span> <span style="color: #110099;">1</span>; <span style="color: #3F7F5F;">// input is a copy that is still valid here</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+在悬挂点之前访问引用传递的参数不会出问题。后续对该协程函数的修改，添加或移动悬挂点，就可能又引入这类问题。某些类型的协程会要求悬挂点在第一行代码之前，这时候，访问引用传递的参数都会是不安全的。通过值传递会更安全，因为值传递的参数会在协程框架内一直存在，所以在整个协程内访问值传递的参数都是安全的。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+对于传出结果的 output 参数，也存在同样的问题。协程中应该避免 output 参数。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记所有有引用传递的参数的协程。
+</p>

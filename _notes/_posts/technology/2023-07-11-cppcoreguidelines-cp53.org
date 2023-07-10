@@ -1,0 +1,82 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.53  协程的参数不能通过引用传递
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Parameters to coroutines should not be passed by reference"
+
+理由
+
+一旦协程执行到悬挂点，比如 ~co_wait~ ，就会从同步代码段返回。在这个点之
+后，任何通过引用传递的参数都是空悬变量。任何其他地方访问这些引用变量都
+会产生未定义的行为结果，包括可能会写入自由区内存。
+
+#+begin_comment
+Once a coroutine reaches the first suspension point, such as a co_await, the synchronous portion returns. After that point any parameters passed by reference are dangling. Any usage beyond that is undefined behavior which may include writing to freed memory.
+#+end_comment
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+std::future<int> Class::do_something(const std::shared_ptr<int>& input)
+{
+    co_await something();
+
+    // DANGER: the reference to input may no longer be valid and may
+    // be freed memory
+    co_return *input + 1;
+}
+#+end_src
+
+好例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+std::future<int> Class::do_something(std::shared_ptr<int> input)
+{
+    co_await something();
+    co_return *input + 1; // input is a copy that is still valid here
+}
+#+end_src
+
+
+注意
+
+在悬挂点之前访问引用传递的参数不会出问题。后续对该协程函数的修改，添加
+或移动悬挂点，就可能又引入这类问题。某些类型的协程会要求悬挂点在第一行
+代码之前，这时候，访问引用传递的参数都会是不安全的。通过值传递会更安全，
+因为值传递的参数会在协程框架内一直存在，所以在整个协程内访问值传递的参
+数都是安全的。
+
+#+begin_comment
+This problem does not apply to reference parameters that are only
+accessed before the first suspension point. Subsequent changes to the
+function may add or move suspension points which would reintroduce
+this class of bug. Some types of coroutines have the suspension point
+before the first line of code in the coroutine executes, in which case
+reference parameters are always unsafe. It is safer to always pass by
+value because the copied parameter will live in the coroutine frame
+that is safe to access throughout the coroutine.
+#+end_comment
+
+注意
+
+对于传出结果的 output 参数，也存在同样的问题。协程中应该避免 output 参
+数。
+
+#+begin_comment
+The same danger applies to output parameters. F.20: For “out” output
+values, prefer return values to output parameters discourages output
+parameters. Coroutines should avoid them entirely.
+#+end_comment
+
+强化
+
+标记所有有引用传递的参数的协程。
+
+#+begin_comment
+Flag all reference parameters to a coroutine.
+#+end_comment
