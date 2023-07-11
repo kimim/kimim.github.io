@@ -1,0 +1,21 @@
+---
+layout: post
+title: CppCoreGuidelines CP.60  用 future 从并行任务返回值
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use a <code>future</code> to return a value from a concurrent task&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>future</code> 关键字能确保从异步任务返回值的语义正确执行。没有显式的锁，可以简单的处理正确结果的值返回，错误结果的异常抛出。
+</p>
