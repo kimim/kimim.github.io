@@ -17,6 +17,11 @@ track with the development *schedule*, and maintaining product quality.
 法语又是从拉丁语的 sedule 变来的。本意是写字的纸条。
 
 稍微留意一下，我们可以发现其实德语的 Zettel 也是从 sedule 演变来的。
+Zettel 就是德语纸条、卡片的意思。德国社会学家 Niklas Luhmann 就是通过
+Zettelkasten 纸片盒笔记管理法，创作了著作等身的作品。Zettelkasten 也是
+启发了很多有 backlink 反向链接的笔记管理软件的开发。比如我目前在用的基
+于 Emacs 和 Org-mode 的 org-roam 插件。可以帮助我很好的管理我的学习笔
+记。
 
 至于，现代的作为进度表、日程表、安排时间等的意思，则是在 1863 年开始出
 现，那时候的 schedule 是用于火车的时间表。
