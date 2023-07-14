@@ -1,0 +1,127 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.61  通过 async() 生成同步任务
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~async()~ to spawn concurrent tasks"
+
+理由 
+
+与 R.12 类似。R.12 提出避免使用原始指针。这里我们提出要尽量避免原始线
+程和原始原语。应该用工厂函数，比如 ~std::async~ 来生成线程和重用线程，从
+而避免在你的代码中暴露原始线程。
+
+#+begin_comment
+Similar to R.12, which tells you to avoid raw owning pointers, you
+should also avoid raw threads and raw promises where possible. Use a
+factory function such as std::async, which handles spawning or reusing
+a thread without exposing raw threads to your own code.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int read_value(const std::string& filename)
+{
+    std::ifstream in(filename);
+    in.exceptions(std::ifstream::failbit);
+    int value;
+    in >> value;
+    return value;
+}
+
+void async_example()
+{
+    try {
+        std::future<int> f1 = std::async(read_value, "v1.txt");
+        std::future<int> f2 = std::async(read_value, "v2.txt");
+        std::cout << f1.get() + f2.get() << '\n';
+    } catch (const std::ios_base::failure& fail) {
+        // handle exception here
+    }
+}
+#+end_src
+
+注意
+
+很遗憾， ~std::async~ 也不是很完美。比如说，它不能利用线程池。这意味着它
+不会把任务丢进队列等待执行，可能会因为资源耗尽而运行失败。但是，就算你
+不能利用 ~std::async~ 你也应该选择编写自己的函数，可以等待未来返回值。而
+尽量避免使用原始原语。
+
+#+begin_comment
+Unfortunately, std::async is not perfect. For example, it doesn’t use
+a thread pool, which means that it might fail due to resource
+exhaustion, rather than queuing up your tasks to be executed
+later. However, even if you cannot use std::async, you should prefer
+to write your own future-returning factory function, rather than using
+raw promises.
+#+end_comment
+
+坏例子
+
+这个例子显示了两种利用 ~std::future~ 的方式。但是无法避免的，需要管理原
+始 ~std::thread~ 。
+
+#+begin_comment
+This example shows two different ways to succeed at using std::future,
+but to fail at avoiding raw std::thread management.
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void async_example()
+{
+    std::promise<int> p1;
+    std::future<int> f1 = p1.get_future();
+    std::thread t1([p1 = std::move(p1)]() mutable {
+        p1.set_value(read_value("v1.txt"));
+    });
+    t1.detach(); // evil
+
+    std::packaged_task<int()> pt2(read_value, "v2.txt");
+    std::future<int> f2 = pt2.get_future();
+    std::thread(std::move(pt2)).detach();
+
+    std::cout << f1.get() + f2.get() << '\n';
+}
+#+end_src
+
+好例子
+
+这个例子展示了使用 ~std::async~ 的通用模式。如果程序环境不允许使用
+~std::async~ 本身的话，可以这么写：
+
+#+begin_comment
+This example shows one way you could follow the general pattern set by
+std::async, in a context where std::async itself was unacceptable for
+use in production.
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void async_example(WorkQueue& wq)
+{
+    std::future<int> f1 = wq.enqueue([]() {
+        return read_value("v1.txt");
+    });
+    std::future<int> f2 = wq.enqueue([]() {
+        return read_value("v2.txt");
+    });
+    std::cout << f1.get() + f2.get() << '\n';
+}
+#+end_src
+
+任何需要处理 ~read_value~ 的线程都隐藏在 ~WorkQueue::enqueue~ 之后。用户代
+码只要处理 ~future~ 对象，而不用处理原始线程、原始原语以及 ~packaged_task~
+对象。
+
+#+begin_comment
+Any threads spawned to execute the code of read_value are hidden
+behind the call to WorkQueue::enqueue. The user code deals only with
+future objects, never with raw thread, promise, or packaged_task
+objects.
+#+end_comment
