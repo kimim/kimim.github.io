@@ -1,0 +1,70 @@
+---
+layout: post
+title: CppCoreGuidelines C.100 除非你确定需要，尽量不要用无锁编程
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don&rsquo;t use lock-free programming unless you absolutely have to&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+容易出错，且对语言、机器架构、数据结构等知识的要求很高。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">extern</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">atomic</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">head</span>;        <span style="color: #3F7F5F;">// the shared head of a linked list</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">nh</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #707183;">(</span>data, <span style="color: #110099;">nullptr</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// make a link ready for insertion</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">h</span> <span style="color: #7F0055; font-weight: bold;">=</span> head.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">load</span><span style="color: #707183;">()</span>;                 <span style="color: #3F7F5F;">// read the shared head of the list</span>
+
+<span style="color: #7F0055; font-weight: bold;">do</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>h<span style="color: #7F0055; font-weight: bold;">-&gt;</span><span style="color: #110099; font-style: italic;">data</span> <span style="color: #7F0055; font-weight: bold;">&lt;=</span> data<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">break</span>;        <span style="color: #3F7F5F;">// if so, insert elsewhere</span>
+    nh<span style="color: #7F0055; font-weight: bold;">-&gt;</span><span style="color: #000000; font-style: italic;">next</span> <span style="color: #7F0055; font-weight: bold;">=</span> h;                      <span style="color: #3F7F5F;">// next element is the previous head</span>
+<span style="color: #707183;">}</span> <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">!</span>head.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">compare_exchange_weak</span><span style="color: #7388d6;">(</span>h, nh<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// write nh to head or to h</span>
+</pre>
+</div>
+
+
+<p>
+很难通过测试发现其中的 bug 。这里有所谓的 ABA 问题。比如，在 <code>nh-&gt;next
+= h</code> 之后，线程被切换走，其他线程可能做了类似的操作， <code>nnh-&gt;next = h</code> 然后， <code>h</code> 和 <code>nnh</code> 进行交换。新的 <code>h</code> 成了 <code>nnh</code> 。这时候，线程又切换回来， <code>nh</code>
+和老的 <code>h</code> 进行交换，这时候， <code>h</code> 指向的链表就丢失了。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+只要你使用顺序的内存模型（ <code>memory_order_seq_cst</code> ），你就可以简单安全地使用原子变量。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+高层的并行机制，如线程和互斥锁是用无锁编程实现的。
+</p>
+
+<p>
+其他选项
+</p>
+
+<p>
+使用别人实现的无锁数据结构。
+</p>
