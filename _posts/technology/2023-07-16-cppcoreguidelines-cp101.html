@@ -1,0 +1,33 @@
+---
+layout: post
+title: CppCoreGuidelines CP.101 不要相信你的硬件/编译器组合
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Distrust your hardware/compiler combination&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+无锁编程用到的底层的硬件接口是最难实现，最容易出现麻烦的可移植性问题的地方。如果你利用无锁编程改善程序性能，你需要持续不断的进行检查。
+</p>
+
+<p>
+我们很难基于指令的乱序执行（静态或动态的），有效的考虑优化问题。这时候就很需要经验、半形式化模型、模型审查等。非常需要进行极限测试。但是“不要太靠近太阳飞行。”不然你会很受伤。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+硬件、操作系统、编译器、程序库修改了之后，一定要重新进行测试。
+</p>

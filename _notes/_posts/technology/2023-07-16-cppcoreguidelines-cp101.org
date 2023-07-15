@@ -1,0 +1,41 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.101 不要相信你的硬件/编译器组合
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Distrust your hardware/compiler combination"
+
+理由
+
+无锁编程用到的底层的硬件接口是最难实现，最容易出现麻烦的可移植性问题的
+地方。如果你利用无锁编程改善程序性能，你需要持续不断的进行检查。
+
+#+begin_comment
+The low-level hardware interfaces used by lock-free programming are
+among the hardest to implement well and among the areas where the most
+subtle portability problems occur. If you are doing lock-free
+programming for performance, you need to check for regressions.
+#+end_comment
+
+我们很难基于指令的乱序执行（静态或动态的），有效的考虑优化问题。这时候
+就很需要经验、半形式化模型、模型审查等。非常需要进行极限测试。但是“不
+要太靠近太阳飞行。”不然你会很受伤。
+
+#+begin_comment
+Instruction reordering (static and dynamic) makes it hard for us to
+think effectively at this level (especially if you use relaxed memory
+models). Experience, (semi)formal models and model checking can be
+useful. Testing - often to an extreme extent - is essential. “Don’t
+fly too close to the sun.”
+#+end_comment
+
+强化
+
+硬件、操作系统、编译器、程序库修改了之后，一定要重新进行测试。
+
+#+begin_comment
+Have strong rules for re-testing in place that covers any change in
+hardware, operating system, compiler, and libraries.
+#+end_comment
