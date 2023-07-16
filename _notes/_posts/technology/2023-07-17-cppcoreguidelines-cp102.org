@@ -1,0 +1,46 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.102 仔细研读以下文献
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Carefully study the literature"
+
+理由
+
+除了原子操作和其他少数标准模式。无锁编程需要很深的专家知识。在提交无锁
+代码给别人前，先要称为专家。
+
+#+begin_comment
+With the exception of atomics and a few other standard patterns,
+lock-free programming is really an expert-only topic. Become an expert
+before shipping lock-free code for others to use.
+#+end_comment
+
+相关参考文献：
+
+- Anthony Williams: C++ concurrency in action. Manning Publications.
+- Boehm, Adve, You Don’t Know Jack About Shared Variables or Memory
+  Models , Communications of the ACM, Feb 2012.
+- Boehm, “Threads Basics”, HPL TR 2009-259.
+- Adve, Boehm, “Memory Models: A Case for Rethinking Parallel
+  Languages and Hardware”, Communications of the ACM, August 2010.
+- Boehm, Adve, “Foundations of the C++ Concurrency Memory Model”,
+  PLDI 08.
+- Mark Batty, Scott Owens, Susmit Sarkar, Peter Sewell, and Tjark
+  Weber, “Mathematizing C++ Concurrency”, POPL 2011.
+- Damian Dechev, Peter Pirkelbauer, and Bjarne Stroustrup:
+  Understanding and Effectively Preventing the ABA Problem in
+  Descriptor-based Lock-free Designs. 13th IEEE Computer Society ISORC
+  2010 Symposium. May 2010.
+- Damian Dechev and Bjarne Stroustrup: Scalable Non-blocking
+  Concurrent Objects for Mission Critical Code. ACM OOPSLA’09. October
+  2009
+- Damian Dechev, Peter Pirkelbauer, Nicolas Rouquette, and Bjarne
+  Stroustrup: Semantically Enhanced Containers for Concurrent
+  Real-Time Systems. Proc. 16th Annual IEEE International Conference
+  and Workshop on the Engineering of Computer Based Systems (IEEE
+  ECBS). April 2009.
+- Maurice Herlihy, Nir Shavit, Victor Luchangco, Michael Spear, “The
+  Art of Multiprocessor Programming”, 2nd ed. September 2020
