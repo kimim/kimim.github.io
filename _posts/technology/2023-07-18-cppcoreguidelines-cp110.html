@@ -1,0 +1,64 @@
+---
+layout: post
+title: CppCoreGuidelines CP.110 不要自己写双次检查锁的初始化代码
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Do not write your own double-checked locking for initialization&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+从 C++11 开始，静态局部变量是以线程安全的初始化的。结合 RAII 模式，静态局部变量可以替代你自己编写的双次检查锁的初始化代码。 <code>std::call_once</code>
+可以实现同样的目的。使用 C++11 静态局部变量或 <code>std::call_once</code> 编写双次检查锁的初始化代码。
+</p>
+
+
+<p>
+例子，使用 <code>std::call_once</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">once_flag</span> <span style="color: #000000;">my_once_flag</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #3a5fcd; font-weight: bold;">call_once</span><span style="color: #7388d6;">(</span>my_once_flag, <span style="color: #909183;">[]()</span>
+    <span style="color: #909183;">{</span>
+        <span style="color: #3F7F5F;">// do this only once</span>
+    <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+利用 C++  的线程安全的静态局部变量
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// Assuming the compiler is compliant with C++11</span>
+    <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_class</span> <span style="color: #000000;">my_object</span>; <span style="color: #3F7F5F;">// Constructor called only once</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_class</span>
+<span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">My_class</span><span style="color: #7388d6;">()</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// do this only once</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
