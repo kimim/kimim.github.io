@@ -1,0 +1,100 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.111  如果需要双次检查锁，请使用常用的设计模式
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use a conventional pattern if you really need double-checked locking"
+
+理由
+
+双次检查锁的实现很容易出错。如果你需要自己编写双次检查锁的代码，考虑规
+则 [[./cppcoreguidelines-cp110][CP.110 不要自己写双次检查锁的初始化代码]] 和 [[./cppcoreguidelines-cp100][CP.100 除非你确定需要，
+尽量不要用无锁编程]]。如果你的确需要，考虑常用的设计模式。
+
+如果非线程安全的行为很难或很少出现，并且有更快的线程安全测试进行保障的
+时候，使用双次检查锁模式并不违反规则[[./cppcoreguidelines-cp110][CP.110 不要自己写双次检查锁的初始
+化代码]]。
+
+#+begin_comment
+Double-checked locking is easy to mess up. If you really need to write
+your own double-checked locking, in spite of the rules CP.110: Do not
+write your own double-checked locking for initialization and CP.100:
+Don’t use lock-free programming unless you absolutely have to, then do
+it in a conventional pattern.
+
+The uses of the double-checked locking pattern that are not in
+violation of CP.110: Do not write your own double-checked locking for
+initialization arise when a non-thread-safe action is both hard and
+rare, and there exists a fast thread-safe test that can be used to
+guarantee that the action is not needed, but cannot be used to
+guarantee the converse.
+#+end_comment
+
+坏例子
+
+使用 ~volatile~ 并不能确保先进性检查后执行的代码能够线程安全。请查看
+[[./cppcoreguidelines-cp200][CP.200: 只使用 ~volatile~ 访问非 C++ 内存]]。
+
+#+begin_comment
+The use of volatile does not make the first check thread-safe, see
+also CP.200: Use volatile only to talk to non-C++ memory
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+mutex action_mutex;
+volatile bool action_needed;
+
+if (action_needed) {
+    std::lock_guard<std::mutex> lock(action_mutex);
+    if (action_needed) {
+        take_action();
+        action_needed = false;
+    }
+}
+#+end_src
+
+好例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+mutex action_mutex;
+atomic<bool> action_needed;
+
+if (action_needed) {
+    std::lock_guard<std::mutex> lock(action_mutex);
+    if (action_needed) {
+        take_action();
+        action_needed = false;
+    }
+}
+#+end_src
+
+如果获取加载的方式比顺序一致加载效率更好的话，优化的内存顺序可能有些好处。
+
+#+begin_comment
+Fine-tuned memory order might be beneficial where acquire load is more
+efficient than sequentially-consistent load
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+mutex action_mutex;
+atomic<bool> action_needed;
+
+if (action_needed.load(memory_order_acquire)) {
+    lock_guard<std::mutex> lock(action_mutex);
+    if (action_needed.load(memory_order_relaxed)) {
+        take_action();
+        action_needed.store(false, memory_order_release);
+    }
+}
+#+end_src
+
+#+begin_comment
+Enforcement
+
+??? Is it possible to detect the idiom?
+#+end_comment

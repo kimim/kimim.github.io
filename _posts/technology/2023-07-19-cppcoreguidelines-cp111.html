@@ -1,0 +1,84 @@
+---
+layout: post
+title: CppCoreGuidelines CP.111  如果需要双次检查锁，请使用常用的设计模式
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use a conventional pattern if you really need double-checked locking&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+双次检查锁的实现很容易出错。如果你需要自己编写双次检查锁的代码，考虑规则 <a href="./cppcoreguidelines-cp110">CP.110 不要自己写双次检查锁的初始化代码</a> 和 <a href="./cppcoreguidelines-cp100">CP.100 除非你确定需要，尽量不要用无锁编程</a>。如果你的确需要，考虑常用的设计模式。
+</p>
+
+<p>
+如果非线程安全的行为很难或很少出现，并且有更快的线程安全测试进行保障的时候，使用双次检查锁模式并不违反规则<a href="./cppcoreguidelines-cp110">CP.110 不要自己写双次检查锁的初始化代码</a>。
+</p>
+
+<p>
+坏例子
+</p>
+
+<p>
+使用 <code>volatile</code> 并不能确保先进性检查后执行的代码能够线程安全。请查看
+<a href="./cppcoreguidelines-cp200">CP.200: 只使用 <code>volatile</code> 访问非 C++ 内存</a>。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000;">action_mutex</span>;
+<span style="color: #7F0055; font-weight: bold;">volatile</span> <span style="color: #7F0055; font-weight: bold;">bool</span> <span style="color: #000000;">action_needed</span>;
+
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>action_needed<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">lock</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">action_mutex</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>action_needed<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3a5fcd; font-weight: bold;">take_action</span><span style="color: #909183;">()</span>;
+        <span style="color: #000000;">action_needed</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">false</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000;">action_mutex</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">atomic</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">bool</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">action_needed</span>;
+
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>action_needed<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">lock</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">action_mutex</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>action_needed<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3a5fcd; font-weight: bold;">take_action</span><span style="color: #909183;">()</span>;
+        <span style="color: #000000;">action_needed</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">false</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果获取加载的方式比顺序一致加载效率更好的话，优化的内存顺序可能有些好处。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span> <span style="color: #000000;">action_mutex</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">atomic</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">bool</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">action_needed</span>;
+
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>action_needed.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">load</span><span style="color: #7388d6;">(</span>memory_order_acquire<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">lock_guard</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">mutex</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">lock</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">action_mutex</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>action_needed.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">load</span><span style="color: #909183;">(</span>memory_order_relaxed<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3a5fcd; font-weight: bold;">take_action</span><span style="color: #909183;">()</span>;
+        action_needed.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">store</span><span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">false</span>, memory_order_release<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
