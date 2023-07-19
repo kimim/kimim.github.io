@@ -1,0 +1,131 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.200 只用 volatile 访问非 C++ 的内存
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use volatile only to talk to non-C++ memory"
+
+理由
+
+~volatile~ 是用来访问非 C++ 的对象，或者用来访问不遵循 C++ 内存模型的硬
+件数据的。
+
+#+begin_comment
+volatile is used to refer to objects that are shared with “non-C++”
+code or hardware that does not follow the C++ memory model.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+const volatile long clock;
+#+end_src
+
+这里描述的是一个一直被时钟电路更新的寄存器。时钟是转瞬即逝的数据，因为
+它的改变不需要 C++ 程序的任何操作。比如，读取时钟两次会得到两个不同的
+值。所有优化器最好不要把两次读取优化成一次：
+
+#+begin_comment
+This describes a register constantly updated by a clock circuit. clock
+is volatile because its value will change without any action from the
+C++ program that uses it. For example, reading clock twice will often
+yield two different values, so the optimizer had better not optimize
+away the second read in this code:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+long t1 = clock;
+// ... no use of clock here ...
+long t2 = clock;
+#+end_src
+
+时钟是常量，程序不该改写时钟数据。
+
+#+begin_comment
+clock is const because the program should not try to write to clock.
+#+end_comment
+
+注意
+
+除非你编写代码直接操作底层硬件。最好避免 ~volatile~ 这种深奥的功能。
+
+#+begin_comment
+Unless you are writing the lowest level code manipulating hardware
+directly, consider volatile an esoteric feature that is best avoided.
+#+end_comment
+
+例子
+
+一般 C++ 代码从别的语言或硬件接收到 ~volatile~ 内存：
+
+#+begin_comment
+Usually C++ code receives volatile memory that is owned elsewhere
+(hardware or another language):
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int volatile* vi = get_hardware_memory_location();
+    // note: we get a pointer to someone else's memory here
+    // volatile says "treat this with extra respect"
+#+end_src
+
+有时候，C++ 代码分配 ~volatile~ 内存，通过指针共享给其他语言或硬件。
+
+#+begin_comment
+Sometimes C++ code allocates the volatile memory and shares it with
+“elsewhere” (hardware or another language) by deliberately escaping a
+pointer:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+static volatile long vl;
+please_use_this(&vl);   // escape a reference to this to "elsewhere" (not C++)
+#+end_src
+
+坏例子
+
+~volatile~ 的局部变量肯定有问题。如果它是短暂的转瞬即逝的，怎么共享给其
+他语言和硬件？这个道理同样适用于成员变量：
+
+#+begin_comment
+volatile local variables are nearly always wrong – how can they be
+shared with other languages or hardware if they’re ephemeral? The same
+applies almost as strongly to member variables, for the same reason.
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f()
+{
+    volatile int i = 0; // bad, volatile local variable
+    // etc.
+}
+
+class My_type {
+    volatile int i = 0; // suspicious, volatile member variable
+    // etc.
+};
+#+end_src
+
+注意
+不像其他语言，在 C++ 中 ~volatile~ 没有同步的作用。
+
+#+begin_comment
+In C++, unlike in some other languages, volatile has nothing to do
+with synchronization.
+#+end_comment
+
+强化
+
+- 标记 ~volatile T~ 局部的或成员变量，大多数情况，你是想要用到 ~atomic<T>~ 
+
+#+begin_comment
+Flag volatile T local and member variables; almost certainly you
+intended to use atomic<T> instead.
+#+end_comment

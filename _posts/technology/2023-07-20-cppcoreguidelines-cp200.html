@@ -1,0 +1,112 @@
+---
+layout: post
+title: CppCoreGuidelines CP.200 只用 volatile 访问非 C++ 的内存
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use volatile only to talk to non-C++ memory&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>volatile</code> 是用来访问非 C++ 的对象，或者用来访问不遵循 C++ 内存模型的硬件数据的。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">volatile</span> <span style="color: #7F0055; font-weight: bold;">long</span> <span style="color: #000000;">clock</span>;
+</pre>
+</div>
+
+<p>
+这里描述的是一个一直被时钟电路更新的寄存器。时钟是转瞬即逝的数据，因为它的改变不需要 C++ 程序的任何操作。比如，读取时钟两次会得到两个不同的值。所有优化器最好不要把两次读取优化成一次：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">long</span> <span style="color: #000000;">t1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">clock</span>;
+<span style="color: #3F7F5F;">// ... no use of clock here ...</span>
+<span style="color: #7F0055; font-weight: bold;">long</span> <span style="color: #000000;">t2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">clock</span>;
+</pre>
+</div>
+
+<p>
+时钟是常量，程序不该改写时钟数据。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+除非你编写代码直接操作底层硬件。最好避免 <code>volatile</code> 这种深奥的功能。
+</p>
+
+<p>
+例子
+</p>
+
+<p>
+一般 C++ 代码从别的语言或硬件接收到 <code>volatile</code> 内存：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #7F0055; font-weight: bold;">volatile</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">vi</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">get_hardware_memory_location</span><span style="color: #707183;">()</span>;
+    <span style="color: #3F7F5F;">// note: we get a pointer to someone else's memory here</span>
+    <span style="color: #3F7F5F;">// volatile says "treat this with extra respect"</span>
+</pre>
+</div>
+
+<p>
+有时候，C++ 代码分配 <code>volatile</code> 内存，通过指针共享给其他语言或硬件。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #7F0055; font-weight: bold;">volatile</span> <span style="color: #7F0055; font-weight: bold;">long</span> <span style="color: #000000;">vl</span>;
+<span style="color: #3a5fcd; font-weight: bold;">please_use_this</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>vl<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// escape a reference to this to "elsewhere" (not C++)</span>
+</pre>
+</div>
+
+<p>
+坏例子
+</p>
+
+<p>
+<code>volatile</code> 的局部变量肯定有问题。如果它是短暂的转瞬即逝的，怎么共享给其他语言和硬件？这个道理同样适用于成员变量：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">volatile</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>; <span style="color: #3F7F5F;">// bad, volatile local variable</span>
+    <span style="color: #3F7F5F;">// etc.</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_type</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">volatile</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>; <span style="color: #3F7F5F;">// suspicious, volatile member variable</span>
+    <span style="color: #3F7F5F;">// etc.</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+注意不像其他语言，在 C++ 中 <code>volatile</code> 没有同步的作用。
+</p>
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记 <code>volatile T</code> 局部的或成员变量，大多数情况，你是想要用到 <code>atomic&lt;T&gt;</code></li>
+</ul>
