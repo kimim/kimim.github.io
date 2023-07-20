@@ -1,0 +1,15 @@
+#+layout: post
+#+title: CppCoreGuidelines CP.201 关于信号
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Signals"关于 UNIX 的信号处理。需要注意的是，信号的异步安全很困难，最
+好避免与信号处理句柄的通信。
+
+#+begin_comment
+???UNIX signal handling???. Might be worth reminding how little is
+async-signal-safe, and how to communicate with a signal handler (best
+is probably “not at all”)
+#+end_comment
