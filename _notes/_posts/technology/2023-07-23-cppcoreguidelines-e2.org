@@ -1,0 +1,137 @@
+#+layout: post
+#+title: CppCoreGuidelines E.2 用抛出异常作为信号说明函数无法处理分配给它的任务
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Throw an exception to signal that a function can’t perform its assigned task"
+
+理由
+
+这种方法可以把出错处理过程变得更系统、稳固，且避免代码重复。
+
+#+begin_comment
+To make error handling systematic, robust, and non-repetitive.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+struct Foo {
+    vector<Thing> v;
+    File_handle f;
+    string s;
+};
+
+void use()
+{
+    Foo bar {{Thing{1}, Thing{2}, Thing{monkey}},
+             {"my_file", "r"}, "Here we go!"};
+    // ...
+}
+#+end_src
+
+这里， ~vector~ 和 ~string~ 的构造函数可能无法分配到足够的内存给其内部元素。
+~vector~ 构造函数可能无法把初始化列表中的东西复制过来， ~File_handle~ 可能
+不能打开文件。在各种可能出错的情况下，都会抛出异常给调用函数 ~use()~ 来
+处理。 ~use()~ 函数可以通过 ~try/catch~ 来处理构造 ~bar~ 的过程中出现的错误。
+出现错误的时候， ~Foo~ 的构造函数会在转交控制权之前，正确销毁已经构造的成员。
+
+#+begin_comment
+Here, vector and strings constructors might not be able to allocate sufficient memory for their elements, vectors constructor might not be able to copy the Things in its initializer list, and File_handle might not be able to open the required file. In each case, they throw an exception for use()’s caller to handle. If use() could handle the failure to construct bar it can take control using try/catch. In either case, Foo’s constructor correctly destroys constructed members before passing control to whatever tried to create a Foo.
+#+end_comment
+
+注意，这里没有包含错误码的返回值。
+
+#+begin_comment
+Note that there is no return value that could contain an error code.
+#+end_comment
+
+~File_handle~ 构造函数可能可以这样定义：
+
+#+begin_comment
+The File_handle constructor might be defined like this:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+File_handle::File_handle(const string& name, const string& mode)
+    : f{fopen(name.c_str(), mode.c_str())}
+{
+    if (!f)
+        throw runtime_error{"File_handle: could not open "
+                            + name + " as " + mode};
+}
+#+end_src
+
+注意
+
+人们经常说异常意味着异常的事件或者异常的错误的信号。但是，这里有些同义
+反复，到底什么是异常的？
+
+#+begin_comment
+It is often said that exceptions are meant to signal exceptional
+events and failures. However, that’s a bit circular because “what is
+exceptional?”
+#+end_comment
+
+例子
+- 一个前提条件没法满足
+- 一个构造函数无法构造一个对象（构造一个类的不变式的过程失败了）
+- 超出范围错误（比如， ~v[v.size()] = 7~ ）
+- 无法获取一个资源（比如，网络连接断开）
+
+相反的，一个普通循环的结束，不算是异常的。除非这个循环是无限循环。这时
+候，提前结束意味着异常情况。
+
+#+begin_comment
+Examples:
+A precondition that cannot be met
+A constructor that cannot construct an object (failure to establish its class’s invariant)
+An out-of-range error (e.g., v[v.size()] = 7)
+Inability to acquire a resource (e.g., the network is down)
+In contrast, termination of an ordinary loop is not exceptional. Unless the loop was meant to be infinite, termination is normal and expected.
+#+end_comment
+
+注意
+
+不要通过 ~throw~ 作为从函数返回值的一种简单替代。
+
+#+begin_comment
+Don’t use a throw as simply an alternative way of returning a value
+from a function.
+#+end_comment
+
+例外情况
+
+像硬实时系统之类的系统，会要求固定的最大时间内响应事件。这时候，我们必
+须有工具确保在指定时间内能从 ~throw~ 恢复的情况。
+
+#+begin_comment
+Some systems, such as hard-real-time systems require a guarantee that
+an action is taken in a (typically short) constant maximum time known
+before execution starts. Such systems can use exceptions only if there
+is tool support for accurately predicting the maximum time to recover
+from a throw.
+#+end_comment
+
+#+begin_comment
+See also: RAII
+
+See also: discussion
+#+end_comment
+
+注意
+
+如果你无法承受异常，或者不喜欢基于异常的出错处理，请在做出决定之前，考
+虑其他选项。当然这些选项有其自身的复杂性和问题。一定要记住，在申明性能
+效率之前，要做出一定的度量。
+
+#+begin_comment
+Before deciding that you cannot afford or don’t like exception-based
+error handling, have a look at the alternatives; they have their own
+complexities and problems. Also, as far as possible, measure before
+making claims about efficiency.
+#+end_comment
