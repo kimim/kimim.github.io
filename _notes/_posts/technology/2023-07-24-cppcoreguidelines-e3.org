@@ -1,0 +1,55 @@
+#+layout: post
+#+title: CppCoreGuidelines E.3 只用异常处理出错情况
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use exceptions for error handling only"
+
+理由
+
+要把出错处理的代码和普通代码分开。C++ 的优化实现，倾向于假定异常情况很
+少出现。也就是说，默认不太会有很多异常情况要处理。
+
+#+begin_comment
+To keep error handling separated from “ordinary code.” C++
+implementations tend to be optimized based on the assumption that
+exceptions are rare.
+#+end_comment
+
+错误例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// don't: exception not used for error handling
+int find_index(vector<string>& vec, const string& x)
+{
+    try {
+        for (gsl::index i = 0; i < vec.size(); ++i)
+            if (vec[i] == x) throw i;  // found x
+    }
+    catch (int i) {
+        return i;
+    }
+    return -1;   // not found
+}
+#+end_src
+
+这段代码把事情弄复杂了，而且可能运行速度会更慢些。在一个 ~vector~ 中查找
+一个值一点也不“异常”。
+
+#+begin_comment
+This is more complicated and most likely runs much slower than the
+obvious alternative. There is nothing exceptional about finding a
+value in a vector.
+#+end_comment
+
+强化
+
+可能需要一些启发式的探索。检查异常值从 ~catch~ 语句中“泄漏”出去的情况。
+
+#+begin_comment
+Would need to be heuristic. Look for exception values “leaked” out of
+catch clauses.
+#+end_comment

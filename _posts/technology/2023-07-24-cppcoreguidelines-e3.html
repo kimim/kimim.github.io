@@ -1,0 +1,53 @@
+---
+layout: post
+title: CppCoreGuidelines E.3 只用异常处理出错情况
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use exceptions for error handling only&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+要把出错处理的代码和普通代码分开。C++ 的优化实现，倾向于假定异常情况很少出现。也就是说，默认不太会有很多异常情况要处理。
+</p>
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't: exception not used for error handling</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">find_index</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">vec</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #909183;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">index</span> <span style="color: #000000;">i</span> = 0; i &lt; vec.size<span style="color: #709870;">()</span>; ++i<span style="color: #909183;">)</span>
+            <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>vec<span style="color: #709870;">[</span>i<span style="color: #709870;">]</span> == x<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> i;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">found x</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> i;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> -1;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">not found</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这段代码把事情弄复杂了，而且可能运行速度会更慢些。在一个 <code>vector</code> 中查找一个值一点也不“异常”。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+可能需要一些启发式的探索。检查异常值从 <code>catch</code> 语句中“泄漏”出去的情况。
+</p>
