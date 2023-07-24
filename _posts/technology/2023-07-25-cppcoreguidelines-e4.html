@@ -1,0 +1,29 @@
+---
+layout: post
+title: CppCoreGuidelines E.4 不要围绕不变式设计出错处理策略
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Design your error-handling strategy around invariants&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+我们使用一个对象的话，这个对象一定要是状态正常（所谓的状态正常，指的是这个状态正式或非正式的由不变式所定义）。如果从错误中恢复的时候，这个对象没有被销毁，那么它必须处在有效的正常状态。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+一个不变式指的是某个逻辑条件，在这个条件下，对象的成员的构造函数必须构造数据的状态，从而确保公开成员函数能够以正常的方式访问数据。
+</p>

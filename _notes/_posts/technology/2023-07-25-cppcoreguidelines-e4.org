@@ -1,0 +1,29 @@
+#+layout: post
+#+title: CppCoreGuidelines E.4 不要围绕不变式设计出错处理策略
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Design your error-handling strategy around invariants"
+
+理由
+
+我们使用一个对象的话，这个对象一定要是状态正常（所谓的状态正常，指的是
+这个状态正式或非正式的由不变式所定义）。如果从错误中恢复的时候，这个对
+象没有被销毁，那么它必须处在有效的正常状态。
+
+#+begin_comment
+To use an object it must be in a valid state (defined formally or informally by an invariant) and to recover from an error every object not destroyed must be in a valid state.
+#+end_comment
+
+注意
+
+一个不变式指的是某个逻辑条件，在这个条件下，对象的成员的构造函数必须构
+造数据的状态，从而确保公开成员函数能够以正常的方式访问数据。
+
+#+begin_comment
+An invariant is a logical condition for the members of an object that
+a constructor must establish for the public member functions to
+assume.
+#+end_comment
