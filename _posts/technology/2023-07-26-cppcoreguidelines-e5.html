@@ -1,0 +1,57 @@
+---
+layout: post
+title: CppCoreGuidelines E.5 让构造函数构建不变式，如果不能构建，抛出异常
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Let a constructor establish an invariant, and throw if it cannot&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+允许未建立不变式的对象会导致很多麻烦。某些成员函数可能无法正确调用。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">very simplified vector of doubles</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">if elem != nullptr then elem points to sz doubles</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">Vector</span><span style="color: #7388d6;">()</span> : elem<span style="color: #7388d6;">{</span><span style="color: #110099;">nullptr</span><span style="color: #7388d6;">}</span>, sz<span style="color: #7388d6;">{</span>0<span style="color: #7388d6;">}{}</span>
+    <span style="color: #0000ff; font-weight: bold;">Vector</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">s</span><span style="color: #7388d6;">)</span> : elem<span style="color: #7388d6;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #909183;">[</span>s<span style="color: #909183;">]</span><span style="color: #7388d6;">}</span>, sz<span style="color: #7388d6;">{</span>s<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">initialize elements</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>
+    ~<span style="color: #0000ff; font-weight: bold;">Vector</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">delete</span> <span style="color: #909183;">[]</span> elem; <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #7388d6; font-weight: bold;">[]</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">s</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> elem<span style="color: #909183;">[</span>s<span style="color: #909183;">]</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span>*<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">elem</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sz</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+在这这个类的构建过程中， <code>new</code> 可能会抛出异常，导致 <code>Vector</code> 的元素没有正确构建。这时候，依赖于这个不变式的下标操作就会调用出错。
+</p>
+
+<p>
+请查看：<a href="./2022-09-19-cppcoreguidelines-c42">C.42 如果构造函数不能构造一个有效对象，抛出一个例外</a>。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记内部有私有状态，且没有构造函数（公开、保护、私有构造函数）的类。
+</p>

@@ -1,0 +1,61 @@
+#+layout: post
+#+title: CppCoreGuidelines E.5 让构造函数构建不变式，如果不能构建，抛出异常
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Let a constructor establish an invariant, and throw if it cannot"
+
+理由
+
+允许未建立不变式的对象会导致很多麻烦。某些成员函数可能无法正确调用。
+
+#+begin_comment
+Leaving an object without its invariant established is asking for
+trouble. Not all member functions can be called.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class Vector {  // very simplified vector of doubles
+    // if elem != nullptr then elem points to sz doubles
+public:
+    Vector() : elem{nullptr}, sz{0}{}
+    Vector(int s) : elem{new double[s]}, sz{s} { /* initialize elements */ }
+    ~Vector() { delete [] elem; }
+    double& operator[](int s) { return elem[s]; }
+    // ...
+private:
+    owner<double*> elem;
+    int sz;
+};
+#+end_src
+
+在这这个类的构建过程中， ~new~ 可能会抛出异常，导致 ~Vector~ 的元素没有正
+确构建。这时候，依赖于这个不变式的下标操作就会调用出错。
+
+#+begin_comment
+The class invariant - here stated as a comment - is established by the
+constructors. new throws if it cannot allocate the required
+memory. The operators, notably the subscript operator, rely on the
+invariant.
+#+end_comment
+
+请查看：[[./2022-09-19-cppcoreguidelines-c42][C.42 如果构造函数不能构造一个有效对象，抛出一个例外]]。
+
+#+begin_comment
+See also: If a constructor cannot construct a valid object, throw an
+exception
+#+end_comment
+
+强化
+
+标记内部有私有状态，且没有构造函数（公开、保护、私有构造函数）的类。
+
+#+begin_comment
+Flag classes with private state without a constructor (public,
+protected, or private).
+#+end_comment
