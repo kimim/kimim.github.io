@@ -1,0 +1,164 @@
+---
+layout: post
+title: CppCoreGuidelines E.6 用 RAII 避免内存泄漏
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use RAII to prevent leaks&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+内存泄漏肯定不行。手工管理释放内存资源很容易出错。RAII（Resource
+Acquisition Is Initialization） 是避免内存泄漏的最简单、最系统化的方式。
+</p>
+
+<p>
+例子
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: possible leak</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">[</span>12<span style="color: #7388d6;">]</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>i &lt; 17<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad<span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"in f()"</span>, i<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+我们可以在抛出异常之前小心地释放内存资源。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Clumsy and error-prone: explicit release</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">[</span>12<span style="color: #7388d6;">]</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>i &lt; 17<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">delete</span><span style="color: #909183;">[]</span> p;
+        <span style="color: #7F0055; font-weight: bold;">throw</span> Bad<span style="color: #909183;">{</span><span style="color: #2A00FF;">"in f()"</span>, i<span style="color: #909183;">}</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+但是，这样操作很繁琐。代码量大的时候，在多处可能跑出异常的地方显式地释放资源，既重复是劳动，又容易出错。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f3</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: resource management done by a handle (but see below)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = make_unique<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">[]</span><span style="color: #7388d6;">&gt;(</span>12<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>i &lt; 17<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad<span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"in f()"</span>, i<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+这个方法在隐式地抛出异常的情况下也能正常工作，因为清理工作在被调用函数中处理掉了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f4</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: resource management done by a handle (but see below)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = make_unique<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">[]</span><span style="color: #7388d6;">&gt;(</span>12<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    helper<span style="color: #7388d6;">(</span>i<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">might throw</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+除非你需要指针语义，不然的话，就用局部的资源对象：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f5</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: resource management done by local object</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #7388d6;">(</span>12<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    helper<span style="color: #7388d6;">(</span>i<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">might throw</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这样更简单、更安全、更高效率。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+如果没有明显的资源句柄，或者很难定义合适的 RAII 对象/句柄，最后的办法是通过某个 <code>final_action</code> 对象清理内存资源。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+如果我们写的程序不能执行异常怎么办？首先，我们要去质疑一下，为什么？是不是有一些反异常操作的迷信？我们只知道很少一些情况不能用异常：
+</p>
+<ul class="org-ul">
+<li>我们的系统很小，支持异常操作会吃掉 2K 内存的大部分。</li>
+<li>我们使用硬实时系统，没有工具可以确保在规定的时间内处理异常。</li>
+<li>我们的系统里有大量旧代码，用了大量难以理解的指针，所以异常会导致内存泄漏。</li>
+<li>我们用的 C++ 版本中的异常处理机制性能很糟糕（慢、耗内存、没法和动态链接库兼容）。请像提供商提议，如果没有用户提议，不会有改进发生。</li>
+<li>如果我们质疑经理的古老智慧，我们会被炒鱿鱼。</li>
+</ul>
+
+<p>
+这些理由中，只有第一条是很根本的，所以，只要有可能，尽量通过 RAII 使用异常机制，或者设计你的 RAII 对象，确保永远不会出错。如果没法使用异常机制，就模拟出 RAII 操作。就是在对象创建之后，先检查对象是否有效，然后在析构函数中释放所有资源。其中一个策略是给每一个资源句柄添加一个 <code>valid()</code>
+操作。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">vs</span><span style="color: #7388d6;">(</span>100<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">not std::vector: valid() added</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!vs.valid<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">handle error or exit</span>
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">ifstream</span> <span style="color: #000000;">fs</span><span style="color: #7388d6;">(</span><span style="color: #2A00FF;">"foo"</span><span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">not std::ifstream: valid() added</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!fs.valid<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">handle error or exit</span>
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">destructors clean up as usual</span>
+</pre>
+</div>
+
+<p>
+很明显，这样会增加代码长度，不支持隐式的异常传导，并且也很容易忘记添加
+<code>valid()</code> 检查。所以，还是首选使用异常机制。
+</p>
+
+<p>
+请查看：使用 noexcept 规则
+</p>
