@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       02b3c1e0-0bab-4be1-aaa6-3d56fe2d9dc5
-:END:
 #+LAYOUT: post
 #+TITLE: 单词本：pedal
 #+TAGS: English

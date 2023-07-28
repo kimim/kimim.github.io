@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       990f5dbe-b00b-43fb-94a5-bcdad79e8e59
-:END:
 #+LAYOUT: post
 #+TITLE: 单词本：idiosyncratic
 #+TAGS: English

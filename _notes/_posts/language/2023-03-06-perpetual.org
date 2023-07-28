@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       5932bcd2-b791-452e-b2a6-7994d01938d1
-:END:
 #+LAYOUT: post
 #+TITLE: 单词本：perpectual
 #+TAGS: English

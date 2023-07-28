@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       292c6ad6-d6de-4e91-8105-9829ad28d6c4
-:END:
 #+layout: post
 #+title: CppCoreGuidelines R.24 用 std::weak_ptr 打破 shared_ptr 循环
 #+categories: technology

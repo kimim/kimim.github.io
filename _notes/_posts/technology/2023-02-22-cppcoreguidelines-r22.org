@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       b6728fec-d682-48e5-b17a-309a153bce4e
-:END:
 #+layout: post
 #+title: CppCoreGuidelines R.22 用 make_shared 创建 shared_ptr
 #+categories: technology

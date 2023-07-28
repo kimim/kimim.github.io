@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       ddee6746-3287-40c1-8842-4160f1e74129
-:END:
 #+layout: post
 #+title: CppCoreGuidelines R.34 用 shared_ptr 参数表示共享所有权
 #+categories: technology

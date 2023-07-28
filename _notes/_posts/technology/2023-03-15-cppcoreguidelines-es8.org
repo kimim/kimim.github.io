@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       75999c43-24b2-486a-a9c3-05f121f961d3
-:END:
 #+layout: post
 #+title: CppCoreGuidelines ES.8 避免似是而非的名字
 #+categories: technology

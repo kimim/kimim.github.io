@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       f0a16469-7786-406b-b1c4-3865284cc204
-:END:
 #+layout: post
 #+title: CppCoreGuidelines ES.2 请使用适当的抽象机制
 #+categories: technology

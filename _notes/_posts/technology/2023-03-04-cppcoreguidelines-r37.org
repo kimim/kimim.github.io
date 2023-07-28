@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       b0d3665f-d19e-4183-afa7-2e18bab52be2
-:END:
 #+layout: post
 #+title: CppCoreGuidelines R.37 不要以指针或引用的方式传递智能指针的别名
 #+categories: technology

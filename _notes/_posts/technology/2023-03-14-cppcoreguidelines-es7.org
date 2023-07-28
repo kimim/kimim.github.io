@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       8ed0f22a-321a-4c3d-9ae0-0b88db18ee78
-:END:
 #+layout: post
 #+title: CppCoreGuidelines ES.7 常见局部变量名尽量短，不常见非局部变量名可稍长
 #+categories: technology

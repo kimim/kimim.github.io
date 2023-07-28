@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID: e6aba5fc-d6f2-4bb2-bc0c-286e07e14e54
-:END:
 #+LAYOUT: post
 #+TITLE: 单词本：argumentum ad ignorantiam
 #+TAGS: English Latin

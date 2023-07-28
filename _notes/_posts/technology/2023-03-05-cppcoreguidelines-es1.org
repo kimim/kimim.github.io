@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       dc73a1c9-6fa3-4cf5-9f4f-6f58319af7bb
-:END:
 #+layout: post
 #+title: CppCoreGuidelines ES.1 相比非标准库和自己编写代码，首选标准库
 #+categories: technology

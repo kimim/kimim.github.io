@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       46f8c104-98f6-42d5-922a-05c11a36a629
-:END:
 #+layout: post
 #+title: CppCoreGuidelines R.32 用 unique_ptr 参数标明函数接收指针的所有权
 #+categories: technology

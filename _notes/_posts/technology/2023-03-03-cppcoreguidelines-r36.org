@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       f5c6f006-6257-423b-aecc-7b5342c61471
-:END:
 #+layout: post
 #+title: CppCoreGuidelines R.36 用 const shared_ptr<widget>& 参数表明函数会保留对象的引用计数
 #+categories: technology

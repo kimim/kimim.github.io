@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       318731a8-e03e-468b-acce-c4f70a1133e7
-:END:
 #+layout: post
 #+title: CppCoreGuidelines ES.3 不要重复、避免多余
 #+categories: technology

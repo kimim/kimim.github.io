@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID: a532b21b-1653-4fc2-97cb-26f318e37065
-:END:
 #+LAYOUT: post
 #+TITLE: 单词本：impromptu
 #+TAGS: English Latin

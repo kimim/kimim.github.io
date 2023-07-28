@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       4682a422-81df-4c6d-800d-d20ad8e2ccac
-:END:
 #+layout: post
 #+title: CppCoreGuidelines R.31 如果要非标准库的智能指针，请遵循标准库的设计模式
 #+categories: technology

@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       a1b10b25-c5ad-456d-bbbf-48837e3cd0a6
-:END:
 #+layout: post
 #+title: CppCoreGuidelines ES.5 小作用域范围
 #+categories: technology

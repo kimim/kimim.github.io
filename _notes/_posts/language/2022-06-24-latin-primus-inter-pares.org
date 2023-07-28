@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       9658ac9c-8e3f-47a8-b588-b781695b9e8e
-:END:
 #+layout: post
 #+title: 单词本：primus inter pares
 #+categories: language

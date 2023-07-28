@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID: 1439594e-b05e-42d9-b9cb-230ac0443c7b
-:END:
 #+LAYOUT: post
 #+TITLE: 单词本：inter alia
 #+TAGS: Latin English

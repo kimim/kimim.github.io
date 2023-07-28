@@ -1,6 +1,3 @@
-:PROPERTIES:
-:ID:       7138b8d1-5f93-4f8d-9889-924f48ab0269
-:END:
 #+LAYOUT: post
 #+TITLE: 单词本：Thereby hangs a tale
 #+TAGS: English
