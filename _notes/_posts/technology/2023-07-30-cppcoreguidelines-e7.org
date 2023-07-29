@@ -1,0 +1,22 @@
+#+layout: post
+#+title: CppCoreGuidelines E.7 申明的前提条件
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"State your preconditions"
+
+理由
+
+避免接口出错。
+
+#+begin_comment
+To avoid interface errors.
+#+end_comment
+
+请查看：[[./2022-03-17-cppcoreguidelines-i5][前提条件规则]]
+
+#+begin_comment
+See also: precondition rule
+#+end_comment
