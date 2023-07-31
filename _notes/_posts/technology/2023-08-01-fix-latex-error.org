@@ -1,0 +1,87 @@
+#+LAYOUT: post
+#+TITLE: Fix LaTeX Beamer errors
+#+TAGS: LaTeX
+#+CATEGORIES: technology
+
+My PC was re-imaged several days ago. I upgraded texlive from 2021 to
+2023, as it is not allowed to update packages in lower system
+version. In order to save disk space, this time I only install the
+packages I need to use.
+
+But when I try to export one of my org-mode file to Beamer slides, the compilation reported errors:
+
+#+begin_src log
+! Extra \or.
+\ifthenelse #1->\toks@ {#1}\TE@repl \or
+                                        \TE@or \TE@repl \and \TE@and \TE@rep...
+l.60 \end{frame}
+
+?
+! Emergency stop.
+\ifthenelse #1->\toks@ {#1}\TE@repl \or
+                                        \TE@or \TE@repl \and \TE@and \TE@rep...
+l.60 \end{frame}
+
+End of file on the terminal!
+#+end_src
+
+When I look into the ~tex~ file, ~l.60~ is just the end of a ~frame~:
+
+#+begin_src latex
+\begin{frame}[label={sec:orgf852438}]{什么是 PA-DIM}
+\begin{columns}
+\begin{column}{0.5\columnwidth}
+\begin{center}
+\includesvg[height=0.82\textheight,width=\textwidth,keepaspectratio]{images/PA-DIM-Context}
+\end{center}
+\end{column}
+
+\begin{column}{0.5\columnwidth}
+PA-DIM = Process Automation - Device Information Model \\[0pt]
+过程自动化 - 设备信息模型
+\begin{itemize}
+\item 过程自动化现场设备的常用参数
+\item 统一的数据结构
+\item 标准的数据语义
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame} % this line
+#+end_src
+
+It looks fine. Later, I found a thread in stackexchange "[[https://tex.stackexchange.com/questions/13866/why-is-the-ifthen-package-obsolete][why is the
+ifthen package obsolete?]]
+
+#+begin_quotation
+The main reason why people may consider ifthen obsolete (last version
+is of 2001/05/26 with about one page of user manual plus four pages of
+code documentation) is that it is superseded by e.g. etoolbox, which
+uses the advanced possibilities of eTeX. Using these allows faster
+processing. You still can use ifthen for your existing and new
+documents if you like and I don't think there is a risk in doing
+so. However for new code, especially new packages which use a lot of
+boolean expression using the more modern alternatives is recommended.
+#+end_quotation
+
+So I change my beamer template to use ~etoolbox~, for example, I change
+from:
+
+#+begin_src latex
+    \ifthenelse{\boolean{customlogo}}{%
+      \insertlogoimage{2}
+    }{
+      \drawlogo{0.1}%
+    }
+#+end_src
+
+to:
+
+#+begin_src latex
+    \ifcustomlogo%
+      \insertlogoimage{2}
+    \else
+      \drawlogo{0.1}%
+    \fi
+#+end_src
+
+Then, texlive 2023 works fine.

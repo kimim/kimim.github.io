@@ -1,0 +1,109 @@
+---
+layout: post
+title: Fix LaTeX Beamer errors
+tags: [LaTeX]
+categories: [technology]
+---
+<p>
+My PC was re-imaged several days ago. I upgraded texlive from 2021 to
+2023, as it is not allowed to update packages in lower system
+version. In order to save disk space, this time I only install the
+packages I need to use.
+</p>
+
+<p>
+But when I try to export one of my org-mode file to Beamer slides, the compilation reported errors:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-log">! Extra \or.
+\ifthenelse #1-&gt;\toks@ {#1}\TE@repl \or
+                                        \TE@or \TE@repl \and \TE@and \TE@rep...
+l.60 \end{frame}
+
+?
+! Emergency stop.
+\ifthenelse #1-&gt;\toks@ {#1}\TE@repl \or
+                                        \TE@or \TE@repl \and \TE@and \TE@rep...
+l.60 \end{frame}
+
+End of file on the terminal!
+</pre>
+</div>
+
+<p>
+When I look into the <code>tex</code> file, <code>l.60</code> is just the end of a <code>frame</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-latex"><span style="color: #7F0055; font-weight: bold;">\begin</span>{<span style="color: #0000ff; font-weight: bold;">frame</span>}[label={sec:orgf852438}]{&#20160;&#20040;&#26159; PA-DIM}
+<span style="color: #7F0055; font-weight: bold;">\begin</span>{<span style="color: #0000ff; font-weight: bold;">columns</span>}
+<span style="color: #7F0055; font-weight: bold;">\begin</span>{<span style="color: #0000ff; font-weight: bold;">column</span>}{0.5<span style="color: #7F0055; font-weight: bold;">\columnwidth</span>}
+<span style="color: #7F0055; font-weight: bold;">\begin</span>{<span style="color: #0000ff; font-weight: bold;">center</span>}
+<span style="color: #7F0055; font-weight: bold;">\includesvg</span>[height=0.82<span style="color: #7F0055; font-weight: bold;">\textheight</span>,width=<span style="color: #7F0055; font-weight: bold;">\textwidth</span>,keepaspectratio]{images/PA-DIM-Context}
+<span style="color: #7F0055; font-weight: bold;">\end</span>{<span style="color: #0000ff; font-weight: bold;">center</span>}
+<span style="color: #7F0055; font-weight: bold;">\end</span>{<span style="color: #0000ff; font-weight: bold;">column</span>}
+
+<span style="color: #7F0055; font-weight: bold;">\begin</span>{<span style="color: #0000ff; font-weight: bold;">column</span>}{0.5<span style="color: #7F0055; font-weight: bold;">\columnwidth</span>}
+PA-DIM = Process Automation - Device Information Model <span style="color: #FF0000;">\\</span>[0pt]
+&#36807;&#31243;&#33258;&#21160;&#21270; - &#35774;&#22791;&#20449;&#24687;&#27169;&#22411;
+<span style="color: #7F0055; font-weight: bold;">\begin</span>{<span style="color: #0000ff; font-weight: bold;">itemize</span>}
+<span style="color: #7F0055; font-weight: bold;">\item</span> &#36807;&#31243;&#33258;&#21160;&#21270;&#29616;&#22330;&#35774;&#22791;&#30340;&#24120;&#29992;&#21442;&#25968;
+<span style="color: #7F0055; font-weight: bold;">\item</span> &#32479;&#19968;&#30340;&#25968;&#25454;&#32467;&#26500;
+<span style="color: #7F0055; font-weight: bold;">\item</span> &#26631;&#20934;&#30340;&#25968;&#25454;&#35821;&#20041;
+<span style="color: #7F0055; font-weight: bold;">\end</span>{<span style="color: #0000ff; font-weight: bold;">itemize</span>}
+<span style="color: #7F0055; font-weight: bold;">\end</span>{<span style="color: #0000ff; font-weight: bold;">column</span>}
+<span style="color: #7F0055; font-weight: bold;">\end</span>{<span style="color: #0000ff; font-weight: bold;">columns</span>}
+<span style="color: #7F0055; font-weight: bold;">\end</span>{<span style="color: #0000ff; font-weight: bold;">frame</span>} <span style="color: #3F7F5F;">% this line</span>
+</pre>
+</div>
+
+<p>
+It looks fine. Later, I found a thread in stackexchange &ldquo;<a href="https://tex.stackexchange.com/questions/13866/why-is-the-ifthen-package-obsolete">why is the
+ifthen package obsolete?</a>
+</p>
+
+<div class="quotation" id="orge9c8a5c">
+<p>
+The main reason why people may consider ifthen obsolete (last version
+is of 2001/05/26 with about one page of user manual plus four pages of
+code documentation) is that it is superseded by e.g. etoolbox, which
+uses the advanced possibilities of eTeX. Using these allows faster
+processing. You still can use ifthen for your existing and new
+documents if you like and I don&rsquo;t think there is a risk in doing
+so. However for new code, especially new packages which use a lot of
+boolean expression using the more modern alternatives is recommended.
+</p>
+
+</div>
+
+<p>
+So I change my beamer template to use <code>etoolbox</code>, for example, I change
+from:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-latex">    <span style="color: #7F0055; font-weight: bold;">\ifthenelse</span>{<span style="color: #7F0055; font-weight: bold;">\boolean</span>{customlogo}}{<span style="color: #3F7F5F;">%</span>
+      <span style="color: #7F0055; font-weight: bold;">\insertlogoimage</span>{2}
+    }{
+      <span style="color: #7F0055; font-weight: bold;">\drawlogo</span>{0.1}<span style="color: #3F7F5F;">%</span>
+    }
+</pre>
+</div>
+
+<p>
+to:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-latex">    <span style="color: #7F0055; font-weight: bold;">\ifcustomlogo</span><span style="color: #3F7F5F;">%</span>
+      <span style="color: #7F0055; font-weight: bold;">\insertlogoimage</span>{2}
+    <span style="color: #7F0055; font-weight: bold;">\else</span>
+      <span style="color: #7F0055; font-weight: bold;">\drawlogo</span>{0.1}<span style="color: #3F7F5F;">%</span>
+    <span style="color: #7F0055; font-weight: bold;">\fi</span>
+</pre>
+</div>
+
+<p>
+Then, texlive 2023 works fine.
+</p>
