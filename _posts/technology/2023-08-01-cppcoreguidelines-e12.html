@@ -1,0 +1,68 @@
+---
+layout: post
+title: CppCoreGuidelines E.12 
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use noexcept when exiting a function because of a throw is impossible or unacceptable&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+出错处理更系统化、更健壮、更有效率。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">compute</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span><span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> log<span style="color: #7388d6;">(</span>sqrt<span style="color: #909183;">(</span>d &lt;= 0 ? 1 : d<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+此处我们知道， <code>compute</code> 不会抛出异常，函数内的操作不会抛出异常。这时候，如果我们把 <code>compute</code> 标记为 <code>noexcept</code> 就可以让编译器更好的进行优化，让其他程序员更好的理解这个函数，从而更好的使用这个函数。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+很多标准库函数是 <code>noexcept</code> 的，包括很多从 C 标准库继承来的 C++  标准库函数。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">munge</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">v</span><span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v2</span><span style="color: #7388d6;">(</span>v.size<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... do something ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+
+<p>
+注意
+</p>
+
+<p>
+不要传统的异常规范：E.30: Don’t use exception specifications
+</p>

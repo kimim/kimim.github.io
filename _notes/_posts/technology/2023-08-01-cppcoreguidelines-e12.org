@@ -1,0 +1,71 @@
+#+layout: post
+#+title: CppCoreGuidelines E.12 
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use noexcept when exiting a function because of a throw is impossible or unacceptable"
+
+理由
+
+出错处理更系统化、更健壮、更有效率。
+
+#+begin_comment
+To make error handling systematic, robust, and efficient.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+double compute(double d) noexcept
+{
+    return log(sqrt(d <= 0 ? 1 : d));
+}
+#+end_src
+
+此处我们知道， ~compute~ 不会抛出异常，函数内的操作不会抛出异常。这时候，
+如果我们把 ~compute~ 标记为 ~noexcept~ 就可以让编译器更好的进行优化，让其
+他程序员更好的理解这个函数，从而更好的使用这个函数。
+
+#+begin_comment
+Here, we know that compute will not throw because it is composed out of operations that don’t throw. By declaring compute to be noexcept, we give the compiler and human readers information that can make it easier for them to understand and manipulate compute.
+#+end_comment
+
+注意
+
+很多标准库函数是 ~noexcept~ 的，包括很多从 C 标准库继承来的 C++  标准库函数。
+
+#+begin_comment
+Many standard-library functions are noexcept including all the standard-library functions “inherited” from the C Standard Library.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+vector<double> munge(const vector<double>& v) noexcept
+{
+    vector<double> v2(v.size());
+    // ... do something ...
+}
+#+end_src
+
+
+
+#+begin_comment
+The noexcept here states that I am not willing or able to handle the situation where I cannot construct the local vector. That is, I consider memory exhaustion a serious design error (on par with hardware failures) so that I’m willing to crash the program if it happens.
+#+end_comment
+
+注意
+
+不要传统的异常规范：E.30: Don’t use exception specifications
+
+#+begin_comment
+Do not use traditional exception-specifications.
+
+See also
+
+discussion.
+#+end_comment
