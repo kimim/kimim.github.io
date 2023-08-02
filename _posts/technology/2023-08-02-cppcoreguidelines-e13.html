@@ -1,0 +1,72 @@
+---
+layout: post
+title: CppCoreGuidelines E.13 对象的直接保管者不可抛出异常
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Never throw while being the direct owner of an object&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+会导致内存泄漏。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">leak</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't: might leak</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">{</span>7<span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x &lt; 0<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Get_me_out_of_here<span style="color: #7388d6;">{}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">might leak *p</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">delete</span> p;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">we might never get here</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这里避免内存泄漏的一个方法是利用资源句柄一致性地处理资源：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">no_leak</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = make_unique<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;(</span>7<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x &lt; 0<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Get_me_out_of_here<span style="color: #7388d6;">{}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">will delete *p if necessary</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">no need for delete p</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+其他更好的解决方案是使用局部变量，从而避免指针的使用：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">no_leak_simplified</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #7388d6;">(</span>7<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+如果你有一个局部的“东西”需要进行清理，但是又没有对应的析构函数处理。那就必须在抛出异常之前进行清理。有时候， <code>finally()</code> 可以使得不太系统的清理过程稍稍可控。
+</p>

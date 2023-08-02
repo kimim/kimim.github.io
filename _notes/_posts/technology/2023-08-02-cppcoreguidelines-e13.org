@@ -1,0 +1,76 @@
+#+layout: post
+#+title: CppCoreGuidelines E.13 对象的直接保管者不可抛出异常
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Never throw while being the direct owner of an object"
+
+理由
+
+会导致内存泄漏。
+
+#+begin_comment
+That would be a leak.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void leak(int x)   // don't: might leak
+{
+    auto p = new int{7};
+    if (x < 0) throw Get_me_out_of_here{};  // might leak *p
+    // ...
+    delete p;   // we might never get here
+}
+#+end_src
+
+这里避免内存泄漏的一个方法是利用资源句柄一致性地处理资源：
+
+#+begin_comment
+One way of avoiding such problems is to use resource handles
+consistently:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void no_leak(int x)
+{
+    auto p = make_unique<int>(7);
+    if (x < 0) throw Get_me_out_of_here{};  // will delete *p if necessary
+    // ...
+    // no need for delete p
+}
+#+end_src
+
+其他更好的解决方案是使用局部变量，从而避免指针的使用：
+
+#+begin_comment
+Another solution (often better) would be to use a local variable to
+eliminate explicit use of pointers:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void no_leak_simplified(int x)
+{
+    vector<int> v(7);
+    // ...
+}
+#+end_src
+
+注意
+
+如果你有一个局部的“东西”需要进行清理，但是又没有对应的析构函数处理。那
+就必须在抛出异常之前进行清理。有时候， ~finally()~ 可以使得不太系统的清
+理过程稍稍可控。
+
+#+begin_comment
+If you have a local “thing” that requires cleanup, but is not
+represented by an object with a destructor, such cleanup must also be
+done before a throw. Sometimes, finally() can make such unsystematic
+cleanup a bit more manageable.
+#+end_comment
