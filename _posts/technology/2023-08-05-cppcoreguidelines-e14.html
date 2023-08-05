@@ -1,0 +1,93 @@
+---
+layout: post
+title: CppCoreGuidelines E.14 用用户定义的设计类型作为异常（不要用内置类型）
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use purpose-designed user-defined types as exceptions (not built-in types)&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+用户自定义的类型能够更好的传达关于出错的信息。错误信息可以通过类型进行编码，这个类型本身不会因为其他人的异常而崩溃。
+</p>
+
+<p>
+例子
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">throw</span> 7; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
+
+<span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #2A00FF;">"something bad"</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
+
+<span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #110099;">std</span>::exception<span style="color: #707183;">{}</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad - no info</span>
+</pre>
+</div>
+
+<p>
+继承 <code>std::exception</code> 可以灵活的捕获特定异常，或通过 <code>std::exception</code> 处理异常。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">MyException</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">runtime_error</span>
+<span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #0000ff; font-weight: bold;">MyException</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">msg</span><span style="color: #7388d6;">)</span> : <span style="color: #110099;">std</span>::runtime_error<span style="color: #7388d6;">{</span>msg<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+
+<span style="color: #7F0055; font-weight: bold;">throw</span> MyException<span style="color: #707183;">{</span><span style="color: #2A00FF;">"something bad"</span><span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+</pre>
+</div>
+
+<p>
+异常并不需要从 <code>std::exception</code> 继承。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">MyCustomError</span> <span style="color: #7F0055; font-weight: bold;">final</span> <span style="color: #707183;">{}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">not derived from std::exception</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+
+<span style="color: #7F0055; font-weight: bold;">throw</span> MyCustomError<span style="color: #707183;">{}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good - handlers must catch this type (or ...)</span>
+</pre>
+</div>
+
+<p>
+如果在异常检测点没有额外有用信息要添加的化，可以用 <code>std::exception</code> 派生的系统库类型处理通用的异常情况。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #110099;">std</span>::runtime_error<span style="color: #707183;">(</span><span style="color: #2A00FF;">"someting bad"</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+
+<span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #110099;">std</span>::invalid_argument<span style="color: #707183;">(</span><span style="color: #2A00FF;">"i is not even"</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+
+<span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">classes</span> are also <span style="color: #000000; font-style: italic; text-decoration: underline;">allowed</span>:
+
+<span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #7F0055; font-weight: bold;">class</span> alert <span style="color: #707183;">{</span><span style="color: #000000;">RED</span>, <span style="color: #000000;">YELLOW</span>, <span style="color: #000000;">GREEN</span><span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #110099;">alert</span>::RED; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+通过内置类型和 <code>std::exception</code> 抛出捕获异常。
+</p>

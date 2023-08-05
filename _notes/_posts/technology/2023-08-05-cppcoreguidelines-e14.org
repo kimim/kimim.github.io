@@ -1,0 +1,98 @@
+#+layout: post
+#+title: CppCoreGuidelines E.14 用用户定义的设计类型作为异常（不要用内置类型）
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use purpose-designed user-defined types as exceptions (not built-in types)"
+
+理由
+
+用户自定义的类型能够更好的传达关于出错的信息。错误信息可以通过类型进行
+编码，这个类型本身不会因为其他人的异常而崩溃。
+
+#+begin_comment
+A user-defined type can better transmit information about an error to a handler. Information can be encoded into the type itself and the type is unlikely to clash with other people’s exceptions.
+#+end_comment
+
+例子
+
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+throw 7; // bad
+
+throw "something bad";  // bad
+
+throw std::exception{}; // bad - no info
+#+end_src
+
+继承 ~std::exception~ 可以灵活的捕获特定异常，或通过 ~std::exception~ 处理
+异常。
+
+#+begin_comment
+Deriving from std::exception gives the flexibility to catch the
+specific exception or handle generally through std::exception:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class MyException : public std::runtime_error
+{
+public:
+    MyException(const string& msg) : std::runtime_error{msg} {}
+    // ...
+};
+
+// ...
+
+throw MyException{"something bad"};  // good
+#+end_src
+
+异常并不需要从 ~std::exception~ 继承。
+
+#+begin_comment
+Exceptions do not need to be derived from std::exception:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class MyCustomError final {};  // not derived from std::exception
+
+// ...
+
+throw MyCustomError{};  // good - handlers must catch this type (or ...)
+#+end_src
+
+如果在异常检测点没有额外有用信息要添加的化，可以用 ~std::exception~ 派生
+的系统库类型处理通用的异常情况。
+
+#+begin_comment
+Library types derived from std::exception can be used as generic
+exceptions if no useful information can be added at the point of
+detection:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+throw std::runtime_error("someting bad"); // good
+
+// ...
+
+throw std::invalid_argument("i is not even"); // good
+
+enum classes are also allowed:
+
+enum class alert {RED, YELLOW, GREEN};
+
+throw alert::RED; // good
+#+end_src
+
+强化
+
+通过内置类型和 ~std::exception~ 抛出捕获异常。
+
+#+begin_comment
+Catch throw of built-in types and std::exception.
+#+end_comment
