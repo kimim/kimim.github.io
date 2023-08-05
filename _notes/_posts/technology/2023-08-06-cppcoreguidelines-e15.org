@@ -1,0 +1,99 @@
+#+layout: post
+#+title: CppCoreGuidelines E.15  抛出异常，以引用的方式从层级结构中捕获异常
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Throw by value, catch exceptions from a hierarchy by reference"
+
+理由
+
+以值的方式抛出异常（非指针），然后通过引用捕获，会阻止复制过程，导致产
+生对象的切片副本。
+
+#+begin_comment
+Throwing by value (not by pointer) and catching by reference prevents
+copying, especially slicing base subobjects.
+#+end_comment
+
+错误例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f()
+{
+    try {
+        // ...
+        throw new widget{}; // don't: throw by value not by raw pointer
+        // ...
+    }
+    catch (base_class e) {  // don't: might slice
+        // ...
+    }
+}
+#+end_src
+
+应该使用引用：
+
+#+begin_comment
+Instead, use a reference:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+catch (base_class& e) { /* ... */ }
+#+end_src
+
+或者，最好用常量引用：
+
+#+begin_comment
+or - typically better still - a const reference:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+catch (const base_class& e) { /* ... */ }
+#+end_src
+
+大部分异常处理不会修改异常的值，所以，一般来说，我们建议使用 ~const~ 
+
+#+begin_comment
+Most handlers do not modify their exception and in general we
+recommend use of const.
+#+end_comment
+
+注意
+
+对于小数值类型，可以以值的方式捕获，比如枚举类型。
+
+#+begin_comment
+Catch by value can be appropriate for a small value type such as an
+enum value.
+#+end_comment
+
+注意
+
+重新抛出捕获的异常，请使用 ~throw~ ，不要用 ~throw e;~ 。用 ~throw e;~ 会抛
+出 ~e~ 的一个副本。因为是复制操作，可能会由于类型不同，把原来的异常对象
+切片处理成 ~std::exception~ 。另外，还要注意，不要尝试在所有函数中，捕获
+所有异常，避免显式的 ~try/catch~ 操作。
+
+#+begin_comment
+To rethrow a caught exception use throw; not throw e;. Using throw e;
+would throw a new copy of e (sliced to the static type std::exception,
+when the exception is caught by catch (const std::exception& e))
+instead of rethrowing the original exception of type
+std::runtime_error. (But keep Don’t try to catch every exception in
+every function and Minimize the use of explicit try/catch in mind.)
+#+end_comment
+
+强化
+
+- 当一个类型有虚函数，然后以值的方式被异常捕获，标记之。
+- 抛出原始指针的异常，标记之。
+
+#+begin_comment
+- Flag catching by value of a type that has a virtual function.
+- Flag throwing raw pointers.
+#+end_comment

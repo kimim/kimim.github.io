@@ -1,0 +1,87 @@
+---
+layout: post
+title: CppCoreGuidelines E.15  抛出异常，以引用的方式从层级结构中捕获异常
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Throw by value, catch exceptions from a hierarchy by reference&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+以值的方式抛出异常（非指针），然后通过引用捕获，会阻止复制过程，导致产生对象的切片副本。
+</p>
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+        <span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">widget</span><span style="color: #909183;">{}</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't: throw by value not by raw pointer</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #7388d6;">(</span>base_class e<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't: might slice</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+应该使用引用：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #707183;">(</span>base_class&amp; e<span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+或者，最好用常量引用：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">base_class</span>&amp; <span style="color: #000000;">e</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+大部分异常处理不会修改异常的值，所以，一般来说，我们建议使用 <code>const</code> 
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+对于小数值类型，可以以值的方式捕获，比如枚举类型。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+重新抛出捕获的异常，请使用 <code>throw</code> ，不要用 <code>throw e;</code> 。用 <code>throw e;</code> 会抛出 <code>e</code> 的一个副本。因为是复制操作，可能会由于类型不同，把原来的异常对象切片处理成 <code>std::exception</code> 。另外，还要注意，不要尝试在所有函数中，捕获所有异常，避免显式的 <code>try/catch</code> 操作。
+</p>
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>当一个类型有虚函数，然后以值的方式被异常捕获，标记之。</li>
+<li>抛出原始指针的异常，标记之。</li>
+</ul>
