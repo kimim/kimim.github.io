@@ -1,0 +1,94 @@
+---
+layout: post
+title: CppCoreGuidelines E.16  析构、释放、交换、异常类型的复制/移动构造函数不可以失败
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Destructors, deallocation, swap, and exception type copy/move
+construction must never fail&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+如果析构、释放、交换、异常类型的复制/移动构造函数也会失败，我们就无法知道如何编写可靠的程序了。所谓的失败，就是这些地方抛出异常，或者无法完成指定的动作。
+</p>
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Connection</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    ~<span style="color: #0000ff; font-weight: bold;">Connection</span><span style="color: #7388d6;">()</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Don't: very bad destructor</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>cannot_disconnect<span style="color: #709870;">()</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> I_give_up<span style="color: #909183;">{</span>information<span style="color: #909183;">}</span>;
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+我们做了很多尝试，怎么在违反此规则的前提下，写出可靠的代码。比如，网络连接无法关闭。就我们所知，还没人发现比较通用的方法。偶尔的，我们会遇到一些很特殊的例子，比如说，我们设置某个状态，等到以后再去清理。比如说，我们可以把一个暂时无法关闭的 socket 放到 bad socket 列表，等到后续系统开始清理的时候，再统一删除。我们看到的几乎所有这些例子都是很特殊、容易出错。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+标准库函数假定构造函数、释放函数（比如 <code>delete</code> 操作）、 <code>swap</code> 交换函数不会抛出异常。如果它们会抛出异常，那么标准库中的不变式就很难维护了。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+释放函数，包括 <code>delete</code> 操作符，必须为 <code>noexcept</code>
+</p>
+
+<p>
+<code>swap</code> 函数也必须是 <code>noexcept</code>
+</p>
+
+<p>
+大部分析构函数，默认是 <code>noexcept</code>  的
+</p>
+
+<p>
+还有，请将 <code>move</code> 操作设置为 <code>noexcept</code>
+</p>
+
+<p>
+如果编写一个类型作为异常类型使用，请确保它的复制构造函数不是 <code>noexcept</code>
+。一般来说，我们无法机械式地强调这个，因为我们不知道这个类型是否会作为一个异常类型。
+</p>
+
+<p>
+避免抛出一个复制构造函数不是 <code>noexcept</code> 的类型。我们不能机械式的强调这个，因为 <code>std::string(...)</code> 有时候也会作为异常抛出。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>找出构造函数、内存释放操作、 <code>swap</code> 会抛出异常的情况。</li>
+<li>找出这类操作没有标记为 <code>noexcept</code> 的情况。</li>
+</ul>

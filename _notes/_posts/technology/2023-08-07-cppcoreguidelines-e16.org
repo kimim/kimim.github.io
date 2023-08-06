@@ -1,0 +1,105 @@
+#+layout: post
+#+title: CppCoreGuidelines E.16  析构、释放、交换、异常类型的复制/移动构造函数不可以失败
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Destructors, deallocation, swap, and exception type copy/move
+construction must never fail"
+
+理由
+
+如果析构、释放、交换、异常类型的复制/移动构造函数也会失败，我们就无法
+知道如何编写可靠的程序了。所谓的失败，就是这些地方抛出异常，或者无法完
+成指定的动作。
+
+#+begin_comment
+We don’t know how to write reliable programs if a destructor, a swap,
+a memory deallocation, or attempting to copy/move-construct an
+exception object fails; that is, if it exits by an exception or
+simply doesn’t perform its required action.
+#+end_comment
+
+错误例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class Connection {
+    // ...
+public:
+    ~Connection()   // Don't: very bad destructor
+    {
+        if (cannot_disconnect()) throw I_give_up{information};
+        // ...
+    }
+};
+#+end_src
+
+注意
+
+我们做了很多尝试，怎么在违反此规则的前提下，写出可靠的代码。比如，网络
+连接无法关闭。就我们所知，还没人发现比较通用的方法。偶尔的，我们会遇到
+一些很特殊的例子，比如说，我们设置某个状态，等到以后再去清理。比如说，
+我们可以把一个暂时无法关闭的 socket 放到 bad socket 列表，等到后续系统
+开始清理的时候，再统一删除。我们看到的几乎所有这些例子都是很特殊、容易
+出错。
+
+#+begin_comment
+Many have tried to write reliable code violating this rule for
+examples, such as a network connection that “refuses to close”. To the
+best of our knowledge nobody has found a general way of doing
+this. Occasionally, for very specific examples, you can get away with
+setting some state for future cleanup. For example, we might put a
+socket that does not want to close on a “bad socket” list, to be
+examined by a regular sweep of the system state. Every example we have
+seen of this is error-prone, specialized, and often buggy.
+#+end_comment
+
+注意
+
+标准库函数假定构造函数、释放函数（比如 ~delete~ 操作）、 ~swap~ 交换函数不
+会抛出异常。如果它们会抛出异常，那么标准库中的不变式就很难维护了。
+
+#+begin_comment
+The standard library assumes that destructors, deallocation functions
+(e.g., operator delete), and swap do not throw. If they do, basic
+standard-library invariants are broken.
+#+end_comment
+
+注意
+
+释放函数，包括 ~delete~ 操作符，必须为 ~noexcept~
+
+~swap~ 函数也必须是 ~noexcept~
+
+大部分析构函数，默认是 ~noexcept~  的
+
+还有，请将 ~move~ 操作设置为 ~noexcept~
+
+如果编写一个类型作为异常类型使用，请确保它的复制构造函数不是 ~noexcept~
+。一般来说，我们无法机械式地强调这个，因为我们不知道这个类型是否会作为
+一个异常类型。
+
+避免抛出一个复制构造函数不是 ~noexcept~ 的类型。我们不能机械式的强调这个，
+因为 ~std::string(...)~ 有时候也会作为异常抛出。
+
+
+#+begin_comment
+Deallocation functions, including operator delete, must be noexcept.
+swap functions must be noexcept.
+Most destructors are implicitly noexcept by default.
+Also, make move operations noexcept.
+If writing a type intended to be used as an exception type, ensure its copy constructor is not noexcept. In general we cannot mechanically enforce this, because we do not know whether a type is intended to be used as an exception type.
+Try not to throw a type whose copy constructor is not noexcept. In general we cannot mechanically enforce this, because even throw std::string(...) could throw but does not in practice.
+#+end_comment
+
+强化
+
+- 找出构造函数、内存释放操作、 ~swap~ 会抛出异常的情况。
+- 找出这类操作没有标记为 ~noexcept~ 的情况。
+
+#+begin_comment
+Catch destructors, deallocation operations, and swaps that throw.
+Catch such operations that are not noexcept.
+#+end_comment
