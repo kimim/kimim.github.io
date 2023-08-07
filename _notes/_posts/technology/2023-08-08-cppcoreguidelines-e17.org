@@ -1,0 +1,48 @@
+#+layout: post
+#+title: CppCoreGuidelines E.17 不要在所有函数中捕获所有异常
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t try to catch every exception in every function"
+
+理由
+
+在一个函数中捕获异常，但是又无法进行有意义的恢复动作，会导致代码复杂和
+性能损失。还是让异常向上传导，直到有一个函数能处理它。还是通过 RAII 在
+层层解构之后开展清理动作。
+
+#+begin_comment
+Catching an exception in a function that cannot take a meaningful
+recovery action leads to complexity and waste. Let an exception
+propagate until it reaches a function that can handle it. Let cleanup
+actions on the unwinding path be handled by RAII.
+#+end_comment
+
+错误例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f()   // bad
+{
+    try {
+        // ...
+    }
+    catch (...) {
+        // no action
+        throw;   // propagate exception
+    }
+}
+#+end_src
+
+
+强化
+
+- 标记堆叠递归的 ~try~ 语句块
+- 标记函数中 ~try~ 语句块太多的代码文件
+
+#+begin_comment
+Flag nested try-blocks.
+Flag source code files with a too high ratio of try-blocks to functions. (??? Problem: define “too high”)
+#+end_comment

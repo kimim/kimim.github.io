@@ -1,0 +1,49 @@
+---
+layout: post
+title: CppCoreGuidelines E.17 不要在所有函数中捕获所有异常
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t try to catch every exception in every function&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+在一个函数中捕获异常，但是又无法进行有意义的恢复动作，会导致代码复杂和性能损失。还是让异常向上传导，直到有一个函数能处理它。还是通过 RAII 在层层解构之后开展清理动作。
+</p>
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #7388d6;">(</span>...<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">no action</span>
+        <span style="color: #7F0055; font-weight: bold;">throw</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">propagate exception</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记堆叠递归的 <code>try</code> 语句块</li>
+<li>标记函数中 <code>try</code> 语句块太多的代码文件</li>
+</ul>
