@@ -1,0 +1,64 @@
+#+layout: post
+#+title: CppCoreGuidelines E.18  减少 try/catch  语句显式的使用
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Minimize the use of explicit try/catch"
+
+理由
+
+~try/catch~ 用起来很繁琐，容易出错。 ~try/catch~ 意味着代码设计不够系统，
+或者有底层资源管理交互，或者错误处理。
+
+#+begin_comment
+try/catch is verbose and non-trivial uses are error-prone. try/catch can be a sign of unsystematic and/or low-level resource management or error handling.
+#+end_comment
+
+错误例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f(zstring s)
+{
+    Gadget* p;
+    try {
+        p = new Gadget(s);
+        // ...
+        delete p;
+    }
+    catch (Gadget_construction_failure) {
+        delete p;
+        throw;
+    }
+}
+#+end_src
+
+这段代码开起来很混乱。原始指针可能在 ~try~ 语句中泄漏内存。没有完全处理
+所有异常。删除一个构造过程中出错的对象显然是个错误。
+
+#+begin_comment
+This code is messy. There could be a leak from the naked pointer in
+the try block. Not all exceptions are handled. deleting an object that
+failed to construct is almost certainly a mistake. Better:
+#+end_comment
+
+更好的代码
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f2(zstring s)
+{
+    Gadget g {s};
+}
+#+end_src
+
+其他方法
+- 通过 [[./2023-07-28-cppcoreguidelines-e6][RAII]] 妥善处理资源管理
+- 使用 ~finally~
+  
+#+begin_comment
+proper resource handles and RAII
+finally
+#+end_comment

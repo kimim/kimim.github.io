@@ -1,0 +1,66 @@
+---
+layout: post
+title: CppCoreGuidelines E.18  减少 try/catch  语句显式的使用
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Minimize the use of explicit try/catch&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>try/catch</code> 用起来很繁琐，容易出错。 <code>try/catch</code> 意味着代码设计不够系统，或者有底层资源管理交互，或者错误处理。
+</p>
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">zstring</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span>* <span style="color: #000000;">p</span>;
+    <span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #7388d6;">{</span>
+        p = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span><span style="color: #909183;">(</span>s<span style="color: #909183;">)</span>;
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+        <span style="color: #7F0055; font-weight: bold;">delete</span> p;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #7388d6;">(</span>Gadget_construction_failure<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">delete</span> p;
+        <span style="color: #7F0055; font-weight: bold;">throw</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这段代码开起来很混乱。原始指针可能在 <code>try</code> 语句中泄漏内存。没有完全处理所有异常。删除一个构造过程中出错的对象显然是个错误。
+</p>
+
+<p>
+更好的代码
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">zstring</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span> <span style="color: #000000;">g</span> <span style="color: #7388d6;">{</span>s<span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+其他方法
+</p>
+<ul class="org-ul">
+<li>通过 <a href="./2023-07-28-cppcoreguidelines-e6">RAII</a> 妥善处理资源管理</li>
+<li>使用 <code>finally</code></li>
+</ul>
