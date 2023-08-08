@@ -1,5 +1,5 @@
 #+layout: post
-#+title: CppCoreGuidelines E.17 不要在所有函数中捕获所有异常
+#+title: CppCoreGuidelines E.17 不要在每个函数中捕获所有异常
 #+categories: technology
 #+tags: CppCoreGuidelines
 
