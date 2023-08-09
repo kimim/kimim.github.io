@@ -1,0 +1,60 @@
+---
+layout: post
+title: CppCoreGuidelines 
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use a final_action object to express cleanup if no suitable resource
+handle is available&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+GSL 库中的 <code>gsl::finally</code> 相比 <code>try/catch</code> 更精简，不易出错。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>* <span style="color: #000000;">p</span> = malloc<span style="color: #7388d6;">(</span>n<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">_</span> = <span style="color: #110099;">gsl</span>::finally<span style="color: #7388d6;">(</span><span style="color: #909183;">[</span><span style="color: #110099;">p</span><span style="color: #909183;">]</span> <span style="color: #909183;">{</span> free<span style="color: #709870;">(</span>p<span style="color: #709870;">)</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+虽然 <code>gsl::finally</code> 比 <code>try/catch</code> 更精简，但依然是一个临时方案。建议使用恰当<a href="./2023-07-28-cppcoreguidelines-e6">的资源管理对象</a>。以 <code>gsl::finally</code> 作为最后一个方案来考虑。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+总的来说，如果没有合适的系统资源管理工具，用 <code>gsl::finally</code> 系统化地清理资源比老式的 <code>goto exit;</code> 技术要好些。
+</p>
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>检测 <code>goto exit;</code> 语句</li>
+</ul>

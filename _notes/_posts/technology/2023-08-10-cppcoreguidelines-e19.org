@@ -1,0 +1,58 @@
+#+layout: post
+#+title: CppCoreGuidelines 
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use a final_action object to express cleanup if no suitable resource
+handle is available"
+
+理由
+
+GSL 库中的 ~gsl::finally~ 相比 ~try/catch~ 更精简，不易出错。
+
+#+begin_comment
+finally from the GSL is less verbose and harder to get wrong than try/catch.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f(int n)
+{
+    void* p = malloc(n);
+    auto _ = gsl::finally([p] { free(p); });
+    // ...
+}
+#+end_src
+
+注意
+
+虽然 ~gsl::finally~ 比 ~try/catch~ 更精简，但依然是一个临时方案。建议使用
+恰当[[./2023-07-28-cppcoreguidelines-e6][的资源管理对象]]。以 ~gsl::finally~ 作为最后一个方案来考虑。
+
+#+begin_comment
+finally is not as messy as try/catch, but it is still ad-hoc. Prefer
+proper resource management objects. Consider finally a last resort.
+#+end_comment
+
+注意
+
+总的来说，如果没有合适的系统资源管理工具，用 ~gsl::finally~ 系统化地清理
+资源比老式的 ~goto exit;~ 技术要好些。
+
+#+begin_comment
+Use of finally is a systematic and reasonably clean alternative to the
+old ~goto exit;~ technique for dealing with cleanup where resource
+management is not systematic.
+#+end_comment
+
+强化
+
+- 检测 ~goto exit;~ 语句
+
+#+begin_comment
+Heuristic: Detect goto exit;
+#+end_comment
