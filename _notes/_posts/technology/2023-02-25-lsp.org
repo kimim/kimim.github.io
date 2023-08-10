@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       1d61aa05-8318-4185-bb82-f37df7d49f20
+:END:
 #+layout: post
 #+title: 利斯科夫替代原则，Liskov substitution principle，LSP
 #+categories: technology

@@ -1,0 +1,85 @@
+---
+layout: post
+title: CppCoreGuidelines 
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If you can’t throw exceptions, simulate RAII for resource management&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+就算没有异常，RAII  也是处理资源最好的、最系统的方式。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+在 C++ 中，处理非局部的错误的完整的方式和系统的方式，依然是异常机制。尤其是在构建某个对象的时候，非侵入式地触发失败信号的时候，还是需要用到一个异常。要触发一个不能忽略的错误信号，需要异常机制。如果你无法使用异常机制，可以考虑尽可能的模拟异常的使用方式。
+</p>
+
+<p>
+很多人害怕异常机制，其实是有些误导的。当我们在代码中用异常处理一些特殊情况，并且确保不会在代码中弄的到处都是指针，也不会把控制结构弄得太复杂，从时间和空间角度看，异常处理机制总是可以承受的。当然，这个设定的前提是，我们有一个比较好的异常处理机制的系统实现，然而，很多系统中，缺少这种实现。当然，有些情况下也不适用这个建议。比如硬实时系统的例子：比如某个实时操作必须在固定时间内完成，要么出错，要么提供正确答案。如果缺少时间估计工具，异常机制就很难保证这种限制要求了。比如飞机控制软件就是一个很好的例子，在这种系统中，动态内存分配都是不允许的。
+</p>
+
+<p>
+所以，错误处理的首要准则是“使用异常和 RAII”。这一部分，我们假定你的系统中暂时没有有效的异常处理机制，或者你的代码像个老鼠窝，充满了指针，错误定义的所有权，很多不系统化的错误处理，很多出错测试代码等。这时候，我们就无法利用简单、系统的异常处理机制了。
+</p>
+
+<p>
+在谴责异常机制，或抱怨其成本太高之前，请考虑以下例子，如果我们用错误码的方式实现故障处理。成本和复杂度会有多高？如果你很担心性能，请进行测量。
+</p>
+
+<p>
+例子
+</p>
+
+<p>
+假设，你想写这段代码：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">func</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">zstring</span> <span style="color: #000000;">arg</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span> <span style="color: #000000;">g</span> <span style="color: #7388d6;">{</span>arg<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果 <code>gadget</code> 没有正确构造。 <code>func</code> 以异常退出。如果我们无法抛出异常，我们可以通过 RAII 风格处理资源，给 <code>Gadget</code> 类添加一个成员函数叫作 <code>valid()</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">error_indicator</span> <span style="color: #0000ff; font-weight: bold;">func</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">zstring</span> <span style="color: #000000;">arg</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span> <span style="color: #000000;">g</span> <span style="color: #7388d6;">{</span>arg<span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!g.valid<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> gadget_construction_error;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> 0;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">zero indicates "good"</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+现在的问题是，调用 <code>func</code> 的地方，你得测试一下返回值是否正确。为了确保返回值正确被检查，可以考虑添加 <code>[[nodiscard]]</code> 标签。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+只有在万不得已的时候，考虑用这个方式实现。即有系统地在构造资源之后，测试 <code>valid()</code> 的值。
+</p>

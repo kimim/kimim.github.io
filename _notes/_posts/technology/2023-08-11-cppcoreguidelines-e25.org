@@ -1,0 +1,128 @@
+#+layout: post
+#+title: CppCoreGuidelines 
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If you can’t throw exceptions, simulate RAII for resource management"
+
+理由
+
+就算没有异常，RAII  也是处理资源最好的、最系统的方式。
+
+#+begin_comment
+Even without exceptions, RAII is usually the best and most systematic
+way of dealing with resources.
+#+end_comment
+
+注意
+
+在 C++ 中，处理非局部的错误的完整的方式和系统的方式，依然是异常机制。
+尤其是在构建某个对象的时候，非侵入式地触发失败信号的时候，还是需要用到
+一个异常。要触发一个不能忽略的错误信号，需要异常机制。如果你无法使用异
+常机制，可以考虑尽可能的模拟异常的使用方式。
+
+#+begin_comment
+Error handling using exceptions is the only complete and systematic way of handling non-local errors in C++. In particular, non-intrusively signaling failure to construct an object requires an exception. Signaling errors in a way that cannot be ignored requires exceptions. If you can’t use exceptions, simulate their use as best you can.
+#+end_comment
+
+很多人害怕异常机制，其实是有些误导的。当我们在代码中用异常处理一些特殊
+情况，并且确保不会在代码中弄的到处都是指针，也不会把控制结构弄得太复杂，
+从时间和空间角度看，异常处理机制总是可以承受的。当然，这个设定的前提是，
+我们有一个比较好的异常处理机制的系统实现，然而，很多系统中，缺少这种实
+现。当然，有些情况下也不适用这个建议。比如硬实时系统的例子：比如某个实
+时操作必须在固定时间内完成，要么出错，要么提供正确答案。如果缺少时间估
+计工具，异常机制就很难保证这种限制要求了。比如飞机控制软件就是一个很好
+的例子，在这种系统中，动态内存分配都是不允许的。
+
+#+begin_comment
+A lot of fear of exceptions is misguided. When used for exceptional
+circumstances in code that is not littered with pointers and
+complicated control structures, exception handling is almost always
+affordable (in time and space) and almost always leads to better
+code. This, of course, assumes a good implementation of the exception
+handling mechanisms, which is not available on all systems. There are
+also cases where the problems above do not apply, but exceptions
+cannot be used for other reasons. Some hard-real-time systems are an
+example: An operation has to be completed within a fixed time with an
+error or a correct answer. In the absence of appropriate time
+estimation tools, this is hard to guarantee for exceptions. Such
+systems (e.g. flight control software) typically also ban the use of
+dynamic (heap) memory.
+#+end_comment
+
+所以，错误处理的首要准则是“使用异常和 RAII”。这一部分，我们假定你的系
+统中暂时没有有效的异常处理机制，或者你的代码像个老鼠窝，充满了指针，错
+误定义的所有权，很多不系统化的错误处理，很多出错测试代码等。这时候，我
+们就无法利用简单、系统的异常处理机制了。
+
+#+begin_comment
+So, the primary guideline for error handling is “use exceptions and RAII.” This section deals with the cases where you either do not have an efficient implementation of exceptions, or have such a rat’s nest of old-style code (e.g., lots of pointers, ill-defined ownership, and lots of unsystematic error handling based on tests of error codes) that it is infeasible to introduce simple and systematic exception handling.
+#+end_comment
+
+在谴责异常机制，或抱怨其成本太高之前，请考虑以下例子，如果我们用错误码
+的方式实现故障处理。成本和复杂度会有多高？如果你很担心性能，请进行测量。
+
+#+begin_comment
+Before condemning exceptions or complaining too much about their cost,
+consider examples of the use of error codes. Consider the cost and
+complexity of the use of error codes. If performance is your worry,
+measure.
+#+end_comment
+
+例子
+
+假设，你想写这段代码：
+
+#+begin_comment
+Assume you wanted to write
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void func(zstring arg)
+{
+    Gadget g {arg};
+    // ...
+}
+#+end_src
+
+如果 ~gadget~ 没有正确构造。 ~func~ 以异常退出。如果我们无法抛出异常，我们
+可以通过 RAII 风格处理资源，给 ~Gadget~ 类添加一个成员函数叫作 ~valid()~
+
+#+begin_comment
+If the gadget isn’t correctly constructed, func exits with an
+exception. If we cannot throw an exception, we can simulate this RAII
+style of resource handling by adding a valid() member function to
+Gadget:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+error_indicator func(zstring arg)
+{
+    Gadget g {arg};
+    if (!g.valid()) return gadget_construction_error;
+    // ...
+    return 0;   // zero indicates "good"
+}
+#+end_src
+
+现在的问题是，调用 ~func~ 的地方，你得测试一下返回值是否正确。为了确保返
+回值正确被检查，可以考虑添加 ~[[nodiscard]]~ 标签。
+
+#+begin_comment
+The problem is of course that the caller now has to remember to test
+the return value. To encourage doing so, consider adding a [[nodiscard]].
+#+end_comment
+
+强化
+
+只有在万不得已的时候，考虑用这个方式实现。即有系统地在构造资源之后，测
+试 ~valid()~ 的值。
+
+#+begin_comment
+Possible (only) for specific versions of this idea: e.g., test for
+systematic test of valid() after resource handle construction
+#+end_comment
