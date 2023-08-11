@@ -1,0 +1,81 @@
+#+layout: post
+#+title: CppCoreGuidelines E.26 如果无法抛出异常，请考虑快速结束
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If you can’t throw exceptions, consider failing fast"
+
+理由
+
+如果无法很好的进行出错恢复，那么，至少在没有造成太大损失之前，早早结束。
+
+#+begin_comment
+If you can’t do a good job at recovering, at least you can get out
+before too much consequential damage is done.
+
+See also: Simulating RAII
+#+end_comment
+
+注意
+
+如果你无法系统化地处理出错情况，对于无法局部处理的错误，考虑直接让程序
+“崩溃”。也就是说，如果在函数检测到错误的时候，无法从错误中恢复回来，可
+以调用 ~abort()~ ， ~quick_exit()~ 等类似的函数触发系统重启。
+
+#+begin_comment
+If you cannot be systematic about error handling, consider “crashing”
+as a response to any error that cannot be handled locally. That is, if
+you cannot recover from an error in the context of the function that
+detected it, call abort(), quick_exit(), or a similar function that
+will trigger some sort of system restart.
+#+end_comment
+
+如果，在系统中，你有很多进程，或者很多计算机，你有预见，将来会需要处理
+很多严重的系统崩溃情况。比如说，硬件出错。这些情况，崩溃只是意味着某个
+错误需要上一层的计算系统来处理罢了。
+
+#+begin_comment
+In systems where you have lots of processes and/or lots of computers,
+you need to expect and handle fatal crashes anyway, say from hardware
+failures. In such cases, “crashing” is simply leaving error handling
+to the next level of the system.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f(int n)
+{
+    // ...
+    p = static_cast<X*>(malloc(n * sizeof(X)));
+    if (!p) abort();     // abort if memory is exhausted
+    // ...
+}
+#+end_src
+
+很多程序无法优雅的处理内存耗尽的情况。此例子大概等价于下面这个例子：
+
+#+begin_comment
+Most programs cannot handle memory exhaustion gracefully anyway. This
+is roughly equivalent to
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f(int n)
+{
+    // ...
+    p = new X[n];    // throw if memory is exhausted (by default, terminate)
+    // ...
+}
+#+end_src
+
+典型的来说，最好在“崩溃”之前记录一条日志，表明崩溃的原因。
+
+#+begin_comment
+Typically, it is a good idea to log the reason for the “crash” before
+exiting.
+#+end_comment

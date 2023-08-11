@@ -1,0 +1,66 @@
+---
+layout: post
+title: CppCoreGuidelines E.26 如果无法抛出异常，请考虑快速结束
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If you can’t throw exceptions, consider failing fast&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+如果无法很好的进行出错恢复，那么，至少在没有造成太大损失之前，早早结束。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+如果你无法系统化地处理出错情况，对于无法局部处理的错误，考虑直接让程序“崩溃”。也就是说，如果在函数检测到错误的时候，无法从错误中恢复回来，可以调用 <code>abort()</code> ， <code>quick_exit()</code> 等类似的函数触发系统重启。
+</p>
+
+<p>
+如果，在系统中，你有很多进程，或者很多计算机，你有预见，将来会需要处理很多严重的系统崩溃情况。比如说，硬件出错。这些情况，崩溃只是意味着某个错误需要上一层的计算系统来处理罢了。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    p = <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>*<span style="color: #7388d6;">&gt;(</span>malloc<span style="color: #909183;">(</span>n * <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #709870;">(</span>X<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!p<span style="color: #7388d6;">)</span> abort<span style="color: #7388d6;">()</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">abort if memory is exhausted</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+很多程序无法优雅的处理内存耗尽的情况。此例子大概等价于下面这个例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    p = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6;">[</span>n<span style="color: #7388d6;">]</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">throw if memory is exhausted (by default, terminate)</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+典型的来说，最好在“崩溃”之前记录一条日志，表明崩溃的原因。
+</p>
