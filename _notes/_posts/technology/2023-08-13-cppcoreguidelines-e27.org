@@ -1,0 +1,249 @@
+#+layout: post
+#+title: CppCoreGuidelines E.27 如果无法抛出异常，请有系统的使用错误码
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If you can’t throw exceptions, use error codes systematically"
+
+理由
+
+比较系统的应用出错处理策略，可以减小忘记处理错误的风险。
+
+#+begin_comment
+Systematic use of any error-handling strategy minimizes the chance of
+forgetting to handle an error.
+#+end_comment
+
+请参考：模拟 RAII
+
+#+begin_comment
+See also: Simulating RAII
+#+end_comment
+
+注意
+
+这里有几个问题需要澄清：
+- 你打算怎么把错误标记传递出函数？
+- 你打算怎么在函数退出的时候释放所有资源？
+- 你打算怎么使用错误标记？
+
+#+begin_comment
+There are several issues to be addressed:
+
+    How do you transmit an error indicator from out of a function?
+    How do you release all resources from a function before doing an error exit?
+    What do you use as an error indicator?
+#+end_comment
+
+一般来说，返回错误标记意味着返回两个值：函数结果和错误标记。错误标记可
+以是对象的一部分，比如某个对象有一个 ~valid()~ 函数，用来标记错误。或者
+返回成对的一对数值。
+
+#+begin_comment
+In general, returning an error indicator implies returning two values:
+The result and an error indicator. The error indicator can be part of
+the object, e.g. an object can have a valid() indicator or a pair of
+values can be returned.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+Gadget make_gadget(int n)
+{
+    // ...
+}
+
+void user()
+{
+    Gadget g = make_gadget(17);
+    if (!g.valid()) {
+            // error handling
+    }
+    // ...
+}
+#+end_src
+
+这个方法属于模拟 RAII 资源管理。 ~valid()~ 函数可以返回一个错误标记。错
+误标记可以是枚举类型的值。
+
+
+#+begin_comment
+This approach fits with simulated RAII resource management. The
+valid() function could return an error_indicator (e.g. a member of an
+error_indicator enumeration).
+#+end_comment
+
+例子
+
+那么，如果我们不能或者不想要修改 ~Gadget~ 类型呢？这种情况，我们只能返回
+一对数值。
+
+#+begin_comment
+What if we cannot or do not want to modify the Gadget type? In that
+case, we must return a pair of values. For example:
+#+end_comment
+
+比如：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+std::pair<Gadget, error_indicator> make_gadget(int n)
+{
+    // ...
+}
+
+void user()
+{
+    auto r = make_gadget(17);
+    if (!r.second) {
+            // error handling
+    }
+    Gadget& g = r.first;
+    // ...
+}
+#+end_src
+
+正如代码所展示的， ~std::pair~ 可以作为返回类型。有些人更喜欢自定义类型。
+比如：
+
+#+begin_comment
+As shown, std::pair is a possible return type. Some people prefer a
+specific type. For example:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+Gval make_gadget(int n)
+{
+    // ...
+}
+
+void user()
+{
+    auto r = make_gadget(17);
+    if (!r.err) {
+            // error handling
+    }
+    Gadget& g = r.val;
+    // ...
+}
+#+end_src
+
+我们选择返回自定义类型是因为自定义类型可以给成员命名。这样就避免使用
+~std::pair~ 出现的混淆。像 ~first~ ~second~ 之类的名字太晦涩。
+
+#+begin_comment
+One reason to prefer a specific return type is to have names for its
+members, rather than the somewhat cryptic first and second and to
+avoid confusion with other uses of std::pair.
+#+end_comment
+
+例子
+
+一般来说，你必须因为错误而退出之前进行清理工作。可能会看起来很杂乱：
+
+#+begin_comment
+In general, you must clean up before an error exit. This can be messy:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+std::pair<int, error_indicator> user()
+{
+    Gadget g1 = make_gadget(17);
+    if (!g1.valid()) {
+        return {0, g1_error};
+    }
+
+    Gadget g2 = make_gadget(31);
+    if (!g2.valid()) {
+        cleanup(g1);
+        return {0, g2_error};
+    }
+
+    // ...
+
+    if (all_foobar(g1, g2)) {
+        cleanup(g2);
+        cleanup(g1);
+        return {0, foobar_error};
+    }
+
+    // ...
+
+    cleanup(g2);
+    cleanup(g1);
+    return {res, 0};
+}
+#+end_src
+
+如果函数中有多个资源，多个出错点的时候，模拟 RAII 的工作量不小。一个常
+见的技术是把清理动作收集在一起放到函数后面，从而可以避免重复（注意，
+~g2~ 的范围限定是不必要的，但是为了使得 ~goto~ 正确工作，需要做这个范围限
+定。
+
+#+begin_comment
+Simulating RAII can be non-trivial, especially in functions with
+multiple resources and multiple possible errors. A not uncommon
+technique is to gather cleanup at the end of the function to avoid
+repetition (note that the extra scope around g2 is undesirable but
+necessary to make the goto version compile):
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+std::pair<int, error_indicator> user()
+{
+    error_indicator err = 0;
+    int res = 0;
+
+    Gadget g1 = make_gadget(17);
+    if (!g1.valid()) {
+        err = g1_error;
+        goto g1_exit;
+    }
+
+    {
+        Gadget g2 = make_gadget(31);
+        if (!g2.valid()) {
+            err = g2_error;
+            goto g2_exit;
+        }
+
+        if (all_foobar(g1, g2)) {
+            err = foobar_error;
+            goto g2_exit;
+        }
+
+        // ...
+
+    g2_exit:
+        if (g2.valid()) cleanup(g2);
+    }
+
+g1_exit:
+    if (g1.valid()) cleanup(g1);
+    return {res, err};
+}
+#+end_src
+
+函数越长，奇技淫巧越多。 ~finally~ 可以减轻一些痛苦。另外，程序越大，越
+难系统地实施这种基于错误标记的错误处理策略。
+
+我们建议使用[[./2023-07-23-cppcoreguidelines-e2][基于异常的错误处理]]，并建议[[./2022-04-06-cppcoreguidelines-f3][保持函数精简短小]]。
+
+#+begin_comment
+The larger the function, the more tempting this technique
+becomes. finally can ease the pain a bit. Also, the larger the program
+becomes the harder it is to apply an error-indicator-based
+error-handling strategy systematically.
+
+We prefer exception-based error handling and recommend keeping
+functions short.
+#+end_comment
+
+请查看：[[./2022-05-31-cppcoreguidelines-f21][返回多个值]]

@@ -1,0 +1,218 @@
+---
+layout: post
+title: CppCoreGuidelines E.27 如果无法抛出异常，请有系统的使用错误码
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If you can’t throw exceptions, use error codes systematically&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+比较系统的应用出错处理策略，可以减小忘记处理错误的风险。
+</p>
+
+<p>
+请参考：模拟 RAII
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+这里有几个问题需要澄清：
+</p>
+<ul class="org-ul">
+<li>你打算怎么把错误标记传递出函数？</li>
+<li>你打算怎么在函数退出的时候释放所有资源？</li>
+<li>你打算怎么使用错误标记？</li>
+</ul>
+
+<p>
+一般来说，返回错误标记意味着返回两个值：函数结果和错误标记。错误标记可以是对象的一部分，比如某个对象有一个 <code>valid()</code> 函数，用来标记错误。或者返回成对的一对数值。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span> <span style="color: #0000ff; font-weight: bold;">make_gadget</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">user</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span> <span style="color: #000000;">g</span> = make_gadget<span style="color: #7388d6;">(</span>17<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!g.valid<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error handling</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这个方法属于模拟 RAII 资源管理。 <code>valid()</code> 函数可以返回一个错误标记。错误标记可以是枚举类型的值。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+那么，如果我们不能或者不想要修改 <code>Gadget</code> 类型呢？这种情况，我们只能返回一对数值。
+</p>
+
+<p>
+比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">pair</span><span style="color: #707183;">&lt;</span>Gadget, error_indicator<span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">make_gadget</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">user</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">r</span> = make_gadget<span style="color: #7388d6;">(</span>17<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!r.second<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error handling</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span>&amp; <span style="color: #000000;">g</span> = r.first;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+正如代码所展示的， <code>std::pair</code> 可以作为返回类型。有些人更喜欢自定义类型。比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Gval</span> <span style="color: #0000ff; font-weight: bold;">make_gadget</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">user</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">r</span> = make_gadget<span style="color: #7388d6;">(</span>17<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!r.err<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error handling</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span>&amp; <span style="color: #000000;">g</span> = r.val;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+我们选择返回自定义类型是因为自定义类型可以给成员命名。这样就避免使用
+<code>std::pair</code> 出现的混淆。像 <code>first</code> <code>second</code> 之类的名字太晦涩。
+</p>
+
+<p>
+例子
+</p>
+
+<p>
+一般来说，你必须因为错误而退出之前进行清理工作。可能会看起来很杂乱：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">pair</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, error_indicator<span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">user</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span> <span style="color: #000000;">g1</span> = make_gadget<span style="color: #7388d6;">(</span>17<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!g1.valid<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #909183;">{</span>0, g1_error<span style="color: #909183;">}</span>;
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span> <span style="color: #000000;">g2</span> = make_gadget<span style="color: #7388d6;">(</span>31<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!g2.valid<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cleanup<span style="color: #909183;">(</span>g1<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #909183;">{</span>0, g2_error<span style="color: #909183;">}</span>;
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>all_foobar<span style="color: #909183;">(</span>g1, g2<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cleanup<span style="color: #909183;">(</span>g2<span style="color: #909183;">)</span>;
+        cleanup<span style="color: #909183;">(</span>g1<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #909183;">{</span>0, foobar_error<span style="color: #909183;">}</span>;
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+
+    cleanup<span style="color: #7388d6;">(</span>g2<span style="color: #7388d6;">)</span>;
+    cleanup<span style="color: #7388d6;">(</span>g1<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7388d6;">{</span>res, 0<span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果函数中有多个资源，多个出错点的时候，模拟 RAII 的工作量不小。一个常见的技术是把清理动作收集在一起放到函数后面，从而可以避免重复（注意，
+<code>g2</code> 的范围限定是不必要的，但是为了使得 <code>goto</code> 正确工作，需要做这个范围限定。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">pair</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, error_indicator<span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">user</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">error_indicator</span> <span style="color: #000000;">err</span> = 0;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">res</span> = 0;
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span> <span style="color: #000000;">g1</span> = make_gadget<span style="color: #7388d6;">(</span>17<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!g1.valid<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        err = g1_error;
+        <span style="color: #7F0055; font-weight: bold;">goto</span> <span style="color: #110099;">g1_exit</span>;
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">Gadget</span> <span style="color: #000000;">g2</span> = make_gadget<span style="color: #909183;">(</span>31<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>!g2.valid<span style="color: #709870;">()</span><span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            err = g2_error;
+            <span style="color: #7F0055; font-weight: bold;">goto</span> <span style="color: #110099;">g2_exit</span>;
+        <span style="color: #909183;">}</span>
+
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>all_foobar<span style="color: #709870;">(</span>g1, g2<span style="color: #709870;">)</span><span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            err = foobar_error;
+            <span style="color: #7F0055; font-weight: bold;">goto</span> <span style="color: #110099;">g2_exit</span>;
+        <span style="color: #909183;">}</span>
+
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+
+    <span style="color: #110099;">g2_exit</span>:
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>g2.valid<span style="color: #709870;">()</span><span style="color: #909183;">)</span> cleanup<span style="color: #909183;">(</span>g2<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+
+<span style="color: #110099;">g1_exit</span>:
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>g1.valid<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> cleanup<span style="color: #7388d6;">(</span>g1<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7388d6;">{</span>res, err<span style="color: #7388d6;">}</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+函数越长，奇技淫巧越多。 <code>finally</code> 可以减轻一些痛苦。另外，程序越大，越难系统地实施这种基于错误标记的错误处理策略。
+</p>
+
+<p>
+我们建议使用<a href="./2023-07-23-cppcoreguidelines-e2">基于异常的错误处理</a>，并建议<a href="./2022-04-06-cppcoreguidelines-f3">保持函数精简短小</a>。
+</p>
+
+<p>
+请查看：<a href="./2022-05-31-cppcoreguidelines-f21">返回多个值</a>
+</p>
