@@ -1,0 +1,46 @@
+#+layout: post
+#+title: CppCoreGuidelines E.28  避免基于全局状态的错误处理（比如 errno）
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid error handling based on global state (e.g. errno)"
+
+理由
+
+全局状态很难管理，容易忘记检查。你上一次什么时候测试过 ~prinft()~ 的返回
+值？
+
+#+begin_comment
+Global state is hard to manage and it is easy to forget to check
+it. When did you last test the return value of printf()?
+#+end_comment
+
+请查看：E.25 模拟 RAII
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int last_err;
+
+void f(int n)
+{
+    // ...
+    p = static_cast<X*>(malloc(n * sizeof(X)));
+    if (!p) last_err = -1;     // error if memory is exhausted
+    // ...
+}
+#+end_src
+
+注意
+
+C 风格的错误处理机制是基于全局的 ~errno~ 变量。所以，基本上无法避免这种
+风格。
+
+#+begin_comment
+C-style error handling is based on the global variable errno, so it is
+essentially impossible to avoid this style completely.
+#+end_comment
+
