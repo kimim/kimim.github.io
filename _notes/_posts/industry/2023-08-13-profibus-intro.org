@@ -1,0 +1,77 @@
+#+LAYOUT: post
+#+TITLE: PROFIBUS 简介
+#+TAGS: industry
+#+CATEGORIES: industry
+
+PROFIBUS 是 PROFIBUS & PROFINET International (PI) 组织维护的工业现场
+总线标准。PROFIBUS 总线可以通过一根总线连接控制系统、控制器，以及传感
+器、执行器等现场设备。同时，又可以通过 PROFINET 与上层工厂管理运营系统
+连接进行数据交换。
+
+PROFIBUS 的支撑技术是统一的、标准的、支持多种应用的 PROFIBUS DP 通信协
+议。PROFIBUS DP 可以用于工厂自动化、流程自动化、运动控制、安全控制等场
+景。
+
+如图 [[PROFIBUS-stack]] 所示，PROFIBUS 协议栈的设计是比较模块化的。
+
+#+name: PROFIBUS-stack
+#+header: :output-dir images :file PROFIBUS-stack.svg
+#+begin_src shell :exports results :results file graphics :eval no-export
+draw.io -x ~/draw/PROFIBUS-stack.drawio \
+        -o ./images/PROFIBUS-stack.pdf && \
+pdf2svg ./images/PROFIBUS-stack.pdf \
+        ./images/PROFIBUS-stack.svg
+#+end_src
+#+RESULTS: PROFIBUS-stack
+[[file:images/PROFIBUS-stack.svg]]
+
+紫色这一层通信技术层是 PROFIBUS 的核心模块，定义了 DP-V0/V1/V2 三个协
+议。
+
+底下一层是传输层技术，包括串行有线技术，光纤技术以及无线技术。
+
+绿色的是通用应用层规定了多种工业应用都会用到的通用部分，如安全、冗余、
+标识管理、时间戳等。
+
+最上层则针对不同的工业应用场景，定义了传动电机、过程自动化设备、表示系
+统、实验室自动化等应用规范。
+
+从工程配置安装的角度，PRROFIBUS 支持 GSD 设备描述文件、EDD 设备描述文
+件、FDT/DTM 以及 TCI。
+
+通过这些模块的组合，就可以支持各种不同自动化控制的细分市场，如图
+[[PROFIBUS-market-segments]] 所示，MBP-IS、RS-485-IS 等不同硬件传输技术配
+合 PROFIBUS DP 通信层，加上 PA Devices 规范，就组成了 PROFIBUS PA 过程
+自动化控制的应用方案。RS-485 + PROFIdrive，组成运动控制解决方案，
+RS-485, MBP-IS + PROFIsafe 组成安全应用解决方案。
+
+#+name: PROFIBUS-market-segments
+#+header: :output-dir images :file PROFIBUS-market-segments.svg
+#+begin_src shell :exports results :results file graphics :eval no-export
+draw.io -x ~/draw/PROFIBUS-market-segments.drawio \
+        -o ./images/PROFIBUS-market-segments.pdf && \
+pdf2svg ./images/PROFIBUS-market-segments.pdf \
+        ./images/PROFIBUS-market-segments.svg
+#+end_src
+#+RESULTS: PROFIBUS-market-segments
+[[file:images/PROFIBUS-market-segments.svg]]
+
+因为这些解决方案的通信层都是 PROFIBUS DP，所以，不同的应用应用之间是可
+以互联互通的，组成混合应用方案。比如，在食品饮料、制药、锂电池制造等行
+业，离散和流程自动化混合的场景中，可以通过一个 PROFIBUS DP 通信层协议
+连同工厂自动化和流程自动化控制（图 [[PROFIBUS-integration]]）。相比其他的
+方案，就不需要两套布线、两套通信协议，就能简化工厂布线、设备安装、操作
+技能、设备维护，从而节省工厂成本。
+
+#+name: PROFIBUS-integration
+#+header: :output-dir images :file PROFIBUS-integration.svg
+#+begin_src shell :exports results :results file graphics :eval no-export
+draw.io -x ~/draw/PROFIBUS-integration.drawio \
+        -o ./images/PROFIBUS-integration.pdf && \
+pdf2svg ./images/PROFIBUS-integration.pdf \
+        ./images/PROFIBUS-integration.svg
+#+end_src
+
+#+RESULTS: PROFIBUS-integration
+[[file:images/PROFIBUS-integration.svg]]
+
