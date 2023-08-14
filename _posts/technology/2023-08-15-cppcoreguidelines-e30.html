@@ -1,0 +1,71 @@
+---
+layout: post
+title: CppCoreGuidelines E.30 不要使用异常规格说明
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t use exception specification&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+异常规格说明导致错误处理变的很脆弱，引起额外的运行时开销。所以这个功能已经从标准 C++ 中移除了。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arg</span><span style="color: #707183;">)</span>
+    <span style="color: #7F0055; font-weight: bold;">throw</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Y</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x</span> = f<span style="color: #7388d6;">(</span>arg<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果 <code>f()</code> 抛出的异常不属于 <code>X</code> 或 <code>Y</code> 就会调用到未定义的出错处理过程，默认的行为是程序终止。这样看起来没问题，但是如果我们修改了 <code>f()</code> ，让它抛出
+<code>Z</code> 异常，这时候，我们的 <code>use</code> 会因为 <code>Z</code> 异常而终止，除非我们修改 <code>use()</code> 的异常规格说明，这时候可能还需要重新测试所有代码。困难的地方是，这个 <code>f()</code>
+函数可能是我们无法控制的程序库函数，它抛出的新的异常 <code>use()</code> 可能不关心、也不知道怎么处理。这时候，我们可以修改 <code>use()</code> 函数，让它把新的异常 <code>Z</code> 转交给调用 <code>use()</code> 的函数来处理。但是这时候，调用 <code>use()</code> 的函数可能需要修改了。很快，这个事情就会变的很不可控。我们也可以在 <code>use()</code> 中 <code>try-catch</code> 捕捉 <code>Z</code> 异常。但是这个方法也很快变的难以管理。请注意，修改总的异常种类可能涉及到系统的最底层。比如修改某些网络库或者中间件。所以，这些修改会像肥皂泡一样，一直上升到调用链的最上面。在大的代码库中，这就意味着，只有最后一个用户修改了代码之后，整个代码库才可以切换到最新版本的库。如果
+<code>use()</code> 属于程序库，可能会因为某些未知的客户在使用，我们就无法升级它。
+</p>
+
+<p>
+“让异常一直传递到某个能处理的函数”，这个策略多年来一直证明是有效的方法。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+用异常规格说明的方式静态地进行强化实际上并无益处。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+如果没有异常要抛出，请使用 <a href="./2023-08-01-cppcoreguidelines-e12">noexcept</a>
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记出现异常规格说明的地方。
+</p>

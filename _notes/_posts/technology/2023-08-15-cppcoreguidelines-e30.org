@@ -1,0 +1,98 @@
+#+layout: post
+#+title: CppCoreGuidelines E.30 不要使用异常规格说明
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t use exception specification"
+
+理由
+
+异常规格说明导致错误处理变的很脆弱，引起额外的运行时开销。所以这个功能
+已经从标准 C++ 中移除了。
+
+#+begin_comment
+Exception specifications make error handling brittle, impose a
+run-time cost, and have been removed from the C++ standard.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int use(int arg)
+    throw(X, Y)
+{
+    // ...
+    auto x = f(arg);
+    // ...
+}
+#+end_src
+
+如果 ~f()~ 抛出的异常不属于 ~X~ 或 ~Y~ 就会调用到未定义的出错处理过程，默认
+的行为是程序终止。这样看起来没问题，但是如果我们修改了 ~f()~ ，让它抛出
+~Z~ 异常，这时候，我们的 ~use~ 会因为 ~Z~ 异常而终止，除非我们修改 ~use()~ 的
+异常规格说明，这时候可能还需要重新测试所有代码。困难的地方是，这个 ~f()~
+函数可能是我们无法控制的程序库函数，它抛出的新的异常 ~use()~ 可能不关心、
+也不知道怎么处理。这时候，我们可以修改 ~use()~ 函数，让它把新的异常 ~Z~ 转
+交给调用 ~use()~ 的函数来处理。但是这时候，调用 ~use()~ 的函数可能需要修改
+了。很快，这个事情就会变的很不可控。我们也可以在 ~use()~ 中 ~try-catch~ 捕
+捉 ~Z~ 异常。但是这个方法也很快变的难以管理。请注意，修改总的异常种类可
+能涉及到系统的最底层。比如修改某些网络库或者中间件。所以，这些修改会像
+肥皂泡一样，一直上升到调用链的最上面。在大的代码库中，这就意味着，只有
+最后一个用户修改了代码之后，整个代码库才可以切换到最新版本的库。如果
+~use()~ 属于程序库，可能会因为某些未知的客户在使用，我们就无法升级它。
+
+#+begin_comment
+If f() throws an exception different from X and Y the unexpected
+handler is invoked, which by default terminates. That’s OK, but say
+that we have checked that this cannot happen and f is changed to throw
+a new exception Z, we now have a crash on our hands unless we change
+use() (and re-test everything). The snag is that f() might be in a
+library we do not control and the new exception is not anything that
+use() can do anything about or is in any way interested in. We can
+change use() to pass Z through, but now use()’s callers probably need
+to be modified. This quickly becomes unmanageable. Alternatively, we
+can add a try-catch to use() to map Z into an acceptable
+exception. This too, quickly becomes unmanageable. Note that changes
+to the set of exceptions often happens at the lowest level of a system
+(e.g., because of changes to a network library or some middleware), so
+changes “bubble up” through long call chains. In a large code base,
+this could mean that nobody could update to a new version of a library
+until the last user was modified. If use() is part of a library, it
+might not be possible to update it because a change could affect
+unknown clients.
+#+end_comment
+
+“让异常一直传递到某个能处理的函数”，这个策略多年来一直证明是有效的方法。
+
+#+begin_comment
+The policy of letting exceptions propagate until they reach a function
+that potentially can handle it has proven itself over the years.
+#+end_comment
+
+注意
+
+用异常规格说明的方式静态地进行强化实际上并无益处。
+
+#+begin_comment
+No. This would not be any better had exception specifications been
+statically enforced. For example, see Stroustrup94.
+#+end_comment
+
+注意
+
+如果没有异常要抛出，请使用 [[./2023-08-01-cppcoreguidelines-e12][noexcept]]
+
+#+begin_comment
+If no exception can be thrown, use noexcept.
+#+end_comment
+
+强化
+
+标记出现异常规格说明的地方。
+
+#+begin_comment
+Flag every exception specification.
+#+end_comment
