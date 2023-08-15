@@ -1,0 +1,53 @@
+---
+layout: post
+title: CppCoreGuidelines E.31  妥善编排 catch 语句的顺序
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Properly order your catch-clauses&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>catch</code>  语句是顺序执行的，前一个语句可能会覆盖后一个语句。
+</p>
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #7388d6;">{</span>
+            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #7388d6;">(</span>Base&amp; b<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #7388d6;">(</span>Derived&amp; d<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #7388d6;">(</span>...<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #7388d6;">(</span><span style="color: #110099;">std</span>::exception&amp; e<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果 <code>Derive</code> 是从 <code>Base</code> 派生的，那么就无法调用 <code>Derive</code> 的处理过程。还有
+<code>...</code> 表示捕获所有例外，这样的话，后面的 <code>std::exception</code> 就永远不会被调用。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记所有会导致覆盖后续异常的异常处理。
+</p>

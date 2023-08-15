@@ -1,0 +1,51 @@
+#+layout: post
+#+title: CppCoreGuidelines E.31  妥善编排 catch 语句的顺序
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Properly order your catch-clauses"
+
+理由
+
+~catch~  语句是顺序执行的，前一个语句可能会覆盖后一个语句。
+
+#+begin_comment
+catch-clauses are evaluated in the order they appear and one clause
+can hide another.
+#+end_comment
+
+错误例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f()
+{
+    // ...
+    try {
+            // ...
+    }
+    catch (Base& b) { /* ... */ }
+    catch (Derived& d) { /* ... */ }
+    catch (...) { /* ... */ }
+    catch (std::exception& e) { /* ... */ }
+}
+#+end_src
+
+如果 ~Derive~ 是从 ~Base~ 派生的，那么就无法调用 ~Derive~ 的处理过程。还有
+~...~ 表示捕获所有例外，这样的话，后面的 ~std::exception~ 就永远不会被调用。
+
+#+begin_comment
+If Derivedis derived from Base the Derived-handler will never be
+invoked. The “catch everything” handler ensured that the
+std::exception-handler will never be invoked.
+#+end_comment
+
+强化
+
+标记所有会导致覆盖后续异常的异常处理。
+
+#+begin_comment
+Flag all “hiding handlers”.
+#+end_comment
