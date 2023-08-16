@@ -1,0 +1,62 @@
+#+LAYOUT: post
+#+TITLE: 怎么写 Epic
+#+TAGS: agile SAFe
+#+CATEGORIES: management
+
+最近，公司又给我派了新的活，做一个大产品的负责人，大概就是大规模敏捷中
+的 Epic Owner 的角色。需要协调多个敏捷开发团队，完成一个产品的方方面面。
+
+所以呢，我就开始准备编写产品的 Epic 。
+
+那么，什么是 Epic 呢？Epic 字面意思是史诗、伟大事迹、英雄叙事诗。在大
+规模敏捷开发框架中，Epic 指的是产品解决方案的很大的一块开发工作。因为
+开发工作量很大，所以投资风险也就很高。投资风险很高，投资方向错了的话，
+组织的损失就会很大。因此，要有些措施保障 Epic 确实是有价值的。于是呢，
+我们就要为每一个 Epic 定义一个 MVP 即 Minimum Viable Product ，最小可
+行产品，并且要通过 LM 精益投资组合管理委员会的评审通过。LPM 是 Lean
+Portfolio Management 的缩写，是为战略投资提供资金保障、为敏捷运营提供
+协调支持、为精益治理提供监督管控的核心部门。
+
+Epic 的开发周期通常是一个 PI(Planning Interval) 。而一个 PI 通常则是一
+个季度，三个月左右。
+
+从 Epic 的类别来看，又分为两种，一个是业务 Epic，另一个则是赋能 Epic。
+业务 Epic，Business Epic，顾名思义，就是能产生业务价值的大块开发工作。
+而赋能 Epic，Enabler Epic，则是用来提供业务和技术支撑的活动。一般来说，
+产品负责人拟定业务 Epic，而架构师则负责拟定赋能 Epic。
+
+史诗负责人 Epic Owener 和产品负责人 Product Owner，在定义 Epic 的时候
+可以参考 Epic 假设陈述（Epic Hypothesis Statement）的方式编写。Epic 假
+设陈述主要包括以下部分：
+- Epic 的拟定时间
+- Epic 的精简名称
+- Epic Owner 史诗负责人
+- Epic 描述：针对【客户】，需要做的【事情】，本【方案】通过【某个新方
+  案】，提供【价值】，不像【别的方案】，我们的方案【能够做的更好……】
+- 业务价值
+- 成效指示（Leading Indicator）
+- 相关非功能性需求
+
+Epic 通过投资组合看板系统进行管理。每个 Epic 要经过不同阶段最终确定是
+否进行开发：
+- Epic 精益业务分析
+- 评审
+- 准备就绪，等待 ART 开发团队档期
+- 拆分 Epic 为 Feature/User Story
+- 评估 Feature/User Story 优先级
+- 开发实现
+- 测试验收
+
+经过 Epic 精益业务分析、评审之后，Epic 假设陈述进一步细化，添加以下内
+容：
+- 关键 Stakeholder，产品干系人
+- Epic 范围内的 Feature
+- Epic 范围外的 Feature
+- 非功能性需求
+- 分析汇总
+- Epic 评审结果
+
+SAFe 不建议使用基于预算的项目模型，而是基于精益投资组合的管理模型。每
+个产品负责人手握一把需要开发的 Epic，然后根据 Epic 的价值进行 PK，把
+Epic 分配到各个敏捷发布火车（Agile Release Train，ART）中进行开发。
+SAFe 中 Epic 的发布过程则以精益启动周期的方式进行。
