@@ -1,0 +1,61 @@
+#+layout: post
+#+title: CppCoreGuidelines Con.1 默认把对象设置为不可变
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"By default, make objects immutable"
+
+理由
+
+更容易对不可变对象进行推理分析。只有在需要修改对象值的地方把对象设置为
+可变数据。使用不可变对象，可以避免偶然的或者很难注意到的值发生改变。
+
+#+begin_comment
+Immutable objects are easier to reason about, so make objects
+non-const only when there is a need to change their value. Prevents
+accidental or hard-to-notice change of value.
+#+end_comment
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+for (const int i : c) cout << i << '\n';    // just reading: const
+
+for (int i : c) cout << i << '\n';          // BAD: just reading, may change
+#+end_src
+
+例外
+
+通过值传递的函数参数不太会被改变。所以也很少设置为 ~const~ 。为了避免混
+淆，为了减少误报，请不要在函数参数上应用此规则指南。
+
+#+begin_comment
+Function parameters passed by value are rarely mutated, but also
+rarely declared const. To avoid confusion and lots of false positives,
+don’t enforce this rule for function parameters.
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f(const char* const p); // pedantic
+void g(const int i) { ... }  // pedantic
+#+end_src
+
+注意，函数参数其实是函数的局部变量，所以修改这些参数只是修改局部数据。
+
+#+begin_comment
+Note that a function parameter is a local variable so changes to it
+are local.
+#+end_comment
+
+强化
+
+标记那些非 ~const~ 的，但是值并不改变的变量。（为了避免误报，请排除函数参数）
+
+#+begin_comment
+Flag non-const variables that are not modified (except for parameters
+to avoid many false positives)
+#+end_comment

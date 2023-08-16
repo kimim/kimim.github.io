@@ -1,0 +1,58 @@
+---
+layout: post
+title: CppCoreGuidelines Con.1 默认把对象设置为不可变
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;By default, make objects immutable&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+更容易对不可变对象进行推理分析。只有在需要修改对象值的地方把对象设置为可变数据。使用不可变对象，可以避免偶然的或者很难注意到的值发生改变。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> : c<span style="color: #707183;">)</span> cout &lt;&lt; i &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">just reading: const</span>
+
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> : c<span style="color: #707183;">)</span> cout &lt;&lt; i &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: just reading, may change</span>
+</pre>
+</div>
+
+<p>
+例外
+</p>
+
+<p>
+通过值传递的函数参数不太会被改变。所以也很少设置为 <code>const</code> 。为了避免混淆，为了减少误报，请不要在函数参数上应用此规则指南。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">pedantic</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> ... <span style="color: #707183;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">pedantic</span>
+</pre>
+</div>
+
+<p>
+注意，函数参数其实是函数的局部变量，所以修改这些参数只是修改局部数据。
+</p>
+
+<p>
+强化
+</p>
+
+<p>
+标记那些非 <code>const</code> 的，但是值并不改变的变量。（为了避免误报，请排除函数参数）
+</p>
