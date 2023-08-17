@@ -1,0 +1,122 @@
+---
+layout: post
+title: CppCoreGuidelines Con.2 请把成员函数默认设置为 const
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;By default, make member functions <code>const</code>&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+如果成员函数不修改对象的外部可观测属性，我们就应该把成员变量标记为
+<code>const</code> 。这种方式更精确地表达了我们的设计目的，他人更容易理解代码，编译器可以捕捉更多错误，有时候，我们可以更好的对代码进行优化。
+</p>
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>, <span style="color: #000000;">y</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">getx</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x; <span style="color: #7388d6;">}</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, should be const as it doesn't</span>
+                                <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">modify the object's state</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span>&amp; <span style="color: #000000;">pt</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = pt.getx<span style="color: #7388d6;">()</span>;          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ERROR, doesn't compile because getx</span>
+                                <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">was not marked const</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+只有调用函数会修改传入的对象的时候，可以用非 <code>const</code> 的方式传递指针或引用给函数。代码阅读者在看到这种以无修饰的 <code>T*</code> 或 <code>T&amp;</code> 传递参数给函数的时候，就可以假定函数会修改所指向的对象。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+有些代码和库函数声明函数的参数是 <code>T*</code> 但是并不修改 <code>T</code> 对象。对于改进代码的人来说，这可能有些麻烦。你可以：
+</p>
+<ul class="org-ul">
+<li>更新到正确使用 <code>const</code>  修饰函数参数的库。这是最佳方案。</li>
+<li>使用强制类型转换，把 <code>const</code> 转换掉。<a href="./2023-04-25-cppcoreguidelines-es50">最好避免这个方案</a>。</li>
+<li>提供一个封装函数。</li>
+</ul>
+
+<p>
+例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">old code: f() does not modify `*p`</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> f<span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const_cast</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #909183;">&gt;(</span>p<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>; <span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">wrapper</span>
+</pre>
+</div>
+
+<p>
+注意，这个封装函数方案只是一个补丁，只有当 <code>f()</code> 函数声明不能修改的时候，才可以使用。比如 <code>f</code> 函数是一个系统库函数，你无法修改。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+如果成员变量是 <code>mutable</code> 或是通过成员的数据的指针所指向的， <code>const</code> 成员函数是可以修改成员变量的值的。一个常见的应用场景是用于建立数据的缓存，从而避免重复的进行复杂计算。比如，这里有个 <code>Date</code> 类型，它可以缓存日期的字符串表达形式。这样就可以避免重复的计算日期的字符串表达。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #0000ff; font-weight: bold;">string_ref</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>string_val == <span style="color: #2A00FF;">""</span><span style="color: #909183;">)</span> compute_string_rep<span style="color: #909183;">()</span>;
+        <span style="color: #7F0055; font-weight: bold;">return</span> string_val;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">compute_string_rep</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">compute string</span>
+                                        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">representation and place it</span>
+                                        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">in string_val</span>
+    <span style="color: #7F0055; font-weight: bold;">mutable</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">string_val</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+换句话说，就是常量属性是不具备传导性的。你可以在 <code>const</code> 成员函数中修改
+<code>mutable</code> 成员变量，也可以通过非 <code>const</code> 的指针访问修改成员变量的值。这里，就需要由类本身确保，进行这些修改不会改变其向用户提供的根据其不变式语义。
+</p>
+
+<p>
+请查看： <a href="./2022-04-02-cppcoreguidelines-i27">Pimpl</a>
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记那些没有标记为 <code>const</code> 的成员函数，但是却并没有对成员变量执行任何非 <code>const</code> 的操作运算。也就是说，这些成员函数应当被标记为 <code>const</code></li>
+</ul>

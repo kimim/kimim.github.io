@@ -1,0 +1,145 @@
+#+layout: post
+#+title: CppCoreGuidelines Con.2 请把成员函数默认设置为 const
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"By default, make member functions ~const~"
+
+理由
+
+如果成员函数不修改对象的外部可观测属性，我们就应该把成员变量标记为
+~const~ 。这种方式更精确地表达了我们的设计目的，他人更容易理解代码，编译
+器可以捕捉更多错误，有时候，我们可以更好的对代码进行优化。
+
+#+begin_comment
+A member function should be marked const unless it changes the
+object’s observable state. This gives a more precise statement of
+design intent, better readability, more errors caught by the compiler,
+and sometimes more optimization opportunities.
+#+end_comment
+
+错误例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class Point {
+    int x, y;
+public:
+    int getx() { return x; }    // BAD, should be const as it doesn't
+                                // modify the object's state
+    // ...
+};
+
+void f(const Point& pt)
+{
+    int x = pt.getx();          // ERROR, doesn't compile because getx
+                                // was not marked const
+}
+#+end_src
+
+注意
+
+只有调用函数会修改传入的对象的时候，可以用非 ~const~ 的方式传递指针或引
+用给函数。代码阅读者在看到这种以无修饰的 ~T*~ 或 ~T&~ 传递参数给函数的时候，
+就可以假定函数会修改所指向的对象。
+
+#+begin_comment
+It is not inherently bad to pass a pointer or reference to non-const,
+but that should be done only when the called function is supposed to
+modify the object. A reader of code must assume that a function that
+takes a “plain” T* or T& will modify the object referred to. If it
+doesn’t now, it might do so later without forcing recompilation.
+#+end_comment
+
+注意
+
+有些代码和库函数声明函数的参数是 ~T*~ 但是并不修改 ~T~ 对象。对于改进代码的人来说，这可能有些麻烦。你可以：
+- 更新到正确使用 ~const~  修饰函数参数的库。这是最佳方案。
+- 使用强制类型转换，把 ~const~ 转换掉。[[./2023-04-25-cppcoreguidelines-es50][最好避免这个方案]]。
+- 提供一个封装函数。
+
+#+begin_comment
+There are code/libraries that offer functions that declare a T* even though those functions do not modify that T. This is a problem for people modernizing code. You can
+
+- update the library to be const-correct; preferred long-term solution
+- “cast away const”; best avoided
+- provide a wrapper function
+#+end_comment
+
+例子：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f(int* p);   // old code: f() does not modify `*p`
+void f(const int* p) { f(const_cast<int*>(p)); } // wrapper
+#+end_src
+
+注意，这个封装函数方案只是一个补丁，只有当 ~f()~ 函数声明不能修改的时候，
+才可以使用。比如 ~f~ 函数是一个系统库函数，你无法修改。
+
+#+begin_comment
+Note that this wrapper solution is a patch that should be used only
+when the declaration of f() cannot be modified, e.g. because it is in
+a library that you cannot modify.
+#+end_comment
+
+注意
+
+如果成员变量是 ~mutable~ 或是通过成员的数据的指针所指向的， ~const~ 成员函
+数是可以修改成员变量的值的。一个常见的应用场景是用于建立数据的缓存，从
+而避免重复的进行复杂计算。比如，这里有个 ~Date~ 类型，它可以缓存日期的字
+符串表达形式。这样就可以避免重复的计算日期的字符串表达。
+
+#+begin_comment
+A const member function can modify the value of an object that is
+mutable or accessed through a pointer member. A common use is to
+maintain a cache rather than repeatedly do a complicated
+computation. For example, here is a Date that caches (memoizes) its
+string representation to simplify repeated uses:
+#+end_comment
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class Date {
+public:
+    // ...
+    const string& string_ref() const
+    {
+        if (string_val == "") compute_string_rep();
+        return string_val;
+    }
+    // ...
+private:
+    void compute_string_rep() const;    // compute string
+                                        // representation and place it
+                                        // in string_val
+    mutable string string_val;
+    // ...
+};
+#+end_src
+
+换句话说，就是常量属性是不具备传导性的。你可以在 ~const~ 成员函数中修改
+~mutable~ 成员变量，也可以通过非 ~const~ 的指针访问修改成员变量的值。这里，
+就需要由类本身确保，进行这些修改不会改变其向用户提供的根据其不变式语义。
+
+#+begin_comment
+Another way of saying this is that constness is not transitive. It is
+possible for a const member function to change the value of mutable
+members and the value of objects accessed through non-const
+pointers. It is the job of the class to ensure such mutation is done
+only when it makes sense according to the semantics (invariants) it
+offers to its users.
+#+end_comment
+
+请查看： [[./2022-04-02-cppcoreguidelines-i27][Pimpl]]
+
+强化
+- 标记那些没有标记为 ~const~ 的成员函数，但是却并没有对成员变量执行任何
+  非 ~const~ 的操作运算。也就是说，这些成员函数应当被标记为 ~const~
+  
+#+begin_comment
+Flag a member function that is not marked const, but that does not
+perform a non-const operation on any member variable.
+#+end_comment
