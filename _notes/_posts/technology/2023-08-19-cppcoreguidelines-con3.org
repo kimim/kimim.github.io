@@ -1,0 +1,41 @@
+#+layout: post
+#+title: CppCoreGuidelines Con.3 默认传递指向常量的指针和引用给函数
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"By default, pass pointers and references to ~const~ s"
+
+理由
+
+避免函数意外的修改了数值。被调用的函数不会修改输入参数的话，更容易对程
+序进行分析。
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f(char* p);        // does f modify *p? (assume it does)
+void g(const char* p);  // g does not modify *p
+#+end_src
+
+注意
+
+并不是说给函数传递一个指向非 ~const~ 的指针或引用不好。但是只能传递给确
+实要修改传入对象的函数。
+
+#+begin_comment
+It is not inherently bad to pass a pointer or reference to non-const,
+but that should be done only when the called function is supposed to
+modify the object.
+#+end_comment
+
+注意
+
+不要把 ~const~ 强制类型转换掉。见 [[./2023-04-25-cppcoreguidelines-es50][ES.50: Don’t cast away const]]。
+
+强化
+- 标记传入的参数是指向非 ~const~  的指针或引用，而函数却又不会修改传入对象。
+- 标记用强制类型转换把传入的是指向 ~const~ 的指针或引用转换为指向非
+  ~const~ 的情况。

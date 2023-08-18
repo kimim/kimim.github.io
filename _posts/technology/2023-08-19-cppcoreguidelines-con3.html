@@ -1,0 +1,56 @@
+---
+layout: post
+title: CppCoreGuidelines Con.3 默认传递指向常量的指针和引用给函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;By default, pass pointers and references to <code>const</code> s&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+避免函数意外的修改了数值。被调用的函数不会修改输入参数的话，更容易对程序进行分析。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">does f modify *p? (assume it does)</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">g does not modify *p</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+并不是说给函数传递一个指向非 <code>const</code> 的指针或引用不好。但是只能传递给确实要修改传入对象的函数。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+不要把 <code>const</code> 强制类型转换掉。见 <a href="./2023-04-25-cppcoreguidelines-es50">ES.50: Don’t cast away const</a>。
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记传入的参数是指向非 <code>const</code>  的指针或引用，而函数却又不会修改传入对象。</li>
+<li>标记用强制类型转换把传入的是指向 <code>const</code> 的指针或引用转换为指向非
+<code>const</code> 的情况。</li>
+</ul>
