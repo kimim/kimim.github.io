@@ -1,22 +1,17 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.30 如果某个类需要特定的对象析构，请定义析构函数
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.30 如果某个类需要特定的对象析构，请定义析构函数
+#+categories: technology
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
 "Define a destructor if a class needs an explicit action at object destruction"
 
-
 理由
 
 在对象生命周期结束的时候，会隐式地调用析构函数。如果默认析构函数够用了，
-就用默认的。如果类的析构函数还会处理一些不在其成员的析构函数中处理的逻
-辑，才需要手工定义一个析构函数。
+就用默认的。如果类的析构函数还会处理一些不在其成员变量的析构函数中处理
+的逻辑，才需要手工定义一个析构函数。
 
 例子
 

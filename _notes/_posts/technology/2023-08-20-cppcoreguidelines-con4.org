@@ -1,0 +1,32 @@
+#+layout: post
+#+title: CppCoreGuidelines Con.4 用 const 定义哪些构造之后不会修改值的对象
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~const~ to define objects with values that do not change after
+construction"
+
+理由
+
+避免对对象的值进行意外值修改。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f()
+{
+    int x = 7;
+    const int y = 9;
+
+    for (;;) {
+        // ...
+    }
+    // ...
+}
+#+end_src
+
+因为 ~x~ 不是一个 ~const~ ，所以我们必须假定它会在循环的某个地方被修改了。
+
+强化
+- 标记非 ~const~ 但是又没有修改过的变量。

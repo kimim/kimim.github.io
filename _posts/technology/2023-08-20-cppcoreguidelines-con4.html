@@ -1,0 +1,47 @@
+---
+layout: post
+title: CppCoreGuidelines Con.4 用 const 定义哪些构造之后不会修改值的对象
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>const</code> to define objects with values that do not change after
+construction&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+避免对对象的值进行意外值修改。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = 7;
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span> = 9;
+
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span>;;<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+因为 <code>x</code> 不是一个 <code>const</code> ，所以我们必须假定它会在循环的某个地方被修改了。
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记非 <code>const</code> 但是又没有修改过的变量。</li>
+</ul>
