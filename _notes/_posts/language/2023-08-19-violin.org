@@ -1,0 +1,43 @@
+#+LAYOUT: post
+#+TITLE: 单词本：violin
+#+TAGS: English
+#+CATEGORIES: language
+
+最近在看 Leopold Mozart 的《Gründliche Violinschule》。这个莫扎特就是
+那个更出名的莫扎特的爸爸，他写的《小提琴教学与演奏的基本论则》可以算得
+上是最早的小提琴教材了。也就是说，他培养出一个音乐家儿子，而他自己本身
+也算得上是个很不错的音乐家了。
+
+我刚开始看这本书。但是，作为本文的主题，所以我们主要是要学习学习一些新
+单词。在绪论的第六节中，老莫扎特介绍了弦乐器的起源。说是墨丘利发明了弦
+乐器。对的，就是那个 [[./2022-12-15-english-mercenary][Mercŭrĭus]]，他是商业、小偷、畜牧、交通、旅游、体育
+之神，在希腊的名字是爱马仕 Hermès。
+
+话说，古时候，尼罗河洪水泛滥，淹没了整个埃及。大水推去后，墨丘利在洪水
+退去的草丛里，发现了一个干枯经络的乌龟壳。当他触动这些长短粗细不一的经
+络时，就听到了高低不同的声音，于是，墨丘利受了启发，发明了意见类似的乐
+器，就是所谓的古里拉琴（Chelys Lyra，Leyer der Alten），里拉琴据说就是
+起源于古埃及的。
+
+在拉丁语里 Chelys 就是提琴的意思，而 Chelysta 则是演奏提琴的人。在希腊
+语里，χελυς 就是乌龟的意思。可以看看 scitechinstitute.org 的介绍：The
+*Chelys-Lyra* is a lyre consisting of a tortoise-shell sound compartment
+with skin stretched over the opening. Two bars with a crossbar
+attached extend from the shell and hold the strings. Compared to other
+Greek instruments of the time, the Chelys-Lyra was small and light, a
+versatile instrument which could be played sitting, standing or
+walking. It was played by both men and women, although it is most
+often depicted in art being played by a man.
+
+老莫扎特还举了一个论证，琴弦 chord 在拉丁语里是 Chorda，意大利语是
+Corda，法语是 la Chorde，其实都是来自希腊语 χορδη，医学上就是内脏或肠
+子。因为那时候大部分的琴弦都用动物内脏做的，像那个干死的乌龟壳上的经络。
+
+再看看几个词，就知道 chelys  的意思了：
+- chelydridaes 啮龟科
+- chelyidae 蛇颈龟科
+- chelyocarpus 龟果榈属；龟果棕属
+
+至于 Lyra 里拉琴，则引伸出了这些词：
+- Lyric 流行歌曲歌词，就是跟着 Lyra 哼唱的歌
+- Lyrebird 澳大利亚一种尾巴像里拉琴的鸟，琴鸟

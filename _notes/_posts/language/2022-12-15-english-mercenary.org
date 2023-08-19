@@ -1,11 +1,7 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: 单词本：mercenary
-categories: [language]
-tags: [English]
----
-#+END_EXPORT
+#+layout: post
+#+title: 单词本：mercenary
+#+categories: language
+#+tags: English
 
 在看关键基础设施的网络攻击方面的书，看到：
 
@@ -34,12 +30,12 @@ any level no longer needs to be military, because it can be
 是交易、买卖的意思，市场 market 就是从 marcatus 演变来的。法语为
 marché，德语为 Markt。
 
-水星也来源于罗马神话墨丘利（Mercŭrĭus)。他行走敏捷，精力充沛，多才多艺，
-在奥林匹斯山上担任诸神的使者和传译，作为沟通之神的他拥有过人的智慧和交
-流能力，所以也被称为商业之神。由于水星在天上运行的速度很快，所以用了他
-的名字而命名。他在希腊神话中有另外一个名字，叫做赫尔墨斯，也就是那个很
-贵很贵很贵的箱包品牌爱马仕，Hermès，因为 H 在法语里不发音，所以就音译
-为爱玛仕。
+水星也来源于罗马神话墨丘利（Mercŭrĭus）。他行走敏捷，精力充沛，多才多
+艺，在奥林匹斯山上担任诸神的使者和传译，作为沟通之神的他拥有过人的智慧
+和交流能力，所以也被称为商业之神。由于水星在天上运行的速度很快，所以用
+了他的名字而命名。他在希腊神话中有另外一个名字，叫做赫尔墨斯，也就是那
+个很贵很贵很贵的箱包品牌爱马仕，Hermès，因为 H 在法语里不发音，所以就
+音译为爱玛仕。
 
 Mercure, première planète du système solaire, la plus proche du
 Soleil. Merkur ist innerster Planet des Sonnensystems, nach dem
