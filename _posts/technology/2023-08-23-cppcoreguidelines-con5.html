@@ -1,0 +1,50 @@
+---
+layout: post
+title: CppCoreGuidelines Con.5 用 constexpr 修饰编译时可以计算的变量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>constexpr</code> for values that can be computed at compile time&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+提升性能。利用编译时检查。确保编译时计算。不会产生竞争条件。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span> = f<span style="color: #707183;">(</span>2<span style="color: #707183;">)</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">possible run-time evaluation</span>
+<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">y</span> = f<span style="color: #707183;">(</span>2<span style="color: #707183;">)</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">possible run-time evaluation</span>
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">z</span> = f<span style="color: #707183;">(</span>2<span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error unless f(2) can be evaluated at</span>
+                            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">compile time</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+查看 <a href="./2022-04-07-cppcoreguidelines-f4">F.4 如果函数可以在编译期计算出结果，可以声明为 constexpr</a>。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记那些用了 <code>const</code> 关键字修饰，但实际是通过常量表达式初始化的值。其实可以用 <code>constexpr</code> 。</li>
+</ul>

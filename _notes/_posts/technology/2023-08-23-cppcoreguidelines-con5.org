@@ -1,0 +1,32 @@
+#+layout: post
+#+title: CppCoreGuidelines Con.5 用 constexpr 修饰编译时可以计算的变量
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~constexpr~ for values that can be computed at compile time"
+
+理由
+
+提升性能。利用编译时检查。确保编译时计算。不会产生竞争条件。
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+double x = f(2);            // possible run-time evaluation
+const double y = f(2);      // possible run-time evaluation
+constexpr double z = f(2);  // error unless f(2) can be evaluated at
+                            // compile time
+#+end_src
+
+注意
+
+查看 [[./2022-04-07-cppcoreguidelines-f4][F.4 如果函数可以在编译期计算出结果，可以声明为 constexpr]]。
+
+
+强化
+
+- 标记那些用了 ~const~ 关键字修饰，但实际是通过常量表达式初始化的值。其
+  实可以用 ~constexpr~ 。
