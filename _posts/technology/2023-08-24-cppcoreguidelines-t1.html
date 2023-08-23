@@ -1,0 +1,100 @@
+---
+layout: post
+title: CppCoreGuidelines T.1 通过模板提升代码抽象层次
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use templates to raise the level of abstraction of code&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+泛化。重用。效率。孤立用户定义类型的一致性。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<p>
+从概念上来看，以下模板的要求是表达错了的。因为我们对类型 <code>T</code> 的要求不仅仅是低层次的可增加。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">requires</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Incrementable</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #0000ff; font-weight: bold;">sum1</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">v</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x</span> : v<span style="color: #7388d6;">)</span> s += x;
+    <span style="color: #7F0055; font-weight: bold;">return</span> s;
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">requires</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Simple_number</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #0000ff; font-weight: bold;">sum2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">v</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x</span> : v<span style="color: #7388d6;">)</span> s = s + x;
+    <span style="color: #7F0055; font-weight: bold;">return</span> s;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+假如， <code>Incrementable</code> 不支持加号运算 <code>+</code> ， <code>Simple_number</code> 不支持 <code>+=</code> 运算。那么我们就给 <code>sum1</code> 和 <code>sum2</code> 增加了过度的限制。于是就失去了进一步泛化的机会：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">requires</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Arithmetic</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #0000ff; font-weight: bold;">sum</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">v</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x</span> : v<span style="color: #7388d6;">)</span> s += x;
+    <span style="color: #7F0055; font-weight: bold;">return</span> s;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+假设 <code>Arithmetic</code> 类型必须实现 <code>+</code> 和 <code>+=</code> 操作，我们就限制 <code>sum</code> 函数的用户提供完整的 <code>Arithmetic</code> 类型。这个要求不是一个最小要求，但是这个要求给算法的实现者足够的自由度，确保 <code>Arithmetic</code> 类型可用于多种不同的算法。
+</p>
+
+<p>
+另外，我们也可以用 <code>Container</code> 或 <code>Range</code> 来替换 <code>vector</code> ，从而增加模板的一般性和可重用性。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果我们定义一个模板的时候，只是针对确切的操作和唯一的算法。我们就限制了未来的维护者，使得他们无法进行扩展了。我们应当尽量减少对模板参数的要求。不过也不能绝对化，太少的参数要求可能没太大意义。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+模板可以用来表达任何东西。模板是图灵完备的。但是模板的初衷是为了泛型编程。模板主要用为特定语义属性的类型集提供高效的通用化的操作和算法。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记模板参数要求太过简单的情况。比如直接使用某个特定操作，而不是使用概念 Concept。</li>
+<li>不要标记某个太简单定义的概念本身。他们可能是更多其他有用概念的基础。</li>
+</ul>

@@ -1,0 +1,79 @@
+#+layout: post
+#+title: CppCoreGuidelines T.1 通过模板提升代码抽象层次
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use templates to raise the level of abstraction of code"
+
+理由
+
+泛化。重用。效率。孤立用户定义类型的一致性。
+
+
+坏例子
+
+从概念上来看，以下模板的要求是表达错了的。因为我们对类型 ~T~ 的要求不仅
+仅是低层次的可增加。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+    requires Incrementable<T>
+T sum1(vector<T>& v, T s)
+{
+    for (auto x : v) s += x;
+    return s;
+}
+
+template<typename T>
+    requires Simple_number<T>
+T sum2(vector<T>& v, T s)
+{
+    for (auto x : v) s = s + x;
+    return s;
+}
+#+end_src
+
+假如， ~Incrementable~ 不支持加号运算 ~+~ ， ~Simple_number~ 不支持 ~+=~ 运算。
+那么我们就给 ~sum1~ 和 ~sum2~ 增加了过度的限制。于是就失去了进一步泛化的机
+会：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+    requires Arithmetic<T>
+T sum(vector<T>& v, T s)
+{
+    for (auto x : v) s += x;
+    return s;
+}
+#+end_src
+
+假设 ~Arithmetic~ 类型必须实现 ~+~ 和 ~+=~ 操作，我们就限制 ~sum~ 函数的用户提
+供完整的 ~Arithmetic~ 类型。这个要求不是一个最小要求，但是这个要求给算法
+的实现者足够的自由度，确保 ~Arithmetic~ 类型可用于多种不同的算法。
+
+另外，我们也可以用 ~Container~ 或 ~Range~ 来替换 ~vector~ ，从而增加模板的一
+般性和可重用性。
+
+
+注意
+
+如果我们定义一个模板的时候，只是针对确切的操作和唯一的算法。我们就限制
+了未来的维护者，使得他们无法进行扩展了。我们应当尽量减少对模板参数的要
+求。不过也不能绝对化，太少的参数要求可能没太大意义。
+
+
+注意
+
+模板可以用来表达任何东西。模板是图灵完备的。但是模板的初衷是为了泛型编
+程。模板主要用为特定语义属性的类型集提供高效的通用化的操作和算法。
+
+
+强化
+
+- 标记模板参数要求太过简单的情况。比如直接使用某个特定操作，而不是使用
+  概念 Concept。
+- 不要标记某个太简单定义的概念本身。他们可能是更多其他有用概念的基础。
