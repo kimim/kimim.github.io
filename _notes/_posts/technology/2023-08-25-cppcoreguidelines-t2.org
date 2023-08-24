@@ -1,0 +1,35 @@
+#+layout: post
+#+title: CppCoreGuidelines T.2 用模板表达哪种适用于多种数据类型的算法
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use templates to express algorithms that apply to many argument
+types"
+
+理由
+
+通用化。精简代码。互操作。可重用。
+
+
+例子
+
+这个原则是 STL 的基础。一个简单的 ~find~ 算法，可以适用于多种不同的输入
+类型。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename Iter, typename Val>
+    // requires Input_iterator<Iter>
+    //       && Equality_comparable<Value_type<Iter>, Val>
+Iter find(Iter b, Iter e, Val v)
+{
+    // ...
+}
+#+end_src
+
+
+注意
+
+只有确实需要适配多种参数类型的时候，才使用模板。不要过度抽象。
