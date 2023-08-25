@@ -1,0 +1,62 @@
+#+layout: post
+#+title: CppCoreGuidelines T.3 用模板表达容器和值域
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use templates to express containers and ranges"
+
+理由
+
+容器需要指定容器元素类型，从而使得模板参数通用化、可重用、类型安全。并
+且避免了低效率的、繁琐的临时解决方案。约定俗成的，我们要遵循 STL 的设
+计方式。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+    // requires Regular<T>
+class Vector {
+    // ...
+    T* elem;   // points to sz Ts
+    int sz;
+};
+
+Vector<double> v(10);
+v[7] = 9.9;
+#+end_src
+
+
+错误例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class Container {
+    // ...
+    void* elem;   // points to size elements of some type
+    int sz;
+};
+
+Container c(10, sizeof(double));
+((double*) c.elem)[7] = 9.9;
+#+end_src
+
+以上设计没法直接表达程序员的意图。隐藏了程序的结构，从而使得类型系统无
+法提供建议、优化器无法进行优化。
+
+通过宏定义替换 ~void*~ 只会使得问题更复杂，导致更多的困惑。
+
+
+例外
+
+如果你需要稳定的 ABI 接口，你可能需要提供一个基础实现，然后基于这个实
+现，用模板设计类型安全的方案。
+
+
+强化
+
+- 标记出现 ~void*~ 且把其他底层实现类型强制转换成 ~void*~ 的情况。

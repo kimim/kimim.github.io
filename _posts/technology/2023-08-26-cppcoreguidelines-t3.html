@@ -1,0 +1,83 @@
+---
+layout: post
+title: CppCoreGuidelines T.3 用模板表达容器和值域
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use templates to express containers and ranges&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+容器需要指定容器元素类型，从而使得模板参数通用化、可重用、类型安全。并且避免了低效率的、繁琐的临时解决方案。约定俗成的，我们要遵循 STL 的设计方式。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">requires Regular&lt;T&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">elem</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">points to sz Ts</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sz</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #707183;">(</span>10<span style="color: #707183;">)</span>;
+v<span style="color: #707183;">[</span>7<span style="color: #707183;">]</span> = 9.9;
+</pre>
+</div>
+
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Container</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>* <span style="color: #000000;">elem</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">points to size elements of some type</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sz</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Container</span> <span style="color: #000000;">c</span><span style="color: #707183;">(</span>10, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>;
+<span style="color: #707183;">(</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span>*<span style="color: #7388d6;">)</span> c.elem<span style="color: #707183;">)[</span>7<span style="color: #707183;">]</span> = 9.9;
+</pre>
+</div>
+
+<p>
+以上设计没法直接表达程序员的意图。隐藏了程序的结构，从而使得类型系统无法提供建议、优化器无法进行优化。
+</p>
+
+<p>
+通过宏定义替换 <code>void*</code> 只会使得问题更复杂，导致更多的困惑。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+如果你需要稳定的 ABI 接口，你可能需要提供一个基础实现，然后基于这个实现，用模板设计类型安全的方案。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记出现 <code>void*</code> 且把其他底层实现类型强制转换成 <code>void*</code> 的情况。</li>
+</ul>
