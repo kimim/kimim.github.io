@@ -1,0 +1,105 @@
+---
+layout: post
+title: CppCoreGuidelines T.5 根据各自的优势组合泛型和 OO 技术
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Combine generic and OO techniques to amplify their strengths, not their costs&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+泛型和 OO 面向对象技术是互补的。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+静态可以辅助动态：用静态多态实现动态多态接口。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Command</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">pure virtual functions</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">implementations</span>
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #3F7F5F;">/*</span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;">*/</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ConcreteCommand</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Command</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">implement virtuals</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<p>
+静态可以辅助动态：提供更泛型、更舒适、更静态绑定的接口的同时，内部又可以做到动态分配。于是，你就可以提供一个统一的对象布局。比如，
+<code>std::shared_ptr</code> 的删除操作就可以抹掉类型信息。不过最好不要用到太多抹除类型信息的操作。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">memory</span><span style="color: #707183;">&gt;</span>
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Object</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>
+    <span style="color: #0000ff; font-weight: bold;">Object</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp;&amp; <span style="color: #000000;">obj</span><span style="color: #7388d6;">)</span>
+        : concept_<span style="color: #7388d6;">(</span><span style="color: #110099;">std</span>::make_shared<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ConcreteCommand</span><span style="color: #709870;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #709870;">&gt;</span><span style="color: #909183;">&gt;(</span><span style="color: #110099;">std</span>::forward<span style="color: #709870;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #709870;">&gt;(</span>obj<span style="color: #709870;">)</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>  <span style="color: #7388d6;">{}</span>
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_id</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> concept_-&gt;get_id<span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Command</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">Command</span><span style="color: #909183;">()</span> <span style="color: #909183;">{}</span>
+        <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_id</span><span style="color: #909183;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> = 0;
+    <span style="color: #7388d6;">}</span>;
+
+    <span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ConcreteCommand</span> <span style="color: #7F0055; font-weight: bold;">final</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">Command</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #0000ff; font-weight: bold;">ConcreteCommand</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp;&amp; <span style="color: #000000;">obj</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span> : object_<span style="color: #909183;">(</span><span style="color: #110099;">std</span>::forward<span style="color: #709870;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #709870;">&gt;(</span>obj<span style="color: #709870;">)</span><span style="color: #909183;">)</span> <span style="color: #909183;">{}</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_id</span><span style="color: #909183;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">final</span> <span style="color: #909183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> object_.get_id<span style="color: #709870;">()</span>; <span style="color: #909183;">}</span>
+
+    <span style="color: #7F0055; font-weight: bold;">private</span>:
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">object_</span>;
+    <span style="color: #7388d6;">}</span>;
+
+    <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Command</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">concept_</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_id</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> 1; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_id</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> 2; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Object</span> <span style="color: #0000ff; font-weight: bold;">o</span><span style="color: #707183;">(</span>Bar<span style="color: #7388d6;">{}</span><span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Object</span> <span style="color: #0000ff; font-weight: bold;">o2</span><span style="color: #707183;">(</span>Foo<span style="color: #7388d6;">{}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+在类模板中， <code>non-virtual</code> 函数只会在使用的时候实例化，而 <code>virtual</code> 函数则每次都会实例化。这个特性会因为过度限制泛型类型，从而实例化了很多从来用不到的函数，于是导致代码量增大。可能标准库函数的设计中出现这个错误，但是请尽量避免这种情况。
+</p>

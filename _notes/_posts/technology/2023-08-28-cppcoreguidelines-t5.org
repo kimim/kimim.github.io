@@ -1,0 +1,89 @@
+#+layout: post
+#+title: CppCoreGuidelines T.5 根据各自的优势组合泛型和 OO 技术
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Combine generic and OO techniques to amplify their strengths, not their costs"
+
+理由
+
+泛型和 OO 面向对象技术是互补的。
+
+
+例子
+
+静态可以辅助动态：用静态多态实现动态多态接口。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class Command {
+    // pure virtual functions
+};
+
+// implementations
+template</*...*/>
+class ConcreteCommand : public Command {
+    // implement virtuals
+};
+#+end_src
+
+
+例子
+
+静态可以辅助动态：提供更泛型、更舒适、更静态绑定的接口的同时，内部又可
+以做到动态分配。于是，你就可以提供一个统一的对象布局。比如，
+~std::shared_ptr~ 的删除操作就可以抹掉类型信息。不过最好不要用到太多抹除
+类型信息的操作。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+#include <memory>
+
+class Object {
+public:
+    template<typename T>
+    Object(T&& obj)
+        : concept_(std::make_shared<ConcreteCommand<T>>(std::forward<T>(obj)))  {}
+
+    int get_id() const { return concept_->get_id(); }
+
+private:
+    struct Command {
+        virtual ~Command() {}
+        virtual int get_id() const = 0;
+    };
+
+    template<typename T>
+    struct ConcreteCommand final : Command {
+        ConcreteCommand(T&& obj) noexcept : object_(std::forward<T>(obj)) {}
+        int get_id() const final { return object_.get_id(); }
+
+    private:
+        T object_;
+    };
+
+    std::shared_ptr<Command> concept_;
+};
+
+class Bar {
+public:
+    int get_id() const { return 1; }
+};
+
+struct Foo {
+public:
+    int get_id() const { return 2; }
+};
+
+Object o(Bar{});
+Object o2(Foo{});
+#+end_src
+
+注意
+
+在类模板中， ~non-virtual~ 函数只会在使用的时候实例化，而 ~virtual~ 函数则
+每次都会实例化。这个特性会因为过度限制泛型类型，从而实例化了很多从来用
+不到的函数，于是导致代码量增大。可能标准库函数的设计中出现这个错误，但
+是请尽量避免这种情况。
