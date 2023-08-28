@@ -1,0 +1,52 @@
+#+layout: post
+#+title: CppCoreGuidelines T.5 对每个模板参数指定 concept
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Specify concepts for all template arguments"
+
+理由
+
+更好的正确性和可读性。模板参数准确的语法和语义定义是模板接口的基础。概
+念（Concept）可以动态提升模板的意义，改进模板的错误处理。给模板参数指
+定概念是很强大的设计工具。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename Iter, typename Val>
+    requires input_iterator<Iter>
+             && equality_comparable_with<iter_value_t<Iter>, Val>
+Iter find(Iter b, Iter e, Val v)
+{
+    // ...
+}
+#+end_src
+
+或者等价的，更严格的方式：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<input_iterator Iter, typename Val>
+    requires equality_comparable_with<iter_value_t<Iter>, Val>
+Iter find(Iter b, Iter e, Val v)
+{
+    // ...
+}
+#+end_src
+
+
+注意
+
+普通的 ~typename~ 或 ~auto~ 是限制最少的概念。只有在限制最少的情况下使用，
+标识这仅仅是一个类型。只有在我们纯粹的表达某种表达式树、延迟类型检查的
+时候才会用到。
+
+参考：TC++PL4
+
+强化
+- 标记没有添加 concept 的模板类型。

@@ -1,0 +1,71 @@
+---
+layout: post
+title: CppCoreGuidelines T.5 对每个模板参数指定 concept
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Specify concepts for all template arguments&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+更好的正确性和可读性。模板参数准确的语法和语义定义是模板接口的基础。概念（Concept）可以动态提升模板的意义，改进模板的错误处理。给模板参数指定概念是很强大的设计工具。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span>, <span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Val</span><span style="color: #707183;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">requires</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">input_iterator</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span><span style="color: #707183;">&gt;</span>
+             &amp;&amp; <span style="color: #000000; font-style: italic; text-decoration: underline;">equality_comparable_with</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">iter_value_t</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span><span style="color: #7388d6;">&gt;</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Val</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #0000ff; font-weight: bold;">find</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">b</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">e</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Val</span> <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+或者等价的，更严格的方式：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">input_iterator</span> <span style="color: #000000;">Iter</span>, <span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Val</span><span style="color: #707183;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">requires</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">equality_comparable_with</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">iter_value_t</span><span style="color: #7388d6;">&lt;</span>Iter<span style="color: #7388d6;">&gt;</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Val</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #0000ff; font-weight: bold;">find</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">b</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">e</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Val</span> <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+普通的 <code>typename</code> 或 <code>auto</code> 是限制最少的概念。只有在限制最少的情况下使用，标识这仅仅是一个类型。只有在我们纯粹的表达某种表达式树、延迟类型检查的时候才会用到。
+</p>
+
+<p>
+参考：TC++PL4
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记没有添加 concept 的模板类型。</li>
+</ul>
