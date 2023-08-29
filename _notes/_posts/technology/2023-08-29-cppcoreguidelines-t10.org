@@ -1,5 +1,5 @@
 #+layout: post
-#+title: CppCoreGuidelines T.5 对每个模板参数指定 concept
+#+title: CppCoreGuidelines T.10 对每个模板参数指定 concept
 #+categories: technology
 #+tags: CppCoreGuidelines
 
