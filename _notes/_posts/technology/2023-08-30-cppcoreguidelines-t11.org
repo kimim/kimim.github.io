@@ -1,0 +1,57 @@
+#+layout: post
+#+title: CppCoreGuidelines T.11 尽量使用标准的 concept
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Whenever possible use standard concepts"
+
+理由
+
+GSL 和 ISO 标准提供的标准 concept 可以帮我们节省时间，避免自己去考虑细
+节。这些标准的 concept 往往比我们自己仓促中想出的 concept 更加周全，从
+而提互操作性。
+
+
+注意
+
+大部分的 ~concept~ 都已经在标准库中定义了，除非是你要创建新的泛型库，你
+需要定义新的 ~concept~ 。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+    // don't define this: sortable is in <iterator>
+concept Ordered_container = Sequence<T> && Random_access<Iterator<T>> && Ordered<Value_type<T>>;
+
+void sort(Ordered_container auto& s);
+#+end_src
+
+这里 ~Ordered_container~ 似乎是挺合理的，但是跟标准库中的 ~sortable~ 很相
+似。这个更好？更正确？是不是跟标准中对 ~sort~ 的要求一致？那么，是不是最
+好直接用 ~sortable~ ？
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void sort(sortable auto& s);   // better
+#+end_src
+
+
+注意
+
+标准的 ~concept~ 会随着 ISO 标准的开发不断完善。
+
+
+注意
+
+设计一个有用的 ~concept~ 是很大的挑战。
+
+
+强化
+- 检查没有限制的参数，用到不太常见的非标准的 ~concept~ 的模板，用到没有
+  证明的自己撸的 ~concept~
+- 开发一个 ~concept~ 拓展工具

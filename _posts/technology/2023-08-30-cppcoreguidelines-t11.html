@@ -1,0 +1,80 @@
+---
+layout: post
+title: CppCoreGuidelines T.11 尽量使用标准的 concept
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Whenever possible use standard concepts&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+GSL 和 ISO 标准提供的标准 concept 可以帮我们节省时间，避免自己去考虑细节。这些标准的 concept 往往比我们自己仓促中想出的 concept 更加周全，从而提互操作性。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+大部分的 <code>concept</code> 都已经在标准库中定义了，除非是你要创建新的泛型库，你需要定义新的 <code>concept</code> 。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't define this: sortable is in &lt;iterator&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Ordered_container</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">Sequence</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span> &amp;&amp; <span style="color: #000000; font-style: italic; text-decoration: underline;">Random_access</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iterator</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span><span style="color: #707183;">&gt;</span> &amp;&amp; <span style="color: #000000; font-style: italic; text-decoration: underline;">Ordered</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Value_type</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span><span style="color: #707183;">&gt;</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sort</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Ordered_container</span> <span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+这里 <code>Ordered_container</code> 似乎是挺合理的，但是跟标准库中的 <code>sortable</code> 很相似。这个更好？更正确？是不是跟标准中对 <code>sort</code> 的要求一致？那么，是不是最好直接用 <code>sortable</code> ？
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sort</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">sortable</span> <span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+标准的 <code>concept</code> 会随着 ISO 标准的开发不断完善。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+设计一个有用的 <code>concept</code> 是很大的挑战。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>检查没有限制的参数，用到不太常见的非标准的 <code>concept</code> 的模板，用到没有证明的自己撸的 <code>concept</code></li>
+<li>开发一个 <code>concept</code> 拓展工具</li>
+</ul>
