@@ -1,0 +1,24 @@
+#+layout: post
+#+title: CppCoreGuidelines T.12 最好用 concept，不要用 auto 或局部变量
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer concept names over auto for local variables"
+
+理由
+
+~auto~ 是最若的 ~concept~ 。 ~concept~ 比 ~auto~ 传递的信息更多。
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+vector<string> v{ "abc", "xyz" };
+auto& x = v.front();        // bad
+String auto& s = v.front(); // good (String is a GSL concept)
+#+end_src
+
+这里 ~String~ 是 GSL 中定义的 ~concept~ 。当 ~String~ 和 ~auto~ 一起用的时候，
+这个 ~String~ 就被当作 ~concept~ 使用了。

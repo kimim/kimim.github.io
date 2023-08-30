@@ -1,0 +1,36 @@
+---
+layout: post
+title: CppCoreGuidelines T.12 最好用 concept，不要用 auto 或局部变量
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer concept names over auto for local variables&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>auto</code> 是最若的 <code>concept</code> 。 <code>concept</code> 比 <code>auto</code> 传递的信息更多。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #707183;">{</span> <span style="color: #2A00FF;">"abc"</span>, <span style="color: #2A00FF;">"xyz"</span> <span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">x</span> = v.front<span style="color: #707183;">()</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">String</span> <span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">s</span> = v.front<span style="color: #707183;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good (String is a GSL concept)</span>
+</pre>
+</div>
+
+<p>
+这里 <code>String</code> 是 GSL 中定义的 <code>concept</code> 。当 <code>String</code> 和 <code>auto</code> 一起用的时候，这个 <code>String</code> 就被当作 <code>concept</code> 使用了。
+</p>
