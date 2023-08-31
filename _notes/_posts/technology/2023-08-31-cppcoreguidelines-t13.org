@@ -1,0 +1,37 @@
+#+layout: post
+#+title: CppCoreGuidelines T.13 对于简单单类型模板，建议使用简短格式
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer the shorthand notation for simple, single-type argument
+concepts"
+
+理由
+
+可读性更好。直接表达想法。
+
+
+例子
+
+这里想表达的是 ~T~ 是可排序的。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>       // Correct but verbose: "The parameter is
+    requires sortable<T>   // of type T which is the name of a type
+void sort(T&);             // that is sortable"
+
+template<sortable T>       // Better: "The parameter is of type T
+void sort(T&);             // which is Sortable"
+
+void sort(sortable auto&); // Best: "The parameter is Sortable"
+#+end_src
+
+这个简短格式很符合我们所要表达的意思。注意，很多模板不需要用到
+~template~ 关键字。
+
+强化
+- 对于首先引入一个 ~typename~ 然后用一个简单的、单类型的 ~concept~ 进行限
+  制的情况，标记之。

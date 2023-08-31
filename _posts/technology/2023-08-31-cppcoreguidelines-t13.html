@@ -1,0 +1,55 @@
+---
+layout: post
+title: CppCoreGuidelines T.13 对于简单单类型模板，建议使用简短格式
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer the shorthand notation for simple, single-type argument
+concepts&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性更好。直接表达想法。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+这里想表达的是 <code>T</code> 是可排序的。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Correct but verbose: "The parameter is</span>
+    <span style="color: #7F0055; font-weight: bold;">requires</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">sortable</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">of type T which is the name of a type</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sort</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp;<span style="color: #707183;">)</span>;             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">that is sortable"</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">sortable</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Better: "The parameter is of type T</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sort</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp;<span style="color: #707183;">)</span>;             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">which is Sortable"</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sort</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">sortable</span> <span style="color: #7F0055; font-weight: bold;">auto</span>&amp;<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Best: "The parameter is Sortable"</span>
+</pre>
+</div>
+
+<p>
+这个简短格式很符合我们所要表达的意思。注意，很多模板不需要用到
+<code>template</code> 关键字。
+</p>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>对于首先引入一个 <code>typename</code> 然后用一个简单的、单类型的 <code>concept</code> 进行限制的情况，标记之。</li>
+</ul>
