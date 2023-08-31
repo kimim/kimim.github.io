@@ -1,0 +1,82 @@
+#+layout: post
+#+title: CppCoreGuidelines T.20 避免添加无意义的 concept
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid “concepts” without meaningful semantics"
+
+
+理由
+
+concept 是用来表达某个语义的标记，比如某个数字，某些元素的范围，或者能
+完全排序。简单的约束，比如有一个 + 操作符，有一个 > 操作符，等等，不一
+定能孤立地用来表达某个特定的意义。而应该是用来建立某个有意义的 concept。
+
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+// bad; insufficient
+concept Addable = requires(T a, T b) { a+b; };
+
+template<Addable N>
+auto algo(const N& a, const N& b) // use two numbers
+{
+    // ...
+    return a + b;
+}
+
+int x = 7;
+int y = 9;
+auto z = algo(x, y);   // z = 16
+
+string xx = "7";
+string yy = "9";
+auto zz = algo(xx, yy);   // zz = "79"
+#+end_src
+
+这里可能可以对参数进行拼接。很可能会出错。定义对应的减号操作会给出完全
+不一样的可接受的类型参数。这个 ~Addable~ 违反了数学规则中加法可交换法则：
+~a+b == b+a~ 。
+
+注意
+
+一个正确的概念应该能够规定有意义的语义特性，而不是语法限制。
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+// The operators +, -, *, and / for a number are assumed to follow the usual mathematical rules
+concept Number = requires(T a, T b) { a+b; a-b; a*b; a/b; };
+
+template<Number N>
+auto algo(const N& a, const N& b)
+{
+    // ...
+    return a + b;
+}
+
+int x = 7;
+int y = 9;
+auto z = algo(x, y);   // z = 16
+
+string xx = "7";
+string yy = "9";
+auto zz = algo(xx, yy);   // error: string is not a Number
+#+end_src
+
+注意
+
+在概念中，规定多个操作可以减少某个单独操作造成的类型多重匹配的情况。
+
+
+强化
+
+- 标记在其他概念之外定义某个单独运算符操作的概念
+- 标记使用 ~enable_if~ 模拟单独运算符操作的概念

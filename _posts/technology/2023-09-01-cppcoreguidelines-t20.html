@@ -1,0 +1,106 @@
+---
+layout: post
+title: CppCoreGuidelines T.20 避免添加无意义的 concept
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid “concepts” without meaningful semantics&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+concept 是用来表达某个语义的标记，比如某个数字，某些元素的范围，或者能完全排序。简单的约束，比如有一个 + 操作符，有一个 &gt; 操作符，等等，不一定能孤立地用来表达某个特定的意义。而应该是用来建立某个有意义的 concept。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad; insufficient</span>
+<span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Addable</span> = <span style="color: #7F0055; font-weight: bold;">requires</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> a+b; <span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Addable</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">N</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #0000ff; font-weight: bold;">algo</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">N</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">N</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">use two numbers</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> a + b;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = 7;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span> = 9;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">z</span> = algo<span style="color: #707183;">(</span>x, y<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">z = 16</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">xx</span> = <span style="color: #2A00FF;">"7"</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">yy</span> = <span style="color: #2A00FF;">"9"</span>;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">zz</span> = algo<span style="color: #707183;">(</span>xx, yy<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">zz = "79"</span>
+</pre>
+</div>
+
+<p>
+这里可能可以对参数进行拼接。很可能会出错。定义对应的减号操作会给出完全不一样的可接受的类型参数。这个 <code>Addable</code> 违反了数学规则中加法可交换法则：
+<code>a+b == b+a</code> 。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+一个正确的概念应该能够规定有意义的语义特性，而不是语法限制。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">The operators +, -, *, and / for a number are assumed to follow the usual mathematical rules</span>
+<span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Number</span> = <span style="color: #7F0055; font-weight: bold;">requires</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> a+b; a-b; <span style="color: #000000; font-style: italic; text-decoration: underline;">a</span>*<span style="color: #000000;">b</span>; a/b; <span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Number</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">N</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #0000ff; font-weight: bold;">algo</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">N</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">N</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> a + b;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = 7;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span> = 9;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">z</span> = algo<span style="color: #707183;">(</span>x, y<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">z = 16</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">xx</span> = <span style="color: #2A00FF;">"7"</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">yy</span> = <span style="color: #2A00FF;">"9"</span>;
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">zz</span> = algo<span style="color: #707183;">(</span>xx, yy<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: string is not a Number</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+在概念中，规定多个操作可以减少某个单独操作造成的类型多重匹配的情况。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记在其他概念之外定义某个单独运算符操作的概念</li>
+<li>标记使用 <code>enable_if</code> 模拟单独运算符操作的概念</li>
+</ul>
