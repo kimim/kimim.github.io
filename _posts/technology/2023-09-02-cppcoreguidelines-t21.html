@@ -1,0 +1,137 @@
+---
+layout: post
+title: CppCoreGuidelines T.21  在概念中规定一组操作操作符号
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Require a complete set of operations for a concept&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+更容易理解。提升互操作性。给实现人员和维护人员更多帮助信息。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+这条是通用规则“概念必须提供语义信息”的特定变体。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span> <span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Subtractable</span> = <span style="color: #7F0055; font-weight: bold;">requires</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> a-b; <span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+这样其实没有语义信息。你需要至少定义 <code>+</code> 和 <code>-</code> 操作。
+</p>
+
+<p>
+定义完全的例子：
+</p>
+<ul class="org-ul">
+<li>算术操作： <code>+</code> ， <code>-</code> ， <code>*</code> ， <code>/</code> ， <code>+=</code> ， <code>-=</code> ， <code>*=</code> ， <code>/=</code></li>
+<li>比较操作： <code>&lt;</code> ， <code>&lt;=</code> , <code>&gt;=</code> ， <code>==</code> ， <code>!=</code></li>
+</ul>
+
+
+<p>
+注意
+</p>
+
+<p>
+此规则在没有 concept 语言支持的情况下，也适用。此规则是一般化的设计规则，对非模板也适用。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Minimal</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Minimal</span>&amp;, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Minimal</span>&amp;<span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">&lt;</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Minimal</span>&amp;, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Minimal</span>&amp;<span style="color: #707183;">)</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Minimal</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">+</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Minimal</span>&amp;, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Minimal</span>&amp;<span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">no other operators</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Minimal</span>&amp; <span style="color: #000000;">x</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Minimal</span>&amp; <span style="color: #000000;">y</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!<span style="color: #909183;">(</span>x == y<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x != y<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">surprise! error</span>
+
+    <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span>!<span style="color: #909183;">(</span>x &lt; y<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span>x &gt;= y<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">surprise! error</span>
+
+    x = x + y;          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    x += y;             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">surprise! error</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这个例子限制了用户，用户会很吃惊。效率也很不好。
+</p>
+
+<p>
+这条规则的意思其实是说我们定义一个概念的时候，应该从数学角度映射一组一致的操作。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Convenient</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Convenient</span>&amp;, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Convenient</span>&amp;<span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">&lt;</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Convenient</span>&amp;, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Convenient</span>&amp;<span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... and the other comparison operators ...</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Convenient</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">+</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Convenient</span>&amp;, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Convenient</span>&amp;<span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... and the other arithmetic operators ...</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Convenient</span>&amp; <span style="color: #000000;">x</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Convenient</span>&amp; <span style="color: #000000;">y</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!<span style="color: #909183;">(</span>x == y<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x != y<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+
+    <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span>!<span style="color: #909183;">(</span>x &lt; y<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span>x &gt;= y<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+
+    x = x + y;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    x += y;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+要提供全部的操作符似乎是很繁琐，但是并不困难。理想的情况下，开发语言应当支持此规则，默认提供比较操作给你。
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记哪些提供一部分操作符子集的类，比如，提供了 <code>==</code> 但是没有 <code>!=</code> 或提供了 <code>+</code> 但是不提供 <code>-</code> 。是的， <code>std::string</code> 只提供了部分操作符，但是现在修改的话太晚了。</li>
+</ul>

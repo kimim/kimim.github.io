@@ -1,0 +1,105 @@
+#+layout: post
+#+title: CppCoreGuidelines T.21  在概念中规定一组操作操作符号
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Require a complete set of operations for a concept"
+
+理由
+
+更容易理解。提升互操作性。给实现人员和维护人员更多帮助信息。
+
+
+注意
+
+这条是通用规则“概念必须提供语义信息”的特定变体。
+
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T> concept Subtractable = requires(T a, T b) { a-b; };
+#+end_src
+
+这样其实没有语义信息。你需要至少定义 ~+~ 和 ~-~ 操作。
+
+定义完全的例子：
+- 算术操作： ~+~ ， ~-~ ， ~*~ ， ~/~ ， ~+=~ ， ~-=~ ， ~*=~ ， ~/=~
+- 比较操作： ~<~ ， ~<=~ , ~>=~ ， ~==~ ， ~!=~
+
+
+注意
+
+此规则在没有 concept 语言支持的情况下，也适用。此规则是一般化的设计规
+则，对非模板也适用。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class Minimal {
+    // ...
+};
+
+bool operator==(const Minimal&, const Minimal&);
+bool operator<(const Minimal&, const Minimal&);
+
+Minimal operator+(const Minimal&, const Minimal&);
+// no other operators
+
+void f(const Minimal& x, const Minimal& y)
+{
+    if (!(x == y)) { /* ... */ }    // OK
+    if (x != y) { /* ... */ }       // surprise! error
+
+    while (!(x < y)) { /* ... */ }  // OK
+    while (x >= y) { /* ... */ }    // surprise! error
+
+    x = x + y;          // OK
+    x += y;             // surprise! error
+}
+#+end_src
+
+这个例子限制了用户，用户会很吃惊。效率也很不好。
+
+这条规则的意思其实是说我们定义一个概念的时候，应该从数学角度映射一组一
+致的操作。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class Convenient {
+    // ...
+};
+
+bool operator==(const Convenient&, const Convenient&);
+bool operator<(const Convenient&, const Convenient&);
+// ... and the other comparison operators ...
+
+Convenient operator+(const Convenient&, const Convenient&);
+// ... and the other arithmetic operators ...
+
+void f(const Convenient& x, const Convenient& y)
+{
+    if (!(x == y)) { /* ... */ }    // OK
+    if (x != y) { /* ... */ }       // OK
+
+    while (!(x < y)) { /* ... */ }  // OK
+    while (x >= y) { /* ... */ }    // OK
+
+    x = x + y;     // OK
+    x += y;        // OK
+}
+#+end_src
+
+要提供全部的操作符似乎是很繁琐，但是并不困难。理想的情况下，开发语言应
+当支持此规则，默认提供比较操作给你。
+
+
+强化
+- 标记哪些提供一部分操作符子集的类，比如，提供了 ~==~ 但是没有 ~!=~ 或提供
+  了 ~+~ 但是不提供 ~-~ 。是的， ~std::string~ 只提供了部分操作符，但是现在
+  修改的话太晚了。
