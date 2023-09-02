@@ -1,0 +1,99 @@
+---
+layout: post
+title: CppCoreGuidelines T.22 为概念规定自明之公理
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Specify axioms for concept&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+一个有意义的概念定义了语义信息。通过非正式的、半形式化的、或形式化的方式定义概念，可以让用户更好理解。并且这种表达方式可以捕捉概念上的错误。语义定义是很强大的设计工具。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">The operators +, -, *, and / for a number are assumed to follow</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the usual mathematical rules</span>
+
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">axiom(T a, T b) { a + b == b + a; a - a == 0; a * (b + c) == a * b + a * c; /*...*/ }</span>
+    <span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Number</span> = <span style="color: #7F0055; font-weight: bold;">requires</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+        <span style="color: #7388d6;">{</span>a + b<span style="color: #7388d6;">}</span> -&gt; <span style="color: #000000; font-style: italic; text-decoration: underline;">convertible_to</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>;
+        <span style="color: #7388d6;">{</span>a - b<span style="color: #7388d6;">}</span> -&gt; <span style="color: #000000; font-style: italic; text-decoration: underline;">convertible_to</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>;
+        <span style="color: #7388d6;">{</span>a * b<span style="color: #7388d6;">}</span> -&gt; <span style="color: #000000; font-style: italic; text-decoration: underline;">convertible_to</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>;
+        <span style="color: #7388d6;">{</span>a / b<span style="color: #7388d6;">}</span> -&gt; <span style="color: #000000; font-style: italic; text-decoration: underline;">convertible_to</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>;
+    <span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+这个类似数学上的公理：某种不证自明的东西。一般来说，公理都是不可证明的。对公理的证明，往往超出了编译器的能力范围。一个公理可能并不是通用的，但是模板开发者可以假定所有的输入都是符合要求的（类似于前置条件
+precondition）。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+在这里，我们说的公理是指真假布尔表达式。目前， C++ 不支持公理。所以，在很长一段时间内，你需要用到注释。一旦语言支持完成，公理前面的 <code>//</code> 就可以移除了。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+GAL  的中的概念，具有很好的语义定义。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+早期版本的 “concept” 还处在开发中，只是定义了一些简单的限制条件。可能需要化不少精力和时间找到好的语义定义。不完全的限制条件也还是有点用的：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">balancer for a generic binary tree</span>
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Node</span><span style="color: #707183;">&gt;</span> <span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Balancer</span> = <span style="color: #7F0055; font-weight: bold;">requires</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Node</span>* <span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    add_fixup<span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">)</span>;
+    touch<span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">)</span>;
+    detach<span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+所以，这里 <code>Balancer</code> 至少要提供针对树的 <code>Node</code> 的一些操作。但是，我们还无法规定详细的语义细节。因为这里的平衡树可能要求其他的一些操作，我们无法在设计初期规定出来。
+</p>
+
+<p>
+一个“concept”不完备，或者没有规定好详细语义，也还是有些用的。比如说，可以在实验初期提供一些检查。不过，这个时候不能假定这些规定已经稳定了。每一次新的使用，可能会要求一些新的改进。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>检查概念定义的注释中的 axiom 关键字</li>
+</ul>

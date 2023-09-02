@@ -1,0 +1,76 @@
+#+layout: post
+#+title: CppCoreGuidelines T.22 为概念规定自明之公理
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Specify axioms for concept"
+
+理由
+
+一个有意义的概念定义了语义信息。通过非正式的、半形式化的、或形式化的方
+式定义概念，可以让用户更好理解。并且这种表达方式可以捕捉概念上的错误。
+语义定义是很强大的设计工具。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+    // The operators +, -, *, and / for a number are assumed to follow
+    // the usual mathematical rules
+
+    // axiom(T a, T b) { a + b == b + a; a - a == 0; a * (b + c) == a * b + a * c; /*...*/ }
+    concept Number = requires(T a, T b) {
+        {a + b} -> convertible_to<T>;
+        {a - b} -> convertible_to<T>;
+        {a * b} -> convertible_to<T>;
+        {a / b} -> convertible_to<T>;
+    };
+#+end_src
+
+注意
+
+这个类似数学上的公理：某种不证自明的东西。一般来说，公理都是不可证明的。
+对公理的证明，往往超出了编译器的能力范围。一个公理可能并不是通用的，但
+是模板开发者可以假定所有的输入都是符合要求的（类似于前置条件
+precondition）。
+
+
+注意
+
+在这里，我们说的公理是指真假布尔表达式。目前， C++ 不支持公理。所以，
+在很长一段时间内，你需要用到注释。一旦语言支持完成，公理前面的 ~//~ 就可
+以移除了。
+
+
+注意
+
+GAL  的中的概念，具有很好的语义定义。
+
+
+例外
+
+早期版本的 “concept” 还处在开发中，只是定义了一些简单的限制条件。可能需要化不少精力和时间找到好的语义定义。不完全的限制条件也还是有点用的：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// balancer for a generic binary tree
+template<typename Node> concept Balancer = requires(Node* p) {
+    add_fixup(p);
+    touch(p);
+    detach(p);
+};
+#+end_src
+
+所以，这里 ~Balancer~ 至少要提供针对树的 ~Node~ 的一些操作。但是，我们还无
+法规定详细的语义细节。因为这里的平衡树可能要求其他的一些操作，我们无法
+在设计初期规定出来。
+
+一个“concept”不完备，或者没有规定好详细语义，也还是有些用的。比如说，
+可以在实验初期提供一些检查。不过，这个时候不能假定这些规定已经稳定了。
+每一次新的使用，可能会要求一些新的改进。
+
+
+强化
+
+- 检查概念定义的注释中的 axiom 关键字
