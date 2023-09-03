@@ -9,7 +9,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-&ldquo;Prefer concept names over auto for local variables&rdquo;
+&ldquo;Prefer concept names over <code>auto</code> for local variables&rdquo;
 </p>
 
 <p>
@@ -17,7 +17,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-<code>auto</code> 是最若的 <code>concept</code> 。 <code>concept</code> 比 <code>auto</code> 传递的信息更多。
+<code>auto</code> 是最弱的 <code>concept</code> 。 <code>concept</code> 比 <code>auto</code> 传递的信息更多。
 </p>
 
 <p>
@@ -32,5 +32,5 @@ tags: [CppCoreGuidelines]
 </div>
 
 <p>
-这里 <code>String</code> 是 GSL 中定义的 <code>concept</code> 。当 <code>String</code> 和 <code>auto</code> 一起用的时候，这个 <code>String</code> 就被当作 <code>concept</code> 使用了。
+这里 <code>String</code> 是 GSL 中定义的 <code>concept</code> 。当 <code>String</code> 和 <code>auto</code> 一起用的时候，这个 <code>String</code> 就被当作 <code>concept</code> 使用了。这里，其实 <code>String</code> 这个 <code>concept</code> 是用来约束 <code>auto</code> 的，不然， <code>auto</code> 就太自由了。
 </p>
