@@ -1,0 +1,51 @@
+---
+layout: post
+title: CppCoreGuidelines T.23 通过添加新的使用模式扩展通用的概念
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Differentiate a refined concept from its more general case by adding
+new use patterns.&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+不然的话，编译器无法自动区分。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">I</span><span style="color: #707183;">&gt;</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Note: input_iterator is defined in &lt;iterator&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Input_iter</span> = <span style="color: #7F0055; font-weight: bold;">requires</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">I</span> <span style="color: #000000;">iter</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> ++iter; <span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">I</span><span style="color: #707183;">&gt;</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Note: forward_iterator is defined in &lt;iterator&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Fwd_iter</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">Input_iter</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">I</span><span style="color: #707183;">&gt;</span> &amp;&amp; <span style="color: #7F0055; font-weight: bold;">requires</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">I</span> <span style="color: #000000;">iter</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> iter++; <span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+编译器编译器可以根据新的操作符要求确定概念的细化定义。这样可以减少实现这些类型的人的额外工作，去声明新的类型。如果两个概念的要求是一样的，那么他们在逻辑上是等价的（并非细化）。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记两个完全相同规定的概念。从而消除歧义。</li>
+</ul>
