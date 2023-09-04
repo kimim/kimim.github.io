@@ -1,0 +1,72 @@
+---
+layout: post
+title: CppCoreGuidelines T.24 通过 tag 标签类或 traits 区分语义不同的概念
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use tag classes or traits to differentiate concepts that differ only in semantics.&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+如果两个割爱年语法一样，但是语义不同，会导致混淆不清。除非程序员把他们区分开来。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">I</span><span style="color: #707183;">&gt;</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">iterator providing random access</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Note: random_access_iterator is defined in &lt;iterator&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">RA_iter</span> = ...;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">I</span><span style="color: #707183;">&gt;</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">iterator providing random access to contiguous data</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Note: contiguous_iterator is defined in &lt;iterator&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Contiguous_iter</span> =
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">RA_iter</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">I</span><span style="color: #707183;">&gt;</span> &amp;&amp; <span style="color: #000000; font-style: italic; text-decoration: underline;">is_contiguous_v</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">I</span><span style="color: #707183;">&gt;</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">using is_contiguous trait</span>
+</pre>
+</div>
+
+<p>
+程序库的开发程序员必须定义 <code>is_contiguous_v</code>
+</p>
+
+<p>
+把标签类封装进概念，可以简化表达式：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">I</span><span style="color: #707183;">&gt;</span> <span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Contiguous</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">is_contiguous_v</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">I</span><span style="color: #707183;">&gt;</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">I</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Contiguous_iter</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">RA_iter</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">I</span><span style="color: #707183;">&gt;</span> &amp;&amp; <span style="color: #000000; font-style: italic; text-decoration: underline;">Contiguous</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">I</span><span style="color: #707183;">&gt;</span>;
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+Traits 可以是类或类型 <code>traits</code> 。可以是用户定义的，也可以是标准库里的。尽量使用标准库里的。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>编译器会标记混淆使用的等价的概念</li>
+<li>标记等价定义的概念</li>
+</ul>

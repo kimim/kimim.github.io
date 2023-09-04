@@ -1,0 +1,51 @@
+#+layout: post
+#+title: CppCoreGuidelines T.24 通过 tag 标签类或 traits 区分语义不同的概念
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use tag classes or traits to differentiate concepts that differ only in semantics."
+
+理由
+
+如果两个割爱年语法一样，但是语义不同，会导致混淆不清。除非程序员把他们
+区分开来。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename I>    // iterator providing random access
+// Note: random_access_iterator is defined in <iterator>
+concept RA_iter = ...;
+
+template<typename I>    // iterator providing random access to contiguous data
+// Note: contiguous_iterator is defined in <iterator>
+concept Contiguous_iter =
+    RA_iter<I> && is_contiguous_v<I>;  // using is_contiguous trait
+#+end_src
+
+程序库的开发程序员必须定义 ~is_contiguous_v~
+
+把标签类封装进概念，可以简化表达式：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename I> concept Contiguous = is_contiguous_v<I>;
+
+template<typename I>
+concept Contiguous_iter = RA_iter<I> && Contiguous<I>;
+#+end_src
+
+注意
+
+Traits 可以是类或类型 ~traits~ 。可以是用户定义的，也可以是标准库里的。
+尽量使用标准库里的。
+
+
+强化
+
+- 编译器会标记混淆使用的等价的概念
+- 标记等价定义的概念

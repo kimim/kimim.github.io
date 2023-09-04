@@ -10,19 +10,19 @@ tags: [CppCoreGuidelines]
 Github 上有个 [[https://github.com/isocpp/CppCoreGuidelines][C++ 核心指南]]。C++ 创始人 [[https://github.com/isocpp/CppCoreGuidelines/commits?author=BjarneStroustrup][Bjarne Stroustrup]] 亲自参与维护。
 值得好好学习。
 
-这个指南根据不同主题，分为多个章节，比如 P 代表编程哲学，I 代表接口设计，
-F 表示函数，C 表示类与类层级，R 表示资源管理，Per 表示性能，CP 表示并发与并
-行计算，Con 表示常量与不变性等。
+这个指南根据不同主题，分为多个章节，比如 P 代表编程哲学，I 代表接口设
+计，F 表示函数，C 表示类与类层级，R 表示资源管理，Per 表示性能，CP 表
+示并发与并行计算，Con 表示常量与不变性等。
 
 在每个章节下，又用阿拉伯数字对规则进行进行标注。比如 [[https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#p1-express-ideas-directly-in-code][P.1 Express ideas
 directly in code]] 这个章节讲的是如何直接地用代码表达编程设计理念。
 
 每一个规则的阐述包含：
-- Reasons 原理
+- Reasons 理由
 - Examples 示例
 - Alternatives 替代方案
-- Exceptions 例外
-- Enforcement 改进方案
+- Exceptions 例外情况
+- Enforcement 工具强化
 - See also 指南中的其他相关规则
 - Notes 备注说明
 - Discussion 扩展讨论
