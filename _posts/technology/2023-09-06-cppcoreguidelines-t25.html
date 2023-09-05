@@ -1,0 +1,119 @@
+---
+layout: post
+title: CppCoreGuidelines T.25 避免互补的约束
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid complementary constraints&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+清晰。可读性好。通过互补约束表达的相反的要求很容易弄错。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+一开始，人们尝试通过互补要求来定义函数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">requires</span> !<span style="color: #000000; font-style: italic; text-decoration: underline;">C</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> f<span style="color: #707183;">()</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">requires</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">C</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>;
+</pre>
+</div>
+
+<p>
+其实这样写会更好：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">general template</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">specialization by concept</span>
+    <span style="color: #7F0055; font-weight: bold;">requires</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">C</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>;
+</pre>
+</div>
+
+<p>
+如果限制条件 <code>C&lt;T&gt;</code> 不满足要求，编译器会选择没有限制的那个模板。如果你不像或无法定义不受限制的版本的 <code>f()</code> ，你可以删除它。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>;
+</pre>
+</div>
+
+<p>
+编译器会选择重载的版本，或者抛出一个恰当的错误。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+互补限制条件在用到 <code>enable_if</code> 的代码里很常见。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">enable_if</span><span style="color: #707183;">&lt;</span>!<span style="color: #000000; font-style: italic; text-decoration: underline;">C</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span><span style="color: #707183;">&gt;</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
+<span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">enable_if</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">C</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span><span style="color: #707183;">&gt;</span>
+<span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>;
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+针对某个单一的要求，大家似乎认为互补要求是可以管理好的。其实，对于 2
+个以上的需求，需要的定义数量指数级增长。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">C1</span><span style="color: #707183;">&lt;</span>T<span style="color: #707183;">&gt;</span> &amp;&amp; <span style="color: #000000; font-style: italic; text-decoration: underline;">C2</span><span style="color: #707183;">&lt;</span><span style="color: #000000;">T</span><span style="color: #707183;">&gt;</span>
+!<span style="color: #000000; font-style: italic; text-decoration: underline;">C1</span><span style="color: #707183;">&lt;</span>T<span style="color: #707183;">&gt;</span> &amp;&amp; <span style="color: #000000; font-style: italic; text-decoration: underline;">C2</span><span style="color: #707183;">&lt;</span>T<span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">C1</span><span style="color: #707183;">&lt;</span>T<span style="color: #707183;">&gt;</span> &amp;&amp; !<span style="color: #000000; font-style: italic; text-decoration: underline;">C2</span><span style="color: #707183;">&lt;</span>T<span style="color: #707183;">&gt;</span>
+!<span style="color: #000000; font-style: italic; text-decoration: underline;">C1</span><span style="color: #707183;">&lt;</span>T<span style="color: #707183;">&gt;</span> &amp;&amp; !<span style="color: #000000; font-style: italic; text-decoration: underline;">C2</span><span style="color: #707183;">&lt;</span>T<span style="color: #707183;">&gt;</span>
+</pre>
+</div>
+
+<p>
+这样，出错的概率也不断增长。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记函数中出现互补对的限制条件的情况 <code>C&lt;T&gt;</code> 与 <code>C&lt;T&gt;</code></li>
+</ul>
