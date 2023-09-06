@@ -1,0 +1,55 @@
+---
+layout: post
+title: CppCoreGuidelines T26 最好用使用形式来定义概念，而不要用简单的语法
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer to define concepts in terms of use-patterns rather than simple
+syntax&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+这样的定义更容易读，也更直接的告诉用户怎么些代码。值转换也考虑进来了。你也不需要记住所有类型 <code>traits</code> 的名字。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+你可能要定义一个 <code>Equality</code> 概念，像这样：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span> <span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Equality</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">has_equal</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span> &amp;&amp; <span style="color: #000000; font-style: italic; text-decoration: underline;">has_not_equal</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>;
+</pre>
+</div>
+
+<p>
+很明显，如果你用标准库的 <code>equality_comparable</code> 会更好更容易。但是，这里，我们仅仅作为例子来分析。其实，还是像以下这样的方式定义会更好：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span> <span style="color: #7F0055; font-weight: bold;">concept</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Equality</span> = <span style="color: #7F0055; font-weight: bold;">requires</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #7388d6;">{</span> a == b <span style="color: #7388d6;">}</span> -&gt; <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">convertible_to</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span><span style="color: #7388d6;">&gt;</span>;
+    <span style="color: #7388d6;">{</span> a != b <span style="color: #7388d6;">}</span> -&gt; <span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">convertible_to</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span><span style="color: #7388d6;">&gt;</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">axiom { !(a == b) == (a != b) }</span>
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">axiom { a = b; =&gt; a == b }  // =&gt; means "implies"</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+相对的，我们不需要使用两个无意义的概念 <code>has_equal</code> 和 <code>has_not_equal</code> 来定义 <code>Equality</code> 。这里，我们说“无意义”指的是，我们无法孤立的规定 <code>has_equal</code>
+的语义。
+</p>

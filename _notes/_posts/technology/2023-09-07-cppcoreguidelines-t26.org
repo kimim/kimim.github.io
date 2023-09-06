@@ -1,0 +1,41 @@
+#+layout: post
+#+title: CppCoreGuidelines T26 最好用使用形式来定义概念，而不要用简单的语法
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer to define concepts in terms of use-patterns rather than simple
+syntax"
+
+理由
+
+这样的定义更容易读，也更直接的告诉用户怎么些代码。值转换也考虑进来了。
+你也不需要记住所有类型 ~traits~ 的名字。
+
+
+例子
+
+你可能要定义一个 ~Equality~ 概念，像这样：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T> concept Equality = has_equal<T> && has_not_equal<T>;
+#+end_src
+
+很明显，如果你用标准库的 ~equality_comparable~ 会更好更容易。但是，这里，
+我们仅仅作为例子来分析。其实，还是像以下这样的方式定义会更好：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T> concept Equality = requires(T a, T b) {
+    { a == b } -> std::convertible_to<bool>;
+    { a != b } -> std::convertible_to<bool>;
+    // axiom { !(a == b) == (a != b) }
+    // axiom { a = b; => a == b }  // => means "implies"
+};
+#+end_src
+
+相对的，我们不需要使用两个无意义的概念 ~has_equal~ 和 ~has_not_equal~ 来定
+义 ~Equality~ 。这里，我们说“无意义”指的是，我们无法孤立的规定 ~has_equal~
+的语义。
