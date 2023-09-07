@@ -1,0 +1,57 @@
+#+layout: post
+#+title: CppCoreGuidelines T.40 通过函数对象传递操作符给算法
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use function objects to pass operations to algorithms"
+
+理由
+
+相比普通指向函数的指针，函数对象能通过接口传递更更多信息。一般来说，传
+递函数对象比传递函数指针性能更好。
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+bool greater(double x, double y) { return x > y; }
+// pointer to function: potentially slow
+sort(v, greater);
+// function object
+sort(v, [](double x, double y) { return x > y; });
+// function object
+sort(v, std::greater{});
+
+bool greater_than_7(double x) { return x > 7; }
+// pointer to function: inflexible
+auto x = find_if(v, greater_than_7);
+// function object: carries the needed data
+auto y = find_if(v, [](double x) { return x > 7; });
+// function object: carries the needed data
+auto z = find_if(v, Greater_than<double>(7));
+#+end_src
+
+你当然也可以通过 ~auto~  和概念把这些函数泛化。比如：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// require an ordered type
+auto y1 = find_if(v, [](totally_ordered auto x) { return x > 7; });
+// hope that the type has a >
+auto z1 = find_if(v, [](auto x) { return x > 7; });
+#+end_src
+
+注意
+
+Lambda 会产生函数对象。
+
+注意
+
+性能最终由编译器和优化器确定。
+
+强化
+
+- 标记模板参数中用到函数指针的情况
+- 标记给模板传递函数指针的情况（可能会有不少误报）

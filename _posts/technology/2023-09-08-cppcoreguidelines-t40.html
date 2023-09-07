@@ -1,0 +1,81 @@
+---
+layout: post
+title: CppCoreGuidelines T.40 通过函数对象传递操作符给算法
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use function objects to pass operations to algorithms&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+相比普通指向函数的指针，函数对象能通过接口传递更更多信息。一般来说，传递函数对象比传递函数指针性能更好。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #0000ff; font-weight: bold;">greater</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">y</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x &gt; y; <span style="color: #707183;">}</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">pointer to function: potentially slow</span>
+sort<span style="color: #707183;">(</span>v, greater<span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">function object</span>
+sort<span style="color: #707183;">(</span>v, <span style="color: #7388d6;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">y</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x &gt; y; <span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">function object</span>
+sort<span style="color: #707183;">(</span>v, <span style="color: #110099;">std</span>::greater<span style="color: #7388d6;">{}</span><span style="color: #707183;">)</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #0000ff; font-weight: bold;">greater_than_7</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x &gt; 7; <span style="color: #707183;">}</span>
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">pointer to function: inflexible</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x</span> = find_if<span style="color: #707183;">(</span>v, greater_than_7<span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">function object: carries the needed data</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">y</span> = find_if<span style="color: #707183;">(</span>v, <span style="color: #7388d6;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x &gt; 7; <span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">function object: carries the needed data</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">z</span> = find_if<span style="color: #707183;">(</span>v, Greater_than<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #7388d6;">&gt;(</span>7<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+你当然也可以通过 <code>auto</code>  和概念把这些函数泛化。比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">require an ordered type</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">y1</span> = find_if<span style="color: #707183;">(</span>v, <span style="color: #7388d6;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">totally_ordered</span> <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x &gt; 7; <span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">hope that the type has a &gt;</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">z1</span> = find_if<span style="color: #707183;">(</span>v, <span style="color: #7388d6;">[](</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x &gt; 7; <span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+Lambda 会产生函数对象。
+</p>
+
+<p>
+注意
+</p>
+
+<p>
+性能最终由编译器和优化器确定。
+</p>
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记模板参数中用到函数指针的情况</li>
+<li>标记给模板传递函数指针的情况（可能会有不少误报）</li>
+</ul>
