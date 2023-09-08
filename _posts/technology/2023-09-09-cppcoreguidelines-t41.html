@@ -1,0 +1,91 @@
+---
+layout: post
+title: CppCoreGuidelines T.41 只在模板概念中要求最基本的属性
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Require only essential properties in a template’s concepts&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+确保接口简单稳定。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+考虑一个 <code>sort</code> 函数，内置了一些调试支持：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sort</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">sortable</span> <span style="color: #7F0055; font-weight: bold;">auto</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">sort sequence s</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>debug<span style="color: #7388d6;">)</span> cerr &lt;&lt; <span style="color: #2A00FF;">"enter sort( "</span> &lt;&lt; s &lt;&lt;  <span style="color: #2A00FF;">")\n"</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>debug<span style="color: #7388d6;">)</span> cerr &lt;&lt; <span style="color: #2A00FF;">"exit sort( "</span> &lt;&lt; s &lt;&lt;  <span style="color: #2A00FF;">")\n"</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+是不是应该重写改写成这样：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">sortable</span> <span style="color: #000000;">S</span><span style="color: #707183;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">requires</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Streamable</span><span style="color: #707183;">&lt;</span>S<span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sort</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">S</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">sort sequence s</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>debug<span style="color: #7388d6;">)</span> cerr &lt;&lt; <span style="color: #2A00FF;">"enter sort( "</span> &lt;&lt; s &lt;&lt;  <span style="color: #2A00FF;">")\n"</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>debug<span style="color: #7388d6;">)</span> cerr &lt;&lt; <span style="color: #2A00FF;">"exit sort( "</span> &lt;&lt; s &lt;&lt;  <span style="color: #2A00FF;">")\n"</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+毕竟，对于 <code>sortable</code> 来说，它不需要 <code>iostream</code> 的支持。但是从另一角度来看，排序的基本思想中并不包含任何调试内容。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果我们把每个操作都列在模板的要求清单中，接口会变的不稳定：每次我们修改调试机制、数据收集、测试支持、错误报告等，模板的定义可能也要对应的修改，而且还要重新编译。这就太麻烦了。有些时候还挺不现实的。相反的，如果我们在实现中用了一个不在概念中规定的操作，我们可能在后期编译时遇到编译错误。
+</p>
+
+<p>
+把不太重要的模板参数属性检查放到实例化时进行检测，是一种比较值得的妥协。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+在模板定义中，用了一些非局部的、非独立的变量（比如 <code>debug</code> ， <code>cerr</code> ），会引入一些对外部的依赖，可能会导致“神秘”的错误。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+很难确定模板参数类型的哪些属性是必要的，哪些是不重要的。
+</p>

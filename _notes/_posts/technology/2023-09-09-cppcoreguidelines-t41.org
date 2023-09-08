@@ -1,0 +1,66 @@
+#+layout: post
+#+title: CppCoreGuidelines T.41 只在模板概念中要求最基本的属性
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Require only essential properties in a template’s concepts"
+
+理由
+
+确保接口简单稳定。
+
+
+例子
+
+考虑一个 ~sort~ 函数，内置了一些调试支持：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void sort(sortable auto& s)  // sort sequence s
+{
+    if (debug) cerr << "enter sort( " << s <<  ")\n";
+    // ...
+    if (debug) cerr << "exit sort( " << s <<  ")\n";
+}
+#+end_src
+
+是不是应该重写改写成这样：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<sortable S>
+    requires Streamable<S>
+void sort(S& s)  // sort sequence s
+{
+    if (debug) cerr << "enter sort( " << s <<  ")\n";
+    // ...
+    if (debug) cerr << "exit sort( " << s <<  ")\n";
+}
+#+end_src
+
+毕竟，对于 ~sortable~ 来说，它不需要 ~iostream~ 的支持。但是从另一角度来看，
+排序的基本思想中并不包含任何调试内容。
+
+
+注意
+
+如果我们把每个操作都列在模板的要求清单中，接口会变的不稳定：每次我们修
+改调试机制、数据收集、测试支持、错误报告等，模板的定义可能也要对应的修
+改，而且还要重新编译。这就太麻烦了。有些时候还挺不现实的。相反的，如果
+我们在实现中用了一个不在概念中规定的操作，我们可能在后期编译时遇到编译
+错误。
+
+把不太重要的模板参数属性检查放到实例化时进行检测，是一种比较值得的妥协。
+
+
+注意
+
+在模板定义中，用了一些非局部的、非独立的变量（比如 ~debug~ ， ~cerr~ ），
+会引入一些对外部的依赖，可能会导致“神秘”的错误。
+
+
+注意
+
+很难确定模板参数类型的哪些属性是必要的，哪些是不重要的。
