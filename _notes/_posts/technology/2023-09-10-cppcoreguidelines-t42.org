@@ -1,0 +1,70 @@
+#+layout: post
+#+title: CppCoreGuidelines T.42 用模板别名简化代码，隐藏实现细节
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use template aliases to simplify notation and hide implementation
+details"
+
+理由
+
+提升可读性。隐藏实现细节。模板别名可以替代很多 ~traits~ 和类型计算的应用。
+也可以用来封装一个 ~traits~
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T, size_t N>
+class Matrix {
+    // ...
+    using Iterator = typename std::vector<T>::iterator;
+    // ...
+};
+#+end_src
+
+这样写， ~Matrix~ 的用户不用关心元素是不是存在一个 ~vector~ 中。用户也可以
+避免重复输入 ~typename std::vector<T>::~
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+void user(T& c)
+{
+    // ...
+    typename container_traits<T>::value_type x; // bad, verbose
+    // ...
+}
+
+template<typename T>
+using Value_type = typename container_traits<T>::value_type;
+#+end_src
+
+这样写，用户就不需要知道实现 ~value_type~ 的技术细节。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+void user2(T& c)
+{
+    // ...
+    Value_type<T> x;
+    // ...
+}
+#+end_src
+
+
+注意
+
+一个简单的，常用的情况，可以通过 ~traits~ 封装实现。
+
+
+强化
+
+- 标记在 ~using~ 之外使用 ~typename~ 来进行说明的情况。
