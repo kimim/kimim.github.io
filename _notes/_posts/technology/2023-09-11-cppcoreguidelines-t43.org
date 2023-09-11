@@ -1,0 +1,38 @@
+#+layout: post
+#+title: CppCoreGuidelines T.43 用 using 来定义别名，避免用 typedef
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer using over typedef for defining aliases"
+
+理由
+
+可读性：用 ~using~ 的话，新的别名出现在最前面，而不是嵌入到声明的某个地
+方。
+
+通用性： ~using~ 可以用于模板别名，而 ~typedef~ 很难称为模板。
+
+统一性： ~using~ 和 ~auto~ 的语法差不多。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+typedef int (*PFI)(int);   // OK, but convoluted
+
+using PFI2 = int (*)(int);   // OK, preferred
+
+template<typename T>
+typedef int (*PFT)(T);      // error
+
+template<typename T>
+using PFT2 = int (*)(T);   // OK
+#+end_src
+
+
+强化
+
+- 标记出现 ~typedef~ 的地方。或许能给出不少“提示”。

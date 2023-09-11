@@ -1,0 +1,56 @@
+---
+layout: post
+title: CppCoreGuidelines T.43 用 using 来定义别名，避免用 typedef
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer using over typedef for defining aliases&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性：用 <code>using</code> 的话，新的别名出现在最前面，而不是嵌入到声明的某个地方。
+</p>
+
+<p>
+通用性： <code>using</code> 可以用于模板别名，而 <code>typedef</code> 很难称为模板。
+</p>
+
+<p>
+统一性： <code>using</code> 和 <code>auto</code> 的语法差不多。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">typedef</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #707183;">(</span>*<span style="color: #000000; font-style: italic; text-decoration: underline;">PFI</span><span style="color: #707183;">)(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, but convoluted</span>
+
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">PFI2</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #707183;">(</span>*<span style="color: #707183;">)(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, preferred</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">typedef</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #707183;">(</span>*<span style="color: #000000; font-style: italic; text-decoration: underline;">PFT</span><span style="color: #707183;">)(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">)</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">PFT2</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #707183;">(</span>*<span style="color: #707183;">)(</span>T<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记出现 <code>typedef</code> 的地方。或许能给出不少“提示”。</li>
+</ul>
