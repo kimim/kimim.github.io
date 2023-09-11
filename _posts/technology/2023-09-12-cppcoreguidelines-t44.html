@@ -1,0 +1,84 @@
+---
+layout: post
+title: CppCoreGuidelines T.44 用函数模板推演出模板参数类型（尽可能的）
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use function templates to deduce class template argument types (where
+feasible)&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+明确地写明模板参数类型会很繁琐，也没必要。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">tuple</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">t1</span> = <span style="color: #707183;">{</span>1, <span style="color: #2A00FF;">"Hamlet"</span>, 3.14<span style="color: #707183;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">explicit type</span>
+<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">t2</span> = make_tuple<span style="color: #707183;">(</span>1, <span style="color: #2A00FF;">"Ophelia"</span>s, 3.14<span style="color: #707183;">)</span>;         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better; deduced type</span>
+</pre>
+</div>
+
+<p>
+注意这里用到的 <code>s</code> 后缀。它强调这个字符串是 <code>std::string</code> 而非 C 风格字符串。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+你可以很轻易写出一个 <code>make_T</code> 函数，编译器也能办到。所以，未来 <code>make_T</code> 函数可能是多余的。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+有时候，没有好办法可以推演出模板参数类型，所以，可能需要你指明参数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v</span> = <span style="color: #707183;">{</span> 1, 2, 3, 7.9, 15.99 <span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">list</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span>*<span style="color: #707183;">&gt;</span> <span style="color: #000000;">lst</span>;
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+C++17 允许模板参数直接从构造函数的参数中引出，所以这个规则可能变的多余。比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">tuple</span> <span style="color: #000000;">t1</span> = <span style="color: #707183;">{</span>1, <span style="color: #2A00FF;">"Hamlet"</span>s, 3.14<span style="color: #707183;">}</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">deduced: tuple&lt;int, string, double&gt;</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标注明确指定的实例化类型的参数和模板参数一样的情况。</li>
+</ul>

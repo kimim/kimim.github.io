@@ -1,0 +1,58 @@
+#+layout: post
+#+title: CppCoreGuidelines T.44 用函数模板推演出模板参数类型（尽可能的）
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use function templates to deduce class template argument types (where
+feasible)"
+
+理由
+
+明确地写明模板参数类型会很繁琐，也没必要。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+tuple<int, string, double> t1 = {1, "Hamlet", 3.14};   // explicit type
+auto t2 = make_tuple(1, "Ophelia"s, 3.14);         // better; deduced type
+#+end_src
+
+注意这里用到的 ~s~ 后缀。它强调这个字符串是 ~std::string~ 而非 C 风格字符
+串。
+
+
+注意
+
+你可以很轻易写出一个 ~make_T~ 函数，编译器也能办到。所以，未来 ~make_T~ 函
+数可能是多余的。
+
+
+例外
+
+有时候，没有好办法可以推演出模板参数类型，所以，可能需要你指明参数：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+vector<double> v = { 1, 2, 3, 7.9, 15.99 };
+list<Record*> lst;
+#+end_src
+
+
+注意
+
+C++17 允许模板参数直接从构造函数的参数中引出，所以这个规则可能变的多余。
+比如：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+tuple t1 = {1, "Hamlet"s, 3.14}; // deduced: tuple<int, string, double>
+#+end_src
+
+
+强化
+
+- 标注明确指定的实例化类型的参数和模板参数一样的情况。
