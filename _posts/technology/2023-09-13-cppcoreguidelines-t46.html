@@ -1,0 +1,62 @@
+---
+layout: post
+title: CppCoreGuidelines T.46 要求模板参数至少是半正则的
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Require template arguments to be at least semiregular&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性。避免出现惊讶和错误。很多应用场合支持这个规则。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">explicit</span> <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;<span style="color: #7388d6;">)</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;<span style="color: #7388d6;">)</span>;
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;&amp;<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">move</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;&amp;<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>;
+    ~<span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no more constructors ...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">x</span> <span style="color: #707183;">{</span>1<span style="color: #707183;">}</span>;              <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">fine</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">y</span> = x;              <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">fine</span>
+<span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #707183;">(</span>10<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: no default constructor</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+半正则需要默认可构造。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标注模板参数不是半正则的情况。</li>
+</ul>
