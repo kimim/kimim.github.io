@@ -1,0 +1,93 @@
+---
+layout: post
+title: CppCoreGuidelines T.47 高可见度的未限定的模板，避免用常见名字
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid highly visible unconstrained templates with common names&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+模板的未限定的参数可以匹配任何东西，所以会比特定类型的参数的模板更容易匹配到。在用了 ADL 的时候，会很讨厌、很危险。常见名字使得问题更糟糕。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bad</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">m</span>; <span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T1</span>, <span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T2</span><span style="color: #7388d6; font-weight: bold;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">bool</span> operator<span style="color: #7F0055; font-weight: bold;">==</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T2</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"Bad\n"</span>; <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">true</span>; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T0</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">bool</span> operator<span style="color: #7F0055; font-weight: bold;">==</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Bad</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">S</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"T0\n"</span>; <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">true</span>; <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// compare to int</span>
+
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">test</span><span style="color: #7388d6;">()</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">Bad</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">bad</span><span style="color: #909183;">{</span> <span style="color: #110099;">1</span> <span style="color: #909183;">}</span>;
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #909183; font-weight: bold;">&gt;</span> <span style="color: #000000;">v</span><span style="color: #909183;">(</span><span style="color: #110099;">10</span><span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">bool</span> <span style="color: #000000;">b</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">1</span> <span style="color: #7F0055; font-weight: bold;">==</span> bad;          <span style="color: #3F7F5F;">// T0</span>
+        <span style="color: #7F0055; font-weight: bold;">bool</span> <span style="color: #000000;">b2</span> <span style="color: #7F0055; font-weight: bold;">=</span> v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #909183;">()</span> <span style="color: #7F0055; font-weight: bold;">==</span> bad;  <span style="color: #3F7F5F;">// Bad</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T0</span>::<span style="color: #3a5fcd; font-weight: bold;">test</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+T0
+Bad
+</pre>
+
+
+<p>
+这里， <code>Bad</code> 中的 <code>==</code> 引起了问题。但是你能在真实代码中发现这个问题吗？问题是这样的， <code>v.size()</code> 返回一个无符号整型，所以如果要用 <code>T0</code> 中的 <code>==</code> 操作符，需要一次类型转换。而 <code>Bad</code> 中的 <code>==</code> 不需要类型转换。像标准库中的迭代器等真实类型就有这种反社会倾向。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果你在同一个名字空间中定义一个未限定的模板，ADL 会发现这个未定义的模板（正如例子中所发生的）。因为这个模板的可见度更高。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+本来不应该有这条规则，但是 C++ 标准委员会成员不同意把未定义的模板排除在 ADL 之外。
+</p>
+
+<p>
+很遗憾，这会导致很多误报。而且标准库也很大程度上违反此规则，把很多未限定的模板和类型放在单独的 <code>std</code> 名字空间。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记在同一个名字空间里有具体类型又有未限定模板的情况（可能直到我们有
+concepts 之后才可以做到）
+</p>
