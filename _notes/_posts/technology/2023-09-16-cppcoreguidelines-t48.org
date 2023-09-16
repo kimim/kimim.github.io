@@ -1,0 +1,39 @@
+#+layout: post
+#+title: CppCoreGuidelines T.48 如果你的编译器不支持 concept 那么就用 enable_if 来假装 concept
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If your compiler does not support concepts, fake them with ~enable_if~"
+
+理由
+
+在没有 concept 的情况下，这是目前最好的方式了。 ~enable_if~ 可以用来选择
+性的定义函数，选择函数集中的某个特定函数。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+enable_if_t<is_integral_v<T>>
+f(T v)
+{
+    // ...
+}
+
+// Equivalent to:
+template<Integral T>
+void f(T v)
+{
+    // ...
+}
+#+end_src
+
+
+注意
+
+小心互补限定条件。用 ~enable_if~ 假装 ~concept~ 有时候会强制我们使用容易出
+错的设计技术。

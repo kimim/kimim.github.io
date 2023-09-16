@@ -1,0 +1,52 @@
+---
+layout: post
+title: CppCoreGuidelines T.48 如果你的编译器不支持 concept 那么就用 enable_if 来假装 concept
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If your compiler does not support concepts, fake them with <code>enable_if</code>&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+在没有 concept 的情况下，这是目前最好的方式了。 <code>enable_if</code> 可以用来选择性的定义函数，选择函数集中的某个特定函数。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">enable_if_t</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">is_integral_v</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #3F7F5F;">// Equivalent to:</span>
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Integral</span> <span style="color: #000000;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+小心互补限定条件。用 <code>enable_if</code> 假装 <code>concept</code> 有时候会强制我们使用容易出错的设计技术。
+</p>
