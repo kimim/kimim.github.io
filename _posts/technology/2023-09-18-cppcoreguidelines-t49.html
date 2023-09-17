@@ -1,0 +1,30 @@
+---
+layout: post
+title: CppCoreGuidelines T.49 如果可以，避免类型抹除
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Where possible, avoid type-erasure&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+类型抹除会在多个编译边界隐藏类型信息，导致额外的不直接访问。
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+类型抹除有时候是可以用的，比如 <code>std::function</code>
+</p>
