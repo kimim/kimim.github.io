@@ -1,0 +1,88 @@
+#+layout: post
+#+title: CppCoreGuidelines T.61 不要过度把成员参数化
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Do not over-parameterize members (SCARY)"
+
+理由
+
+模板类成员要依赖使用模板参数，除非是一个特定参数。但是会限定模板的使用
+范围，而且会增加生成的代码量。
+
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T, typename A = std::allocator<T>>
+    // requires Regular<T> && Allocator<A>
+class List {
+public:
+    struct Link {   // does not depend on A
+        T elem;
+        Link* pre;
+        Link* suc;
+    };
+
+    using iterator = Link*;
+
+    iterator first() const { return head; }
+
+    // ...
+private:
+    Link* head;
+};
+
+List<int> lst1;
+List<int, My_allocator> lst2;
+#+end_src
+
+这段代码看起来人畜无害，但是现在 ~Link~ 依赖于 ~allocator~ （尽管它不使用
+~allocator~ ）。这就强化了多余的实例化，在某些实际场景中可能会带来显著的
+开销。一个很典型的解决方案是把这个嵌套类改为非局部的，让它自己拥有一组
+最小的模板参数。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+struct Link {
+    T elem;
+    Link* pre;
+    Link* suc;
+};
+
+template<typename T, typename A = std::allocator<T>>
+    // requires Regular<T> && Allocator<A>
+class List2 {
+public:
+    using iterator = Link<T>*;
+
+    iterator first() const { return head; }
+
+    // ...
+private:
+    Link<T>* head;
+};
+
+List2<int> lst1;
+List2<int, My_allocator> lst2;
+#+end_src
+
+有些人会觉得，这时候 ~Link~ 不在隐藏在 list 之内很恐怖。所以我们称这种技
+术为 [[https://www.open-std.org/jtc1/sc22/WG21/docs/papers/2009/n2911.pdf][SCARY]] 。学术论文中提到：SCARY 描述的复制和初始化过程似乎是错误的
+（看起来受冲突的泛型参数约束），但是实际上是可以通过正确的实现正常工作
+的（因为减少依赖，从而不受冲突限制）。
+
+
+注意
+
+这个规则也适用于不依赖于所有模板参数的 lambda
+
+
+强化
+- 标记不依赖于所有模板参数的成员变量类型
+- 标记不依赖于所有模板参数的成员函数类型
+- 标记不依赖于所有模板参数的 lambda 或变量模板

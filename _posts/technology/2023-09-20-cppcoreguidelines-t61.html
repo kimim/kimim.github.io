@@ -1,0 +1,105 @@
+---
+layout: post
+title: CppCoreGuidelines T.61 不要过度把成员参数化
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Do not over-parameterize members (SCARY)&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+模板类成员要依赖使用模板参数，除非是一个特定参数。但是会限定模板的使用范围，而且会增加生成的代码量。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>, <span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">A</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">allocator</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+    <span style="color: #3F7F5F;">// requires Regular&lt;T&gt; &amp;&amp; Allocator&lt;A&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">List</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span> <span style="color: #7388d6;">{</span>   <span style="color: #3F7F5F;">// does not depend on A</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000; font-style: italic;">elem</span>;
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">pre</span>;
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">suc</span>;
+    <span style="color: #7388d6;">}</span>;
+
+    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">iterator</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #7F0055; font-weight: bold;">*</span>;
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">iterator</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">first</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> head; <span style="color: #7388d6;">}</span>
+
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">head</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">List</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">lst1</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">List</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">My_allocator</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">lst2</span>;
+</pre>
+</div>
+
+<p>
+这段代码看起来人畜无害，但是现在 <code>Link</code> 依赖于 <code>allocator</code> （尽管它不使用
+<code>allocator</code> ）。这就强化了多余的实例化，在某些实际场景中可能会带来显著的开销。一个很典型的解决方案是把这个嵌套类改为非局部的，让它自己拥有一组最小的模板参数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000; font-style: italic;">elem</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">pre</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">suc</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>, <span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">A</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">allocator</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+    <span style="color: #3F7F5F;">// requires Regular&lt;T&gt; &amp;&amp; Allocator&lt;A&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">List2</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">iterator</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">*</span>;
+
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">iterator</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">first</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> head; <span style="color: #7388d6;">}</span>
+
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #7F0055; font-weight: bold;">private</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">head</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">List2</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">lst1</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">List2</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">My_allocator</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">lst2</span>;
+</pre>
+</div>
+
+<p>
+有些人会觉得，这时候 <code>Link</code> 不在隐藏在 list 之内很恐怖。所以我们称这种技术为 <a href="https://www.open-std.org/jtc1/sc22/WG21/docs/papers/2009/n2911.pdf">SCARY</a> 。学术论文中提到：SCARY 描述的复制和初始化过程似乎是错误的（看起来受冲突的泛型参数约束），但是实际上是可以通过正确的实现正常工作的（因为减少依赖，从而不受冲突限制）。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+这个规则也适用于不依赖于所有模板参数的 lambda
+</p>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记不依赖于所有模板参数的成员变量类型</li>
+<li>标记不依赖于所有模板参数的成员函数类型</li>
+<li>标记不依赖于所有模板参数的 lambda 或变量模板</li>
+</ul>
