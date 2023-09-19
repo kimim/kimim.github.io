@@ -1,0 +1,63 @@
+---
+layout: post
+title: CppCoreGuidelines T.60 减少模板上下文依赖关系
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Minimize a template’s context dependencies&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+更容易理解。减小不必要的依赖关系导致的错误。简化工具的支持。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">C</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sort</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">C</span>&amp; <span style="color: #000000;">c</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #110099;">std</span>::sort<span style="color: #7388d6;">(</span>begin<span style="color: #909183;">(</span>c<span style="color: #909183;">)</span>, end<span style="color: #909183;">(</span>c<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">necessary and useful dependency</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span><span style="color: #707183;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #0000ff; font-weight: bold;">algo</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">first</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">last</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span>; first != last; ++first<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">x</span> = sqrt<span style="color: #909183;">(</span>*first<span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">potentially surprising dependency: which sqrt()?</span>
+        helper<span style="color: #909183;">(</span>first, x<span style="color: #909183;">)</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">potentially surprising dependency:</span>
+                               <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">helper is chosen based on first and x</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">TT</span> <span style="color: #000000;">var</span> = 7;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">potentially surprising dependency: which TT?</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+模板通常出现在头文件里，所以他们的上下文依赖关系会受 <code>#include</code> 的顺序影响。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+有一个减小模板对外部依赖的方式是让模板的操作只处理自己本身的参数。但是这样一般很难管理。比如，算法经常需要用到其他算法，然后调用到一些其他操作。注意，不要开始考虑用宏定义。
+</p>

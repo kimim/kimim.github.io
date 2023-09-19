@@ -1,0 +1,47 @@
+#+layout: post
+#+title: CppCoreGuidelines T.60 减少模板上下文依赖关系
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Minimize a template’s context dependencies"
+
+理由
+
+更容易理解。减小不必要的依赖关系导致的错误。简化工具的支持。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename C>
+void sort(C& c)
+{
+    std::sort(begin(c), end(c)); // necessary and useful dependency
+}
+
+template<typename Iter>
+Iter algo(Iter first, Iter last)
+{
+    for (; first != last; ++first) {
+        auto x = sqrt(*first); // potentially surprising dependency: which sqrt()?
+        helper(first, x);      // potentially surprising dependency:
+                               // helper is chosen based on first and x
+        TT var = 7;            // potentially surprising dependency: which TT?
+    }
+}
+#+end_src
+
+注意
+
+模板通常出现在头文件里，所以他们的上下文依赖关系会受 ~#include~ 的顺序影
+响。
+
+
+注意
+
+有一个减小模板对外部依赖的方式是让模板的操作只处理自己本身的参数。但是
+这样一般很难管理。比如，算法经常需要用到其他算法，然后调用到一些其他操
+作。注意，不要开始考虑用宏定义。
