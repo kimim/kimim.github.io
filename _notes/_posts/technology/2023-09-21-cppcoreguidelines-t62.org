@@ -1,0 +1,51 @@
+#+layout: post
+#+title: CppCoreGuidelines T.62 把不相关的类模板成员放进非模板化的基类中
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Place non-dependent class template members in a non-templated base
+class"
+
+理由
+
+可以不用指定模板参数、不用实例化模板而使用基类成员
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+class Foo {
+public:
+    enum { v1, v2 };
+    // ...
+};
+#+end_src
+
+尽管这个枚举不需要模板参数，但是你仍然要给出一个模板参数才可以使用。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+struct Foo_base {
+    enum { v1, v2 };
+    // ...
+};
+
+template<typename T>
+class Foo : public Foo_base {
+public:
+    // ...
+};
+#+end_src
+
+这样就不需要为基类指定模板参数了。
+
+
+注意
+
+本规则的一个更通用的版本是“如果一个类模板成员仅仅依赖于 M 个模板参数中
+的 N 个，那么就定义只用到 N 个模板参数的基类。”当 ~N == 1~ 的时候，就得
+到了规则 T.61。
