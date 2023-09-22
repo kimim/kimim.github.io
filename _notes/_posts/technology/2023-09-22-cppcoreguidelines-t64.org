@@ -1,0 +1,13 @@
+#+layout: post
+#+title: CppCoreGuidelines T.64 实例化提供了模板类的多个实现
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use specialization to provide alternative implementations of class
+template"
+
+理由
+
+模板定义了通用的接口。实例化提供了一个强大的机制提供多个接口的实现方式。
