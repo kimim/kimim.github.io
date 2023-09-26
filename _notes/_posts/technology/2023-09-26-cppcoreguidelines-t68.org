@@ -1,0 +1,34 @@
+#+layout: post
+#+title: CppCoreGuidelines T.68 为避免混淆，在模板中用 {} 不要用 ()
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~{}~ rather than ~()~ within templates to avoid ambiguities"
+
+理由
+
+~()~ 很容易导致语法模糊。
+
+
+例子
+
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T, typename U>
+void f(T t, U u)
+{
+    T v1(T(u));    // mistake: oops, v1 is a function not a variable
+    T v2{u};       // clear:   obviously a variable
+    auto x = T(u); // unclear: construction or cast?
+}
+
+f(1, "asdf"); // bad: cast from const char* to int
+#+end_src
+
+
+强化
+- 标记通过 ~()~ 初始化的地方
+- 标记函数风格的类型转换

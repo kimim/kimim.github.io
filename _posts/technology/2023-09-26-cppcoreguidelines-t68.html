@@ -1,0 +1,49 @@
+---
+layout: post
+title: CppCoreGuidelines T.68 为避免混淆，在模板中用 {} 不要用 ()
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>{}</code> rather than <code>()</code> within templates to avoid ambiguities&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>()</code> 很容易导致语法模糊。
+</p>
+
+
+<p>
+例子
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>, <span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">U</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">t</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">U</span> <span style="color: #000000;">u</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #0000ff; font-weight: bold;">v1</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">u</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// mistake: oops, v1 is a function not a variable</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">v2</span><span style="color: #7388d6;">{</span>u<span style="color: #7388d6;">}</span>;       <span style="color: #3F7F5F;">// clear:   obviously a variable</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">T</span><span style="color: #7388d6;">(</span>u<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// unclear: construction or cast?</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #110099;">1</span>, <span style="color: #2A00FF;">"asdf"</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// bad: cast from const char* to int</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记通过 <code>()</code> 初始化的地方</li>
+<li>标记函数风格的类型转换</li>
+</ul>
