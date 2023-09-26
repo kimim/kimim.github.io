@@ -1,0 +1,81 @@
+---
+layout: post
+title: CppCoreGuidelines 
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Inside a template, don’t make an unqualified non-member function call
+unless you intend it to be a customization point&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<ul class="org-ul">
+<li>只提供必要的灵活性</li>
+<li>避免环境改变导致的漏洞</li>
+</ul>
+
+
+<p>
+例子
+</p>
+
+<p>
+主要有三种方式，让调用的代码定义一个模板
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+    <span style="color: #3F7F5F;">// Call a member function</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">test1</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">t</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    t.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">f</span><span style="color: #7388d6;">()</span>;    <span style="color: #3F7F5F;">// require T to provide f()</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">test2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">t</span><span style="color: #707183;">)</span>
+    <span style="color: #3F7F5F;">// Call a non-member function without qualification</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>t<span style="color: #7388d6;">)</span>;     <span style="color: #3F7F5F;">// require f(/*T*/) be available in caller's scope or in T's namespace</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">test3</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">t</span><span style="color: #707183;">)</span>
+    <span style="color: #3F7F5F;">// Invoke a "trait"</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">test_traits</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6; font-weight: bold;">&gt;</span>::<span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>t<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// require customizing test_traits&lt;&gt;</span>
+                          <span style="color: #3F7F5F;">// to get non-default functions/types</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+<code>trait</code> 一般就是一个计算类型的类型别名，一个计算值的 <code>constexpr</code> 函数，或者一个传统的 traits 模板，用于根据用户提供的类型实例化模板。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果你计划调用你自己定义的帮助函数 <code>helper(t)</code> ，而且这个 <code>t</code> 有依赖于模板类型参数。那么可以把 <code>helper</code> 放在 <code>::detail</code> 名字空间，然后通过限定的
+<code>detail::helper(t)</code> 调用。而一个未限定的调用则会成为一个定制化点，任何 <code>t</code>
+类型名字空间里的 <code>helper</code> 函数都可以调用。这可能会造成问题，比如你不小心调用了未限定的函数模板。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+在模板中，标记调用未限定的非成员函数，且传入一个依赖于模板类型的变量，并且，在模板名字空间内还有一个一样名字的非成员函数。
+</p>

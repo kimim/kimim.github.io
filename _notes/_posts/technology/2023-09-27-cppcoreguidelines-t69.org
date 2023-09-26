@@ -1,0 +1,62 @@
+#+layout: post
+#+title: CppCoreGuidelines 
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Inside a template, don’t make an unqualified non-member function call
+unless you intend it to be a customization point"
+
+理由
+
+- 只提供必要的灵活性
+- 避免环境改变导致的漏洞
+
+
+例子
+
+主要有三种方式，让调用的代码定义一个模板
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<class T>
+    // Call a member function
+void test1(T t)
+{
+    t.f();    // require T to provide f()
+}
+
+template<class T>
+void test2(T t)
+    // Call a non-member function without qualification
+{
+    f(t);     // require f(/*T*/) be available in caller's scope or in T's namespace
+}
+
+template<class T>
+void test3(T t)
+    // Invoke a "trait"
+{
+    test_traits<T>::f(t); // require customizing test_traits<>
+                          // to get non-default functions/types
+}
+#+end_src
+
+~trait~ 一般就是一个计算类型的类型别名，一个计算值的 ~constexpr~ 函数，或
+者一个传统的 traits 模板，用于根据用户提供的类型实例化模板。
+
+
+注意
+
+如果你计划调用你自己定义的帮助函数 ~helper(t)~ ，而且这个 ~t~ 有依赖于模板
+类型参数。那么可以把 ~helper~ 放在 ~::detail~ 名字空间，然后通过限定的
+~detail::helper(t)~ 调用。而一个未限定的调用则会成为一个定制化点，任何 ~t~
+类型名字空间里的 ~helper~ 函数都可以调用。这可能会造成问题，比如你不小心
+调用了未限定的函数模板。
+
+
+强化
+
+在模板中，标记调用未限定的非成员函数，且传入一个依赖于模板类型的变量，
+并且，在模板名字空间内还有一个一样名字的非成员函数。
