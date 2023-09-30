@@ -1,0 +1,77 @@
+---
+layout: post
+title: CppCoreGuidelines T.80 不要把类层级模板化
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Do not naively templatize a class hierarchy&rdquo;
+</p>
+
+<p>
+模板是 C++ 支持泛型编程的基础，而类层级则是 C++ 支持面向对象编程的基础。两个语言机制的组合有很多好处，但是我们也要避免设计陷阱。
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+把有很多函数，尤其是虚函数的类层级模板化，会导致代码量剧增。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Container</span> <span style="color: #707183;">{</span>         <span style="color: #3F7F5F;">// an interface</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">get</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">first</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">next</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">sort</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Container</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">vi</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">vs</span>;
+</pre>
+</div>
+
+
+<p>
+把 <code>sort</code> 定义成容器的成员函数不是个好主意。
+</p>
+
+<p>
+这里，编译器无法知道 <code>vector&lt;int&gt;::sort()</code> 是否被调用了，所以，总是会为之生成代码。对于 <code>vector&lt;string&gt;::sort()</code> 也一样。除非，这两个函数确实调用了，不然，就是产生多余的代码了。想象下，如果这个类层级中有几十个这类成员函数，有几十个派生类，那么会实例化多少个这些函数？
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+很多情况下，我们可以提供一个稳定的基类，而这个基类不需要参数化。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记依赖于模板参数的虚函数。</li>
+</ul>
