@@ -1,0 +1,77 @@
+---
+layout: post
+title: CppCoreGuidelines T.84 用非模板的内核实现提供 ABI 稳定的接口
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use a non-template core implementation to provide an ABI-stable interface&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+提升代码可读性。避免代码膨胀。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+可以是一个基类。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Link_base</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// stable</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Link_base</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">suc</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Link_base</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">pre</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>   <span style="color: #3F7F5F;">// templated wrapper to add type safety</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">Link_base</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000; font-style: italic;">val</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">List_base</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Link_base</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">first</span>;   <span style="color: #3F7F5F;">// first element (if any)</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">sz</span>;             <span style="color: #3F7F5F;">// number of elements</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">add_front</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Link_base</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">List</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">List_base</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">put_front</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">e</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3a5fcd; font-weight: bold;">add_front</span><span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #709870; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #709870; font-weight: bold;">&gt;</span><span style="color: #709870;">{</span>e<span style="color: #709870;">}</span><span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span>   <span style="color: #3F7F5F;">// implicit cast to Link_base</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">front</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #3a5fcd; font-weight: bold;">static_cast</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Link</span><span style="color: #709870; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #709870; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #909183; font-weight: bold;">&gt;</span><span style="color: #909183;">(</span>first<span style="color: #909183;">)</span>.<span style="color: #110099; font-style: italic;">val</span>; <span style="color: #7388d6;">}</span>   <span style="color: #3F7F5F;">// explicit cast back to Link&lt;T&gt;</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">List</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">li</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">List</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">ls</span>;
+</pre>
+</div>
+
+<p>
+这样，就只有一份添加/删除 <code>List</code> 元素的操作。 <code>Link</code> 和 <code>List</code> 啥也不做，只是处理类型信息。
+</p>
+
+<p>
+除了这种单独的基础类型，另一个常用的技术是把 <code>void</code> 和 <code>void*</code> 实例化，然后通过模板参数 <code>T</code> 来安全地进行封装类型转换。
+</p>
+
+
+<p>
+其他方案
+</p>
+<ul class="org-ul">
+<li>使用 <a href="./2022-04-02-cppcoreguidelines-i27">Pimpl</a> 实现方式。</li>
+</ul>

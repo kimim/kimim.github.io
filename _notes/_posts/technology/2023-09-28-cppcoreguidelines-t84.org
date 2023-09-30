@@ -1,0 +1,58 @@
+#+layout: post
+#+title: CppCoreGuidelines T.84 用非模板的内核实现提供 ABI 稳定的接口
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use a non-template core implementation to provide an ABI-stable interface"
+
+理由
+
+提升代码可读性。避免代码膨胀。
+
+
+例子
+
+可以是一个基类。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+struct Link_base {   // stable
+    Link_base* suc;
+    Link_base* pre;
+};
+
+template<typename T>   // templated wrapper to add type safety
+struct Link : Link_base {
+    T val;
+};
+
+struct List_base {
+    Link_base* first;   // first element (if any)
+    int sz;             // number of elements
+    void add_front(Link_base* p);
+    // ...
+};
+
+template<typename T>
+class List : List_base {
+public:
+    void put_front(const T& e) { add_front(new Link<T>{e}); }   // implicit cast to Link_base
+    T& front() { static_cast<Link<T>*>(first).val; }   // explicit cast back to Link<T>
+    // ...
+};
+
+List<int> li;
+List<string> ls;
+#+end_src
+
+这样，就只有一份添加/删除 ~List~ 元素的操作。 ~Link~ 和 ~List~ 啥也不做，只
+是处理类型信息。
+
+除了这种单独的基础类型，另一个常用的技术是把 ~void~ 和 ~void*~ 实例化，然
+后通过模板参数 ~T~ 来安全地进行封装类型转换。
+
+
+其他方案
+- 使用 [[./2022-04-02-cppcoreguidelines-i27][Pimpl]] 实现方式。
