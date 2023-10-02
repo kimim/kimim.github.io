@@ -1,0 +1,56 @@
+#+layout: post
+#+title: CppCoreGuidelines T.80 不要把类层级模板化
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Do not naively templatize a class hierarchy"
+
+模板是 C++ 支持泛型编程的基础，而类层级则是 C++ 支持面向对象编程的基础。
+两个语言机制的组合有很多好处，但是我们也要避免设计陷阱。
+
+理由
+
+把有很多函数，尤其是虚函数的类层级模板化，会导致代码量剧增。
+
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+struct Container {         // an interface
+    virtual T* get(int i);
+    virtual T* first();
+    virtual T* next();
+    virtual void sort();
+};
+
+template<typename T>
+class Vector : public Container<T> {
+public:
+    // ...
+};
+
+Vector<int> vi;
+Vector<string> vs;
+#+end_src
+
+
+把 ~sort~ 定义成容器的成员函数不是个好主意。
+
+这里，编译器无法知道 ~vector<int>::sort()~ 是否被调用了，所以，总是会为
+之生成代码。对于 ~vector<string>::sort()~ 也一样。除非，这两个函数确实调
+用了，不然，就是产生多余的代码了。想象下，如果这个类层级中有几十个这类
+成员函数，有几十个派生类，那么会实例化多少个这些函数？
+
+
+注意
+
+很多情况下，我们可以提供一个稳定的基类，而这个基类不需要参数化。
+
+
+强化
+
+- 标记依赖于模板参数的虚函数。
