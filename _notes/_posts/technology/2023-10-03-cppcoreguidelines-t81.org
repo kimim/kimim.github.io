@@ -1,0 +1,66 @@
+#+layout: post
+#+title: CppCoreGuidelines T.81 不要混用层级和数组
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Do not mix hierarchies and arrays"
+
+理由
+
+一个派生类的数组，很容易隐式的衰变为指向基类的指针，这样会导致可怕的结
+果。
+
+
+例子
+
+假设 ~Apple~  和 ~Pear~  是两类水果 ~Fruit~
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void maul(Fruit* p)
+{
+    *p = Pear{};     // put a Pear into *p
+    p[1] = Pear{};   // put a Pear into p[1]
+}
+
+Apple aa [] = { an_apple, another_apple };   // aa contains Apples (obviously!)
+
+maul(aa);
+Apple& a0 = &aa[0];   // a Pear?
+Apple& a1 = &aa[1];   // a Pear?
+#+end_src
+
+很可能 ~aa[0]~ 还是个梨子（ ~Pear~ ）（无需类型转换！）如果 ~sizeof(Apple)
+!= sizeof(Pear)~ 那么访问 ~aa[1]~ 就无法对其数组中的对象访问起点。我们遇
+到了类型不一致，可能会导致内存毁坏。永远不要写这样的代码。
+
+注意， ~maul()~ 违反了 [[./2022-06-07-cppcoreguidelines-f22][CppCoreGuidelines F.22 用 T* 或 owner<T*> 表示单个对象]]
+
+
+替代方案
+
+使用正确模板化的容器。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void maul2(Fruit* p)
+{
+    *p = Pear{};   // put a Pear into *p
+}
+
+vector<Apple> va = { an_apple, another_apple };   // va contains Apples (obviously!)
+
+maul2(va);       // error: cannot convert a vector<Apple> to a Fruit*
+maul2(&va[0]);   // you asked for it
+
+Apple& a0 = &va[0];   // a Pear?
+#+end_src
+
+注意，这里 ~maul2()~ 中的复制操作违反了 [[./2023-05-01-cppcoreguidelines-es63][CppCoreGuidelines ES.63 不要进行对象切片]]
+
+
+强化
+
+- 一定要检测这些情况。

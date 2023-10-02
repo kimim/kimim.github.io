@@ -1,0 +1,91 @@
+---
+layout: post
+title: CppCoreGuidelines T.81 不要混用层级和数组
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Do not mix hierarchies and arrays&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+一个派生类的数组，很容易隐式的衰变为指向基类的指针，这样会导致可怕的结果。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+假设 <code>Apple</code>  和 <code>Pear</code>  是两类水果 <code>Fruit</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">maul</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Fruit</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Pear</span><span style="color: #7388d6;">{}</span>;     <span style="color: #3F7F5F;">// put a Pear into *p</span>
+    <span style="color: #000000;">p</span><span style="color: #7388d6;">[</span><span style="color: #110099;">1</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Pear</span><span style="color: #7388d6;">{}</span>;   <span style="color: #3F7F5F;">// put a Pear into p[1]</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Apple</span> <span style="color: #000000;">aa</span> <span style="color: #707183;">[]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">{</span> an_apple, another_apple <span style="color: #707183;">}</span>;   <span style="color: #3F7F5F;">// aa contains Apples (obviously!)</span>
+
+<span style="color: #3a5fcd; font-weight: bold;">maul</span><span style="color: #707183;">(</span>aa<span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Apple</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a0</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span>aa<span style="color: #707183;">[</span><span style="color: #110099;">0</span><span style="color: #707183;">]</span>;   <span style="color: #3F7F5F;">// a Pear?</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Apple</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span>aa<span style="color: #707183;">[</span><span style="color: #110099;">1</span><span style="color: #707183;">]</span>;   <span style="color: #3F7F5F;">// a Pear?</span>
+</pre>
+</div>
+
+<p>
+很可能 <code>aa[0]</code> 还是个梨子（ <code>Pear</code> ）（无需类型转换！）如果 <code>sizeof(Apple)
+!= sizeof(Pear)</code> 那么访问 <code>aa[1]</code> 就无法对其数组中的对象访问起点。我们遇到了类型不一致，可能会导致内存毁坏。永远不要写这样的代码。
+</p>
+
+<p>
+注意， <code>maul()</code> 违反了 <a href="./2022-06-07-cppcoreguidelines-f22">CppCoreGuidelines F.22 用 T* 或 owner&lt;T*&gt; 表示单个对象</a>
+</p>
+
+
+<p>
+替代方案
+</p>
+
+<p>
+使用正确模板化的容器。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">maul2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Fruit</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Pear</span><span style="color: #7388d6;">{}</span>;   <span style="color: #3F7F5F;">// put a Pear into *p</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Apple</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">va</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">{</span> an_apple, another_apple <span style="color: #707183;">}</span>;   <span style="color: #3F7F5F;">// va contains Apples (obviously!)</span>
+
+<span style="color: #3a5fcd; font-weight: bold;">maul2</span><span style="color: #707183;">(</span>va<span style="color: #707183;">)</span>;       <span style="color: #3F7F5F;">// error: cannot convert a vector&lt;Apple&gt; to a Fruit*</span>
+<span style="color: #3a5fcd; font-weight: bold;">maul2</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>va<span style="color: #7388d6;">[</span><span style="color: #110099;">0</span><span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// you asked for it</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Apple</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a0</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span>va<span style="color: #707183;">[</span><span style="color: #110099;">0</span><span style="color: #707183;">]</span>;   <span style="color: #3F7F5F;">// a Pear?</span>
+</pre>
+</div>
+
+<p>
+注意，这里 <code>maul2()</code> 中的复制操作违反了 <a href="./2023-05-01-cppcoreguidelines-es63">CppCoreGuidelines ES.63 不要进行对象切片</a>
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>一定要检测这些情况。</li>
+</ul>
