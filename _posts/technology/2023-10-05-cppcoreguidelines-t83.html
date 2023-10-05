@@ -1,0 +1,61 @@
+---
+layout: post
+title: CppCoreGuidelines T.83 不要声明成员函数为模板虚函数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Do not declare a member function template virtual&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+C++ 不支持这种用法。如果支持，也无法生成 <code>vtbls</code> ，直到链接时间才可以生成。一般来说，实现方式必须处理动态链接。
+</p>
+
+
+<p>
+错误例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6; font-weight: bold;">&gt;</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">bool</span> <span style="color: #0000ff; font-weight: bold;">intersect</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// error: template cannot be virtual</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+我们需要此规则，是因为很多人总是在提问。
+</p>
+
+
+<p>
+其他方案
+</p>
+
+<p>
+双重分派，访问者模式，计算调用了哪个函数。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+编译器会处理。
+</p>
