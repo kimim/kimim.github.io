@@ -1,0 +1,30 @@
+---
+layout: post
+title: CppCoreGuidelines T.100 如果需要接受多个不同类型的参数，可以用可变模板参数
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use variadic templates when you need a function that takes a variable
+number of arguments of a variety of types&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可变参数模板是处理这个问题的最通用的机制。既效率高，又类型安全。不要使用 C 的变长参数。
+</p>
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记使用 <code>va_arg</code> 的用户代码。</li>
+</ul>
