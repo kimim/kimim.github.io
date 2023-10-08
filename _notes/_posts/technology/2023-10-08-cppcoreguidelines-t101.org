@@ -1,0 +1,10 @@
+#+layout: post
+#+title: CppCoreGuidelines T.101 如何传递参数给可变参数模板
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"How to pass arguments to a variadic template"
+
+未完待续。
