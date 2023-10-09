@@ -1,0 +1,12 @@
+#+layout: post
+#+title: CppCoreGuidelines T.103 不要用可变参数模板处理同类的参数列表
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t use variadic templates for homogeneous argument lists"
+
+理由
+
+有更精确的方式指定同类的序列，比如 ~initializer_list~
