@@ -1,0 +1,50 @@
+---
+layout: post
+title: CppCoreGuidelines T.120 只有真的需要的时候，才使用模板元编程
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use template metaprogramming only when you really need to&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+模板元编程很难写正确，降低编译速度，经常很难维护。然而，也有一些实际使用的例子。比如，模板元编程可以比专家级别的汇编代码提供更好的性能。也有一些实际例子中，模板元编程可比运行时代码更好的表达基础思想。比如，你真的需要在编译时进行 AST 操作（比如，可选的矩阵运算符折叠）。这些情况，在 C++ 中可能没有其他方法了。
+</p>
+
+<p>
+坏例子
+</p>
+
+<p>
+<code>enable_if</code>
+</p>
+
+<p>
+其他方案，也可以使用概念 concept。
+</p>
+
+<p>
+其他方案
+</p>
+
+<p>
+如果结果是个数值，而不是个类型，可以用 <code>constexpr</code> 函数。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+如果你感觉需要宏定义隐藏模板元编程，很可能你已经走得太远了。
+</p>
