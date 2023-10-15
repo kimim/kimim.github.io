@@ -1,0 +1,38 @@
+#+layout: post
+#+title: CppCoreGuidelines T.121 主要用模板元编程模拟 concept 机制
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use template metaprogramming primarily to emulate concepts"
+
+理由
+
+当 C++20 还没好的时候，我们需要用 TMP 模拟 concept。最常见的使用 TMP
+的例子是基于 concept 的重载。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename Iter>
+    /*requires*/ enable_if<random_access_iterator<Iter>, void>
+advance(Iter p, int n) { p += n; }
+
+template<typename Iter>
+    /*requires*/ enable_if<forward_iterator<Iter>, void>
+advance(Iter p, int n) { assert(n >= 0); while (n--) ++p;}
+#+end_src
+
+注意
+
+此类代码用 concept 实现会更简单。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void advance(random_access_iterator auto p, int n) { p += n; }
+
+void advance(forward_iterator auto p, int n) { assert(n >= 0); while (n--) ++p;}
+#+end_src

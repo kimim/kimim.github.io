@@ -1,0 +1,53 @@
+---
+layout: post
+title: CppCoreGuidelines T.121 主要用模板元编程模拟 concept 机制
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use template metaprogramming primarily to emulate concepts&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+当 C++20 还没好的时候，我们需要用 TMP 模拟 concept。最常见的使用 TMP
+的例子是基于 concept 的重载。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+    <span style="color: #3F7F5F;">/*requires*/</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">enable_if</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">random_access_iterator</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span><span style="color: #7388d6; font-weight: bold;">&gt;</span>, <span style="color: #7F0055; font-weight: bold;">void</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #0000ff; font-weight: bold;">advance</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">p</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">+=</span> n; <span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+    <span style="color: #3F7F5F;">/*requires*/</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">enable_if</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">forward_iterator</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span><span style="color: #7388d6; font-weight: bold;">&gt;</span>, <span style="color: #7F0055; font-weight: bold;">void</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #0000ff; font-weight: bold;">advance</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">p</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3a5fcd; font-weight: bold;">assert</span><span style="color: #7388d6;">(</span>n <span style="color: #7F0055; font-weight: bold;">&gt;=</span> <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>; <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span><span style="color: #000000;">n</span><span style="color: #7F0055; font-weight: bold;">--</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">p</span>;<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+此类代码用 concept 实现会更简单。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">advance</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">random_access_iterator</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">+=</span> n; <span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">advance</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">forward_iterator</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3a5fcd; font-weight: bold;">assert</span><span style="color: #7388d6;">(</span>n <span style="color: #7F0055; font-weight: bold;">&gt;=</span> <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>; <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span><span style="color: #000000;">n</span><span style="color: #7F0055; font-weight: bold;">--</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">p</span>;<span style="color: #707183;">}</span>
+</pre>
+</div>
