@@ -1,0 +1,41 @@
+#+layout: post
+#+title: CppCoreGuidelines T.123 在编译时用 constexpr 函数计算值
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use constexpr functions to compute values at compile time"
+
+理由
+
+函数是最显著、最普通的方式表达值的计算过程。 ~constexpr~ 函数经常意味着
+更少的编译时开销。
+
+
+注意
+
+大部分“trait”技术已经通过这些方式替代掉了：
+- 由模板别名计算出类型
+- 由 ~constexpr~ 函数计算出值
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+template<typename T>
+    // requires Number<T>
+constexpr T pow(T v, int n)   // power/exponential
+{
+    T res = 1;
+    while (n--) res *= v;
+    return res;
+}
+
+constexpr auto f7 = pow(pi, 7);
+#+end_src
+
+强化
+
+- 标记模板元编程计算出值的情况。这些应该通过 ~constexpr~ 函数来实现。

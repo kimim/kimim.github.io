@@ -1,0 +1,61 @@
+---
+layout: post
+title: CppCoreGuidelines T.123 在编译时用 constexpr 函数计算值
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use constexpr functions to compute values at compile time&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+函数是最显著、最普通的方式表达值的计算过程。 <code>constexpr</code> 函数经常意味着更少的编译时开销。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+大部分“trait”技术已经通过这些方式替代掉了：
+</p>
+<ul class="org-ul">
+<li>由模板别名计算出类型</li>
+<li>由 <code>constexpr</code> 函数计算出值</li>
+</ul>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+    <span style="color: #3F7F5F;">// requires Number&lt;T&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #0000ff; font-weight: bold;">pow</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">v</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// power/exponential</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">res</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">1</span>;
+    <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span><span style="color: #000000;">n</span><span style="color: #7F0055; font-weight: bold;">--</span><span style="color: #7388d6;">)</span> <span style="color: #000000;">res</span> <span style="color: #7F0055; font-weight: bold;">*=</span> v;
+    <span style="color: #7F0055; font-weight: bold;">return</span> res;
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">f7</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">pow</span><span style="color: #707183;">(</span>pi, <span style="color: #110099;">7</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记模板元编程计算出值的情况。这些应该通过 <code>constexpr</code> 函数来实现。</li>
+</ul>
