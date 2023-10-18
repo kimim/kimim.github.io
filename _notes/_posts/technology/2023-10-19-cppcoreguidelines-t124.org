@@ -1,0 +1,13 @@
+#+layout: post
+#+title: CppCoreGuidelines T.124 选择使用标准库的模板元编程（TMP）工具
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer to use standard-library TMP facilities"
+
+理由
+
+标准库中的工具，如 ~conditional~ ， ~enable_if~ 以及 ~tupple~ 可移植性更好，
+大家都知道。
