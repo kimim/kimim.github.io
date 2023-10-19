@@ -1,0 +1,14 @@
+#+layout: post
+#+title: CppCoreGuidelines T.125 如果你需要标准库之外的 TMP 工具，尽量用现有的库
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If you need to go beyond the standard-library TMP facilities, use an
+existing library"
+
+理由
+
+实现高级的 TMP 设施工具很难，而库中的工具有很好的社区支持。只有你确实
+需要的时候，才编写高级的 TMP 工具。
