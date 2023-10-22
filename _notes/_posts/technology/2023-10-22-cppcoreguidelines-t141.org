@@ -1,0 +1,11 @@
+#+layout: post
+#+title: CppCoreGuidelines T.141 如果你在单独一个地方需要一个简单的函数对象，用匿名 lambda
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use an unnamed lambda if you need a simple function object in one
+place only"
+
+查看 F.11
