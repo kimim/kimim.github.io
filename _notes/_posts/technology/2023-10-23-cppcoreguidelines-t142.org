@@ -1,0 +1,12 @@
+#+layout: post
+#+title: CppCoreGuidelines T.142 用模板变量简化标记符号
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use template variables to simplify notation"
+
+理由
+
+提升可读性。
