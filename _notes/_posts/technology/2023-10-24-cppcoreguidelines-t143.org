@@ -1,0 +1,79 @@
+#+layout: post
+#+title: CppCoreGuidelines T.143 不要无心地编写非泛型的代码
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t write unintentionally non-generic code"
+
+理由
+
+通用型。可重用性。不要无意义的深入了解细节。使用已有的最通用的工具。
+
+
+例子
+
+用 ~!=~ 进行迭代器比较，而不要用 ~<~ 。对于大部分对象来说， ~!=~ 都使用，因
+为它不需要以排序为前提。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+for (auto i = first; i < last; ++i) {   // less generic
+    // ...
+}
+
+for (auto i = first; i != last; ++i) {   // good; more generic
+    // ...
+}
+#+end_src
+
+当然，这里用范围 ~for~ 更好。
+
+
+例子
+
+如果你需要的功能已经足够，请用派生得最少的类。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class Base {
+public:
+    Bar f();
+    Bar g();
+};
+
+class Derived1 : public Base {
+public:
+    Bar h();
+};
+
+class Derived2 : public Base {
+public:
+    Bar j();
+};
+
+// bad, unless there is a specific reason for limiting to Derived1 objects only
+void my_func(Derived1& param)
+{
+    use(param.f());
+    use(param.g());
+}
+
+// good, uses only Base interface so only commit to that
+void my_func(Base& param)
+{
+    use(param.f());
+    use(param.g());
+}
+#+end_src
+
+
+强化
+
+- 标记用 ~<~ 而不是用 ~!=~ 对迭代器进行比较的地方。
+- 标记出现了 ~x.size() == 0~ ，而其实有 ~x.empty()~ 或 ~x.is_empty()~ 的情况。
+  检查是否为空比容器的 ~size()~ 使用范围更广。因为有些容器不知道自己里面
+  有多少元素，而有的没有大小的概念。
+- 标记函数中用到指针或引用指向派生层级更深等等子类型，而实际只用了基类
+  的一组接口的情况。

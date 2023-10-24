@@ -1,0 +1,98 @@
+---
+layout: post
+title: CppCoreGuidelines T.143 不要无心地编写非泛型的代码
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t write unintentionally non-generic code&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+通用型。可重用性。不要无意义的深入了解细节。使用已有的最通用的工具。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+用 <code>!=</code> 进行迭代器比较，而不要用 <code>&lt;</code> 。对于大部分对象来说， <code>!=</code> 都使用，因为它不需要以排序为前提。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">first</span>; i <span style="color: #7F0055; font-weight: bold;">&lt;</span> last; <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">i</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// less generic</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">first</span>; i <span style="color: #7F0055; font-weight: bold;">!=</span> last; <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">i</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// good; more generic</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+当然，这里用范围 <code>for</code> 更好。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+如果你需要的功能已经足够，请用派生得最少的类。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">g</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Derived1</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">h</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Derived2</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Bar</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">j</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #3F7F5F;">// bad, unless there is a specific reason for limiting to Derived1 objects only</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">my_func</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Derived1</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">param</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3a5fcd; font-weight: bold;">use</span><span style="color: #7388d6;">(</span>param.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">f</span><span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">use</span><span style="color: #7388d6;">(</span>param.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">g</span><span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #3F7F5F;">// good, uses only Base interface so only commit to that</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">my_func</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">param</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3a5fcd; font-weight: bold;">use</span><span style="color: #7388d6;">(</span>param.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">f</span><span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">use</span><span style="color: #7388d6;">(</span>param.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">g</span><span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记用 <code>&lt;</code> 而不是用 <code>!=</code> 对迭代器进行比较的地方。</li>
+<li>标记出现了 <code>x.size() == 0</code> ，而其实有 <code>x.empty()</code> 或 <code>x.is_empty()</code> 的情况。检查是否为空比容器的 <code>size()</code> 使用范围更广。因为有些容器不知道自己里面有多少元素，而有的没有大小的概念。</li>
+<li>标记函数中用到指针或引用指向派生层级更深等等子类型，而实际只用了基类的一组接口的情况。</li>
+</ul>
