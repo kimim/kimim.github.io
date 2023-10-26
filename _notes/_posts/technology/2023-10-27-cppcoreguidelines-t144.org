@@ -1,0 +1,27 @@
+#+layout: post
+#+title: CppCoreGuidelines T.144 不要实例化函数模板
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t specialize function templates"
+
+理由
+
+根据语言规则，你无法部分实例化某个函数模板。你只能完全实例化函数模板，
+但是你肯定想要重载此函数。因为函数模板实例化不参与重载过程。他们无法按
+你的预期工作。在很少的情况下，你实际应该通过代理给类模板进行实例化，这
+样你才能正确的实例化函数。
+
+
+例外
+
+如果你没有合适的理由实例化一个函数模板，那么还是把函数模板代理给类模板，
+然后你只要实例化这个类模板就可以了。这时候也可以进行部分实例化。
+
+
+
+强化
+
+- 标记所有实例化函数模板的情况。应该用函数重载。
