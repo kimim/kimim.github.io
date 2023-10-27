@@ -1,5 +1,5 @@
 #+layout: post
-#+title: CppCoreGuidelines T.151 通过 static_assert 检查一个类是否符合某个概念
+#+title: CppCoreGuidelines T.150 通过 static_assert 检查一个类是否符合某个概念
 #+categories: technology
 #+tags: CppCoreGuidelines
 
@@ -33,6 +33,5 @@ public:
 // error: X has no default constructor
 static_assert(Default_constructible<X>);
 // error: we forgot to define X's move constructor
-static_assert(Copyable<X>);                 
+static_assert(Copyable<X>);
 #+end_src
-

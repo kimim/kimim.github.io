@@ -1,6 +1,6 @@
 ---
 layout: post
-title: CppCoreGuidelines T.151 通过 static_assert 检查一个类是否符合某个概念
+title: CppCoreGuidelines T.150 通过 static_assert 检查一个类是否符合某个概念
 categories: [technology]
 tags: [CppCoreGuidelines]
 ---
@@ -45,6 +45,6 @@ tags: [CppCoreGuidelines]
 <pre class="src src-C++"><span style="color: #3F7F5F;">// error: X has no default constructor</span>
 static_assert<span style="color: #707183;">(</span><span style="color: #3a5fcd; font-weight: bold;">Default_constructible</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #707183;">)</span>;
 <span style="color: #3F7F5F;">// error: we forgot to define X's move constructor</span>
-static_assert<span style="color: #707183;">(</span><span style="color: #3a5fcd; font-weight: bold;">Copyable</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #707183;">)</span>;                 
+static_assert<span style="color: #707183;">(</span><span style="color: #3a5fcd; font-weight: bold;">Copyable</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
