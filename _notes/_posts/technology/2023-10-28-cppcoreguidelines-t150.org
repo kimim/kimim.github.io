@@ -1,0 +1,38 @@
+#+layout: post
+#+title: CppCoreGuidelines T.151 通过 static_assert 检查一个类是否符合某个概念
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Check that a class matches a concept using static_assert"
+
+理由
+
+如果你想要某个类符合某个概念，尽量在早期进行验证，可以减少用户的痛苦。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class X {
+public:
+    X() = delete;
+    X(const X&) = default;
+    X(X&&) = default;
+    X& operator=(const X&) = default;
+    // ...
+};
+#+end_src
+
+可以在实现文件的某处，让编译器去检查我们需要的 ~X~ 的属性：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// error: X has no default constructor
+static_assert(Default_constructible<X>);
+// error: we forgot to define X's move constructor
+static_assert(Copyable<X>);                 
+#+end_src
+
