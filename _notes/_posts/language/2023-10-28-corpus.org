@@ -1,5 +1,5 @@
 #+LAYOUT: post
-#+TITLE: 单词表：corpus
+#+TITLE: 单词本：corpus
 #+TAGS: English
 #+CATEGORIES: language
 
@@ -55,3 +55,12 @@ z. B. Kang, Jiang, Qiang. 中国的年轻取名字注重身体健康与强壮，
 
 大概因为拉丁语里 -us 都是阳性名词的结尾，所以神圣罗马帝国延续下来的德
 语中 Körper 也是一个阳性词。
+
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
