@@ -1,0 +1,36 @@
+#+layout: post
+#+title: CppCoreGuidelines CPL.1 能用 C++ 的时候就不要用 C
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer C++ to C"
+
+C 和 C++ 是关系紧密的语言。他们都源自 1978 年的经典 C，都在 ISO 标准委
+员会不断发展。人们做了很多尝试，使得他们互相兼容，但是互相都不是对方的
+一个子集。
+
+理由
+
+C++ 提供更好的类型检测，更多的标记符号支持。C++ 支持更好的高级语言特性，
+经常产生速度更快的代码。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+char ch = 7;
+void* pv = &ch;
+int* pi = pv;   // not C++
+*pi = 999;      // overwrite sizeof(int) bytes near &ch
+#+end_src
+
+C 中隐式的从 ~void*~ 转换类型很难发现，也没有任何强化。尤其是本例子中，
+我们违反了规则，不该转换类型到更严格的字节对齐。
+
+
+强化
+
+用 C++ 编译器。

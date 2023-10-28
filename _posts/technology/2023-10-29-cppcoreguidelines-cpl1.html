@@ -1,0 +1,51 @@
+---
+layout: post
+title: CppCoreGuidelines CPL.1 能用 C++ 的时候就不要用 C
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer C++ to C&rdquo;
+</p>
+
+<p>
+C 和 C++ 是关系紧密的语言。他们都源自 1978 年的经典 C，都在 ISO 标准委员会不断发展。人们做了很多尝试，使得他们互相兼容，但是互相都不是对方的一个子集。
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+C++ 提供更好的类型检测，更多的标记符号支持。C++ 支持更好的高级语言特性，经常产生速度更快的代码。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">ch</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">7</span>;
+<span style="color: #7F0055; font-weight: bold;">void</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">pv</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span>ch;
+<span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">pi</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">pv</span>;   <span style="color: #3F7F5F;">// not C++</span>
+<span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #000000;">pi</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">999</span>;      <span style="color: #3F7F5F;">// overwrite sizeof(int) bytes near &amp;ch</span>
+</pre>
+</div>
+
+<p>
+C 中隐式的从 <code>void*</code> 转换类型很难发现，也没有任何强化。尤其是本例子中，我们违反了规则，不该转换类型到更严格的字节对齐。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+用 C++ 编译器。
+</p>
