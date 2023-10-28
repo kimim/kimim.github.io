@@ -59,6 +59,8 @@ z. B. Kang, Jiang, Qiang. 中国的年轻取名字注重身体健康与强壮，
 #+BEGIN_EXPORT latex
 \iffalse % multiline comment
 #+END_EXPORT
+*参考文献*
+
 [[bibliography:~/docs/references.bib]]
 #+BEGIN_EXPORT latex
 \fi
