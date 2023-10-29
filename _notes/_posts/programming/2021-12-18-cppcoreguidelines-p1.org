@@ -1,9 +1,7 @@
 #+layout: post
 #+title: CppCoreGuidelines P.1 直接地用代码表达编程设计理念
-#+categories: technology
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
@@ -31,12 +29,13 @@ directly in code]] 这个章节讲的是如何直接地用代码表达编程设�
 接下来，学习学习第一条指南：P.1 Express ideas directly in code 直接用
 代码表达设计想法。
 
-编译器直接处理代码，程序员也总是直接读代码。所以尽量直接在代码中表达设
-计理念。
+理由
 
-以下代码中，第一个函数声明的表达内容更清晰： ~month~ 函数返回 ~Month~ 对象，
-并且该函数是一个 ~const~ 成员函数，所以 ~month~ 不改变 ~Date~ 的成员变量，也
-不能调用 ~Date~ 类中非 ~const~ 的成员函数。
+一般来说，编译器是不会处理代码注释，更不会解析设计文档。很多程序员可能
+也没耐心仔细阅读代码注释和设计文档。所以，如果能直接用代码清晰的表达程
+序意图的话，可以提升机器和人类对代码的理解度。
+
+例子
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
 class Date {
@@ -46,8 +45,12 @@ public:
 };
 #+end_src
 
-相比较而言，以下第二个函数的声明，表达的代码信息和设计理念就少很多。别
-的程序员可能要连蒙带猜地使用你设计的函数，从而，容易产生的 bug。
+以上代码中，第一个函数声明的表达内容更清晰： ~month~ 函数返回 ~Month~ 对象，
+并且该函数是一个 ~const~ 成员函数，所以 ~month~ 不改变 ~Date~ 的成员变量，也
+不能调用 ~Date~ 类中非 ~const~ 的成员函数。
+
+相比较而言，第二个函数的声明，表达的代码信息和设计理念就少很多。别的程
+序员可能要连蒙带猜地使用你设计的函数，这样，容易产生的 bug。
 
 坏例子：
 
@@ -68,7 +71,7 @@ void f(vector<string>& v)
 }
 #+end_src
 
-~std::find~ 更直接表达程序的目的。
+~std::find~ 标准库函数可以更直接地表达程序的目的。
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void f(vector<string>& v)
