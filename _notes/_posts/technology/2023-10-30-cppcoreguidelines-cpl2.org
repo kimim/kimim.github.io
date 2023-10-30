@@ -1,0 +1,31 @@
+#+layout: post
+#+title: CppCoreGuidelines CPL.2 如果一定要用 C，用 C 和 C++  的公共子集，以 C++ 编译 C
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If you must use C, use the common subset of C and C++, and compile
+the C code as C++"
+
+理由
+
+这个子集可以由 C 或 C++ 编译器编译。通过 C++ 方式编译，可以不纯 C 的类
+型检测做的更好
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int* p1 = malloc(10 * sizeof(int));                      // not C++
+int* p2 = static_cast<int*>(malloc(10 * sizeof(int)));   // not C, C-style C++
+int* p3 = new int[10];                                   // not C
+int* p4 = (int*) malloc(10 * sizeof(int));               // both C and C++
+#+end_src
+
+
+强化
+
+- 标记以 C 方式编译代码的地方。
+  - C++ 编译器要求代码是有效的 C++，除非你用了 C 扩展选项。

@@ -1,0 +1,47 @@
+---
+layout: post
+title: CppCoreGuidelines CPL.2 如果一定要用 C，用 C 和 C++  的公共子集，以 C++ 编译 C
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If you must use C, use the common subset of C and C++, and compile
+the C code as C++&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+这个子集可以由 C 或 C++ 编译器编译。通过 C++ 方式编译，可以不纯 C 的类型检测做的更好
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">malloc</span><span style="color: #707183;">(</span><span style="color: #110099;">10</span> <span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>;                      <span style="color: #3F7F5F;">// not C++</span>
+<span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">static_cast</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #707183; font-weight: bold;">&gt;</span><span style="color: #707183;">(</span><span style="color: #3a5fcd; font-weight: bold;">malloc</span><span style="color: #7388d6;">(</span><span style="color: #110099;">10</span> <span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// not C, C-style C++</span>
+<span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p3</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183;">[</span><span style="color: #110099;">10</span><span style="color: #707183;">]</span>;                                   <span style="color: #3F7F5F;">// not C</span>
+<span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p4</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #707183;">)</span> <span style="color: #3a5fcd; font-weight: bold;">malloc</span><span style="color: #707183;">(</span><span style="color: #110099;">10</span> <span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>;               <span style="color: #3F7F5F;">// both C and C++</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记以 C 方式编译代码的地方。
+<ul class="org-ul">
+<li>C++ 编译器要求代码是有效的 C++，除非你用了 C 扩展选项。</li>
+</ul></li>
+</ul>
