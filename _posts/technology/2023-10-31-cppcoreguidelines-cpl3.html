@@ -1,0 +1,67 @@
+---
+layout: post
+title: CppCoreGuidelines CPL.3 如果必须用 C 实现接口，在调用这些接口的时候用 C++
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;If you must use C for interfaces, use C++ in the calling code using
+such interfaces&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+C++ 比 C 表达能力更好，提供更多类型支持。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+比如说，要用到第三方 C 程序库，或 C 系统接口，可以用 C 与 C++ 的公共子集定义底层接口，这样类型检测会处理的更好。尽可能遵循 C++ 指南来防撞底层接口。然后在 C++ 代码里用这些 C++ 封装的接口。这样，在抽象，内存安全，资源安全方面会做的更好。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+你可以在 C++ 中调用 C
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// in C:</span>
+<span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #0000ff; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #707183;">)</span>;
+
+<span style="color: #3F7F5F;">// in C++:</span>
+<span style="color: #7F0055; font-weight: bold;">extern</span> <span style="color: #2A00FF;">"C"</span> <span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #0000ff; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #707183;">)</span>;
+
+<span style="color: #3a5fcd; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #110099;">2</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+你也可以在 C 中调用 C++
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// in C:</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #0000ff; font-weight: bold;">call_f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Y</span><span style="color: #7F0055; font-weight: bold;">*</span>, <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183;">)</span>;
+
+<span style="color: #3F7F5F;">// in C++:</span>
+<span style="color: #7F0055; font-weight: bold;">extern</span> <span style="color: #2A00FF;">"C"</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #0000ff; font-weight: bold;">call_f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Y</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> p<span style="color: #7F0055; font-weight: bold;">-&gt;</span><span style="color: #3a5fcd; font-weight: bold; font-style: italic;">f</span><span style="color: #7388d6;">(</span>i<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// possibly a virtual function call</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>

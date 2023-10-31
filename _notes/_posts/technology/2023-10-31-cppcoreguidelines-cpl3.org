@@ -1,0 +1,53 @@
+#+layout: post
+#+title: CppCoreGuidelines CPL.3 如果必须用 C 实现接口，在调用这些接口的时候用 C++
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"If you must use C for interfaces, use C++ in the calling code using
+such interfaces"
+
+理由
+
+C++ 比 C 表达能力更好，提供更多类型支持。
+
+
+例子
+
+比如说，要用到第三方 C 程序库，或 C 系统接口，可以用 C 与 C++ 的公共子
+集定义底层接口，这样类型检测会处理的更好。尽可能遵循 C++ 指南来防撞底
+层接口。然后在 C++ 代码里用这些 C++ 封装的接口。这样，在抽象，内存安全，
+资源安全方面会做的更好。
+
+
+例子
+
+你可以在 C++ 中调用 C
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// in C:
+double sqrt(double);
+
+// in C++:
+extern "C" double sqrt(double);
+
+sqrt(2);
+#+end_src
+
+你也可以在 C 中调用 C++
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// in C:
+X call_f(struct Y*, int);
+
+// in C++:
+extern "C" X call_f(Y* p, int i)
+{
+    return p->f(i);   // possibly a virtual function call
+}
+#+end_src
+
+
