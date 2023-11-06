@@ -1,0 +1,54 @@
+#+layout: post
+#+title: CppCoreGuidelines SF.2 头文件里不能包含对象定义或非 inline 的函数定义
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"A header file must not contain object definitions or non-inline
+function definitions"
+
+理由
+
+包含一些只能定义一次的东西会导致链接错误。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// file.h:
+namespace Foo {
+    int x = 7;
+    int xx() { return x+x; }
+}
+
+// file1.cpp:
+#include <file.h>
+// ... more ...
+
+ // file2.cpp:
+#include <file.h>
+// ... more ...
+#+end_src
+
+链接 file1.cpp  与 file2.cpp  会导致两个链接错误。
+
+
+其他指南：
+
+头文件只能包含以下内容：
+- ~#include~ 其他文件（需要包含 include 保护）
+- 模板
+- 类定义
+- 函数声明
+- ~extern~ 声明
+- ~inline~ 函数定义
+- ~constexpr~ 定义
+- ~const~ 定义
+- ~using~ 别名定义
+
+
+强化
+
+- 检查上述清单是否满足。

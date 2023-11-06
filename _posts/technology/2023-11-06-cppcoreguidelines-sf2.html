@@ -1,0 +1,77 @@
+---
+layout: post
+title: CppCoreGuidelines SF.2 头文件里不能包含对象定义或非 inline 的函数定义
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;A header file must not contain object definitions or non-inline
+function definitions&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+包含一些只能定义一次的东西会导致链接错误。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// file.h:</span>
+<span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">7</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">xx</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x<span style="color: #7F0055; font-weight: bold;">+</span>x; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+
+<span style="color: #3F7F5F;">// file1.cpp:</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;file.h&gt;</span>
+<span style="color: #3F7F5F;">// ... more ...</span>
+
+ <span style="color: #3F7F5F;">// file2.cpp:</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;file.h&gt;</span>
+<span style="color: #3F7F5F;">// ... more ...</span>
+</pre>
+</div>
+
+<p>
+链接 file1.cpp  与 file2.cpp  会导致两个链接错误。
+</p>
+
+
+<p>
+其他指南：
+</p>
+
+<p>
+头文件只能包含以下内容：
+</p>
+<ul class="org-ul">
+<li><code>#include</code> 其他文件（需要包含 include 保护）</li>
+<li>模板</li>
+<li>类定义</li>
+<li>函数声明</li>
+<li><code>extern</code> 声明</li>
+<li><code>inline</code> 函数定义</li>
+<li><code>constexpr</code> 定义</li>
+<li><code>const</code> 定义</li>
+<li><code>using</code> 别名定义</li>
+</ul>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>检查上述清单是否满足。</li>
+</ul>
