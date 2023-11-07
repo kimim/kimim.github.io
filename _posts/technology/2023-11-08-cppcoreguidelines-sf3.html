@@ -1,0 +1,51 @@
+---
+layout: post
+title: CppCoreGuidelines SF.3 多个源码文件中用到的声明要用放在头文件里
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use header files for all declarations used in multiple source files&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+可维护性。可读性。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// bar.cpp:</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">bar</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span> cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"bar\n"</span>; <span style="color: #707183;">}</span>
+
+<span style="color: #3F7F5F;">// foo.cpp:</span>
+<span style="color: #7F0055; font-weight: bold;">extern</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">bar</span><span style="color: #707183;">()</span>;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span> <span style="color: #3a5fcd; font-weight: bold;">bar</span><span style="color: #7388d6;">()</span>; <span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+<code>bar</code> 的维护者无法找到所有 <code>bar</code> 用到的定义，在修改代码的时候会遇到麻烦。
+<code>bar</code> 的用户无法知道用到的接口是否是完整的且正确的。最后，可能会在链接的时候收到错误信息。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记不在头文件，而是在其他源文件中的声明。</li>
+</ul>

@@ -1,0 +1,35 @@
+#+layout: post
+#+title: CppCoreGuidelines SF.3 多个源码文件中用到的声明要用放在头文件里
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use header files for all declarations used in multiple source files"
+
+
+理由
+
+可维护性。可读性。
+
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// bar.cpp:
+void bar() { cout << "bar\n"; }
+
+// foo.cpp:
+extern void bar();
+void foo() { bar(); }
+#+end_src
+
+~bar~ 的维护者无法找到所有 ~bar~ 用到的定义，在修改代码的时候会遇到麻烦。
+~bar~ 的用户无法知道用到的接口是否是完整的且正确的。最后，可能会在链接的
+时候收到错误信息。
+
+
+强化
+
+- 标记不在头文件，而是在其他源文件中的声明。
