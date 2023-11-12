@@ -1,5 +1,5 @@
 #+LAYOUT: post
-#+TITLE: 单词本：linkischen
+#+TITLE: 单词本：linkisch
 #+TAGS: Deutsch
 #+CATEGORIES: language
 
@@ -21,11 +21,11 @@ Antworten gegen ältere eher geschätzt als getadelt werde, daß man dies
 alles sogar sehr geistreich finde, so dachten sie bei sich: »Es ist
 mir ein leichtes, auch solch ein geistreicher Schlingel zu werden.«
 
-这里，我们看到 linkischen 这个词，用来修饰 Wesen ，是说绿黄鼠狼小镇青
-年的笨拙的认知。
+这里，我们看到 linkisch 这个词，用来修饰 Wesen，是说绿黄鼠狼小镇青年
+的笨拙的认知。
 
-link 在德语里是左边，而 linkischen 是笨拙。是不是和 recht 形成鲜明的对
-比呢？
+link 在德语里是左边，而 linkisch 是笨拙。是不是和 recht 形成鲜明的对比
+呢？
 
 德语和英语里 gauche 也有笨手笨脚、不擅社交的意思。而 gauche 在法语里正
 是左边，英语的 left，德语的 link 。
@@ -35,4 +35,4 @@ link 在德语里是左边，而 linkischen 是笨拙。是不是和 recht 形�
 
 英语 awkward 就是尴尬、笨拙、别扭的意思。awkward 本来的意思也正是朝相
 反方向转的意思。右边是恰当的方向，左边就是相反的方向了。所以
-linkischen, gauche 就很 awkward.
+linkisch, gauche 就很 awkward.
