@@ -1,0 +1,68 @@
+---
+layout: post
+title: CppCoreGuidelines SF.5 一个 .cpp 文件必须包含为其定义了接口的头文件
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;A .cpp file must include the header file(s) that defines its
+interface&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+这样做就允许编译器进行早起的一致性检查。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// foo.h:</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">bar</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">long</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">foobar</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183;">)</span>;
+
+<span style="color: #3F7F5F;">// foo.cpp:</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* ... */</span> <span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">bar</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* ... */</span> <span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #0000ff; font-weight: bold;">foobar</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+在早起捕捉不到错误，只有在链接时，一个程序调用了 <code>bar</code> 或 <code>foobar</code> 的时候才会报错。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// foo.h:</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">bar</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">long</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">foobar</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183;">)</span>;
+
+<span style="color: #3F7F5F;">// foo.cpp:</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">"foo.h"</span>
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* ... */</span> <span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">bar</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* ... */</span> <span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #0000ff; font-weight: bold;">foobar</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// error: wrong return type</span>
+</pre>
+</div>
+
+<p>
+现在， <code>foobar</code> 的返回值错误在编译的时候就能立即捕捉到。但是 <code>bar</code> 的参数类型错误还不能马上捕捉到，因为有可能存在重载，但是链接时还是会捕获到的。不管怎么样，系统化的使用 <code>.h</code> 文件可以尽量提前捕捉到错误。
+</p>
