@@ -1,0 +1,53 @@
+#+layout: post
+#+title: CppCoreGuidelines SF.4 在其他声明之前包含头文件
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Include header files before other declarations in a file"
+
+理由
+
+减少互相依赖，增加可读性。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+#include <vector>
+#include <algorithm>
+#include <string>
+
+// ... my code here ...
+#+end_src
+
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+#include <vector>
+
+// ... my code here ...
+
+#include <algorithm>
+#include <string>
+#+end_src
+
+
+注意
+
+对 .h 和 .cpp 文件都适用。
+
+
+注意
+
+也有一些讨论认为应该在我们要保护的代码之后再 ~#include~ 头文件。就像坏例
+子中做的那样。然而，这种方式
+- 只在一层一个文件的时候有效：这么处理的头文件包含到其他头文件中就出问
+  题了。
+- 名字空间（一个实现的名字空间）能保护很多这种上下文依赖的情况。
+- 完全的保护和灵活性需要模块设计。
+  

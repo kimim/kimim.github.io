@@ -112,16 +112,36 @@ C++ 程序员要熟悉标准库和 <a href="https://github.com/isocpp/CppCoreGui
 </p>
 
 <p>
-以下例子中，最后一个使用了 C++ 的自定义后缀。可以用来表示不同的物理量：
+例子
 </p>
 
 <div class="org-src-container">
 <pre class="src src-C++"><span style="color: #0000ff; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// bad: what does s signify?</span>
 <span style="color: #3a5fcd; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #110099;">2.3</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
 
-<span style="color: #0000ff; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Speed</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// better: the meaning of s is specified</span>
+<p>
+从上面的函数定义，我们无法得出这个 <code>double</code> 类型的变量 <code>s</code> 是什么意思。是新的速度，还是速度增量，速度的单位是什么？
+</p>
+
+<p>
+以下例子中，最后一个使用了 C++ 的字面量后缀。可以用来表示不同的物理量。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #0000ff; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Speed</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// better: the meaning of s is specified</span>
 <span style="color: #3a5fcd; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #110099;">2.3</span><span style="color: #707183;">)</span>;        <span style="color: #3F7F5F;">// error: no unit</span>
 <span style="color: #3a5fcd; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #110099;">23</span>_m <span style="color: #7F0055; font-weight: bold;">/</span> <span style="color: #110099;">10</span>s<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// meters per second</span>
+</pre>
+</div>
+
+<p>
+另外，如果我们想让这个函数接收两种不同的变量，即新的速度或者速度的改变量，我们可以再额外定义个名为 <code>Delta</code> 的变量类型。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #0000ff; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Delta</span> <span style="color: #000000;">d</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 

@@ -1,0 +1,73 @@
+---
+layout: post
+title: CppCoreGuidelines SF.4 在其他声明之前包含头文件
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Include header files before other declarations in a file&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+减少互相依赖，增加可读性。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;vector&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;algorithm&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;string&gt;</span>
+
+<span style="color: #3F7F5F;">// ... my code here ...</span>
+</pre>
+</div>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;vector&gt;</span>
+
+<span style="color: #3F7F5F;">// ... my code here ...</span>
+
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;algorithm&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;string&gt;</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+对 .h 和 .cpp 文件都适用。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+也有一些讨论认为应该在我们要保护的代码之后再 <code>#include</code> 头文件。就像坏例子中做的那样。然而，这种方式
+</p>
+<ul class="org-ul">
+<li>只在一层一个文件的时候有效：这么处理的头文件包含到其他头文件中就出问题了。</li>
+<li>名字空间（一个实现的名字空间）能保护很多这种上下文依赖的情况。</li>
+<li>完全的保护和灵活性需要模块设计。</li>
+</ul>

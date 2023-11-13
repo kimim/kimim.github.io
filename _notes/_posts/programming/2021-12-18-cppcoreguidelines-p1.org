@@ -87,18 +87,34 @@ void f(vector<string>& v)
 C++ 程序员要熟悉标准库和 [[https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#S-gsl][GSL 库]]。可复用的库抽象了常用的功能，经过验证、
 性能保障、不易出错、有助理解。
 
-以下例子中，最后一个使用了 C++ 的自定义后缀。可以用来表示不同的物理量：
+例子
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
 change_speed(double s);   // bad: what does s signify?
 change_speed(2.3);
+#+end_src
 
+从上面的函数定义，我们无法得出这个 ~double~ 类型的变量 ~s~ 是什么意思。是
+新的速度，还是速度增量，速度的单位是什么？
+
+以下例子中，最后一个使用了 C++ 的字面量后缀。可以用来表示不同的物理量。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
 change_speed(Speed s);    // better: the meaning of s is specified
 change_speed(2.3);        // error: no unit
 change_speed(23_m / 10s); // meters per second
 #+end_src
 
-以下程序定义了 =_m= 和 =_s= 后缀，这样就可以很直观的表达速度是如何计算出来
+另外，如果我们想让这个函数接收两种不同的变量，即新的速度或者速度的改变
+量，我们可以再额外定义个名为 ~Delta~ 的变量类型。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+change_speed(Delta d);
+#+end_src
+
+以下程序定义了 ~_m~ 和 ~_s~ 后缀，这样就可以很直观的表达速度是如何计算出来
 的，即：米/秒。
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> :eval no-export
