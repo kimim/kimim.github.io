@@ -1,0 +1,63 @@
+---
+layout: post
+title: CppCoreGuidelines SF.7 不要在头文件全局使用 using namespace
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t write <code>using namespace</code> at global scope in a header file&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+这么做的话，就剥夺了 <code>#include</code> 的好处：有效的避免模糊，使用其他选项。这样也导致按照不同顺序包含进来的头文件有不同的效果。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// bad.h</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std; <span style="color: #3F7F5F;">// bad</span>
+
+<span style="color: #3F7F5F;">// user.cpp</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">"bad.h"</span>
+
+<span style="color: #7F0055; font-weight: bold;">bool</span> <span style="color: #0000ff; font-weight: bold;">copy</span><span style="color: #707183;">(</span><span style="color: #3F7F5F;">/*... some parameters ...*/</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// some function that</span>
+                                           <span style="color: #3F7F5F;">// happens to be named copy</span>
+
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3a5fcd; font-weight: bold;">copy</span><span style="color: #7388d6;">(</span><span style="color: #3F7F5F;">/*...*/</span><span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// now overloads local ::copy and std::copy,</span>
+                      <span style="color: #3F7F5F;">// could be ambiguous</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+<code>using namespace std::literals;</code> 是个例外情况。很多情况需要在头文件里使用字符串字面量。根据规则，用户必须自己定义 UDL（user defined literal），不能跟标准库冲突。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记在头文件全局范围内用了 <code>using namespace</code> 的情况。</li>
+</ul>

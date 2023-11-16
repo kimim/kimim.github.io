@@ -1,0 +1,47 @@
+#+layout: post
+#+title: CppCoreGuidelines SF.7 不要在头文件全局使用 using namespace
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t write ~using namespace~ at global scope in a header file"
+
+理由
+
+这么做的话，就剥夺了 ~#include~ 的好处：有效的避免模糊，使用其他选项。这
+样也导致按照不同顺序包含进来的头文件有不同的效果。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// bad.h
+#include <iostream>
+using namespace std; // bad
+
+// user.cpp
+#include "bad.h"
+
+bool copy(/*... some parameters ...*/);    // some function that
+                                           // happens to be named copy
+
+int main()
+{
+    copy(/*...*/);    // now overloads local ::copy and std::copy,
+                      // could be ambiguous
+}
+#+end_src
+
+
+注意
+
+~using namespace std::literals;~ 是个例外情况。很多情况需要在头文件里使
+用字符串字面量。根据规则，用户必须自己定义 UDL（user defined literal），
+不能跟标准库冲突。
+
+
+强化
+
+- 标记在头文件全局范围内用了 ~using namespace~ 的情况。
