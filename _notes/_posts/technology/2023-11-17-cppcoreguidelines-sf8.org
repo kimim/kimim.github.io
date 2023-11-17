@@ -1,0 +1,39 @@
+#+layout: post
+#+title: CppCoreGuidelines SF.8 每个头文件都要加上 #include 包含保护
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~#include~ guards for all header files"
+
+理由
+
+避免头文件被包含了多次。为了避免头文件包含保护本身的冲突，不要仅仅按照
+头文件名来命名包含保护宏。最好包含一个关键字和可区分的名字。比如代码库
+或组件的名字。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// file foobar.h:
+#ifndef LIBRARY_FOOBAR_H
+#define LIBRARY_FOOBAR_H
+// ... declarations ...
+#endif // LIBRARY_FOOBAR_H
+#+end_src
+
+
+强化
+
+标记没有 ~#include~ 包含保护的 ~.h~ 头文件。
+
+
+注意
+
+有些语言的实现通过像 ~@pragma once~ 这种方式来进行包含保护。但是，这种方
+式不是标准定义的，缺少移植性。它是在你的程序中注入主机文件系统语义信息
+来实现的。用这种方式，也会让你的程序锁定在特定语言实现厂商。我们还是建
+议按照 ISO C++ 进行开发。请查看规则：[[./2021-12-20-cppcoreguidelines-p2][P.2]]

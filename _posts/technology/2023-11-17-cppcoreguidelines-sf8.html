@@ -1,0 +1,53 @@
+---
+layout: post
+title: CppCoreGuidelines SF.8 每个头文件都要加上 #include 包含保护
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>#include</code> guards for all header files&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+避免头文件被包含了多次。为了避免头文件包含保护本身的冲突，不要仅仅按照头文件名来命名包含保护宏。最好包含一个关键字和可区分的名字。比如代码库或组件的名字。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// file foobar.h:</span>
+<span style="color: #7F0055; font-weight: bold;">#ifndef</span> <span style="color: #110099;">LIBRARY_FOOBAR_H</span>
+<span style="color: #7F0055; font-weight: bold;">#define</span> <span style="color: #FF0000;">LIBRARY_FOOBAR_H</span>
+<span style="color: #3F7F5F;">// ... declarations ...</span>
+<span style="color: #7F0055; font-weight: bold;">#endif</span> <span style="color: #3F7F5F;">// LIBRARY_FOOBAR_H</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记没有 <code>#include</code> 包含保护的 <code>.h</code> 头文件。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+有些语言的实现通过像 <code>@pragma once</code> 这种方式来进行包含保护。但是，这种方式不是标准定义的，缺少移植性。它是在你的程序中注入主机文件系统语义信息来实现的。用这种方式，也会让你的程序锁定在特定语言实现厂商。我们还是建议按照 ISO C++ 进行开发。请查看规则：<a href="./2021-12-20-cppcoreguidelines-p2">P.2</a>
+</p>
