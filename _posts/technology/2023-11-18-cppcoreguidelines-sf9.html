@@ -1,0 +1,57 @@
+---
+layout: post
+title: CppCoreGuidelines SF.9 避免源代码之间循环依赖
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid cyclic dependencies among source files&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+循环依赖不好理解，减慢编译速度。也不利于将来切换到语言支持的模块
+module。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+避免循环，不是仅仅通过 <code>#include</code> 包含保护来避免。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// file1.h:</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">"file2.h"</span>
+
+<span style="color: #3F7F5F;">// file2.h:</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">"file3.h"</span>
+
+<span style="color: #3F7F5F;">// file3.h:</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">"file1.h"</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记所有的循环依赖。
+</p>
