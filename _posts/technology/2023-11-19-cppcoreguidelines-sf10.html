@@ -1,0 +1,116 @@
+---
+layout: post
+title: CppCoreGuidelines 
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid dependencies on implicitly <code>#include</code> d names&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+避免惊讶。避免因为一个包含的头文件改动了，不得不修改 <code>#include</code> 列表。避免因为头文件，造成逻辑上独立的实现细节之家互相依赖。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std;
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+    cin <span style="color: #7F0055; font-weight: bold;">&gt;&gt;</span> s;               <span style="color: #3F7F5F;">// fine</span>
+    <span style="color: #3a5fcd; font-weight: bold;">getline</span><span style="color: #7388d6;">(</span>cin, s<span style="color: #7388d6;">)</span>;        <span style="color: #3F7F5F;">// error: getline() not defined</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>s <span style="color: #7F0055; font-weight: bold;">==</span> <span style="color: #2A00FF;">"surprise"</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>  <span style="color: #3F7F5F;">// error == not defined</span>
+        <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+<code>&lt;iostream&gt;</code> 会暴露 <code>std::string</code> 的定义（为何？）。但是不会包含整个
+<code>&lt;string&gt;</code> 头文件。于是会引起一些初学者的问题：为何 <code>getline(cin, s);</code> 无法工作？为什么 <code>string</code> 无法通过 <code>==</code> 进行比较判断？
+</p>
+
+<p>
+解决方案是显式的添加 <code>#include &lt;string&gt;;</code>
+</p>
+
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;string&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std;
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+    cin <span style="color: #7F0055; font-weight: bold;">&gt;&gt;</span> s;               <span style="color: #3F7F5F;">// fine</span>
+    <span style="color: #3a5fcd; font-weight: bold;">getline</span><span style="color: #7388d6;">(</span>cin, s<span style="color: #7388d6;">)</span>;        <span style="color: #3F7F5F;">// fine</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>s <span style="color: #7F0055; font-weight: bold;">==</span> <span style="color: #2A00FF;">"surprise"</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>  <span style="color: #3F7F5F;">// fine</span>
+        <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+有些头文件就是用来收集多个不同头文件的，比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// basic_std_lib.h:</span>
+
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;string&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;map&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;random&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;vector&gt;</span>
+</pre>
+</div>
+
+<p>
+用户可以通过单个 <code>#include</code> 就把以上头文件都包含进来了。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">"basic_std_lib.h"</span>
+</pre>
+</div>
+
+<p>
+此条规则反对隐式包含，但是并不阻止这种有意的头文件聚合设计。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+强化手段需要知道头文件里哪些是导出的，哪些是实现细节相关的。在我们有
+ C++ module 之前，暂时没有什么好的解决方案。
+</p>
