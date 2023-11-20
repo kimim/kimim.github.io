@@ -1,0 +1,39 @@
+#+layout: post
+#+title: CppCoreGuidelines SF.11 头文件应当自包含
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Header files should be self-contained"
+
+理由
+
+可用性。头文件应该用起来很简单、工作起来很方便。头文件应该是子包含的，
+也就是说包含了自身能正常工作的相关其他头文件。头文件应当封装了它能提供的功能。头文件的用户不需要管理头文件的依赖关系。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+#include "helpers.h"
+// helpers.h depends on std::string and includes <string>
+#+end_src
+
+
+注意
+
+违背此规则，会导致头文件的用户在诊断错误的时候遇到麻烦。
+
+
+注意
+
+头文件应当包含自己依赖的所有东西。注意相对路径。因为 C++ 中的相对路径
+有特殊的意义。
+
+
+强化
+
+- 需要测试一下，头文件本身是否可以编译，或者一个 ~cpp~ 文件只包含了某个
+  头文件，也可以编译。
