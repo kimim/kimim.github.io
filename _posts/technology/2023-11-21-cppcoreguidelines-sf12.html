@@ -1,0 +1,64 @@
+---
+layout: post
+title: CppCoreGuidelines SF.12 相对路径的头文件用引号包含，其他情况用尖括号
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer the quoted form of #include for files relative to the
+including file and the angle bracket form everywhere else&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+C++ 标准规定两种形式的 <code>#include</code> 一种是尖括号（&lt;&gt;），一种是双引号（&ldquo;&rdquo;），编译器可以灵活选择进行实现。工具厂商也可以利用两种形式的差别，选择不同的路径搜索算法。
+</p>
+
+<p>
+然而，本指南建议，头文件的路径如果是相对路径，则使用引号形式。其他情况则使用尖括号。这样的使用方式，可以清晰区分相对路径的头文件和其他需要特定搜索算法的头文件。这样也可以清晰区分哪些头文件是相对的局部头文件，哪些是标准库的头文件。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// foo.cpp:</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;string&gt;</span>                <span style="color: #3F7F5F;">// From the standard library, requires the &lt;&gt; form</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;some_library/common.h&gt;</span> <span style="color: #3F7F5F;">// A file that is not locally relative, included from another library; use the &lt;&gt; form</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">"foo.h"</span>                 <span style="color: #3F7F5F;">// A file locally relative to foo.cpp in the same project, use the "" form</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">"foo_utils/utils.h"</span>     <span style="color: #3F7F5F;">// A file locally relative to foo.cpp in the same project, use the "" form</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;component_b/bar.h&gt;</span>     <span style="color: #3F7F5F;">// A file in the same project located via a search path, use the &lt;&gt; form</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+不遵循这条指南的话，会很难诊断出是否选用了错误的头文件。比如说，
+<code>#include ""</code> 一般会优先选择局部的相对的路径，然后查找非局部的非相对的路径。这就意味着，如果之前局部相对路径没有某个头文件，后来添加了这个头文件，编译器就会选用这个新添加的头文件。这时候，就会得到预料之外的结果了。
+</p>
+
+<p>
+程序库的作者应当把头文件放在特定系统路径，然后要求使用者以尖括号的方式包含到代码中： <code>#include &lt;some_library/common.h&gt;</code>
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+要能检测出本该用 <code>&lt;&gt;</code>  的地方，用了 <code>""</code>
+</p>

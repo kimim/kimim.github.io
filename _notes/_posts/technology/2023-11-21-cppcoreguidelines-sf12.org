@@ -1,0 +1,49 @@
+#+layout: post
+#+title: CppCoreGuidelines SF.12 相对路径的头文件用引号包含，其他情况用尖括号
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer the quoted form of #include for files relative to the
+including file and the angle bracket form everywhere else"
+
+理由
+
+C++ 标准规定两种形式的 ~#include~ 一种是尖括号（<>），一种是双引号（""），
+编译器可以灵活选择进行实现。工具厂商也可以利用两种形式的差别，选择不同
+的路径搜索算法。
+
+然而，本指南建议，头文件的路径如果是相对路径，则使用引号形式。其他情况
+则使用尖括号。这样的使用方式，可以清晰区分相对路径的头文件和其他需要特
+定搜索算法的头文件。这样也可以清晰区分哪些头文件是相对的局部头文件，哪
+些是标准库的头文件。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// foo.cpp:
+#include <string>                // From the standard library, requires the <> form
+#include <some_library/common.h> // A file that is not locally relative, included from another library; use the <> form
+#include "foo.h"                 // A file locally relative to foo.cpp in the same project, use the "" form
+#include "foo_utils/utils.h"     // A file locally relative to foo.cpp in the same project, use the "" form
+#include <component_b/bar.h>     // A file in the same project located via a search path, use the <> form
+#+end_src
+
+
+注意
+
+不遵循这条指南的话，会很难诊断出是否选用了错误的头文件。比如说，
+~#include ""~ 一般会优先选择局部的相对的路径，然后查找非局部的非相对的路
+径。这就意味着，如果之前局部相对路径没有某个头文件，后来添加了这个头文
+件，编译器就会选用这个新添加的头文件。这时候，就会得到预料之外的结果了。
+
+程序库的作者应当把头文件放在特定系统路径，然后要求使用者以尖括号的方式
+包含到代码中： ~#include <some_library/common.h>~
+
+
+强化
+
+要能检测出本该用 ~<>~  的地方，用了 ~""~
