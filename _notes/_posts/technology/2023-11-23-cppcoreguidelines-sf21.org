@@ -1,0 +1,44 @@
+#+layout: post
+#+title: CppCoreGuidelines SF.21 不要在头文件中用匿名 namespace
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t use an unnamed (anonymous) namespace in a header"
+
+理由
+
+在头文件中用到匿名 namespace  基本上都是一种 bug
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// file foo.h:
+namespace
+{
+    const double x = 1.234;  // bad
+
+    double foo(double y)     // bad
+    {
+        return y + x;
+    }
+}
+
+namespace Foo
+{
+    const double x = 1.234; // good
+
+    inline double foo(double y)        // good
+    {
+        return y + x;
+    }
+}
+#+end_src
+
+
+强化
+
+- 标记在头文件中用到匿名 namespace 的情况
