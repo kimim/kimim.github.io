@@ -1,0 +1,44 @@
+#+layout: post
+#+title: CppCoreGuidelines SF.22 匿名 namespace 中放内部的、不导出实体
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use an unnamed (anonymous) namespace for all internal/non-exported
+entities"
+
+理由
+
+外部程序不该依赖于嵌套的匿名 namespace 中的实体。考虑把具体实现的代码
+文件中用到的定义放到匿名 namespace，除非某个实例需要导出供外部使用。
+
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+static int f();
+int g();
+static bool h();
+int k();
+#+end_src
+
+
+好例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+namespace {
+    int f();
+    bool h();
+}
+int g();
+int k();
+#+end_src
+
+
+例子
+
+API 类和成员不能放在匿名 namespace；但是定义在具体实现的代码文件中的辅
+助类和函数应当放在匿名 namespace 范围

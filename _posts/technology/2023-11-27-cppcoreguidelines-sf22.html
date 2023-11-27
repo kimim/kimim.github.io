@@ -1,0 +1,59 @@
+---
+layout: post
+title: CppCoreGuidelines SF.22 匿名 namespace 中放内部的、不导出实体
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use an unnamed (anonymous) namespace for all internal/non-exported
+entities&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+外部程序不该依赖于嵌套的匿名 namespace 中的实体。考虑把具体实现的代码文件中用到的定义放到匿名 namespace，除非某个实例需要导出供外部使用。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">()</span>;
+<span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #7F0055; font-weight: bold;">bool</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #707183;">()</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">k</span><span style="color: #707183;">()</span>;
+</pre>
+</div>
+
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">bool</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">()</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">k</span><span style="color: #707183;">()</span>;
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<p>
+API 类和成员不能放在匿名 namespace；但是定义在具体实现的代码文件中的辅助类和函数应当放在匿名 namespace 范围
+</p>
