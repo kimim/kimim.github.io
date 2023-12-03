@@ -1,0 +1,13 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.1 尽量用程序库
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use libraries wherever possible"
+
+理由
+
+节省时间。不要重复造轮子。不要重复他人的工作。别人做了改进你也能直接受
+益。你做了改进，也要提供出去帮助他人。
