@@ -1,0 +1,13 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.2 优先使用标准库
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer the standard library to other libraries"
+
+理由
+
+标准库大家都在用。更稳定。维护支持的更好。比你自己的代码和别的库用的地
+方更多。
