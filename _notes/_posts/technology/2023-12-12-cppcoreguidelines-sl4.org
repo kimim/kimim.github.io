@@ -1,0 +1,18 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.4 以类型安全的方式使用标准库
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use the standard library in a type-safe manner"
+
+理由
+
+很显然，违反此规则，会导致未定义的行为、内存错乱、以及多种严重的错误。
+
+
+注意
+
+这是一条半哲学的元规则。需要一些列具体的支持规则。我们以这条作为其他很
+多具体规则的一个总领。
