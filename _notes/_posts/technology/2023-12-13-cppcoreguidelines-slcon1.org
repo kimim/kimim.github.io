@@ -1,0 +1,58 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.con.1 用 STL array 或 vector，不要用 C 数组
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer using STL array or vector instead of a C array"
+
+理由
+
+C 数组不够安全，相比 STL array 和 vector 也没有任何优势。需要固定长度
+数组的话，可以用 ~std::array~ ，它在传递给函数的时候不会退化成指针，也包
+含了自身的大小。另外，也跟内置数组一样，堆栈分配的 ~std::array~ 的元素保
+存在堆栈中。对于变长数组，可以使用 ~std::vector~ ，它会根据需要从分配新
+的内存。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int v[SIZE];                        // BAD
+
+std::array<int, SIZE> w;            // ok
+#+end_src
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int* v = new int[initial_size];     // BAD, owning raw pointer
+delete[] v;                         // BAD, manual delete
+
+std::vector<int> w(initial_size);   // ok
+#+end_src
+
+
+注意
+
+对于无需所有权的容器，可以用 ~gsl::span~ 
+
+
+注意
+
+比较堆栈上分配的固定长度数组和自由存储区上分配元素的 ~vector~ 是一个伪命
+题。你只要比较下在堆栈上分配内存的 ~std::array~ 和 ~malloc()~ 内存以指针访
+问的方式就知道了。对于大部分代码，堆栈分配内存还是自由存储区分配内存其
+实没有太大差别。但是从安全性和便捷性上看， ~vector~ 还是胜出的。对于两种
+内存分配方式差别很大的地方，工作人员也很清楚应该怎么选择数组和 ~vector~
+。
+
+
+强化
+
+- 标记在函数和类中声明 C 数组的地方，同时也声明 STL 容器的情况。至少要
+  把 C 数组改为 ~std::array~ 。

@@ -1,0 +1,74 @@
+---
+layout: post
+title: CppCoreGuidelines SL.con.1 用 STL array 或 vector，不要用 C 数组
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer using STL array or vector instead of a C array&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+C 数组不够安全，相比 STL array 和 vector 也没有任何优势。需要固定长度数组的话，可以用 <code>std::array</code> ，它在传递给函数的时候不会退化成指针，也包含了自身的大小。另外，也跟内置数组一样，堆栈分配的 <code>std::array</code> 的元素保存在堆栈中。对于变长数组，可以使用 <code>std::vector</code> ，它会根据需要从分配新的内存。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">v</span><span style="color: #707183;">[</span><span style="color: #000000;">SIZE</span><span style="color: #707183;">]</span>;                        <span style="color: #3F7F5F;">// BAD</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">array</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">SIZE</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">w</span>;            <span style="color: #3F7F5F;">// ok</span>
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">v</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183;">[</span>initial_size<span style="color: #707183;">]</span>;     <span style="color: #3F7F5F;">// BAD, owning raw pointer</span>
+<span style="color: #7F0055; font-weight: bold;">delete</span><span style="color: #707183;">[]</span> v;                         <span style="color: #3F7F5F;">// BAD, manual delete</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">w</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">initial_size</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// ok</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+对于无需所有权的容器，可以用 <code>gsl::span</code> 
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+比较堆栈上分配的固定长度数组和自由存储区上分配元素的 <code>vector</code> 是一个伪命题。你只要比较下在堆栈上分配内存的 <code>std::array</code> 和 <code>malloc()</code> 内存以指针访问的方式就知道了。对于大部分代码，堆栈分配内存还是自由存储区分配内存其实没有太大差别。但是从安全性和便捷性上看， <code>vector</code> 还是胜出的。对于两种内存分配方式差别很大的地方，工作人员也很清楚应该怎么选择数组和 <code>vector</code>
+。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记在函数和类中声明 C 数组的地方，同时也声明 STL 容器的情况。至少要把 C 数组改为 <code>std::array</code> 。</li>
+</ul>
