@@ -1,0 +1,45 @@
+---
+layout: post
+title: CppCoreGuidelines SL.3 不要把非标准库的实体放在 std 名字空间里
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Do not add non-standard entities to namespace <code>std</code>&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+添加到 <code>std</code> 会使得代码不符合标准，还可能导致将来的版本出错。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// BAD: violates standard</span>
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_vector</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #3F7F5F;">//     . . .</span>
+<span style="color: #7388d6;">}</span>;
+
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// GOOD: user namespace is allowed</span>
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_vector</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #3F7F5F;">//     . . .</span>
+<span style="color: #7388d6;">}</span>;
+
+<span style="color: #707183;">}</span>
+</pre>
+</div>
