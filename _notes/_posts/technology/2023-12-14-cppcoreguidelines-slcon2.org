@@ -1,0 +1,58 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.con.2 一般使用 STL vector，除非你有其他特殊需求
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer using STL vector by default unless you have a reason to use a
+different container"
+
+理由
+
+标准容器中的 ~vector~ 和 ~std::array~ 有以下优势：
+- 访问速度快（随机访问、支持向量式访问）
+- 各种访问模式都很快（从前到后，从后到前，支持预读取）
+- 空间开销最小（连续的内存布局，各元素之间没有额外开销，有效利用缓存）
+
+通常来说，你需要在容器里添加或删除元素，所以首选选择 ~vector~ 。如果你不
+修改容器的大小，就可以用 ~std::array~
+
+尽管有时候，其他容器看起来更合适，比如 ~map~ 的查询开销是 ~O(log N)~ ，
+~list~ 的中间插入效率很高。但是，如果存储 KB 的元素， ~vector~ 的性能还是
+很不错的。
+
+
+注意
+
+~string~ 不能作为单独字符的容器。 ~string~ 就是一个字符串。如果你需要字符
+的容器，可以用 ~vector</*char_type*/>~ 或 ~array</*char_type*/>~
+
+
+例外
+
+如果你有充分的理由用其他容器更好用，那么就用吧。比如：
+- 如果 ~vector~  满足你的需求，但是你不想要可变大小的容器，可以用 ~std::array~
+- 如果你想要一个字典式可查找的容器，确保满足 ~O(K)~ 或 ~O(log N)~ 查询速度，
+  或者容器很大，远远大于几 KB ，而且你还要经常进行元素插入操作，这时候，
+  要维护一个排序的 ~vector~ 就很不合理了。可以用 ~unordered_map~ 或 ~map~ 。
+
+
+注意
+
+初始化一个特定大小的 ~vector~ ，用 ~()~ 来初始化。用一个列表初始化 ~vector~
+，请使用 ~{}~ 。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+vector<int> v1(20);  // v1 has 20 elements with the value 0 (vector<int>{})
+vector<int> v2 {20}; // v2 has 1 element with the value 20
+#+end_src
+
+[[./2023-03-30-cppcoreguidelines-es23][首选 ~{}~ 初始化语法]]。
+
+
+强化
+
+- 标记初始化后大小不改变的 ~vector~ ，比如它是 ~const~ 的，或者是没有非
+  ~const~ 函数访问它。可以改为 ~array~ 。

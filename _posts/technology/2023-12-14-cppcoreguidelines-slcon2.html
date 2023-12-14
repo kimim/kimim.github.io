@@ -1,0 +1,88 @@
+---
+layout: post
+title: CppCoreGuidelines SL.con.2 一般使用 STL vector，除非你有其他特殊需求
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer using STL vector by default unless you have a reason to use a
+different container&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+标准容器中的 <code>vector</code> 和 <code>std::array</code> 有以下优势：
+</p>
+<ul class="org-ul">
+<li>访问速度快（随机访问、支持向量式访问）</li>
+<li>各种访问模式都很快（从前到后，从后到前，支持预读取）</li>
+<li>空间开销最小（连续的内存布局，各元素之间没有额外开销，有效利用缓存）</li>
+</ul>
+
+<p>
+通常来说，你需要在容器里添加或删除元素，所以首选选择 <code>vector</code> 。如果你不修改容器的大小，就可以用 <code>std::array</code>
+</p>
+
+<p>
+尽管有时候，其他容器看起来更合适，比如 <code>map</code> 的查询开销是 <code>O(log N)</code> ，
+<code>list</code> 的中间插入效率很高。但是，如果存储 KB 的元素， <code>vector</code> 的性能还是很不错的。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+<code>string</code> 不能作为单独字符的容器。 <code>string</code> 就是一个字符串。如果你需要字符的容器，可以用 <code>vector&lt;/*char_type*/&gt;</code> 或 <code>array&lt;/*char_type*/&gt;</code>
+</p>
+
+
+<p>
+例外
+</p>
+
+<p>
+如果你有充分的理由用其他容器更好用，那么就用吧。比如：
+</p>
+<ul class="org-ul">
+<li>如果 <code>vector</code>  满足你的需求，但是你不想要可变大小的容器，可以用 <code>std::array</code></li>
+<li>如果你想要一个字典式可查找的容器，确保满足 <code>O(K)</code> 或 <code>O(log N)</code> 查询速度，或者容器很大，远远大于几 KB ，而且你还要经常进行元素插入操作，这时候，要维护一个排序的 <code>vector</code> 就很不合理了。可以用 <code>unordered_map</code> 或 <code>map</code> 。</li>
+</ul>
+
+
+<p>
+注意
+</p>
+
+<p>
+初始化一个特定大小的 <code>vector</code> ，用 <code>()</code> 来初始化。用一个列表初始化 <code>vector</code>
+，请使用 <code>{}</code> 。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">v1</span><span style="color: #707183;">(</span><span style="color: #110099;">20</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// v1 has 20 elements with the value 0 (vector&lt;int&gt;{})</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">v2</span> <span style="color: #707183;">{</span><span style="color: #110099;">20</span><span style="color: #707183;">}</span>; <span style="color: #3F7F5F;">// v2 has 1 element with the value 20</span>
+</pre>
+</div>
+
+<p>
+<a href="./2023-03-30-cppcoreguidelines-es23">首选 <code>{}</code> 初始化语法</a>。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记初始化后大小不改变的 <code>vector</code> ，比如它是 <code>const</code> 的，或者是没有非
+<code>const</code> 函数访问它。可以改为 <code>array</code> 。</li>
+</ul>
