@@ -1,0 +1,125 @@
+---
+layout: post
+title: CppCoreGuidelines SL.con.3 避免边界错误
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid bounds errors&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+超出边界读写容器的元素，往往会导致严重的错误、错误的结果、程序崩溃或安全漏洞。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+应用于有范围的容器的标准库函数，往往会有边界安全的函数重载。像 <code>vector</code>
+这样的标准类型，可以简单修改为边界检测版本（比如添加一个合约 contract），或者用 <code>at()</code> 函数。
+</p>
+
+
+<p>
+理想情况下，是否在边界范围内应该能静态的强化。比如：
+</p>
+<ul class="org-ul">
+<li>带范围的 <code>for</code>  循环不能运行超出容器边界。</li>
+<li>可以用 <code>v.begin()</code> 和 <code>v.end()</code> 确定是否超出边界。</li>
+</ul>
+
+<p>
+此类循环和不检测的，不安全的版本应该运行速度一样快。 
+</p>
+
+<p>
+通常，简单的预先检测可以避免对每个下标进行检测。比如： <code>v.begin(),
+v.begin()+i</code> 中的 <code>i</code> 可以先跟 <code>v.size()</code> 进行比较。
+</p>
+
+<p>
+这样写的循环比每次访问元素都进行检测的版本要快很多。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">array</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span>, <span style="color: #110099;">10</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">a</span>, <span style="color: #000000;">b</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">memset</span><span style="color: #7388d6;">(</span>a.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">data</span><span style="color: #909183;">()</span>, <span style="color: #110099;">0</span>, <span style="color: #110099;">10</span><span style="color: #7388d6;">)</span>;         <span style="color: #3F7F5F;">// BAD, and contains a length error (length = 10 * sizeof(int))</span>
+    <span style="color: #3a5fcd; font-weight: bold;">memcmp</span><span style="color: #7388d6;">(</span>a.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">data</span><span style="color: #909183;">()</span>, b.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">data</span><span style="color: #909183;">()</span>, <span style="color: #110099;">10</span><span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// BAD, and contains a length error (length = 10 * sizeof(int))</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+还有， <code>std::array&lt;&gt;::fill()</code> 或 <code>std::fill()</code> 或者甚至是空的初始化，都比
+<code>memset()</code> 还要好。
+</p>
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">array</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span>, <span style="color: #110099;">10</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">a</span>, <span style="color: #000000;">b</span>, <span style="color: #000000;">c</span><span style="color: #7388d6;">{}</span>;       <span style="color: #3F7F5F;">// c is initialized to zero</span>
+    a.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">fill</span><span style="color: #7388d6;">(</span><span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">fill</span><span style="color: #7388d6;">(</span>b.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">begin</span><span style="color: #909183;">()</span>, b.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">end</span><span style="color: #909183;">()</span>, <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>;    <span style="color: #3F7F5F;">// std::fill()</span>
+    <span style="color: #3a5fcd; font-weight: bold;">fill</span><span style="color: #7388d6;">(</span>b, <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>;                     <span style="color: #3F7F5F;">// std::ranges::fill()</span>
+
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span> a <span style="color: #7F0055; font-weight: bold;">==</span> b <span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+      <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<p>
+如果代码里已经用了没修改过的标准库，我们还有其他临时方案以边界安全的方式使用 <code>std::array</code> 和 <code>std::vector</code> 。代码里可以调用 <code>.at()</code> 成员函数。这样，如果超出边界访问，就会抛出 <code>std::out_of_range</code> 异常。另外，代码里也能调用 <code>at()</code> 函数，有越界访问的话，会直接出错，或者你可以设定出错行为。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">v</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">array</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span>, <span style="color: #110099;">12</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000;">v</span><span style="color: #7388d6;">[</span><span style="color: #110099;">0</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> a<span style="color: #7388d6;">[</span><span style="color: #110099;">0</span><span style="color: #7388d6;">]</span>;        <span style="color: #3F7F5F;">// BAD</span>
+    v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">at</span><span style="color: #7388d6;">(</span><span style="color: #110099;">0</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> a<span style="color: #7388d6;">[</span><span style="color: #110099;">0</span><span style="color: #7388d6;">]</span>;     <span style="color: #3F7F5F;">// OK (alternative 1)</span>
+    <span style="color: #3a5fcd; font-weight: bold;">at</span><span style="color: #7388d6;">(</span>v, <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> a<span style="color: #7388d6;">[</span><span style="color: #110099;">0</span><span style="color: #7388d6;">]</span>;    <span style="color: #3F7F5F;">// OK (alternative 2)</span>
+
+    v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">at</span><span style="color: #7388d6;">(</span><span style="color: #110099;">0</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> a<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span>;     <span style="color: #3F7F5F;">// BAD</span>
+    v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">at</span><span style="color: #7388d6;">(</span><span style="color: #110099;">0</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> a.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">at</span><span style="color: #7388d6;">(</span>i<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// OK (alternative 1)</span>
+    v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">at</span><span style="color: #7388d6;">(</span><span style="color: #110099;">0</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">at</span><span style="color: #7388d6;">(</span>a, i<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// OK (alternative 2)</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>诊断发现调用到无边界检测的标准库函数。</li>
+</ul>

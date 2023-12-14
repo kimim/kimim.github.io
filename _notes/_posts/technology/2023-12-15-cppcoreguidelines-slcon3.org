@@ -1,0 +1,92 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.con.3 避免边界错误
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid bounds errors"
+
+理由
+
+超出边界读写容器的元素，往往会导致严重的错误、错误的结果、程序崩溃或安全漏洞。
+
+
+注意
+
+应用于有范围的容器的标准库函数，往往会有边界安全的函数重载。像 ~vector~
+这样的标准类型，可以简单修改为边界检测版本（比如添加一个合约 contract），
+或者用 ~at()~ 函数。
+
+
+理想情况下，是否在边界范围内应该能静态的强化。比如：
+- 带范围的 ~for~  循环不能运行超出容器边界。
+- 可以用 ~v.begin()~ 和 ~v.end()~ 确定是否超出边界。
+
+此类循环和不检测的，不安全的版本应该运行速度一样快。 
+
+通常，简单的预先检测可以避免对每个下标进行检测。比如： ~v.begin(),
+v.begin()+i~ 中的 ~i~ 可以先跟 ~v.size()~ 进行比较。
+
+这样写的循环比每次访问元素都进行检测的版本要快很多。
+
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f()
+{
+    array<int, 10> a, b;
+    memset(a.data(), 0, 10);         // BAD, and contains a length error (length = 10 * sizeof(int))
+    memcmp(a.data(), b.data(), 10);  // BAD, and contains a length error (length = 10 * sizeof(int))
+}
+#+end_src
+
+
+还有， ~std::array<>::fill()~ 或 ~std::fill()~ 或者甚至是空的初始化，都比
+~memset()~ 还要好。
+
+好例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f()
+{
+    array<int, 10> a, b, c{};       // c is initialized to zero
+    a.fill(0);
+    fill(b.begin(), b.end(), 0);    // std::fill()
+    fill(b, 0);                     // std::ranges::fill()
+
+    if ( a == b ) {
+      // ...
+    }
+}
+#+end_src
+
+
+例子
+
+如果代码里已经用了没修改过的标准库，我们还有其他临时方案以边界安全的方
+式使用 ~std::array~ 和 ~std::vector~ 。代码里可以调用 ~.at()~ 成员函数。这样，
+如果超出边界访问，就会抛出 ~std::out_of_range~ 异常。另外，代码里也能调
+用 ~at()~ 函数，有越界访问的话，会直接出错，或者你可以设定出错行为。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f(std::vector<int>& v, std::array<int, 12> a, int i)
+{
+    v[0] = a[0];        // BAD
+    v.at(0) = a[0];     // OK (alternative 1)
+    at(v, 0) = a[0];    // OK (alternative 2)
+
+    v.at(0) = a[i];     // BAD
+    v.at(0) = a.at(i);  // OK (alternative 1)
+    v.at(0) = at(a, i); // OK (alternative 2)
+}
+#+end_src
+
+
+强化
+
+- 诊断发现调用到无边界检测的标准库函数。
