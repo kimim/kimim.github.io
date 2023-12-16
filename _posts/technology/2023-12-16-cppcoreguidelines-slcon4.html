@@ -1,0 +1,78 @@
+---
+layout: post
+title: CppCoreGuidelines SL.con.4 不要给 memset 或 memcpy 传平凡可复制的类型
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;don’t use memset or memcpy for arguments that are not
+trivially-copyable&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+违背此规则会搅乱对象的语义（比如覆盖了 <code>vptr</code> ）。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+此规则也适用于 <code>(w)memset</code>, <code>(w)memcpy</code>, <code>(w)memmove</code>, <code>(w)memcmp</code>
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">base</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">update</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">derived</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">base</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">update</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{}</span>
+<span style="color: #707183;">}</span>;
+
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">derived</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">derived</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// goodbye v-tables</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3a5fcd; font-weight: bold;">memset</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>a, <span style="color: #110099;">0</span>, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span>derived<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">memcpy</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>a, <span style="color: #7F0055; font-weight: bold;">&amp;</span>b, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span>derived<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">memcmp</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>a, <span style="color: #7F0055; font-weight: bold;">&amp;</span>b, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span>derived<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+相反，应该定义恰当的默认初始化函数、复制函数、比较函数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">derived</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">derived</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000;">a</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7388d6;">{}</span>;    <span style="color: #3F7F5F;">// default initialize</span>
+    <span style="color: #000000;">b</span> <span style="color: #7F0055; font-weight: bold;">=</span> a;     <span style="color: #3F7F5F;">// copy</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>a <span style="color: #7F0055; font-weight: bold;">==</span> b<span style="color: #7388d6;">)</span> <span style="color: #3a5fcd; font-weight: bold;">do_something</span><span style="color: #7388d6;">(</span>a, b<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记在非平凡可复制类型使用以上这些函数的情况</li>
+</ul>

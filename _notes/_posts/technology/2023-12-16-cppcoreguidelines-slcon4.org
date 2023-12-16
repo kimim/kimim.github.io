@@ -1,0 +1,57 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.con.4 不要给 memset 或 memcpy 传平凡可复制的类型
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"don’t use memset or memcpy for arguments that are not
+trivially-copyable"
+
+理由
+
+违背此规则会搅乱对象的语义（比如覆盖了 ~vptr~ ）。
+
+
+注意
+
+此规则也适用于 ~(w)memset~, ~(w)memcpy~, ~(w)memmove~, ~(w)memcmp~
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+struct base {
+    virtual void update() = 0;
+};
+
+struct derived : public base {
+    void update() override {}
+};
+
+
+void f(derived& a, derived& b) // goodbye v-tables
+{
+    memset(&a, 0, sizeof(derived));
+    memcpy(&a, &b, sizeof(derived));
+    memcmp(&a, &b, sizeof(derived));
+}
+#+end_src
+
+相反，应该定义恰当的默认初始化函数、复制函数、比较函数。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void g(derived& a, derived& b)
+{
+    a = {};    // default initialize
+    b = a;     // copy
+    if (a == b) do_something(a, b);
+}
+#+end_src
+
+
+强化
+
+- 标记在非平凡可复制类型使用以上这些函数的情况
