@@ -1,0 +1,74 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.str.1 用 std::string 表达字符串序列的所有权
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use std::string to own character sequences"
+
+理由
+
+~string~ 提供了正确处理分配、所有权转移、复制、逐渐扩展以及其他很多有用
+的操作。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+vector<string> read_until(const string& terminator)
+{
+    vector<string> res;
+    for (string s; cin >> s && s != terminator; ) // read a word
+        res.push_back(s);
+    return res;
+}
+#+end_src
+
+注意看， ~>>~ 操作是如何提供给 ~string~ 的。看看这些操作是多么有用。这里没
+有用到任何显式的分配、销毁、边界检测等操作。字符串都自己处理好了。
+
+在 C++17 中，我们可以用 ~string_view~ 来作为参数，而不用 ~const string&~
+，这允许调用更灵活的使用函数。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+vector<string> read_until(string_view terminator)   // C++17
+{
+    vector<string> res;
+    for (string s; cin >> s && s != terminator; ) // read a word
+        res.push_back(s);
+    return res;
+}
+#+end_src
+
+
+坏例子
+
+不要用 C  风格的字符串，因为这个方式需要繁琐的内存操作。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+char* cat(const char* s1, const char* s2)   // beware!
+    // return s1 + '.' + s2
+{
+    int l1 = strlen(s1);
+    int l2 = strlen(s2);
+    char* p = (char*) malloc(l1 + l2 + 2);
+    strcpy(p, s1, l1);
+    p[l1] = '.';
+    strcpy(p + l1 + 1, s2, l2);
+    p[l1 + l2 + 1] = 0;
+    return p;
+}
+#+end_src
+
+我们写对代码了吗？调用 ~cat~ 的人会不会忘记 ~free()~ 掉返回的指针？这段代
+码能通过信息安全评审吗？
+
+
+注意
+
+没有测量的话，不要认为字符串 ~string~ 类比底层技术速度更慢。记住，不是所
+有代码都是性能敏感的关键代码。不要在还没实际还不成熟的时候进行优化。

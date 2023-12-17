@@ -1,0 +1,95 @@
+---
+layout: post
+title: CppCoreGuidelines SL.str.1 用 std::string 表达字符串序列的所有权
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use std::string to own character sequences&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>string</code> 提供了正确处理分配、所有权转移、复制、逐渐扩展以及其他很多有用的操作。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">read_until</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">terminator</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">res</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>; cin <span style="color: #7F0055; font-weight: bold;">&gt;&gt;</span> s <span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> s <span style="color: #7F0055; font-weight: bold;">!=</span> terminator; <span style="color: #7388d6;">)</span> <span style="color: #3F7F5F;">// read a word</span>
+        res.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">push_back</span><span style="color: #7388d6;">(</span>s<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> res;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意看， <code>&gt;&gt;</code> 操作是如何提供给 <code>string</code> 的。看看这些操作是多么有用。这里没有用到任何显式的分配、销毁、边界检测等操作。字符串都自己处理好了。
+</p>
+
+<p>
+在 C++17 中，我们可以用 <code>string_view</code> 来作为参数，而不用 <code>const string&amp;</code>
+，这允许调用更灵活的使用函数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">read_until</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">terminator</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// C++17</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">res</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>; cin <span style="color: #7F0055; font-weight: bold;">&gt;&gt;</span> s <span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> s <span style="color: #7F0055; font-weight: bold;">!=</span> terminator; <span style="color: #7388d6;">)</span> <span style="color: #3F7F5F;">// read a word</span>
+        res.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">push_back</span><span style="color: #7388d6;">(</span>s<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> res;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+坏例子
+</p>
+
+<p>
+不要用 C  风格的字符串，因为这个方式需要繁琐的内存操作。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #0000ff; font-weight: bold;">cat</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">s1</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">s2</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// beware!</span>
+    <span style="color: #3F7F5F;">// return s1 + '.' + s2</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">l1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">strlen</span><span style="color: #7388d6;">(</span>s1<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">l2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">strlen</span><span style="color: #7388d6;">(</span>s2<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6;">)</span> <span style="color: #3a5fcd; font-weight: bold;">malloc</span><span style="color: #7388d6;">(</span>l1 <span style="color: #7F0055; font-weight: bold;">+</span> l2 <span style="color: #7F0055; font-weight: bold;">+</span> <span style="color: #110099;">2</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">strcpy</span><span style="color: #7388d6;">(</span>p, s1, l1<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000;">p</span><span style="color: #7388d6;">[</span>l1<span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">'.'</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">strcpy</span><span style="color: #7388d6;">(</span>p <span style="color: #7F0055; font-weight: bold;">+</span> l1 <span style="color: #7F0055; font-weight: bold;">+</span> <span style="color: #110099;">1</span>, s2, l2<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000;">p</span><span style="color: #7388d6;">[</span>l1 <span style="color: #7F0055; font-weight: bold;">+</span> l2 <span style="color: #7F0055; font-weight: bold;">+</span> <span style="color: #110099;">1</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> p;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+我们写对代码了吗？调用 <code>cat</code> 的人会不会忘记 <code>free()</code> 掉返回的指针？这段代码能通过信息安全评审吗？
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+没有测量的话，不要认为字符串 <code>string</code> 类比底层技术速度更慢。记住，不是所有代码都是性能敏感的关键代码。不要在还没实际还不成熟的时候进行优化。
+</p>
