@@ -1,0 +1,35 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.str.2 用 std::string_view 或 gsl::span<char> 访问字符序列
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use std::string_view or gsl::span<char> to refer to character
+sequences"
+
+理由
+
+~std::string_view~ 或 ~gsl::span<char>~ 提供了简单、安全的访问字符串序列的
+方式。而且不管字符串序列是怎么分配的怎么存储的。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+vector<string> read_until(string_view terminator);
+
+void user(zstring p, const string& s, string_view ss)
+{
+    auto v1 = read_until(p);
+    auto v2 = read_until(s);
+    auto v3 = read_until(ss);
+    // ...
+}
+#+end_src
+
+
+注意
+
+C++17 的 ~std::string_view~ 是只读的。

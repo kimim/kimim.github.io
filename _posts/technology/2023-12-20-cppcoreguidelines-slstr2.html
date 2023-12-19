@@ -1,0 +1,49 @@
+---
+layout: post
+title: CppCoreGuidelines SL.str.2 用 std::string_view 或 gsl::span<char> 访问字符序列
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use std::string_view or gsl::span&lt;char&gt; to refer to character
+sequences&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>std::string_view</code> 或 <code>gsl::span&lt;char&gt;</code> 提供了简单、安全的访问字符串序列的方式。而且不管字符串序列是怎么分配的怎么存储的。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">read_until</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">terminator</span><span style="color: #707183;">)</span>;
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">user</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">zstring</span> <span style="color: #000000;">p</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">s</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span> <span style="color: #000000;">ss</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">v1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">read_until</span><span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">v2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">read_until</span><span style="color: #7388d6;">(</span>s<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">v3</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">read_until</span><span style="color: #7388d6;">(</span>ss<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+C++17 的 <code>std::string_view</code> 是只读的。
+</p>
