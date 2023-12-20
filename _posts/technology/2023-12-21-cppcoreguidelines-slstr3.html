@@ -1,0 +1,81 @@
+---
+layout: post
+title: CppCoreGuidelines SL.str.3 用 zstring 或 czstring 访问 C 风格，空字符结尾的字符串序列
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>zstring</code> or <code>czstring</code> to refer to a C-style, zero-terminated,
+sequence of characters&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性更好。表达了程序意图。一个普通的 <code>char*</code> 可以标识指向单独字符的指针，指向字符数组的指针，或者指向控制符结束的 C 风格字符串，甚至是一个小整数。把这些区分开来，可以避免理解错误，减少 bug。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// s is probably a string</span>
+</pre>
+</div>
+
+<p>
+我们只知道这里 <code>s</code> 可能是个 <code>nullptr</code> 或者指向至少一个字符的东西。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">zstring</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;     <span style="color: #3F7F5F;">// s is a C-style string or the nullptr</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">czstring</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// s is a C-style string constant or the nullptr</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">byte</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// s is a pointer to a byte (C++17)</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+不要把 C 风格字符串转换成 <code>string</code> ，除非有特定的理由。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+跟其他任何普通指针一样， <code>zstring</code> 不表达所有权。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+世界上有成百上千万的 C++ 代码，用到了 <code>char*</code> 和 <code>const char*</code> ，而且还没有文档注释说明。这些类型以很多不同的方式使用。比如有表达所有权的，有指向内存的泛型指针（本该是 <code>void*</code> ）。这就导致我们很难区分他们的使用意图，所以，这条指南也很难遵循。这是 C 和 C++ 中很重要的 bug 来源。所以，尽可能地遵循本规则。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记在 <code>char*</code> 上使用 <code>[]</code> 的情况</li>
+<li>标记对 <code>char*</code> 使用 <code>delete</code> 的情况</li>
+<li>标记对 <code>char*</code> 进行 <code>free()</code> 的情况</li>
+</ul>

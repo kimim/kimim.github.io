@@ -1,0 +1,58 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.str.3 用 zstring 或 czstring 访问 C 风格，空字符结尾的字符串序列
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~zstring~ or ~czstring~ to refer to a C-style, zero-terminated,
+sequence of characters"
+
+理由
+
+可读性更好。表达了程序意图。一个普通的 ~char*~ 可以标识指向单独字符的指
+针，指向字符数组的指针，或者指向控制符结束的 C 风格字符串，甚至是一个
+小整数。把这些区分开来，可以避免理解错误，减少 bug。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f1(const char* s); // s is probably a string
+#+end_src
+
+我们只知道这里 ~s~ 可能是个 ~nullptr~ 或者指向至少一个字符的东西。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f1(zstring s);     // s is a C-style string or the nullptr
+void f1(czstring s);    // s is a C-style string constant or the nullptr
+void f1(std::byte* s);  // s is a pointer to a byte (C++17)
+#+end_src
+
+
+注意
+
+不要把 C 风格字符串转换成 ~string~ ，除非有特定的理由。
+
+
+注意
+
+跟其他任何普通指针一样， ~zstring~ 不表达所有权。
+
+
+注意
+
+世界上有成百上千万的 C++ 代码，用到了 ~char*~ 和 ~const char*~ ，而且还没
+有文档注释说明。这些类型以很多不同的方式使用。比如有表达所有权的，有指
+向内存的泛型指针（本该是 ~void*~ ）。这就导致我们很难区分他们的使用意图，
+所以，这条指南也很难遵循。这是 C 和 C++ 中很重要的 bug 来源。所以，尽
+可能地遵循本规则。
+
+
+强化
+
+- 标记在 ~char*~ 上使用 ~[]~ 的情况
+- 标记对 ~char*~ 使用 ~delete~ 的情况
+- 标记对 ~char*~ 进行 ~free()~ 的情况
