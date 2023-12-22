@@ -1,0 +1,43 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.str.4 用 char* 访问单个字符
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use char* to refer to a single character"
+
+理由
+
+目前代码中大部分用到 ~char*~ 的地方都是错误的根源。
+
+坏例子
+
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+char arr[] = {'a', 'b', 'c'};
+
+void print(const char* p)
+{
+    cout << p << '\n';
+}
+
+void use()
+{
+    print(arr);   // run-time error; potentially very bad
+}
+#+end_src
+
+数组 ~arr~ 不是一个 C 风格字符串，因为它不是空字符结束的。
+
+
+其他建议
+
+请查看 ~zstring~, ~string~, ~string_view~
+
+
+强化
+
+- 标记在 ~char*~ 上使用 ~[]~ 的情况
+

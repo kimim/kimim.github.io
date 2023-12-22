@@ -1,0 +1,63 @@
+---
+layout: post
+title: CppCoreGuidelines SL.str.4 用 char* 访问单个字符
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use char* to refer to a single character&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+目前代码中大部分用到 <code>char*</code> 的地方都是错误的根源。
+</p>
+
+<p>
+坏例子
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">arr</span><span style="color: #707183;">[]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">{</span><span style="color: #110099;">'a'</span>, <span style="color: #110099;">'b'</span>, <span style="color: #110099;">'c'</span><span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> p <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #110099;">'\n'</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3a5fcd; font-weight: bold;">print</span><span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// run-time error; potentially very bad</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+数组 <code>arr</code> 不是一个 C 风格字符串，因为它不是空字符结束的。
+</p>
+
+
+<p>
+其他建议
+</p>
+
+<p>
+请查看 <code>zstring</code>, <code>string</code>, <code>string_view</code>
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记在 <code>char*</code> 上使用 <code>[]</code> 的情况</li>
+</ul>
