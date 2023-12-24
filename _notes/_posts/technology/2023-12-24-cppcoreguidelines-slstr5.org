@@ -1,0 +1,13 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.str.5 用 std::byte 访问非字符的字节数值
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use std::byte to refer to byte values that do not necessarily
+represent characters"
+
+理由
+
+用 ~char*~ 标识指向非字符的数值的指针，会引起混淆，阻碍数值的优化。
