@@ -1,0 +1,31 @@
+---
+layout: post
+title: CppCoreGuidelines SL.str.11 如果要修改某个字符串，用 gsl:span<char> 不要用 std::string_view
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use gsl::span&lt;char&gt; rather than std::string_view when you need to
+mutate a string&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>str::string_view</code> 是只读的。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+如果改写 <code>string_view</code> 编译器会警告
+</p>
