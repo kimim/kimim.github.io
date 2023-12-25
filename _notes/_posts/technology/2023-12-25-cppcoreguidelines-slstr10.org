@@ -1,0 +1,14 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.str.10 如果要处理一些本地语言相关的字符串操作，可以用 std::string
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use std::string when you need to perform locale-sensitive string
+operations"
+
+理由
+
+~std::string~ 支持一些标准库的本地语言工具。
+
