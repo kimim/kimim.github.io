@@ -1,0 +1,35 @@
+---
+layout: post
+title: CppCoreGuidelines SL.str.12 用 s 后缀字面量标识标准库的字符串
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use the <code>s</code> suffix for string literals meant to be standard-library
+<code>string</code> s&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+直接表达意图，避免误解。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">pp1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_pair</span><span style="color: #707183;">(</span><span style="color: #2A00FF;">"Tokyo"</span>, <span style="color: #110099;">9.00</span><span style="color: #707183;">)</span>;         <span style="color: #3F7F5F;">// {C-style string,double} intended?</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">pair</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>, <span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">pp2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">{</span><span style="color: #2A00FF;">"Tokyo"</span>, <span style="color: #110099;">9.00</span><span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// a bit verbose</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">pp3</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_pair</span><span style="color: #707183;">(</span><span style="color: #2A00FF;">"Tokyo"</span>s, <span style="color: #110099;">9.00</span><span style="color: #707183;">)</span>;        <span style="color: #3F7F5F;">// {std::string,double}    // C++14</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">pair</span> <span style="color: #000000;">pp4</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">{</span><span style="color: #2A00FF;">"Tokyo"</span>s, <span style="color: #110099;">9.00</span><span style="color: #707183;">}</span>;                 <span style="color: #3F7F5F;">// {std::string,double}    // C++17</span>
+</pre>
+</div>
