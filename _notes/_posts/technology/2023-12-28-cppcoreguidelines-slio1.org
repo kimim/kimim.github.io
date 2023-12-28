@@ -1,0 +1,39 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.io.1 只有在必要的时候用字符级别的输入流
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use character-level input only when you have to"
+
+理由
+
+除非真的很需要处理单个字符，不然不要用字符级别的输入流。因为很容易出错，
+而且要从单个字符组成字符串串效率很低。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+char c;
+char buf[128];
+int i = 0;
+while (cin.get(c) && !isspace(c) && i < 128)
+    buf[i++] = c;
+if (i == 128) {
+    // ... handle too long string ....
+}
+#+end_src
+
+更简单更安全的写法：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+string s;
+s.reserve(128);
+cin >> s;
+#+end_src
+
+这里可能不需要用到 ~reserve(128)~

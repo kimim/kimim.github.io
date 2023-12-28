@@ -1,0 +1,53 @@
+---
+layout: post
+title: CppCoreGuidelines SL.io.1 只有在必要的时候用字符级别的输入流
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use character-level input only when you have to&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+除非真的很需要处理单个字符，不然不要用字符级别的输入流。因为很容易出错，而且要从单个字符组成字符串串效率很低。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">c</span>;
+<span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">buf</span><span style="color: #707183;">[</span><span style="color: #110099;">128</span><span style="color: #707183;">]</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+<span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #707183;">(</span>cin.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">get</span><span style="color: #7388d6;">(</span>c<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #7F0055; font-weight: bold;">!</span><span style="color: #3a5fcd; font-weight: bold;">isspace</span><span style="color: #7388d6;">(</span>c<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> i <span style="color: #7F0055; font-weight: bold;">&lt;</span> <span style="color: #110099;">128</span><span style="color: #707183;">)</span>
+    <span style="color: #000000;">buf</span><span style="color: #707183;">[</span><span style="color: #000000;">i</span><span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #707183;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> c;
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>i <span style="color: #7F0055; font-weight: bold;">==</span> <span style="color: #110099;">128</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ... handle too long string ....</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+更简单更安全的写法：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
+s.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">reserve</span><span style="color: #707183;">(</span><span style="color: #110099;">128</span><span style="color: #707183;">)</span>;
+cin <span style="color: #7F0055; font-weight: bold;">&gt;&gt;</span> s;
+</pre>
+</div>
+
+<p>
+这里可能不需要用到 <code>reserve(128)</code>
+</p>
