@@ -1,0 +1,13 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.io.2 输入读取的时候，一定要考虑可能结构不对的输入值
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"When reading, always consider ill-formed input"
+
+理由
+
+越早处理错误越好。如果输入是无效，每个函数都要写一段处理错误数据的代码，
+很不现实。
