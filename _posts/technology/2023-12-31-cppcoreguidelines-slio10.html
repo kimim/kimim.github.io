@@ -1,0 +1,37 @@
+---
+layout: post
+title: CppCoreGuidelines SL.io.10 除非你用只用 prinft 函数，不然请先调用 ios_base::sync_with_stdio(false)
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Unless you use printf-family functions call <code>ios_base::sync_with_stdio(false)</code>&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+让 <code>iostream</code> 和 <code>prinf</code> 风格的 I/O 操作同步成本很高。 <code>cin</code> 和 <code>cout</code> 默认和
+<code>prinft</code> 同步。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">ios_base</span>::<span style="color: #3a5fcd; font-weight: bold;">sync_with_stdio</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">false</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ... use iostreams ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>

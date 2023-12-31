@@ -1,0 +1,76 @@
+---
+layout: post
+title: CppCoreGuidelines SL.io.3 首选 iostream 处理 I/O
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Prefer <code>iostream</code> s for I/O
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>iostream</code> 更安全、灵活、可扩展。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// write a complex number:</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">complex</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">z</span><span style="color: #707183;">{</span> <span style="color: #110099;">3</span>, <span style="color: #110099;">4</span> <span style="color: #707183;">}</span>;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> z <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #110099;">'\n'</span>;
+</pre>
+</div>
+
+<p>
+<code>complex</code> 是用户定义类型，它的 I/O 的定义都不需要修改 <code>iostream</code> 程序库。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// read a file of complex numbers:</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">complex</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">z</span>; cin <span style="color: #7F0055; font-weight: bold;">&gt;&gt;</span> z; <span style="color: #707183;">)</span>
+    v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">push_back</span><span style="color: #707183;">(</span>z<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+讨论
+</p>
+
+<p>
+<code>iostream</code> 与 <code>printf()</code> 系列的对比。人们经常提到的是 <code>printf()</code> 系列相比
+<code>iostream</code> 有两个优势：灵活的格式化，较好的性能。我们在讨论这两点的时候，也要权衡一下 <code>iostream</code> 的一些其他优势：可扩展性优势、安全性、隐式内存管理、 <code>locale</code> 本地语言处理。
+</p>
+
+<p>
+在 I/O 性能上， <code>iostream</code> 很多时候也比 <code>printf()</code> 好。
+</p>
+
+<p>
+<code>gets()</code> 、 <code>scanf()</code> 、 <code>printf()</code> 用到了 <code>%s</code> 。这里存在严重的安全隐患（比如缓冲区溢出漏洞、容易出错）。C11 定义了一些额外的扩展，可以检查输入的参数。如果 C 程序库里有 <code>gets_s()</code> 、 <code>scanf_s()</code> 、 <code>prinf_s()</code> 等函数，可以考虑用这些函数，他们相对更安全些，但是他们仍然不是类型安全的。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记 <code>&lt;cstdio&gt;</code>  和 <code>&lt;stdio.h&gt;</code>
+</p>
