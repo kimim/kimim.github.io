@@ -1,0 +1,43 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.io.50 避免使用 endl
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid ~endl~"
+
+理由
+
+~endl~ 这个输入输出操作符跟 ~'\n'~ 和 ~"\n"~ 的效果是等价的。但是往往速度更
+慢，因为它会进行一次额外的 ~flush()~ 操作。相比 ~prinf~ 风格的代码，速度减
+慢会很明显。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+cout << "Hello, World!" << endl;    // two output operations and a flush
+cout << "Hello, World!\n";          // one output operation and no flush
+#+end_src
+
+
+注意
+
+对于 ~cin~ 和 ~cout~ 等操作，不太需要 ~flush~ 。因为 ~flush~ 一般都是自动完成
+的。往文件写东西的时候，很少需要用到 ~flush~ 。
+
+
+注意
+
+对于字符串流（尤其是 ~ostringstream~ ），插入一个 ~endl~ 完全等价于插入一
+个 ~'\n'~ 字符。然而， ~endl~ 会严重拖慢程序速度。
+
+~endl~ 也不会产生一个操作系统平台相关的行结束符（比如 Windows 上是
+"\r\n"）。所以，对于字符串流， ~s << endl~ 只是插入了一个 ~'\n'~ 字符。
+
+
+注意
+
+除了很重要的性能上的考量，选择 ~'\n'~ 还是 ~endl~ 完全是一种美学偏好。

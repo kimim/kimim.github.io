@@ -1,0 +1,64 @@
+---
+layout: post
+title: CppCoreGuidelines SL.io.50 避免使用 endl
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid <code>endl</code>&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>endl</code> 这个输入输出操作符跟 <code>'\n'</code> 和 <code>"\n"</code> 的效果是等价的。但是往往速度更慢，因为它会进行一次额外的 <code>flush()</code> 操作。相比 <code>prinf</code> 风格的代码，速度减慢会很明显。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"Hello, World!"</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;    <span style="color: #3F7F5F;">// two output operations and a flush</span>
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"Hello, World!\n"</span>;          <span style="color: #3F7F5F;">// one output operation and no flush</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+对于 <code>cin</code> 和 <code>cout</code> 等操作，不太需要 <code>flush</code> 。因为 <code>flush</code> 一般都是自动完成的。往文件写东西的时候，很少需要用到 <code>flush</code> 。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+对于字符串流（尤其是 <code>ostringstream</code> ），插入一个 <code>endl</code> 完全等价于插入一个 <code>'\n'</code> 字符。然而， <code>endl</code> 会严重拖慢程序速度。
+</p>
+
+<p>
+<code>endl</code> 也不会产生一个操作系统平台相关的行结束符（比如 Windows 上是
+&ldquo;\r\n&rdquo;）。所以，对于字符串流， <code>s &lt;&lt; endl</code> 只是插入了一个 <code>'\n'</code> 字符。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+除了很重要的性能上的考量，选择 <code>'\n'</code> 还是 <code>endl</code> 完全是一种美学偏好。
+</p>
