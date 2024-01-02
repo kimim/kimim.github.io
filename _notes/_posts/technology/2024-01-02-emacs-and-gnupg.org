@@ -1,0 +1,21 @@
+#+LAYOUT: post
+#+TITLE: Emacs 与 GnuPG 版本不兼容
+#+TAGS: Emacs
+#+CATEGORIES: technology
+
+最近升级 msys64 ，emacs出现了一个奇怪的问题。GnuPG加密的文件可以打开，
+但是无法保存。
+
+原因是 Emacs 和 GnuPG 2.4.1 以上的版本之间命令行解析不兼容：
+
+[[https://www.gnu.org/software/emacs/manual/html_node/auth/GnuPG-and-EasyPG-Assistant-Configuration.html][Appendix A GnuPG and EasyPG Assistant Configuration]]
+
+https://dev.gnupg.org/T6481
+
+在两者匹配之前，最简单的办法是把 GnuPG 版本降级到 2.4.0 以下。
+
+1. 下载 [[https://repo.msys2.org/msys/x86_64/gnupg-2.2.41-1-x86_64.pkg.tar.zst][gnupg-2.2.41-1-x86_64.pkg.tar.zst]]
+2. 降级安装：
+   #+begin_src shell
+pacman -U gnupg-2.2.41-1-x86_64.pkg.tar.zst
+   #+end_src
