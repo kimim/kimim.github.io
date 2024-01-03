@@ -1,0 +1,12 @@
+#+layout: post
+#+title: CppCoreGuidelines SL.chrono Time
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Time"
+
+~<chrono>~ （在 ~std::chrono~ 名字空间)，提供时间点 ~time_point~ 和时间段
+~duration~ 两种类型。再加上各种支持时间单元输出的函数。这个库还提供注册
+时间点 ~time_point~ 的时钟。
