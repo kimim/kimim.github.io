@@ -1,0 +1,31 @@
+---
+layout: post
+title: CppCoreGuidelines SL.C.1 不要用 setjmp/longjmp
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t use setjmp/longjmp&rdquo;
+</p>
+
+
+<p>
+理由
+</p>
+
+<p>
+<code>longjmp</code> 会略过析构函数，这样就破坏了 RAII 资源管理策略。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记出现 <code>longjmp</code> 和 <code>setjmp</code> 的地方。
+</p>
