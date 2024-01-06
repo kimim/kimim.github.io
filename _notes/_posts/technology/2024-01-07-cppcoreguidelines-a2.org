@@ -1,0 +1,16 @@
+#+layout: post
+#+title: CppCoreGuidelines A.2 把可能能重用的代码做成库
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Express potentially reusable parts as a library"
+
+
+注意
+
+所谓的代码库，就是一组带版本的、有人维护的、有文档的、一起发布的代码声
+明和定义。代码库可以是一组头文件（纯头文件库），也可以是一组头文件加一
+组对象文件。你可以把库静态或动态链接到程序中。或者你通过 ~#include~ 包含
+使用纯头文件库。
