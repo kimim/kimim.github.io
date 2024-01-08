@@ -1,0 +1,20 @@
+#+layout: post
+#+title: CppCoreGuidelines A.4 代码库之间不能有循环依赖关系
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"There should be no cycles among libraries"
+
+理由
+
+- 循环依赖会导致编译过程变的复杂
+- 循环不好理解，容易引入不确定性行为。
+
+
+注意
+
+库的组件的定义中可以包含循环引用。
+
+然而，库不能依赖于另一个库，而另一个库又依赖于这个库。
