@@ -1,0 +1,111 @@
+---
+layout: post
+title: CppCoreGuidelines NR.2 不要坚持在一个函数中只能有一个返回语句
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t insist to have only a single return-statement in a function&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+如果坚持只能有一个返回值的话，会导致代码逻辑很绕，还要引入额外的状态变量。尤其是，这种“只有一个返回值规则”会导致很难在函数的顶部进行错误检测。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #3F7F5F;">//  requires Number&lt;T&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">sign</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x <span style="color: #7F0055; font-weight: bold;">&lt;</span> <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">"negative"</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x <span style="color: #7F0055; font-weight: bold;">&gt;</span> <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">"positive"</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">"zero"</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果只能有一个返回值的话。我们可能要这样写：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #3F7F5F;">//  requires Number&lt;T&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">sign</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>        <span style="color: #3F7F5F;">// bad</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">res</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x <span style="color: #7F0055; font-weight: bold;">&lt;</span> <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>
+        <span style="color: #000000;">res</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"negative"</span>;
+    <span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x <span style="color: #7F0055; font-weight: bold;">&gt;</span> <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>
+        <span style="color: #000000;">res</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"positive"</span>;
+    <span style="color: #7F0055; font-weight: bold;">else</span>
+        <span style="color: #000000;">res</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"zero"</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> res;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+这种写法一方面代码更长，另一方面效率更低。代码越长越复杂，就会越痛苦。当然，有些简单的函数本身就只有一个返回语句。因为其本身就只是简单的逻辑。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">index</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">!</span>p<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">-1</span>;  <span style="color: #3F7F5F;">// error indicator: alternatively "throw</span>
+                        <span style="color: #3F7F5F;">// nullptr_error{}"</span>
+    <span style="color: #3F7F5F;">// ... do a lookup to find the index for p</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> i;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+如果我们遵循一个返回语句规则的话，就成这样了：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">index2</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">!</span>p<span style="color: #7388d6;">)</span>
+        <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">-1</span>;  <span style="color: #3F7F5F;">// error indicator</span>
+    <span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// ... do a lookup to find the index for p</span>
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> i;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意，这里我们故意违反了变量应当初始化规则。因为一个返回语句规则很容易导致变量为初始化错误。而且，这种风格的代码很容易倾向于用 <code>goto exit</code> 方式结束函数。
+</p>
+
+
+<p>
+其他方案
+</p>
+<ul class="org-ul">
+<li>保持函数简单短小。</li>
+<li>放心使用多个返回语句（以及抛出异常）</li>
+</ul>
