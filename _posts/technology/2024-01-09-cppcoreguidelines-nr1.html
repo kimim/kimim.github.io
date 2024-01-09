@@ -1,0 +1,61 @@
+---
+layout: post
+title: CppCoreGuidelines NR.1 不要坚持把声明放在函数开头
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t insist that all declarations should be at the top of a function&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+“所有声明都要放在开始处”是一个过时的编程规则。老的编程语言不允许在语句之后初始化变量和常量。这个限制会导致代码很长，很容易因为未初始化或错误的初始化导致错误。
+</p>
+
+<p>
+坏例子
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span>;
+    <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">c</span>;
+    <span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #000000;">d</span>;
+
+    <span style="color: #3F7F5F;">// ... some stuff ...</span>
+
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x <span style="color: #7F0055; font-weight: bold;">&lt;</span> i<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// ...</span>
+        <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #909183;">(</span>x, d<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>i <span style="color: #7F0055; font-weight: bold;">&lt;</span> x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// ...</span>
+        <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">g</span><span style="color: #909183;">(</span>x, c<span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> i;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+变量声明和变量使用的位置越远，越容易出现 bug。幸运的是，编译器能捕捉很多“设置之前使用”的错误。但是，遗憾的是，编译器不能捕捉到所有这类错误。就算在这个小例子中，我们也很难发现错误。
+</p>
+
+
+<p>
+其他要求
+</p>
+<ul class="org-ul">
+<li><a href="./2023-03-27-cppcoreguidelines-es20">总是把对象初始化</a>。</li>
+<li><a href="./2023-03-28-cppcoreguidelines-es.21">CppCoreGuidelines ES.21 不要在需要使用之前引入一个变量或常量</a></li>
+</ul>

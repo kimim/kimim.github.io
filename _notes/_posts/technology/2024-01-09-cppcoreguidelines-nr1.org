@@ -1,0 +1,48 @@
+#+layout: post
+#+title: CppCoreGuidelines NR.1 不要坚持把声明放在函数开头
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t insist that all declarations should be at the top of a function"
+
+理由
+
+“所有声明都要放在开始处”是一个过时的编程规则。老的编程语言不允许在语句
+之后初始化变量和常量。这个限制会导致代码很长，很容易因为未初始化或错误
+的初始化导致错误。
+
+坏例子
+
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int use(int x)
+{
+    int i;
+    char c;
+    double d;
+
+    // ... some stuff ...
+
+    if (x < i) {
+        // ...
+        i = f(x, d);
+    }
+    if (i < x) {
+        // ...
+        i = g(x, c);
+    }
+    return i;
+}
+#+end_src
+
+变量声明和变量使用的位置越远，越容易出现 bug。幸运的是，编译器能捕捉很
+多“设置之前使用”的错误。但是，遗憾的是，编译器不能捕捉到所有这类错误。
+就算在这个小例子中，我们也很难发现错误。
+
+
+其他要求
+- [[./2023-03-27-cppcoreguidelines-es20][总是把对象初始化]]。
+- [[./2023-03-28-cppcoreguidelines-es.21][CppCoreGuidelines ES.21 不要在需要使用之前引入一个变量或常量]]  
