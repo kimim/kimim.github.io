@@ -1,0 +1,49 @@
+#+LAYOUT: post
+#+TITLE: 单词本：detour
+#+TAGS: English
+#+CATEGORIES: language
+
+今天看文档，读到这段：
+
+#+begin_quote
+This function enables direct and time-saving communication between
+slaves using broadcast communication without the *detour* over a
+master. (PROFIBUS, Slave-to-slave Communication).
+#+end_quote
+
+这里，有一个词 detour 意思是绕行路线、迂回路线。比如 we had to *make a
+detour* round the floods. 我们绕道避开洪水。
+
+前面那段文字的意思是通过 slave-to-slave 的通信机制，可以绕开 master 节
+点。因为一般的，主从通信协议，所以从设备都是被动的设备，只响应主设备的
+请求。PROFIBUS 扩展了 DP-V2 可以直接发起从设备到从设备的通信，所以说，
+可以绕道主设备进行通信。
+
+另外，在 [[cite:&friedl2020generation]] 的一篇论文中，提出了一个信息模型转
+换生成方法，因为没有用到 UML 作为中间模型，所以作者说 The approach
+proposed here is a direct use of OPC UA without a *detour* via UML.
+
+其实，从这个词的拼写来看，它是来自法语的 détour ，早期的读音应该是
+[ˊdeituә] 后来读音才变成 ['di:tuә]。而法语则又从拉丁语里的 destorner
+转变而来。
+
+一般组成词组使用：
+- You'd be wise to *make a detour* to avoid the roadworks. 绕道。
+- While discussing education, she *took* a sharp *detour into* trade
+  policy. *take a detour* 绕道，这里是岔开主题的意思。
+
+最近的新闻：The *detour* south around the African continent causes
+additional costs for Hapag-Lloyd in the double-digit millions every
+month, according to the spokesman. 
+
+因为苏伊士运河“堵”了，货船必须绕道非洲，导致每个月数千万额外的成本。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
