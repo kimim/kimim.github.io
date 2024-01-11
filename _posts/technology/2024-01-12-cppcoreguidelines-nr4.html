@@ -1,0 +1,29 @@
+---
+layout: post
+title: CppCoreGuidelines NR.4 不要坚持把每个类定义放在单独的源码文件中
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t insist on placing each class definition in its own source file&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+把每个类定义放在单独的文件中会产生大量文件，难以管理，编译变慢。单独一个类很少情况下是一个好的逻辑单元和分发单元。
+</p>
+
+
+<p>
+其他方案
+</p>
+<ul class="org-ul">
+<li>在名字空间中包含逻辑上关联的类和函数</li>
+</ul>
