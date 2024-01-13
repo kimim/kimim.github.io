@@ -1,0 +1,138 @@
+---
+layout: post
+title: CppCoreGuidelines NR.5 不要用两阶段初始化
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t use two-phase initialization&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+把初始化过程分成两个阶段会导致更弱的不变式、更复杂的代码（需要处理半构造的对象），更多的错误（如果我们没有正确一致地处理半构造的对象）。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #3F7F5F;">// Old conventional style: many problems</span>
+
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Picture</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">mx</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">my</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">data</span>;
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// main problem: constructor does not fully construct</span>
+    <span style="color: #0000ff; font-weight: bold;">Picture</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">y</span><span style="color: #7388d6;">)</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #000000;">mx</span> <span style="color: #7F0055; font-weight: bold;">=</span> x;         <span style="color: #3F7F5F;">// also bad: assignment in constructor body</span>
+                        <span style="color: #3F7F5F;">// rather than in member initializer</span>
+        <span style="color: #000000;">my</span> <span style="color: #7F0055; font-weight: bold;">=</span> y;
+        <span style="color: #000000;">data</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099; font-weight: bold;">nullptr</span>; <span style="color: #3F7F5F;">// also bad: constant initialization in constructor</span>
+                        <span style="color: #3F7F5F;">// rather than in member initializer</span>
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #7F0055; font-weight: bold;">~</span>Picture<span style="color: #7388d6;">()</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #3a5fcd; font-weight: bold;">Cleanup</span><span style="color: #909183;">()</span>;
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #3F7F5F;">// ...</span>
+
+    <span style="color: #3F7F5F;">// bad: two-phase initialization</span>
+    <span style="color: #7F0055; font-weight: bold;">bool</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">Init</span><span style="color: #7388d6;">()</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// invariant checks</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>mx <span style="color: #7F0055; font-weight: bold;">&lt;=</span> <span style="color: #110099;">0</span> <span style="color: #7F0055; font-weight: bold;">||</span> my <span style="color: #7F0055; font-weight: bold;">&lt;=</span> <span style="color: #110099;">0</span><span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">false</span>;
+        <span style="color: #909183;">}</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>data<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">false</span>;
+        <span style="color: #909183;">}</span>
+        <span style="color: #000000;">data</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #909183;">)</span> <span style="color: #3a5fcd; font-weight: bold;">malloc</span><span style="color: #909183;">(</span>mx<span style="color: #7F0055; font-weight: bold;">*</span>my<span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>;   <span style="color: #3F7F5F;">// also bad: owning</span>
+                                                   <span style="color: #3F7F5F;">// raw * and malloc</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> data <span style="color: #7F0055; font-weight: bold;">!=</span> <span style="color: #110099; font-weight: bold;">nullptr</span>;
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #3F7F5F;">// also bad: no reason to make cleanup a separate function</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">Cleanup</span><span style="color: #7388d6;">()</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>data<span style="color: #909183;">)</span> <span style="color: #3a5fcd; font-weight: bold;">free</span><span style="color: #909183;">(</span>data<span style="color: #909183;">)</span>;
+        <span style="color: #000000;">data</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099; font-weight: bold;">nullptr</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Picture</span> <span style="color: #000000;">picture</span><span style="color: #707183;">(</span><span style="color: #110099;">100</span>, <span style="color: #110099;">0</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// not ready-to-use picture here</span>
+<span style="color: #3F7F5F;">// this will fail..</span>
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">!</span>picture.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">Init</span><span style="color: #7388d6;">()</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #3a5fcd; font-weight: bold;">puts</span><span style="color: #7388d6;">(</span><span style="color: #2A00FF;">"Error, invalid picture"</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+<span style="color: #3F7F5F;">// now have an invalid picture object instance.</span>
+</pre>
+</div>
+
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Picture</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">mx</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">my</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic;">data</span>;
+
+    <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">check_size</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">size</span><span style="color: #7388d6;">)</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// invariant check</span>
+        <span style="color: #3a5fcd; font-weight: bold;">Expects</span><span style="color: #909183;">(</span>size <span style="color: #7F0055; font-weight: bold;">&gt;</span> <span style="color: #110099;">0</span><span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">return</span> size;
+    <span style="color: #7388d6;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">public</span>:
+    <span style="color: #3F7F5F;">// even better would be a class for a 2D Size as one single parameter</span>
+    <span style="color: #0000ff; font-weight: bold;">Picture</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">y</span><span style="color: #7388d6;">)</span>
+        : <span style="color: #110099; font-style: italic;">mx</span><span style="color: #7388d6;">(</span><span style="color: #3a5fcd; font-weight: bold;">check_size</span><span style="color: #909183;">(</span>x<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+        , <span style="color: #110099; font-style: italic;">my</span><span style="color: #7388d6;">(</span><span style="color: #3a5fcd; font-weight: bold;">check_size</span><span style="color: #909183;">(</span>y<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+        <span style="color: #3F7F5F;">// now we know x and y have a valid size</span>
+        , <span style="color: #110099; font-style: italic;">data</span><span style="color: #7388d6;">(</span>mx <span style="color: #7F0055; font-weight: bold;">*</span> my<span style="color: #7388d6;">)</span> <span style="color: #3F7F5F;">// will throw std::bad_alloc on error</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// picture is ready-to-use</span>
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #3F7F5F;">// compiler generated dtor does the job. (also see C.21)</span>
+
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Picture</span> <span style="color: #000000;">picture1</span><span style="color: #707183;">(</span><span style="color: #110099;">100</span>, <span style="color: #110099;">100</span><span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// picture1 is ready-to-use here...</span>
+
+<span style="color: #3F7F5F;">// not a valid size for y,</span>
+<span style="color: #3F7F5F;">// default contract violation behavior will call std::terminate then</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Picture</span> <span style="color: #000000;">picture2</span><span style="color: #707183;">(</span><span style="color: #110099;">100</span>, <span style="color: #110099;">0</span><span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// not reach here...</span>
+</pre>
+</div>
+
+
+<p>
+其他方案
+</p>
+<ul class="org-ul">
+<li>总是在构造函数中构造类的不变式</li>
+<li>不要在需要使用对象之前定义对象</li>
+</ul>

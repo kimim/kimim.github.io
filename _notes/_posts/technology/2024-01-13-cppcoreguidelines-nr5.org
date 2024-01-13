@@ -1,0 +1,122 @@
+#+layout: post
+#+title: CppCoreGuidelines NR.5 不要用两阶段初始化
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t use two-phase initialization"
+
+理由
+
+把初始化过程分成两个阶段会导致更弱的不变式、更复杂的代码（需要处理半构
+造的对象），更多的错误（如果我们没有正确一致地处理半构造的对象）。
+
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// Old conventional style: many problems
+
+class Picture
+{
+    int mx;
+    int my;
+    int * data;
+public:
+    // main problem: constructor does not fully construct
+    Picture(int x, int y)
+    {
+        mx = x;         // also bad: assignment in constructor body
+                        // rather than in member initializer
+        my = y;
+        data = nullptr; // also bad: constant initialization in constructor
+                        // rather than in member initializer
+    }
+
+    ~Picture()
+    {
+        Cleanup();
+    }
+
+    // ...
+
+    // bad: two-phase initialization
+    bool Init()
+    {
+        // invariant checks
+        if (mx <= 0 || my <= 0) {
+            return false;
+        }
+        if (data) {
+            return false;
+        }
+        data = (int*) malloc(mx*my*sizeof(int));   // also bad: owning
+                                                   // raw * and malloc
+        return data != nullptr;
+    }
+
+    // also bad: no reason to make cleanup a separate function
+    void Cleanup()
+    {
+        if (data) free(data);
+        data = nullptr;
+    }
+};
+
+Picture picture(100, 0); // not ready-to-use picture here
+// this will fail..
+if (!picture.Init()) {
+    puts("Error, invalid picture");
+}
+// now have an invalid picture object instance.
+#+end_src
+
+
+好例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class Picture
+{
+    int mx;
+    int my;
+    vector<int> data;
+
+    static int check_size(int size)
+    {
+        // invariant check
+        Expects(size > 0);
+        return size;
+    }
+
+public:
+    // even better would be a class for a 2D Size as one single parameter
+    Picture(int x, int y)
+        : mx(check_size(x))
+        , my(check_size(y))
+        // now we know x and y have a valid size
+        , data(mx * my) // will throw std::bad_alloc on error
+    {
+        // picture is ready-to-use
+    }
+
+    // compiler generated dtor does the job. (also see C.21)
+
+    // ...
+};
+
+Picture picture1(100, 100);
+// picture1 is ready-to-use here...
+
+// not a valid size for y,
+// default contract violation behavior will call std::terminate then
+Picture picture2(100, 0);
+// not reach here...
+#+end_src
+
+
+其他方案
+- 总是在构造函数中构造类的不变式
+- 不要在需要使用对象之前定义对象
