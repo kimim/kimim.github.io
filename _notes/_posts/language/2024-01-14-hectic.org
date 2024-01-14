@@ -1,0 +1,39 @@
+#+LAYOUT: post
+#+TITLE: 单词本：hectic
+#+TAGS: English
+#+CATEGORIES: language
+
+在《西风颂 Ode to the West Wind》第一节的第二段中，我们读到了 hectic：
+
+#+begin_verse
+Yellow, and black, and pale, and *hectic* red,
+Pestilence-stricken multitudes: O thou,
+Who chariotest to their dark wintry bed
+#+end_verse
+
+这里应该是形容被西风狂吹的树叶。这些树叶有各种颜色：黄色、黑色、苍白还
+有潮热发红的。
+
+hectic red 是形容那种因为肺结核而导致的持续发烧导致脸色发红。
+
+这个词本意是持续的意思。来自希腊语 hexis 身体和心的一种习惯性的状态。
+hectic fever 指的是 a fever of irritation and debility, occurring
+usually at a advanced stage of exhausting disease, as a in pulmonary
+consumption. 一种因为肺部疾病、持续身体损耗导致的虚弱持续的发烧。
+
+除了脸上发红之外，hectic 还有忙乱、忙碌的意思。
+- He leads a hectic life in this big city. 他在这个大城市里，过着忙忙
+  碌碌的生活。
+- Today was hectic. 今天真是忙得不亦乐乎。
+- Soldiers from the Israel Defense Forces killed two Hamas fighters
+  during *hectic* close-quarters combat that broke out inside a building
+  in southern Gaza 以色列士兵在一阵忙乱的近身搏击战斗中，杀死了两名哈
+  马斯战士。
+
+最后，让我试着翻译西风颂的这一段：
+
+#+begin_verse
+灰黄、漆黑、苍白、病红，
+瘟疫袭击苍生：哦，你啊
+把它们赶向黑暗的寒洞
+#+end_verse
