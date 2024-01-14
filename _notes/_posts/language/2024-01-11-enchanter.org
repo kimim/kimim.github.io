@@ -25,6 +25,14 @@ Are driven, like ghosts from an *enchanter* fleeing,
 像孤魂野鬼从法师处逃离。
 #+end_verse
 
+或者翻译的文诌诌一些
+
+#+begin_verse
+呜呼，西风飙兮，其秋之噫气，
+隐其无形兮，驱败叶，
+若孤魂兮，自尸祝而逃匿。
+#+end_verse
+    
 这里，enchanter 的意思是行巫术的人、巫师、魔法师、使人着迷的人。
 
 因为，这个词来自法语，所以保留了一些些法语的调调 [in'tʃɑ:ntә]。

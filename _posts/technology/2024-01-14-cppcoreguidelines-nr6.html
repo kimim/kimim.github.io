@@ -1,0 +1,54 @@
+---
+layout: post
+title: CppCoreGuidelines NR.6 不要在函数末尾实施清理动作以及 goto exit
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t place all cleanup actions at the end of a function and goto exit&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+<code>goto</code>  很容易导致错误。这个技术是在没有异常之前，用于 RAII  类型的资源、进行错误处理的方法。
+</p>
+
+<p>
+坏例子
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">do_something</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>n <span style="color: #7F0055; font-weight: bold;">&lt;</span> <span style="color: #110099;">100</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">goto</span> <span style="color: #7F0055; font-weight: bold;">exit</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6;">)</span> <span style="color: #3a5fcd; font-weight: bold;">malloc</span><span style="color: #7388d6;">(</span>n<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>some_error<span style="color: #7388d6;">)</span> goto_exit;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #7F0055; font-weight: bold;">exit</span>:
+    <span style="color: #3a5fcd; font-weight: bold;">free</span><span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+你能找到错误吗？
+</p>
+
+
+<p>
+其他方案
+</p>
+<ul class="org-ul">
+<li>使用异常和 <a href="./2023-07-28-cppcoreguidelines-e6">RAII</a></li>
+<li>对于非 RAII  资源，用 <a href="./2023-08-10-cppcoreguidelines-e19">finally</a></li>
+</ul>

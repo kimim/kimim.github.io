@@ -1,0 +1,37 @@
+#+layout: post
+#+title: CppCoreGuidelines NR.6 不要在函数末尾实施清理动作以及 goto exit
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t place all cleanup actions at the end of a function and goto exit"
+
+理由
+
+~goto~  很容易导致错误。这个技术是在没有异常之前，用于 RAII  类型的资源、进行错误处理的方法。
+
+坏例子
+
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void do_something(int n)
+{
+    if (n < 100) goto exit;
+    // ...
+    int* p = (int*) malloc(n);
+    // ...
+    if (some_error) goto_exit;
+    // ...
+exit:
+    free(p);
+}
+#+end_src
+
+你能找到错误吗？
+
+
+其他方案
+- 使用异常和 [[./2023-07-28-cppcoreguidelines-e6][RAII]]
+- 对于非 RAII  资源，用 [[./2023-08-10-cppcoreguidelines-e19][finally]]
