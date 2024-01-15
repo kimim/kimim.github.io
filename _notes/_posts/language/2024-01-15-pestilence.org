@@ -7,14 +7,18 @@
 也值得学一学。
 
 #+begin_verse
-Yellow, and black, and pale, and hectic red, *Pestilence*-stricken multitudes: O thou, Who chariotest to their dark wintry bed
+Yellow, and black, and pale, and hectic red,
+*Pestilence*-stricken multitudes: O thou,
+Who chariotest to their dark wintry bed
 #+end_verse
 
 pestilence 瘟疫，尤其指腺鼠疫（bubonic plague）。
 
-本单词源自拉丁语 pestilentia 传入病、不健康的空气。而拉丁语单词 pestis指的是致命的瘟疫。所以很多与 pest 相关的词都不太好：
+本单词源自拉丁语 pestilentia 传入病、不健康的空气。而拉丁语单词 pestis
+指的是致命的瘟疫。所以很多与 pest 相关的词都不太好：
 - pest 害虫
-- pesticide 杀虫剂，我们之前了解过，cide 是从拉丁语 caedere（切割）来的。在[[./2023-03-06-taurus][单词本：taurus]]，我们认识了tauricide 牛磺酸杀虫剂。还有[[./2023-04-05-auspicious][单词本： auspicious]]中，认识的 avicide 杀鸟剂。以及[[./2023-02-26-english-circumcision][circumcision]] 环切手术。
+- pesticide 杀虫剂，我们之前了解过，cide 是从拉丁语 caedere（切割）来
+  的。在[[./2023-03-06-taurus][单词本：taurus]]，我们认识了tauricide 牛磺酸杀虫剂。还有[[./2023-04-05-auspicious][单词本： auspicious]]中，认识的 avicide 杀鸟剂。以及[[./2023-02-26-english-circumcision][circumcision]] 环切手术。
 - pestilent 似瘟疫的、致命的、极其讨厌的
 - pestology 害虫学、害虫防治学
 - pestiferous 传播疾病的、邪恶的
