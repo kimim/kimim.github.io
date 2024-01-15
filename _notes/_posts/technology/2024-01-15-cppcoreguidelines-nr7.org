@@ -1,0 +1,17 @@
+#+layout: post
+#+title: CppCoreGuidelines NR.7 不要把所有数据车内隔音设置为 protected
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t make all data members protected"
+
+理由
+
+~protected~ 数据成员是很多错误的根源。我们可以在很多地方操作 ~protected~
+数据。 ~protected~  数据在类层级中类似于全局变量。
+
+
+其他方案
+- [[./2022-12-18-cppcoreguidelines-c133][把类成员数据设置为 ~public~ 或（最好是） ~private~ ]]
