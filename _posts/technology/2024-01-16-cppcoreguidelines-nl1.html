@@ -1,0 +1,38 @@
+---
+layout: post
+title: CppCoreGuidelines NL.1 如果能在代码中清晰说明的不要放在注释中
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t say in comments what can be clearly stated in code&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+编译器不读取注释。注释比代码精确度低。注释不一定跟代码保持一致。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> m <span style="color: #7F0055; font-weight: bold;">*</span> v1 <span style="color: #7F0055; font-weight: bold;">+</span> vv;   <span style="color: #3F7F5F;">// multiply m with v1 and add the result to vv</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+查看是否能在 C++ 中更好地表达
+</p>

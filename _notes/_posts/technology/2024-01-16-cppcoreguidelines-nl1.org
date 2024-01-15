@@ -1,0 +1,23 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.1 如果能在代码中清晰说明的不要放在注释中
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t say in comments what can be clearly stated in code"
+
+理由
+
+编译器不读取注释。注释比代码精确度低。注释不一定跟代码保持一致。
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+auto x = m * v1 + vv;   // multiply m with v1 and add the result to vv
+#+end_src
+
+强化
+
+查看是否能在 C++ 中更好地表达
