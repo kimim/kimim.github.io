@@ -1,11 +1,7 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines P.2 用 ISO C++ 标准写代码
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines P.2 用 ISO C++ 标准写代码
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
