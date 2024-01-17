@@ -1,0 +1,37 @@
+#+LAYOUT: post
+#+TITLE: 单词本：corpse
+#+TAGS: English
+#+CATEGORIES: language
+
+西风颂第一节第三小段中出现一个单词 *corpse* ：
+
+#+begin_verse
+The winged seeds, where they lie cold and low,
+Each like a corpse within its grave, until
+Thine azure sister of the Spring shall blow
+#+end_verse
+
+与这个单词相关的内容，我们之前学到过两次：
+- [[./2023-10-28-corpus][单词本：corpus]] 全体、全集
+- [[./2021-03-12-francais-esprit-de-corps][单词本：Esprit de corps]] 集体精神
+
+这里 corpse 其实是尸体的意思。比如之前学到过的 Corpse Bride 僵尸新娘，
+还有瑜伽的 corpse pose 平躺在地姿势。
+
+总之，这个词来自拉丁语 corpus 本来指的就是身体，包括活的以及死的。然后
+流转到古法语 cors，以及现代法语 corps 。它的意思还是指身体。比如 robe
+près du corps 很贴身紧身的衣服，corps gras 身体很肥，corps à corps 身
+体扭打在一起，se battre au corps à corps 近身肉搏。
+
+在德语里变了个字母 der Körper 还是身体的意思。比如 Körpergeruch 体味，
+Körpergröße 身高，Körperverletzung 身体受伤。
+
+然而，不知道怎么的，从法语流转到英语就变成尸体的意思了。
+
+最后，前面提到的那一段，我们来试着翻译下：
+
+#+begin_verse
+种有翼兮，寒且潜。
+若死灰兮，墓中眠。
+待春姊兮，忽吹还。
+#+end_verse
