@@ -1,5 +1,5 @@
 #+layout: post
-#+title: CppCoreGuidelines NL.4 注释清晰
+#+title: CppCoreGuidelines NL.3 注释清晰
 #+categories: technology
 #+tags: CppCoreGuidelines
 
