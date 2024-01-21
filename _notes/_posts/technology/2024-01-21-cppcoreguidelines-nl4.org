@@ -1,0 +1,40 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.4 维护一致的缩进风格
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Maintain a consistent indentation style"
+
+理由
+
+
+可读性。避免愚蠢的错误。
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int i;
+for (i = 0; i < max; ++i); // bug waiting to happen
+if (i == j)
+    return i;
+#+end_src
+
+注意
+
+最好在 ~if (...)~ ， ~for (...)~  和 ~while (...)~  之后缩进。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+if (i < 0) error("negative argument");
+
+if (i < 0)
+    error("negative argument");
+#+end_src
+
+
+强化
+
+使用工具

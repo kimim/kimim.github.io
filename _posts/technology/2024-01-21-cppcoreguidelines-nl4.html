@@ -1,0 +1,59 @@
+---
+layout: post
+title: CppCoreGuidelines NL.4 维护一致的缩进风格
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Maintain a consistent indentation style&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+
+<p>
+可读性。避免愚蠢的错误。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span>;
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>; i <span style="color: #7F0055; font-weight: bold;">&lt;</span> max; <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">i</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// bug waiting to happen</span>
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>i <span style="color: #7F0055; font-weight: bold;">==</span> j<span style="color: #707183;">)</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> i;
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+最好在 <code>if (...)</code> ， <code>for (...)</code>  和 <code>while (...)</code>  之后缩进。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>i <span style="color: #7F0055; font-weight: bold;">&lt;</span> <span style="color: #110099;">0</span><span style="color: #707183;">)</span> <span style="color: #3a5fcd; font-weight: bold;">error</span><span style="color: #707183;">(</span><span style="color: #2A00FF;">"negative argument"</span><span style="color: #707183;">)</span>;
+
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>i <span style="color: #7F0055; font-weight: bold;">&lt;</span> <span style="color: #110099;">0</span><span style="color: #707183;">)</span>
+    <span style="color: #3a5fcd; font-weight: bold;">error</span><span style="color: #707183;">(</span><span style="color: #2A00FF;">"negative argument"</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+强化
+</p>
+
+<p>
+使用工具
+</p>
