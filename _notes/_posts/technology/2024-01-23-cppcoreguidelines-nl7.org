@@ -1,0 +1,31 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.7 名字的长短和其作用范围匹配
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Make the length of a name roughly proportional to the length of its
+scope"
+
+理由
+
+越大的作用域范围，会容易出现混淆和不小心的名字冲突。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+double sqrt(double x);   // return the square root of x; x must be non-negative
+
+int length(const char* p);  // return the number of characters in a zero-terminated C-style string
+
+int length_of_string(const char zero_terminated_array_of_char[])    // bad: verbose
+
+int g;      // bad: global variable with a cryptic name
+
+int open;   // bad: global variable with a short, popular name
+#+end_src
+
+用 ~p~ 做指针，用 ~x~ 做浮点变量是常见的约定，不太会产生混淆。

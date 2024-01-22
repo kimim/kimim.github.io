@@ -1,0 +1,44 @@
+---
+layout: post
+title: CppCoreGuidelines NL.7 名字的长短和其作用范围匹配
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Make the length of a name roughly proportional to the length of its
+scope&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+越大的作用域范围，会容易出现混淆和不小心的名字冲突。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #0000ff; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// return the square root of x; x must be non-negative</span>
+
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">length</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// return the number of characters in a zero-terminated C-style string</span>
+
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">length_of_string</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">zero_terminated_array_of_char</span><span style="color: #7388d6;">[]</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// bad: verbose</span>
+
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">g</span>;      <span style="color: #3F7F5F;">// bad: global variable with a cryptic name</span>
+
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">open</span>;   <span style="color: #3F7F5F;">// bad: global variable with a short, popular name</span>
+</pre>
+</div>
+
+<p>
+用 <code>p</code> 做指针，用 <code>x</code> 做浮点变量是常见的约定，不太会产生混淆。
+</p>
