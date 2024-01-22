@@ -1,0 +1,139 @@
+---
+layout: post
+title: CppCoreGuidelines NL.5 避免把类型信息编码到变量名中
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid encoding type information in names&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+如果变量名隐含了类型信息而不是功能，那么，要保持变量的功能，而修改变量的类型就变的困难了。另外，如果变量的类型改变了，那么使用这个带类型名字的变量就得修改。请尽量减少不必要的转换。
+</p>
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print_int</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print_string</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #707183;">)</span>;
+
+<span style="color: #3a5fcd; font-weight: bold;">print_int</span><span style="color: #707183;">(</span><span style="color: #110099;">1</span><span style="color: #707183;">)</span>;          <span style="color: #3F7F5F;">// repetitive, manual type matching</span>
+<span style="color: #3a5fcd; font-weight: bold;">print_string</span><span style="color: #707183;">(</span><span style="color: #2A00FF;">"xyzzy"</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// repetitive, manual type matching</span>
+</pre>
+</div>
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string_view</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// also works on any string-like sequence</span>
+
+<span style="color: #3a5fcd; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #110099;">1</span><span style="color: #707183;">)</span>;              <span style="color: #3F7F5F;">// clear, automatic type matching</span>
+<span style="color: #3a5fcd; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #2A00FF;">"xyzzy"</span><span style="color: #707183;">)</span>;        <span style="color: #3F7F5F;">// clear, automatic type matching</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+带类型的变量名要么繁琐，要么难懂。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">printS</span>  <span style="color: #3F7F5F;">// print a std::string</span>
+prints  <span style="color: #3F7F5F;">// print a C-style string</span>
+printi  <span style="color: #3F7F5F;">// print an int</span>
+</pre>
+</div>
+
+
+<p>
+以前，在无类型语言中，要求用匈牙利命名法把类型编码到变量命中，但是在
+C++ 之类静态强类型语言中，这种做法一般来说是没必要的，而且可能会导致不好的影响。因为类型信息可能跟不上代码改动。而且也组织了语言中的好用的重载机制。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+有些风格会添加一些通用信息到变量中
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">User</span><span style="color: #707183;">()</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_unique</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">User</span><span style="color: #707183; font-weight: bold;">&gt;</span><span style="color: #707183;">()</span>;
+<span style="color: #3F7F5F;">// note: "p" is not being used to say "raw pointer to type User,"</span>
+<span style="color: #3F7F5F;">//       just generally to say "this is an indirection"</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">cntHits</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">calc_total_of_hits</span><span style="color: #707183;">(</span><span style="color: #3F7F5F;">/*...*/</span><span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// note: "cnt" is not being used to encode a type,</span>
+<span style="color: #3F7F5F;">//       just generally to say "this is a count of something"</span>
+</pre>
+</div>
+
+<p>
+这种做法没有坏处。不属于本指南的范畴。因为他们没有把类型编码到变量中。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+有些风格会区分成员变量、局部变量和全局变量。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">m_</span>;
+    <span style="color: #0000ff; font-weight: bold;">S</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">m</span><span style="color: #7388d6;">)</span> : <span style="color: #110099; font-style: italic;">m_</span><span style="color: #7388d6;">{</span><span style="color: #3a5fcd; font-weight: bold;">abs</span><span style="color: #909183;">(</span>m<span style="color: #909183;">)</span><span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>;
+</pre>
+</div>
+
+<p>
+这种做法没有坏处。不属于本指南的范畴。因为他们没有把类型编码到变量中。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+有些风格会区分区分类型和非类型的名字，比如在类型名上添加大小写字母，但是函数和变量名不添加。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">typename</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">HashTable</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// maps string to T</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">HashTable</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">index</span>;
+</pre>
+</div>
+
+<p>
+这种做法没有坏处。不属于本指南的范畴。因为他们没有把类型编码到变量中。
+</p>

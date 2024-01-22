@@ -1,0 +1,107 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.5 避免把类型信息编码到变量名中
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid encoding type information in names"
+
+理由
+
+如果变量名隐含了类型信息而不是功能，那么，要保持变量的功能，而修改变量
+的类型就变的困难了。另外，如果变量的类型改变了，那么使用这个带类型名字
+的变量就得修改。请尽量减少不必要的转换。
+
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void print_int(int i);
+void print_string(const char*);
+
+print_int(1);          // repetitive, manual type matching
+print_string("xyzzy"); // repetitive, manual type matching
+#+end_src
+
+好例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void print(int i);
+void print(string_view);    // also works on any string-like sequence
+
+print(1);              // clear, automatic type matching
+print("xyzzy");        // clear, automatic type matching
+#+end_src
+
+
+注意
+
+带类型的变量名要么繁琐，要么难懂。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+printS  // print a std::string
+prints  // print a C-style string
+printi  // print an int
+#+end_src
+
+
+以前，在无类型语言中，要求用匈牙利命名法把类型编码到变量命中，但是在
+C++ 之类静态强类型语言中，这种做法一般来说是没必要的，而且可能会导致不
+好的影响。因为类型信息可能跟不上代码改动。而且也组织了语言中的好用的重
+载机制。
+
+
+注意
+
+有些风格会添加一些通用信息到变量中
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+auto p = new User();
+auto p = make_unique<User>();
+// note: "p" is not being used to say "raw pointer to type User,"
+//       just generally to say "this is an indirection"
+
+auto cntHits = calc_total_of_hits(/*...*/);
+// note: "cnt" is not being used to encode a type,
+//       just generally to say "this is a count of something"
+#+end_src
+
+这种做法没有坏处。不属于本指南的范畴。因为他们没有把类型编码到变量中。
+
+
+注意
+
+有些风格会区分成员变量、局部变量和全局变量。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+struct S {
+    int m_;
+    S(int m) : m_{abs(m)} { }
+};
+#+end_src
+
+这种做法没有坏处。不属于本指南的范畴。因为他们没有把类型编码到变量中。
+
+
+注意
+
+有些风格会区分区分类型和非类型的名字，比如在类型名上添加大小写字母，但
+是函数和变量名不添加。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+typename<typename T>
+class HashTable {   // maps string to T
+    // ...
+};
+
+HashTable<int> index;
+#+end_src
+
+这种做法没有坏处。不属于本指南的范畴。因为他们没有把类型编码到变量中。
