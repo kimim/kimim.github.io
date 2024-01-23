@@ -1,0 +1,102 @@
+---
+layout: post
+title: CppCoreGuidelines NL.8 遵循一致的命名风格
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use a consistent naming style&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+一致的命名风格增加可读性。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+可能在不同的库里用了不同的命名风格。你无法遵循不同的命名风格。所以，自己写的代码用自己的风格，库代码用其原来的风格。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+ISO 标准中，只用到小写字母、数字和下划线区分单词。
+</p>
+<ul class="org-ul">
+<li><code>int</code></li>
+<li><code>vector</code></li>
+<li><code>my_map</code></li>
+</ul>
+
+<p>
+请避免双下划线  <code>__</code>
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+Stroustrup 说的：遵循 ISO 标准。但是自己的类型和概念 concept 用大写字母：
+</p>
+<ul class="org-ul">
+<li><code>int</code></li>
+<li><code>vector</code></li>
+<li><code>My_map</code></li>
+</ul>
+
+<p>
+例子
+</p>
+
+<p>
+CamelCase：把多个单词组成的标识符中的每个单词首字母大写：
+</p>
+<ul class="org-ul">
+<li><code>int</code></li>
+<li><code>vector</code></li>
+<li><code>MyMap</code></li>
+<li><code>myMap</code></li>
+</ul>
+
+<p>
+有些约定会把第一个字母大写，有些不这么做。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+尽量保持使用相同的缩写，标识符的长度也一致。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">mtbf</span> <span style="color: #707183;">{</span><span style="color: #110099;">12</span><span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">mean_time_between_failures</span> <span style="color: #707183;">{</span><span style="color: #110099;">12</span><span style="color: #707183;">}</span>; <span style="color: #3F7F5F;">// make up your mind</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>可能可以，除了库函数会用到不同的命名约定</li>
+</ul>

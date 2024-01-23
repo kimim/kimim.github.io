@@ -1,0 +1,61 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.8 遵循一致的命名风格
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use a consistent naming style"
+
+理由
+
+一致的命名风格增加可读性。
+
+
+注意
+
+可能在不同的库里用了不同的命名风格。你无法遵循不同的命名风格。所以，自
+己写的代码用自己的风格，库代码用其原来的风格。
+
+
+例子
+
+ISO 标准中，只用到小写字母、数字和下划线区分单词。
+- ~int~
+- ~vector~
+- ~my_map~
+
+请避免双下划线  ~__~
+
+
+例子
+
+Stroustrup 说的：遵循 ISO 标准。但是自己的类型和概念 concept 用大写字
+母：
+- ~int~
+- ~vector~
+- ~My_map~
+
+例子
+
+CamelCase：把多个单词组成的标识符中的每个单词首字母大写：
+- ~int~
+- ~vector~
+- ~MyMap~
+- ~myMap~
+
+有些约定会把第一个字母大写，有些不这么做。
+
+
+注意
+
+尽量保持使用相同的缩写，标识符的长度也一致。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int mtbf {12};
+int mean_time_between_failures {12}; // make up your mind
+#+end_src
+
+强化
+- 可能可以，除了库函数会用到不同的命名约定
