@@ -33,4 +33,11 @@ categories: [technology]
 <pre class="src src-shell">pacman -U gnupg-2.2.41-1-x86_64.pkg.tar.zst
 </pre>
 </div></li>
+<li><p>
+为了避免每次更新都自动升级 gnupg, 可以将它加入到 <code>/etc/pacman.conf</code> 配置中
+</p>
+<div class="org-src-container">
+<pre class="src src-conf"><span style="color: #000000;">IgnorePkg</span>   = gnupg
+</pre>
+</div></li>
 </ol>

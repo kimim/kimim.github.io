@@ -19,3 +19,8 @@ https://dev.gnupg.org/T6481
    #+begin_src shell
 pacman -U gnupg-2.2.41-1-x86_64.pkg.tar.zst
    #+end_src
+3. 为了避免每次更新都自动升级 gnupg, 可以将它加入到 =/etc/pacman.conf= 配置中
+   #+begin_src conf
+IgnorePkg   = gnupg
+   #+end_src
+
