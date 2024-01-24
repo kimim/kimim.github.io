@@ -1,0 +1,38 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.9 全大写只用于宏名字
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use ~ALL_CAPS~ for macro names only"
+
+理由
+
+避免宏名字和其他的变量和类型名字混淆。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void f()
+{
+    const int SIZE{1000};  // Bad, use 'size' instead
+    int v[SIZE];
+}
+#+end_src
+
+
+注意
+
+此规则不适用于不是宏定义的符号常量：
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+enum bad { BAD, WORSE, HORRIBLE }; // BAD
+#+end_src
+
+强化
+- 标记用小写字母的宏名字
+- 标记用全大写的非宏定义名字

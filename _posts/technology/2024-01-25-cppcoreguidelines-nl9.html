@@ -1,0 +1,57 @@
+---
+layout: post
+title: CppCoreGuidelines NL.9 全大写只用于宏名字
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use <code>ALL_CAPS</code> for macro names only&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+避免宏名字和其他的变量和类型名字混淆。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">SIZE</span><span style="color: #7388d6;">{</span><span style="color: #110099;">1000</span><span style="color: #7388d6;">}</span>;  <span style="color: #3F7F5F;">// Bad, use 'size' instead</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">v</span><span style="color: #7388d6;">[</span><span style="color: #000000;">SIZE</span><span style="color: #7388d6;">]</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+此规则不适用于不是宏定义的符号常量：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">enum</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">bad</span> <span style="color: #707183;">{</span> <span style="color: #000000;">BAD</span>, <span style="color: #000000;">WORSE</span>, <span style="color: #000000;">HORRIBLE</span> <span style="color: #707183;">}</span>; <span style="color: #3F7F5F;">// BAD</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+<ul class="org-ul">
+<li>标记用小写字母的宏名字</li>
+<li>标记用全大写的非宏定义名字</li>
+</ul>
