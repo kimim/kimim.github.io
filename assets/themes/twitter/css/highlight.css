@@ -31,7 +31,7 @@ pre {
 }
 pre.src {
     position: relative;
-    overflow-x: visible;
+    overflow-x: auto;
     padding-top: 1.2em;
 }
 pre.src:before {
