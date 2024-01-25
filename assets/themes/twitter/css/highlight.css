@@ -23,17 +23,25 @@ pre {
     box-shadow: 3px 3px 3px #eee;
     padding: 8pt;
     font-family:Monaco,Menlo,Consolas,"Courier New",monospace;
+    font-size: 14pt;
     overflow: auto;
     margin: 1.2em;
     background-color:#f5f5f5;
     border:1px solid #ccc;
-    border:1px solid rgba(0, 0, 0, 0.15);
+}
+pre.prettyprint{
+    margin-bottom:20px;
+}
+.pre-scrollable{
+    max-height:340px;
+    overflow-y:scroll;
 }
 pre.src {
     position: relative;
     overflow-x: auto;
     padding-top: 1.2em;
 }
+
 pre.src:before {
     display: none;
     position: absolute;
@@ -43,16 +51,9 @@ pre.src:before {
     padding: 3px;
     border: 1px solid black;
 }
-
-pre.prettyprint{
-    margin-bottom:20px;
+pre.src:hover:before {
+    display: inline;
 }
-.pre-scrollable{
-    max-height:340px;
-    overflow-y:scroll;
-}
-
-pre.src:hover:before { display: inline;}
 /* Languages per Org manual */
 pre.src-asymptote:before { content: 'Asymptote'; }
 pre.src-awk:before { content: 'Awk'; }
