@@ -1,0 +1,34 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.10 建议用下划线命名风格 underscore_style
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Prefer underscore_style names"
+
+理由
+
+C 和 C++ 传统风格是用下划线分隔名称中的单词。 C++ 库也用这种风格。
+
+
+注意
+
+只有你可以选的时候，才能采用此做法。如果你没得选，那就遵循已经建立的风
+格，保证一致性。风格一致性胜过个人品味。
+
+只有当你没有其他限制或其他更好的想法的时候，选用此建议。这条规则是在很
+多人要求添加的。
+
+
+例子
+
+Stroustrup 说：这条符合 ISO 标准。但是在自己定义的类型和概念 concept
+中用大写字母开头：
+- ~int~
+- ~vector~
+- ~My_map~
+
+强化  
+
+没法强化。
