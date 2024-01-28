@@ -8,16 +8,18 @@
 Github 上有个 [[https://github.com/isocpp/CppCoreGuidelines][C++ 核心指南]]。C++ 创始人 [[https://github.com/isocpp/CppCoreGuidelines/commits?author=BjarneStroustrup][Bjarne Stroustrup]] 亲自参与维护。
 值得好好学习。
 
-这个指南根据不同主题，分为多个章节，比如 P 代表编程哲学，I 代表接口设
-计，F 表示函数，C 表示类与类层级，R 表示资源管理，Per 表示性能，CP 表
-示并发与并行计算，Con 表示常量与不变性等。
+这个指南根据不同主题，分为多个章节，比如 P 代表编程 Philosophy 哲学，I
+代表 Interface 接口设计，F 表示 Function 函数，C 表示 Class and Class
+Hierarchies 类与类层级，R 表示 Resource Management 资源管理，Per 表示
+Performance 性能，CP 表示 Concurrency 并发与并行计算，Con 表示
+Constants and Immutability 常量与不变性等。
 
 在每个章节下，又用阿拉伯数字对规则进行进行标注。比如 [[https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#p1-express-ideas-directly-in-code][P.1 Express ideas
-directly in code]] 这个章节讲的是如何直接地用代码表达编程设计理念。
+directly in code]] 这个章节讲的是如何直接地用代码表达编程设计哲学理念。
 
 每一个规则的阐述包含：
 - Reasons 理由
-- Examples 示例
+- Examples 代码示例
 - Alternatives 替代方案
 - Exceptions 例外情况
 - Enforcement 工具强化
@@ -29,13 +31,14 @@ directly in code]] 这个章节讲的是如何直接地用代码表达编程设�
 接下来，学习学习第一条指南：P.1 Express ideas directly in code 直接用
 代码表达设计想法。
 
-理由
+*理由*
 
-一般来说，编译器是不会处理代码注释，更不会解析设计文档。很多程序员可能
-也没耐心仔细阅读代码注释和设计文档。所以，如果能直接用代码清晰的表达程
-序意图的话，可以提升机器和人类对代码的理解度。
+一般来说，编译器是不会处理代码注释，更不会解析设计文档。大多数程序员也
+没耐心仔细阅读代码注释和设计文档。所以，程序的意图直接通过代码清晰地表
+达出来，不论是编译器，还是其他程序员，都可以理解地更好。
 
-例子
+
+*示例*
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
 class Date {
@@ -45,14 +48,18 @@ public:
 };
 #+end_src
 
-以上代码中，第一个函数声明的表达内容更清晰： ~month~ 函数返回 ~Month~ 对象，
-并且该函数是一个 ~const~ 成员函数，所以 ~month~ 不改变 ~Date~ 的成员变量，也
-不能调用 ~Date~ 类中非 ~const~ 的成员函数。
+上面的代码段中，第一个函数声明所表达的内容更清晰：调用 ~month~ 函数可以
+得到一个 ~Month~ 对象，又因为该函数是一个 ~const~ 成员函数，所以 ~month~ 不
+改变 ~Date~ 对象的成员变量，也不能调用 ~Date~ 对象中没有 ~const~ 所修饰的成
+员函数，因为没有 ~const~ 修饰的成员函数意味着这些函数是允许修改对象的成
+员变量，那就违反了 ~const~ 修饰词所表达的意图了。
 
-相比较而言，第二个函数的声明，表达的代码信息和设计理念就少很多。别的程
-序员可能要连蒙带猜地使用你设计的函数，这样，容易产生的 bug。
+相比较而言，第二个函数 ~int month()~ 的声明，所表达的代码信息和设计理念
+较少。别的程序员在使用你设计的接口函数的时候，可能就要连蒙带猜、费尽心
+思了。这就会导致更多的代码缺陷、程序 bug。
 
-坏例子：
+
+*坏例子* ：其实只是标准库函数 ~std::find~ 的一个特定应用。
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
 void f(vector<string>& v)
@@ -74,20 +81,39 @@ void f(vector<string>& v)
 ~std::find~ 标准库函数可以更直接地表达程序的目的。
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
-void f(vector<string>& v)
+void f(vector<string>& v, string& val)
 {
-    string val;
-    cin >> val;
+    //string val;
+    //cin >> val;
     // ...
     auto p = find(begin(v), end(v), val);  // better
+    if (p == end(v))
+        cout << "can't find \"" << val << "\"\n";
+    else
+        cout << "find \""  << val << "\"\n";
     // ...
 }
+int main()
+{
+    vector<string> vec{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+    string day{"Fri"};
+    f(vec, day);
+    day = "周五";
+    f(vec, day);    
+}
 #+end_src
+
+#+RESULTS:
+: find "Fri"
+: can't find "周五"
+
+设计优良的程序库清晰地表达设计意图，即程序要完成什么任务，而不是怎么完
+成这些任务。这就相比直接通过编写代码效果要好。
 
 C++ 程序员要熟悉标准库和 [[https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#S-gsl][GSL 库]]。可复用的库抽象了常用的功能，经过验证、
 性能保障、不易出错、有助理解。
 
-例子
+*例子*
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
 change_speed(double s);   // bad: what does s signify?
@@ -95,7 +121,7 @@ change_speed(2.3);
 #+end_src
 
 从上面的函数定义，我们无法得出这个 ~double~ 类型的变量 ~s~ 是什么意思。是
-新的速度，还是速度增量，速度的单位是什么？
+新的速度，还是速度增量，速度的单位又是什么？
 
 以下例子中，最后一个使用了 C++ 的字面量后缀。可以用来表示不同的物理量。
 
@@ -124,7 +150,6 @@ int main()
 {
     auto speed = 23.1_m / 10.0_s;
     cout << speed << endl;
-    return 0;
 }
 #+end_src
 
@@ -150,9 +175,17 @@ size_t operator""_sz(char const *str, size_t sz) {return sz;}
 int main()
 {
     cout << "size of \'hello world\' is: " << "hello world"_sz << endl;
-    return 0;
 }
 #+end_src
 
 #+RESULTS:
 : size of 'hello world' is: 11
+
+
+*强化*
+- 检查成员函数是不是会修改对象内部数据，如果不修改的话，这个成员函数应
+  该用 ~const~ 修饰。
+- 检查函数会不会修改通过指针或引用传入的参数，如果不修改的话，这些参数
+  应该用 ~const~ 修饰。
+- 标记出用了类型转换的代码，因为强制类型转换会削弱类型系统的作用。
+- 识别出可以用标准库替代的代码。

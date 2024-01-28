@@ -13,12 +13,16 @@ Github 上有个 <a href="https://github.com/isocpp/CppCoreGuidelines">C++ 核�
 </p>
 
 <p>
-这个指南根据不同主题，分为多个章节，比如 P 代表编程哲学，I 代表接口设计，F 表示函数，C 表示类与类层级，R 表示资源管理，Per 表示性能，CP 表示并发与并行计算，Con 表示常量与不变性等。
+这个指南根据不同主题，分为多个章节，比如 P 代表编程 Philosophy 哲学，I
+代表 Interface 接口设计，F 表示 Function 函数，C 表示 Class and Class
+Hierarchies 类与类层级，R 表示 Resource Management 资源管理，Per 表示
+Performance 性能，CP 表示 Concurrency 并发与并行计算，Con 表示
+Constants and Immutability 常量与不变性等。
 </p>
 
 <p>
 在每个章节下，又用阿拉伯数字对规则进行进行标注。比如 <a href="https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#p1-express-ideas-directly-in-code">P.1 Express ideas
-directly in code</a> 这个章节讲的是如何直接地用代码表达编程设计理念。
+directly in code</a> 这个章节讲的是如何直接地用代码表达编程设计哲学理念。
 </p>
 
 <p>
@@ -26,7 +30,7 @@ directly in code</a> 这个章节讲的是如何直接地用代码表达编程�
 </p>
 <ul class="org-ul">
 <li>Reasons 理由</li>
-<li>Examples 示例</li>
+<li>Examples 代码示例</li>
 <li>Alternatives 替代方案</li>
 <li>Exceptions 例外情况</li>
 <li>Enforcement 工具强化</li>
@@ -41,15 +45,16 @@ directly in code</a> 这个章节讲的是如何直接地用代码表达编程�
 </p>
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-一般来说，编译器是不会处理代码注释，更不会解析设计文档。很多程序员可能也没耐心仔细阅读代码注释和设计文档。所以，如果能直接用代码清晰的表达程序意图的话，可以提升机器和人类对代码的理解度。
+一般来说，编译器是不会处理代码注释，更不会解析设计文档。大多数程序员也没耐心仔细阅读代码注释和设计文档。所以，程序的意图直接通过代码清晰地表达出来，不论是编译器，还是其他程序员，都可以理解地更好。
 </p>
 
+
 <p>
-例子
+<b>示例</b>
 </p>
 
 <div class="org-src-container">
@@ -62,15 +67,16 @@ directly in code</a> 这个章节讲的是如何直接地用代码表达编程�
 </div>
 
 <p>
-以上代码中，第一个函数声明的表达内容更清晰： <code>month</code> 函数返回 <code>Month</code> 对象，并且该函数是一个 <code>const</code> 成员函数，所以 <code>month</code> 不改变 <code>Date</code> 的成员变量，也不能调用 <code>Date</code> 类中非 <code>const</code> 的成员函数。
+上面的代码段中，第一个函数声明所表达的内容更清晰：调用 <code>month</code> 函数可以得到一个 <code>Month</code> 对象，又因为该函数是一个 <code>const</code> 成员函数，所以 <code>month</code> 不改变 <code>Date</code> 对象的成员变量，也不能调用 <code>Date</code> 对象中没有 <code>const</code> 所修饰的成员函数，因为没有 <code>const</code> 修饰的成员函数意味着这些函数是允许修改对象的成员变量，那就违反了 <code>const</code> 修饰词所表达的意图了。
 </p>
 
 <p>
-相比较而言，第二个函数的声明，表达的代码信息和设计理念就少很多。别的程序员可能要连蒙带猜地使用你设计的函数，这样，容易产生的 bug。
+相比较而言，第二个函数 <code>int month()</code> 的声明，所表达的代码信息和设计理念较少。别的程序员在使用你设计的接口函数的时候，可能就要连蒙带猜、费尽心思了。这就会导致更多的代码缺陷、程序 bug。
 </p>
 
+
 <p>
-坏例子：
+<b>坏例子</b> ：其实只是标准库函数 <code>std::find</code> 的一个特定应用。
 </p>
 
 <div class="org-src-container">
@@ -96,23 +102,45 @@ directly in code</a> 这个章节讲的是如何直接地用代码表达编程�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">v</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">val</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">val</span>;
-    cin <span style="color: #7F0055; font-weight: bold;">&gt;&gt;</span> val;
+    <span style="color: #3F7F5F;">//string val;</span>
+    <span style="color: #3F7F5F;">//cin &gt;&gt; val;</span>
     <span style="color: #3F7F5F;">// ...</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">find</span><span style="color: #7388d6;">(</span><span style="color: #3a5fcd; font-weight: bold;">begin</span><span style="color: #909183;">(</span>v<span style="color: #909183;">)</span>, <span style="color: #3a5fcd; font-weight: bold;">end</span><span style="color: #909183;">(</span>v<span style="color: #909183;">)</span>, val<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// better</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>p <span style="color: #7F0055; font-weight: bold;">==</span> <span style="color: #3a5fcd; font-weight: bold;">end</span><span style="color: #909183;">(</span>v<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+        cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"can't find \""</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> val <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"\"\n"</span>;
+    <span style="color: #7F0055; font-weight: bold;">else</span>
+        cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"find \""</span>  <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> val <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"\"\n"</span>;
     <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">vec</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"Mon"</span>, <span style="color: #2A00FF;">"Tue"</span>, <span style="color: #2A00FF;">"Wed"</span>, <span style="color: #2A00FF;">"Thu"</span>, <span style="color: #2A00FF;">"Fri"</span>, <span style="color: #2A00FF;">"Sat"</span>, <span style="color: #2A00FF;">"Sun"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">day</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"Fri"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>vec, day<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000;">day</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"&#21608;&#20116;"</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>vec, day<span style="color: #7388d6;">)</span>;    
 <span style="color: #707183;">}</span>
 </pre>
 </div>
+
+<pre class="example">
+find "Fri"
+can't find "周五"
+</pre>
+
+
+<p>
+设计优良的程序库清晰地表达设计意图，即程序要完成什么任务，而不是怎么完成这些任务。这就相比直接通过编写代码效果要好。
+</p>
 
 <p>
 C++ 程序员要熟悉标准库和 <a href="https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#S-gsl">GSL 库</a>。可复用的库抽象了常用的功能，经过验证、性能保障、不易出错、有助理解。
 </p>
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
@@ -122,7 +150,7 @@ C++ 程序员要熟悉标准库和 <a href="https://github.com/isocpp/CppCoreGui
 </div>
 
 <p>
-从上面的函数定义，我们无法得出这个 <code>double</code> 类型的变量 <code>s</code> 是什么意思。是新的速度，还是速度增量，速度的单位是什么？
+从上面的函数定义，我们无法得出这个 <code>double</code> 类型的变量 <code>s</code> 是什么意思。是新的速度，还是速度增量，速度的单位又是什么？
 </p>
 
 <p>
@@ -156,7 +184,6 @@ C++ 程序员要熟悉标准库和 <a href="https://github.com/isocpp/CppCoreGui
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">speed</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">23.1</span>_m <span style="color: #7F0055; font-weight: bold;">/</span> <span style="color: #110099;">10.0</span>_s;
     cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> speed <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
-    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -190,7 +217,6 @@ char32_t <span style="color: #7F0055; font-weight: bold;">const</span> <span sty
 <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"size of \'hello world\' is: "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"hello world"</span>_sz <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
-    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -198,3 +224,15 @@ char32_t <span style="color: #7F0055; font-weight: bold;">const</span> <span sty
 <pre class="example">
 size of 'hello world' is: 11
 </pre>
+
+
+
+<p>
+<b>强化</b>
+</p>
+<ul class="org-ul">
+<li>检查成员函数是不是会修改对象内部数据，如果不修改的话，这个成员函数应该用 <code>const</code> 修饰。</li>
+<li>检查函数会不会修改通过指针或引用传入的参数，如果不修改的话，这些参数应该用 <code>const</code> 修饰。</li>
+<li>标记出用了类型转换的代码，因为强制类型转换会削弱类型系统的作用。</li>
+<li>识别出可以用标准库替代的代码。</li>
+</ul>
