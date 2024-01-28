@@ -1,0 +1,71 @@
+---
+layout: post
+title: CppCoreGuidelines NL.11 字面量要容易读
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Make literals readable&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性。
+</p>
+
+
+<p>
+例子
+</p>
+
+<p>
+用数字分隔号把长数字分隔开。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">c</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">299'792'458</span>; <span style="color: #3F7F5F;">// m/s2</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">q2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0b0000'1111'0000'0000</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">ss_number</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">123'456'7890</span>;
+</pre>
+</div>
+
+
+<p>
+例子
+</p>
+
+<p>
+用字面量后缀区分不同类型。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">hello</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"Hello!"</span>s; <span style="color: #3F7F5F;">// a std::string</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">world</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"world"</span>;   <span style="color: #3F7F5F;">// a C-style string</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">interval</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">100</span>ms;  <span style="color: #3F7F5F;">// using &lt;chrono&gt;</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+字面量不应该作为<a href="./2023-04-19-cppcoreguidelines-es45">神秘常量</a>在代码里到处分散开来。但是，在其定义的地方把他们变的更容易读取还是值得的。对于很长的数字，很容易写错。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记很长的数字序列。很难定义什么是“长”，或许超过 7 个数字就算长了。</li>
+</ul>

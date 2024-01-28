@@ -1,0 +1,47 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.11 字面量要容易读
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Make literals readable"
+
+理由
+
+可读性。
+
+
+例子
+
+用数字分隔号把长数字分隔开。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+auto c = 299'792'458; // m/s2
+auto q2 = 0b0000'1111'0000'0000;
+auto ss_number = 123'456'7890;
+#+end_src
+
+
+例子
+
+用字面量后缀区分不同类型。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+auto hello = "Hello!"s; // a std::string
+auto world = "world";   // a C-style string
+auto interval = 100ms;  // using <chrono>
+#+end_src
+
+
+注意
+
+字面量不应该作为[[./2023-04-19-cppcoreguidelines-es45][神秘常量]]在代码里到处分散开来。但是，在其定义的地方把他
+们变的更容易读取还是值得的。对于很长的数字，很容易写错。
+
+
+强化
+
+- 标记很长的数字序列。很难定义什么是“长”，或许超过 7 个数字就算长了。
