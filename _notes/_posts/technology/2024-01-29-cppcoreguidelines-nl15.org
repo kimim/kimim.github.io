@@ -1,0 +1,48 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.15 节约使用空格
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use spaces sparingly"
+
+理由
+
+空格太多的话，代码显得很长，很分散。
+
+坏例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+#include < map >
+
+int main(int argc, char * argv [ ])
+{
+    // ...
+}
+#+end_src
+
+好例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+#include <map>
+
+int main(int argc, char* argv[])
+{
+    // ...
+}
+#+end_src
+
+
+注意
+
+有些 IDE 有自己的设定，会添加一些额外的空格。
+
+如果没有其他更好的想法的话，请遵循这条规则。这条规则是很多人要求添加的。
+
+
+注意
+
+我们鼓励恰当好处的空格。可以提升可读性。但是不要过多。

@@ -1,0 +1,71 @@
+---
+layout: post
+title: CppCoreGuidelines NL.15 节约使用空格
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use spaces sparingly&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+空格太多的话，代码显得很长，很分散。
+</p>
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt; map &gt;</span>
+
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">argc</span>, <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #7F0055; font-weight: bold;">*</span> argv <span style="color: #7388d6;">[</span> <span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+好例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;map&gt;</span>
+
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">argc</span>, <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> argv<span style="color: #7388d6;">[]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+有些 IDE 有自己的设定，会添加一些额外的空格。
+</p>
+
+<p>
+如果没有其他更好的想法的话，请遵循这条规则。这条规则是很多人要求添加的。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+我们鼓励恰当好处的空格。可以提升可读性。但是不要过多。
+</p>
