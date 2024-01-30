@@ -1,0 +1,79 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.16 遵循常规的类成员声明顺序
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use a conventional class member declaration order"
+
+理由
+
+常规的类成员顺序提升可读性。
+
+
+声明类成员的时候，遵循以下顺序：
+- 类型：类类型、枚举类型、别名（using）
+- 构造函数、赋值函数、析构函数
+- 成员函数
+- 成员数据
+
+先 ~public~  再 ~protected~  最后 ~private~
+
+如果没有其他更好的想法的话，请遵循这条规则。这条规则是很多人要求添加的。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class X {
+public:
+    // interface
+protected:
+    // unchecked function for use by derived class implementations
+private:
+    // implementation details
+};
+#+end_src
+
+
+例子
+
+有时候，默认的声明顺序违反了公开接口和实现细节分开的想法，这个时候，私
+有类型和函数定义可以放在 ~private~ 下。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class X {
+public:
+    // interface
+protected:
+    // unchecked function for use by derived class implementations
+private:
+    // implementation details (types, functions, and data)
+};
+#+end_src
+
+
+坏例子
+
+不要连续放多个一样的访问设定，如 ~public~ 。或者交替使用不同的访问设定。
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+class X {   // bad
+public:
+    void f();
+public:
+    int g();
+    // ...
+};
+#+end_src
+
+用宏定义声明一组成员往往会违反此规则。其实宏定义还混淆了我们所要表达的程序意图。
+
+
+强化
+
+标记违反本规则建议的顺序的情况。可能会有很多老的代码违反了此规则。
