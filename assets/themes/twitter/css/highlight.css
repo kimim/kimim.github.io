@@ -40,6 +40,10 @@ pre.src {
     padding-top: 1.2em;
 }
 
+pre.src-bad {
+    background: wheat;
+}
+
 pre.example {
     background-color: #e3e3e3;
 }

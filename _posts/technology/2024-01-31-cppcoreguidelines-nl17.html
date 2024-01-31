@@ -1,0 +1,126 @@
+---
+layout: post
+title: CppCoreGuidelines NL.17 用 K&R 风格的代码布局
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use K&amp;R-derived layout&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+K&amp;R 风格是 C 和 C++ 的传统布局。保留足够的垂直空间。很好地区分不同的语言结构，如函数和类。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+在 C++ 中，这种风格经常称为 “Stroustrup” 风格。
+</p>
+
+<p>
+这条只是个建议。如果没有其他更好的想法的话，请遵循这条规则。这条规则是很多人要求添加的。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Cable</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">x</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #110099;">0</span> <span style="color: #7F0055; font-weight: bold;">&lt;</span> x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #7F0055; font-weight: bold;">switch</span> <span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">case</span> <span style="color: #110099;">0</span>:
+        <span style="color: #3F7F5F;">// ...</span>
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">case</span> amazing:
+        <span style="color: #3F7F5F;">// ...</span>
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">default</span>:
+        <span style="color: #3F7F5F;">// ...</span>
+        <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7388d6;">}</span>
+
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #110099;">0</span> <span style="color: #7F0055; font-weight: bold;">&lt;</span> x<span style="color: #7388d6;">)</span>
+        <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">x</span>;
+
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x <span style="color: #7F0055; font-weight: bold;">&lt;</span> <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>
+        <span style="color: #3a5fcd; font-weight: bold;">something</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">else</span>
+        <span style="color: #3a5fcd; font-weight: bold;">something_else</span><span style="color: #7388d6;">()</span>;
+
+    <span style="color: #7F0055; font-weight: bold;">return</span> some_value;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+注意 <code>if</code> 和 <code>(</code> 之间的空格。
+</p>
+
+
+
+<p>
+注意
+</p>
+
+<p>
+每个语句之间的空行， <code>if</code> 语句的分支，以及 <code>if</code> 语句的内部。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+类定义的 <code>{</code> 不新开一行。而函数的 <code>{</code> 会另起一行。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+用户自定义的类型首字母大写，以区分标准库类型。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+函数名不要首字母大写。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+如果你要强化，可以用 IDE 的格式化设置。
+</p>

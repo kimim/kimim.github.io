@@ -1,0 +1,89 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.17 用 K&R 风格的代码布局
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use K&R-derived layout"
+
+理由
+
+K&R 风格是 C 和 C++ 的传统布局。保留足够的垂直空间。很好地区分不同的语
+言结构，如函数和类。
+
+
+注意
+
+在 C++ 中，这种风格经常称为 “Stroustrup” 风格。
+
+这条只是个建议。如果没有其他更好的想法的话，请遵循这条规则。这条规则是
+很多人要求添加的。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+struct Cable {
+    int x;
+    // ...
+};
+
+double foo(int x)
+{
+    if (0 < x) {
+        // ...
+    }
+
+    switch (x) {
+    case 0:
+        // ...
+        break;
+    case amazing:
+        // ...
+        break;
+    default:
+        // ...
+        break;
+    }
+
+    if (0 < x)
+        ++x;
+
+    if (x < 0)
+        something();
+    else
+        something_else();
+
+    return some_value;
+}
+#+end_src
+
+注意 ~if~ 和 ~(~ 之间的空格。
+
+
+
+注意
+
+每个语句之间的空行， ~if~ 语句的分支，以及 ~if~ 语句的内部。
+
+
+注意
+
+类定义的 ~{~ 不新开一行。而函数的 ~{~ 会另起一行。
+
+
+注意
+
+用户自定义的类型首字母大写，以区分标准库类型。
+
+
+注意
+
+函数名不要首字母大写。
+
+
+强化
+
+如果你要强化，可以用 IDE 的格式化设置。
