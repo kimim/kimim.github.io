@@ -1,11 +1,7 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines P.3 明确地表达程序意图
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines P.3 明确地表达程序意图
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
@@ -14,6 +10,7 @@ tags: [CppCoreGuidelines]
 
 例如，以下例子：
 
+#+attr_html :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
 vector<int> v = {1, 2, 3, 4, 5};
 gsl::index i = 0;
@@ -106,11 +103,18 @@ for_each(execution::par, v.begin(), v.end(), [](int x) { cout << x << " "; });
 
 如果要表示在两点间画线，以下两种写法里，第二种就比较明确：
 
+#+attr_html :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 draw_line(int, int, int, int);  // obscure
-draw_line(Point, Point);        // clearer
 #+end_src
 
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+draw_line(Point, Point);        // clearer
+#+end_src
 
 一些建议：
 - 熟悉掌握指南支持的程序库（guidelines support library, gsl）

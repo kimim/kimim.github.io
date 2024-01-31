@@ -13,8 +13,9 @@
 
 坏例子
 
+#+attr_html: :class bad
 #+header: :namespaces std :includes  <iostream> <vector> <algorithm>
-#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+#+begin_src C++ :exports both :flags -std=c++20 :eval no-export :results output
 #include < map >
 
 int main(int argc, char * argv [ ])
