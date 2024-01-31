@@ -1,0 +1,52 @@
+---
+layout: post
+title: CppCoreGuidelines NL.18 用 C++ 风格的声明布局
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use C++-style declarator layout&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+C 风格的布局强调表达式和语法，而 C++ 风格的布局则强调类型。对表达式的要求不适用于引用。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #707183;">[]</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">size_t</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// OK</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-bad src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span>operator<span style="color: #707183;">[]</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">size_t</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// just strange</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #707183;">[]</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">size_t</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// undecided</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+如果没有其他更好的想法的话，请遵循这条规则。这条规则是很多人要求添加的。
+</p>
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>因为历史原因，很难强化。</li>
+</ul>

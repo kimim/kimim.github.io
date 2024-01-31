@@ -1,0 +1,38 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.18 用 C++ 风格的声明布局
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use C++-style declarator layout"
+
+理由
+
+C 风格的布局强调表达式和语法，而 C++ 风格的布局则强调类型。对表达式的
+要求不适用于引用。
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+T& operator[](size_t);   // OK
+#+end_src
+
+#+attr_html: :class bad
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+T &operator[](size_t);   // just strange
+T & operator[](size_t);   // undecided
+#+end_src
+
+注意
+
+如果没有其他更好的想法的话，请遵循这条规则。这条规则是很多人要求添加的。
+
+强化
+
+- 因为历史原因，很难强化。
