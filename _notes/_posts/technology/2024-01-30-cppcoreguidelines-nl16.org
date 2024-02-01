@@ -60,6 +60,7 @@ private:
 
 不要连续放多个一样的访问设定，如 ~public~ 。或者交替使用不同的访问设定。
 
+#+attr_html: :class bad
 #+header: :namespaces std :includes  <iostream> <vector> <algorithm>
 #+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
 class X {   // bad
