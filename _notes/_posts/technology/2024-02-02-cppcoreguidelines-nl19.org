@@ -1,0 +1,26 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.19 避免很容易误读的名字
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Avoid names that are easily misread"
+
+理由
+
+可读性。并非每个人的显示器和打印机能很好区分所有字符。对于相似的拼写和
+细小的错拼，我们很容易误读。
+
+
+例子
+
+#+attr_html: :class bad
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int oO01lL = 6; // bad
+
+int splunk = 7;
+int splonk = 8; // bad: splunk and splonk are easily confused
+#+end_src
+

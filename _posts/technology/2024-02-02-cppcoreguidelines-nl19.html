@@ -1,0 +1,34 @@
+---
+layout: post
+title: CppCoreGuidelines NL.19 避免很容易误读的名字
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Avoid names that are easily misread&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性。并非每个人的显示器和打印机能很好区分所有字符。对于相似的拼写和细小的错拼，我们很容易误读。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">oO01lL</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">6</span>; <span style="color: #3F7F5F;">// bad</span>
+
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">splunk</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">7</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">splonk</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">8</span>; <span style="color: #3F7F5F;">// bad: splunk and splonk are easily confused</span>
+</pre>
+</div>
