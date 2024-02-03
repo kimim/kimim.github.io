@@ -1,0 +1,39 @@
+---
+layout: post
+title: CppCoreGuidelines NL.20 不要在同一行写两个表达式语句
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t place two statements on the same line&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+可读性。如果没有单独的一行，很容易忽略其中一个表达式。
+</p>
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">7</span>; <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">29</span>;    <span style="color: #3F7F5F;">// don't</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">7</span>; <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #707183;">(</span>x<span style="color: #707183;">)</span>;  <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">x</span>;      <span style="color: #3F7F5F;">// don't</span>
+</pre>
+</div>
+
+<p>
+强化
+</p>
+
+<p>
+很容易
+</p>
