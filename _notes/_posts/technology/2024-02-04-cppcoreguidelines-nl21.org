@@ -1,0 +1,15 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.21 一次只声明一个变量名
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Declare one name (only) per declaration"
+
+理由
+
+可读性。减小声明语法的误读。
+
+详细查看：[[./2023-03-18-cppcoreguidelines-es10][CppCoreGuidelines ES.10 一个声明语句只声明一个变量]]
+
