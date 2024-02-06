@@ -1,0 +1,56 @@
+---
+layout: post
+title: CppCoreGuidelines NL.25 不要用 void 作为参数类型
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Don’t use <code>void</code> as an argument type&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+很繁琐，只有和 C 兼容的时候才需要。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">void</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// bad</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">()</span>;       <span style="color: #3F7F5F;">// better</span>
+</pre>
+</div>
+
+
+<p>
+注意
+</p>
+
+<p>
+Dennis Ritchie 都认为应该淘汰<code>f(void)</code>。你可能认为淘汰掉这个函数声明方式会导致一些奇怪的问题：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>;
+<span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span>, <span style="color: #2A00FF;">"weird but valid C89"</span><span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// hope that f() is defined int f(a, b, c) char* c; { /* ... */ }</span>
+</pre>
+</div>
+
+<p>
+其实可以放心。在 21 世纪，以及在C++中不会出现这个问题。
+</p>

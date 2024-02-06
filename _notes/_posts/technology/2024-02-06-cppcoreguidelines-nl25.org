@@ -1,0 +1,45 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.25 不要用 void 作为参数类型
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Don’t use ~void~ as an argument type"
+
+理由
+
+很繁琐，只有和 C 兼容的时候才需要。
+
+
+例子
+
+#+attr_html: :class bad
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+void f(void);   // bad
+#+end_src
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+void g();       // better
+#+end_src
+
+
+注意
+
+Dennis Ritchie 都认为应该淘汰 ~f(void)~ 。你可能认为淘汰掉这个函数声明方
+式会导致一些奇怪的问题：
+
+#+attr_html: :class bad
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+int f();
+f(1, 2, "weird but valid C89");
+// hope that f() is defined int f(a, b, c) char* c; { /* ... */ }
+#+end_src
+
+其实可以放心。在 21 世纪，以及在 C++ 中不会出现这个问题。
