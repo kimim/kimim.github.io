@@ -1,0 +1,85 @@
+---
+layout: post
+title: CppCoreGuidelines NL.27 用 .cpp 作代码文件名，用 .h 作接口文件名
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use a <code>.cpp</code> suffix for code files and <code>.h</code> for interface files&rdquo;
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+这是一个用了很久的设计约定。但是，一致性更重要，如果你的项目有其他约定，那么请遵循项目约定。
+</p>
+
+
+<p>
+注意
+</p>
+
+<p>
+这个约定也反映了一个使用模式：头文件通常会在 C 和 C++ 中共享。这样，用一样的<code>.h</code>作为头文件的结尾，比不同的结尾，可以更好的进行共享。另一方面，代码实现在 C 和 C++ 之间不太会共享，所以用<code>.c</code>和 <code>.cpp</code> 把两者区分开来就比较好。
+</p>
+
+<p>
+当然，用<code>.h</code>和 <code>.cpp</code> 两个后缀也不是强制的。只是作为默认选项。还有其他很多选项也有广泛的应用。比如<code>.hh</code> <code>.C</code> <code>.cxx</code>等。用起来没太大差别。在这个文档中，我们选择<code>.h</code>和 <code>.cpp</code> 作为头文件和实现文件的简称。实际后缀可能会不同。
+</p>
+
+<p>
+你用的IDE 可能对于文件后缀有很强的要求：
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// foo.h:</span>
+<span style="color: #7F0055; font-weight: bold;">extern</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">a</span>;   <span style="color: #3F7F5F;">// a declaration</span>
+<span style="color: #7F0055; font-weight: bold;">extern</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span>;
+
+<span style="color: #3F7F5F;">// foo.cpp:</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">a</span>;   <span style="color: #3F7F5F;">// a definition</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">a</span>; <span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+<code>foo.h</code> 提供<code>foo.cpp</code>的接口。最好避免全局变量。
+</p>
+
+
+
+<p>
+坏例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bad src-C++"><span style="color: #3F7F5F;">// foo.h:</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">a</span>;   <span style="color: #3F7F5F;">// a definition</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">a</span>; <span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+在程序中添加<code>#include &lt;foo.h&gt;</code>两次，会导致链接错误，因为违反了“单次定义规则”。
+</p>
+
+
+<p>
+强化
+</p>
+
+<ul class="org-ul">
+<li>标记非约定的文件名</li>
+<li>检查是不是遵循<code>.h</code>  <code>.cpp</code> 文件命名规则</li>
+</ul>

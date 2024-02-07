@@ -1,0 +1,65 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.27 用 .cpp 作代码文件名，用 .h 作接口文件名
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use a ~.cpp~ suffix for code files and ~.h~ for interface files"
+
+理由
+
+这是一个用了很久的设计约定。但是，一致性更重要，如果你的项目有其他
+约定，那么请遵循项目约定。
+
+
+注意
+
+这个约定也反映了一个使用模式：头文件通常会在 C 和 C++ 中共享。这样，用
+一样的 ~.h~ 作为头文件的结尾，比不同的结尾，可以更好的进行共享。另一方面，
+代码实现在 C 和 C++ 之间不太会共享，所以用 ~.c~ 和 ~.cpp~ 把两者区分开来就
+比较好。
+
+当然，用 ~.h~ 和 ~.cpp~ 两个后缀也不是强制的。只是作为默认选项。还有其他很
+多选项也有广泛的应用。比如 ~.hh~ ~.C~ ~.cxx~ 等。用起来没太大差别。在这个文
+档中，我们选择 ~.h~ 和 ~.cpp~ 作为头文件和实现文件的简称。实际后缀可能会不
+同。
+
+你用的 IDE  可能对于文件后缀有很强的要求：
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// foo.h:
+extern int a;   // a declaration
+extern void foo();
+
+// foo.cpp:
+int a;   // a definition
+void foo() { ++a; }
+#+end_src
+
+~foo.h~ 提供 ~foo.cpp~ 的接口。最好避免全局变量。
+
+
+
+坏例子
+
+#+attr_html: :class bad
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+// foo.h:
+int a;   // a definition
+void foo() { ++a; }
+#+end_src
+
+在程序中添加 ~#include <foo.h>~ 两次，会导致链接错误，因为违反了“单次定
+义规则”。
+
+
+强化
+
+- 标记非约定的文件名
+- 检查是不是遵循 ~.h~  ~.cpp~  文件命名规则
