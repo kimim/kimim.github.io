@@ -1,0 +1,64 @@
+---
+layout: post
+title: CppCoreGuidelines NL.26 用常规的 const 标记方式
+categories: [technology]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+&ldquo;Use conventional <code>const</code> notation“
+</p>
+
+<p>
+理由
+</p>
+
+<p>
+程序员更熟悉常规的 <code>const</code> 标记方式。在很大的代码库中一致性更好。
+</p>
+
+
+<p>
+例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">7</span>;    <span style="color: #3F7F5F;">// OK</span>
+
+<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099; font-weight: bold;">nullptr</span>;   <span style="color: #3F7F5F;">// OK, constant pointer to constant int</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000;">y</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">9</span>;    <span style="color: #3F7F5F;">// bad</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099; font-weight: bold;">nullptr</span>;   <span style="color: #3F7F5F;">// bad, constant pointer to constant int</span>
+</pre>
+</div>
+
+<p>
+注意
+</p>
+
+<p>
+我们也注意到了，用不建议的常量声明方式好想更符合逻辑。但是，会令很多人迷惑，尤其是那些刚学好学校资料的人。他们更熟悉这种通常的、常规的风格。
+</p>
+
+<p>
+还要注意，这里的一些命名规则和代码布局很多时候是一种美学考量，不同的人有不同的审美风格。
+</p>
+
+<p>
+如果没有其他更好的想法的话，请遵循这条规则。这条规则是很多人要求添加的。
+</p>
+
+
+<p>
+强化
+</p>
+
+<p>
+标记把 <code>const</code> 放在类型后面的情况
+</p>

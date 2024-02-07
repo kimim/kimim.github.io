@@ -1,0 +1,47 @@
+#+layout: post
+#+title: CppCoreGuidelines NL.26 用常规的 const 标记方式
+#+categories: technology
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+"Use conventional ~const~ notation“
+
+理由
+
+程序员更熟悉常规的 ~const~ 标记方式。在很大的代码库中一致性更好。
+
+
+例子
+
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+begin_src C++ :exports both :flags -std=c++20  :eval no-export :results output
+const int x = 7;    // OK
+
+const int *const p = nullptr;   // OK, constant pointer to constant int
+#+end_src
+
+#+attr_html: :class bad
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+int const y = 9;    // bad
+int const *const p = nullptr;   // bad, constant pointer to constant int
+#+end_src
+
+注意
+
+我们也注意到了，用不建议的常量声明方式好想更符合逻辑。但是，会令很多人
+迷惑，尤其是那些刚学好学校资料的人。他们更熟悉这种通常的、常规的风格。
+
+还要注意，这里的一些命名规则和代码布局很多时候是一种美学考量，不同的人
+有不同的审美风格。
+
+如果没有其他更好的想法的话，请遵循这条规则。这条规则是很多人要求添加的。
+
+
+强化
+
+标记把 ~const~ 放在类型后面的情况
