@@ -1,0 +1,181 @@
+---
+layout: post
+title: CppCoreGuidelines P.3 明确地表达程序的意图
+categories: [programming]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+如果要读代码的注释才能理解代码的意图，那可能就意味着，你写的代码不够清晰，你没有很明确地表达出代码的意图。
+</p>
+
+<p>
+例如，以下例子：
+</p>
+
+<p>
+#+attr_html :class bad
+</p>
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">v</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span>, <span style="color: #110099;">3</span>, <span style="color: #110099;">4</span>, <span style="color: #110099;">5</span><span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic;">gsl</span>::<span style="color: #000000; font-style: italic;">index</span> <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+<span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #707183;">(</span>i <span style="color: #7F0055; font-weight: bold;">&lt;</span> v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #7388d6;">()</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> v<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span>;
+    <span style="color: #000000;">i</span><span style="color: #7F0055; font-weight: bold;">++</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+1 2 3 4 5
+</pre>
+
+
+<p>
+这里，我们的意图其实就是要循环一遍向量 <code>v</code> ，把它的元素的值一个个打印出来。但是呢，读别人拿到这个代码，可能就无法一眼看出来代码要做的事情。并且，代码里还多余的定义了一个索引变量 <code>i</code> ，这个变量的作用域范围还超出了循环体。
+</p>
+
+
+<p>
+倘若把 <code>while</code> 循环改成以下 <code>for</code> 循环，就比较直截了当了：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">v</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span>, <span style="color: #110099;">3</span>, <span style="color: #110099;">4</span>, <span style="color: #110099;">5</span><span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic;">auto</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> x : v<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> x <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+1 2 3 4 5
+</pre>
+
+
+<p>
+并且，在这里，我们还用了 <code>const</code> 关键字修饰 <code>x</code> ，我们限定了，在这个循环里，我们不会修改 <code>x</code> 的值。如果不小心在循环中对 <code>x</code> 的值进行修改，编译器就会报错。那么，根据编译出错信息，我们就比较容易在编码早期发现问题了。
+</p>
+
+<p>
+例如，我们在循环体内，做一个自增操作，就收到了编译器的警告：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bad src-C++"><span style="color: #000000; font-style: italic;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">v</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span>, <span style="color: #110099;">3</span>, <span style="color: #110099;">4</span>, <span style="color: #110099;">5</span><span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic;">auto</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> x : v<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example" id="org0147e1a">
+C-src-eO7Jst.cpp: In function 'int main()':
+C-src-eO7Jst.cpp:14:15: error: increment of read-only reference 'x'
+   14 |     cout &lt;&lt; ++x &lt;&lt; " ";
+      |               ^
+</pre>
+
+<p>
+如果我们想要明确表明，我们要在循环中修改变量 <code>x</code> ，那么就可以去掉 <code>const</code> ：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">v</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span>, <span style="color: #110099;">3</span>, <span style="color: #110099;">4</span>, <span style="color: #110099;">5</span><span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic;">auto</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> x : v<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
+2 3 4 5 6
+</pre>
+
+
+<p>
+除了 <code>for</code> 循环，我们也可以用<code>std::ranges::for_each</code>更清晰的表达程序意图：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">v</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span>, <span style="color: #110099;">3</span>, <span style="color: #110099;">4</span>, <span style="color: #110099;">5</span>, <span style="color: #110099;">6</span>, <span style="color: #110099;">7</span>, <span style="color: #110099;">8</span>, <span style="color: #110099;">9</span>, <span style="color: #110099;">0</span><span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic;">std</span>::<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">ranges</span><span style="color: #3a5fcd; font-weight: bold;">::for_each</span><span style="color: #707183;">(</span>v, <span style="color: #7388d6;">[](</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic;">auto</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> x <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span>; <span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<pre class="example">
+1 2 3 4 5 6 7 8 9 0
+</pre>
+
+
+<p>
+需要注意的是，在 <code>algorithm</code> 中，也有一个<code>std::for_each</code>，它的前两个参数是 <code>InputIterator</code> ：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">v</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span>, <span style="color: #110099;">3</span>, <span style="color: #110099;">4</span>, <span style="color: #110099;">5</span>, <span style="color: #110099;">6</span>, <span style="color: #110099;">7</span>, <span style="color: #110099;">8</span>, <span style="color: #110099;">9</span>, <span style="color: #110099;">0</span><span style="color: #707183;">}</span>;
+<span style="color: #3a5fcd; font-weight: bold;">for_each</span><span style="color: #707183;">(</span><span style="color: #3a5fcd; font-weight: bold;">begin</span><span style="color: #7388d6;">(</span>v<span style="color: #7388d6;">)</span>, <span style="color: #3a5fcd; font-weight: bold;">end</span><span style="color: #7388d6;">(</span>v<span style="color: #7388d6;">)</span>, <span style="color: #7388d6;">[](</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> x <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span>; <span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<pre class="example">
+1 2 3 4 5 6 7 8 9 0
+</pre>
+
+
+<p>
+如果，在循环访问的时候，不需要按照顺序一个一个访问，可以添加
+<code>execute::par</code> 参数，来表示并行访问。因为在这里 <code>v</code> 的元素不够多，不会有太明显的变化：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">v</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span>, <span style="color: #110099;">3</span>, <span style="color: #110099;">4</span>, <span style="color: #110099;">5</span>, <span style="color: #110099;">6</span>, <span style="color: #110099;">7</span>, <span style="color: #110099;">8</span>, <span style="color: #110099;">9</span>, <span style="color: #110099;">0</span><span style="color: #707183;">}</span>;
+<span style="color: #3a5fcd; font-weight: bold;">for_each</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic;">execution</span>::par, v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">begin</span><span style="color: #7388d6;">()</span>, v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">end</span><span style="color: #7388d6;">()</span>, <span style="color: #7388d6;">[](</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> x <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span>; <span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<pre class="example">
+1 2 3 4 5 6 7 8 9 0
+</pre>
+
+
+<p>
+另外举一个例子，如果要表示在两点间画线，以下两种写法里，第二种就比较明确：
+</p>
+
+<p>
+#+attr_html :class bad
+</p>
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #0000ff; font-weight: bold;">draw_line</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span>, <span style="color: #7F0055; font-weight: bold;">int</span>, <span style="color: #7F0055; font-weight: bold;">int</span>, <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// obscure</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #3a5fcd; font-weight: bold;">draw_line</span><span style="color: #707183;">(</span>Point, Point<span style="color: #707183;">)</span>;        <span style="color: #3F7F5F;">// clearer</span>
+</pre>
+</div>
+
+<p>
+一些建议：
+</p>
+<ul class="org-ul">
+<li>熟悉掌握指南支持的程序库（guidelines support library, gsl）</li>
+<li>熟悉了解ISO C++标准库</li>
+<li>其他项目中使用的基础库</li>
+</ul>
+
+
+<p>
+一些需要注意的地方：
+</p>
+<ul class="org-ul">
+<li>弄清楚简单的 <code>for</code> 循环和带范围的<code>for_each</code>的差异，什么时候可以选用 <code>for_each</code></li>
+<li>了解<code>f(T*, int)</code>接口和<code>f(span&lt;T&gt;)</code>接口的差异</li>
+<li>避免只在循环中用到的变量，不要超出循环体范围</li>
+<li>避免直接用 <code>new</code> 或 <code>delete</code> 的操作</li>
+<li>注意有过多内置类型的函数参数，通常可以通过自定义类型减少参数数量</li>
+</ul>

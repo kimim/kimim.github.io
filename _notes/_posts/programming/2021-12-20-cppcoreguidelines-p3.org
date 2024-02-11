@@ -1,12 +1,12 @@
 #+layout: post
-#+title: CppCoreGuidelines P.3 明确地表达程序意图
+#+title: CppCoreGuidelines P.3 明确地表达程序的意图
 #+categories: programming
 #+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-如果要读代码注释才能理解代码意图，那可能就意味着代码写的不够清晰，代码
-意图没有明确地表达了。
+如果要读代码的注释才能理解代码的意图，那可能就意味着，你写的代码不够清
+晰，你没有很明确地表达出代码的意图。
 
 例如，以下例子：
 
@@ -23,9 +23,10 @@ while (i < v.size()) {
 #+RESULTS:
 : 1 2 3 4 5
 
-这里，我们的意图其实就是要循环一遍 ~v~ ，把其元素的值打印出来。然而，别
-人可能无法一眼看出来代码要做的事情。并且，代码里还多余的定义了一个索引
-变量 ~i~ ，这个变量的有效范围还超出了循环体。
+这里，我们的意图其实就是要循环一遍向量 ~v~ ，把它的元素的值一个个打印出
+来。但是呢，读别人拿到这个代码，可能就无法一眼看出来代码要做的事情。并
+且，代码里还多余的定义了一个索引变量 ~i~ ，这个变量的作用域范围还超出了
+循环体。
 
 
 倘若把 ~while~ 循环改成以下 ~for~ 循环，就比较直截了当了：
@@ -40,8 +41,13 @@ for (const auto& x : v) {
 #+RESULTS:
 : 1 2 3 4 5
 
-并且，还用了 ~const~ 修饰 ~x~ ，表示循环内不会修改 ~x~ 的值。如果循环中修改了 ~x~ 的值，编译器会报错。
+并且，在这里，我们还用了 ~const~ 关键字修饰 ~x~ ，我们限定了，在这个循环里，
+我们不会修改 ~x~ 的值。如果不小心在循环中对 ~x~ 的值进行修改，编译器就会报
+错。那么，根据编译出错信息，我们就比较容易在编码早期发现问题了。
 
+例如，我们在循环体内，做一个自增操作，就收到了编译器的警告：
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
 vector<int> v = {1, 2, 3, 4, 5};
 for (const auto& x : v) {
@@ -57,7 +63,7 @@ C-src-eO7Jst.cpp:14:15: error: increment of read-only reference 'x'
       |               ^
 #+end_example
 
-如果明确要在循环中修改 ~x~ ，那么可以去掉 ~const~ ：
+如果我们想要明确表明，我们要在循环中修改变量 ~x~ ，那么就可以去掉 ~const~ ：
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
 vector<int> v = {1, 2, 3, 4, 5};
@@ -69,7 +75,7 @@ for (auto& x : v) {
 #+RESULTS:
 : 2 3 4 5 6
 
-也可以用 ~std::ranges::for_each~ 更清晰的表达程序意图：
+除了 ~for~ 循环，我们也可以用 ~std::ranges::for_each~ 更清晰的表达程序意图：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
 vector<int> v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
@@ -90,8 +96,9 @@ for_each(begin(v), end(v), [](int x) { cout << x << " "; });
 #+RESULTS:
 : 1 2 3 4 5 6 7 8 9 0
 
-如果，循环访问的时候，不用按顺序，可以添加 ~execute::par~ 表示并行访问。
-因为 ~v~ 的元素不够多，所以看不出什么变化：
+如果，在循环访问的时候，不需要按照顺序一个一个访问，可以添加
+~execute::par~ 参数，来表示并行访问。因为在这里 ~v~ 的元素不够多，不会有太
+明显的变化：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> <execution> :eval no-export
 vector<int> v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
@@ -101,7 +108,8 @@ for_each(execution::par, v.begin(), v.end(), [](int x) { cout << x << " "; });
 #+RESULTS:
 : 1 2 3 4 5 6 7 8 9 0
 
-如果要表示在两点间画线，以下两种写法里，第二种就比较明确：
+另外举一个例子，如果要表示在两点间画线，以下两种写法里，第二种就比较明
+确：
 
 #+attr_html :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
@@ -123,8 +131,8 @@ draw_line(Point, Point);        // clearer
 
 
 一些需要注意的地方：
-- 简单的 for 循环 vs. 带范围的 ~for_each~
-- ~f(T*, int)~ 接口 vs. ~f(span<T>)~ 接口
-- 循环变量超出循环体范围
-- naked ~new~ and ~delete~ （没看懂……）
-- 有过多内置类型的函数参数
+- 弄清楚简单的 ~for~ 循环和带范围的 ~for_each~ 的差异，什么时候可以选用 ~for_each~
+- 了解 ~f(T*, int)~ 接口和 ~f(span<T>)~ 接口的差异
+- 避免只在循环中用到的变量，不要超出循环体范围
+- 避免直接用 ~new~ 或 ~delete~ 的操作
+- 注意有过多内置类型的函数参数，通常可以通过自定义类型减少参数数量
