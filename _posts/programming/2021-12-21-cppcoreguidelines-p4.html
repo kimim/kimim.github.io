@@ -1,52 +1,47 @@
 ---
 layout: post
 title: CppCoreGuidelines P.4 理想情况下，程序应该要静态类型安全
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
-<div id="outline-container-orgafd6466" class="outline-2">
-<h2 id="orgafd6466"><span class="section-number-2">1.</span> 注意事项</h2>
-<div class="outline-text-2" id="text-1">
 <p>
-理想情况下，写程序要做到完全的静态（编译期）类型安全。可是，实际开发工作中，也避免不了，比如以下这些情况：
+<b>理由</b>
+</p>
+
+<p>
+理想情况下，我们写程序要能做到完全的静态（编译期）类型安全。但是，在实际开发工作中，我们也避免不了会出现动态类型的情况。比如以下这些情况：
 </p>
 <ul class="org-ul">
-<li>联合体（union）：使用 C++17 的 variant</li>
-<li>类型转换（cast）： 减少使用，多用模板</li>
-<li>数组衰变（array decay）：使用 GSL 的 span</li>
-<li>范围错误（range error）：使用 span</li>
-<li>收缩转换（narrowing conversion）：减少使用，使用 GSL 中的 <code>narrow_cast</code></li>
+<li>联合体（ union ）：我们建议使用C++17的 <code>variant</code> 来替代联合体</li>
+<li>强制类型转换（ cast ）： 我们建议少用强制类型转换，多用模板</li>
+<li>数组衰变（array decay）：使用 GSL 的 <code>span</code> 避免</li>
+<li>范围越界错误（range error）：使用 <code>span</code> 避免</li>
+<li>变窄类型转换（narrowing conversion）：减少出现变窄类型转换的情况，如果不能避免，建议使用 GSL 中的 <code>narrow_cast</code></li>
 </ul>
-</div>
-</div>
 
-<div id="outline-container-org4a92061" class="outline-2">
-<h2 id="org4a92061"><span class="section-number-2">2.</span> 示例</h2>
-<div class="outline-text-2" id="text-2">
-</div>
-<div id="outline-container-org0900d26" class="outline-3">
-<h3 id="org0900d26"><span class="section-number-3">2.1.</span> 联合体</h3>
-<div class="outline-text-3" id="text-2-1">
 <p>
-<code>variant</code> 是 C++17 增加的一个功能，用以作为 <code>union</code> 的安全替代。它可以保存模板参数列表中的某一类型的值。
+<b>variant</b>
+</p>
+
+<p>
+<code>variant</code> 是C++17增加的一个功能，用以作为 <code>union</code> 的安全替代。它可以保存模板参数列表中的某一类型的值。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">//</span><span style="color: #3F7F5F;">#include &lt;variant&gt;</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">variant</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">var1</span><span style="color: #707183;">{</span>1<span style="color: #707183;">}</span>;
-cout &lt;&lt; <span style="color: #2A00FF;">"index is: "</span> &lt;&lt; var1.index<span style="color: #707183;">()</span> &lt;&lt; endl;
-cout &lt;&lt; <span style="color: #2A00FF;">"var1 is int now: "</span> &lt;&lt; get<span style="color: #707183;">&lt;</span>0<span style="color: #707183;">&gt;(</span>var1<span style="color: #707183;">)</span> &lt;&lt; endl;
-var1 = 1.2;
-cout &lt;&lt; <span style="color: #2A00FF;">"index is: "</span> &lt;&lt; var1.index<span style="color: #707183;">()</span> &lt;&lt; endl;
-cout &lt;&lt; <span style="color: #2A00FF;">"var1 is double now: "</span> &lt;&lt; get<span style="color: #707183;">&lt;</span>1<span style="color: #707183;">&gt;(</span>var1<span style="color: #707183;">)</span> &lt;&lt; endl;
-var1 = <span style="color: #2A00FF;">"kimi.im"</span>;
-cout &lt;&lt; <span style="color: #2A00FF;">"index is: "</span> &lt;&lt; var1.index<span style="color: #707183;">()</span> &lt;&lt; endl;
-cout &lt;&lt; <span style="color: #2A00FF;">"var1 is string now: "</span> &lt;&lt; get<span style="color: #707183;">&lt;</span>2<span style="color: #707183;">&gt;(</span>var1<span style="color: #707183;">)</span> &lt;&lt; endl;
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">//#include &lt;variant&gt;</span>
+<span style="color: #000000; font-style: italic;">variant</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span>, <span style="color: #7F0055; font-weight: bold;">double</span>, <span style="color: #000000; font-style: italic;">string</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">var1</span><span style="color: #707183;">{</span><span style="color: #110099;">1</span><span style="color: #707183;">}</span>;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"index is: "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> var1.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">index</span><span style="color: #707183;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"var1 is int now: "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">get</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #110099;">0</span><span style="color: #707183; font-weight: bold;">&gt;</span><span style="color: #707183;">(</span>var1<span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+<span style="color: #000000;">var1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">1.2</span>;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"index is: "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> var1.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">index</span><span style="color: #707183;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"var1 is double now: "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">get</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #110099;">1</span><span style="color: #707183; font-weight: bold;">&gt;</span><span style="color: #707183;">(</span>var1<span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+<span style="color: #000000;">var1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"&#20851;&#27880;&#20803;&#23431;&#23449;&#29289;&#32852;&#32593;&#20844;&#20247;&#21495;"</span>;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"index is: "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> var1.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">index</span><span style="color: #707183;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"var1 is string now: \n"</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">get</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #110099;">2</span><span style="color: #707183; font-weight: bold;">&gt;</span><span style="color: #707183;">(</span>var1<span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 </pre>
 </div>
 
@@ -56,40 +51,37 @@ var1 is int now: 1
 index is: 1
 var1 is double now: 1.2
 index is: 2
-var1 is string now: kimi.im
+var1 is string now: 
+关注元宇宙物联网公众号
 </pre>
-</div>
-</div>
 
 
-<div id="outline-container-orgfa6627f" class="outline-3">
-<h3 id="orgfa6627f"><span class="section-number-3">2.2.</span> 数组衰变</h3>
-<div class="outline-text-3" id="text-2-2">
+
+<p>
+<b>数组衰变</b>
+</p>
+
 <p>
 所谓的数组衰变是指在使用数组的过程中，数组元素类型和长度信息丢失的情况。比如当我们以指针或数值的形式传递数组参数给函数的时候，数组的长度信息就丢失了。
 </p>
 
-<p>
-举个例子：
-</p>
-
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">display_array_from_value</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> *<span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-   cout &lt;&lt; <span style="color: #2A00FF;">"&#20197;&#25968;&#20540;&#24418;&#24335;&#20256;&#36882;&#30340;&#25968;&#32452;&#21442;&#25968;&#65292;&#35745;&#31639;&#30340;&#20869;&#23384;&#21344;&#29992;&#20540;&#20026;&#65306;"</span>;
-   cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">)</span> &lt;&lt; endl;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">display_array_from_value</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+   cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"&#20197;&#25968;&#20540;&#24418;&#24335;&#20256;&#36882;&#30340;&#25968;&#32452;&#21442;&#25968;&#65292;&#35745;&#31639;&#30340;&#20869;&#23384;&#21344;&#29992;&#20540;&#20026;&#65306;"</span>;
+   cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic;">p</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">display_array_from_pointer</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #7388d6;">(</span>*<span style="color: #000000;">p</span><span style="color: #7388d6;">)[</span>10<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-   cout &lt;&lt; <span style="color: #2A00FF;">"&#20197;&#25351;&#38024;&#24418;&#24335;&#20256;&#36882;&#30340;&#25968;&#32452;&#21442;&#25968;&#65292;&#35745;&#31639;&#30340;&#20869;&#23384;&#21344;&#29992;&#20540;&#20026;&#65306;"</span>;
-   cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">)</span> &lt;&lt; endl;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">display_array_from_pointer</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">*</span>p<span style="color: #7388d6;">)[</span><span style="color: #110099;">10</span><span style="color: #7388d6;">]</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+   cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"&#20197;&#25351;&#38024;&#24418;&#24335;&#20256;&#36882;&#30340;&#25968;&#32452;&#21442;&#25968;&#65292;&#35745;&#31639;&#30340;&#20869;&#23384;&#21344;&#29992;&#20540;&#20026;&#65306;"</span>;
+   cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic;">p</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
-   <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arr</span><span style="color: #7388d6;">[</span>10<span style="color: #7388d6;">]</span> = <span style="color: #7388d6;">{</span>1, 2, <span style="color: #7388d6;">}</span>;
-   cout &lt;&lt; <span style="color: #2A00FF;">"&#25968;&#32452;&#23454;&#38469;&#21344;&#29992;&#20869;&#23384;&#31354;&#38388;&#26159;&#65306;"</span>;
-   cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span> &lt;&lt; endl;
-   display_array_from_value<span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span>;
-   display_array_from_pointer<span style="color: #7388d6;">(</span>&amp;arr<span style="color: #7388d6;">)</span>;
-   <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+   <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">arr</span><span style="color: #7388d6;">[</span><span style="color: #110099;">10</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span>, <span style="color: #7388d6;">}</span>;
+   cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"&#25968;&#32452;&#23454;&#38469;&#21344;&#29992;&#20869;&#23384;&#31354;&#38388;&#26159;&#65306;"</span>;
+   cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic;">arr</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+   <span style="color: #3a5fcd; font-weight: bold;">display_array_from_value</span><span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span>;
+   <span style="color: #3a5fcd; font-weight: bold;">display_array_from_pointer</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>arr<span style="color: #7388d6;">)</span>;
+   <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -105,115 +97,138 @@ var1 is string now: kimi.im
 为了避免数组衰变:
 </p>
 <ul class="org-ul">
-<li>可以以指针或数值传递数组参数的同时，传一个数组长度给函数，然后不用 <code>sizeof</code></li>
+<li>可以以指针或数值传递数组参数的同时，传一个数组长度给函数，然后不用
+<code>sizeof</code></li>
 <li>或者以引用形式传递数组参数</li>
 <li>使用 GSL 的 <code>span</code></li>
 </ul>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">display_array_from_value_with_size</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> *<span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #000000;">sz</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-   cout &lt;&lt; <span style="color: #2A00FF;">"&#21442;&#25968;&#20256;&#20837;&#30340;&#20869;&#23384;&#21344;&#29992;&#20540;&#65306;"</span>;
-   cout &lt;&lt; sz &lt;&lt; endl;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">display_array_from_value_with_size</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #000000;">p</span>, <span style="color: #7F0055; font-weight: bold;">size_t</span> <span style="color: #000000;">sz</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+   cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"&#36890;&#36807;&#39069;&#22806;&#21442;&#25968;&#20256;&#20837;&#30340;&#20869;&#23384;&#21344;&#29992;&#20540;&#65306;"</span>;
+   cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> sz <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">display_array_from_reference</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #7388d6;">(</span>&amp;<span style="color: #000000;">p</span><span style="color: #7388d6;">)[</span>10<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-   cout &lt;&lt; <span style="color: #2A00FF;">"&#20197;&#25968;&#20540;&#24418;&#24335;&#20256;&#36882;&#30340;&#25968;&#32452;&#21442;&#25968;&#65292;&#35745;&#31639;&#20869;&#23384;&#21344;&#29992;&#20540;&#20026;&#65306;"</span>;
-   cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">)</span> &lt;&lt; endl;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">display_array_from_reference</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>p<span style="color: #7388d6;">)[</span><span style="color: #110099;">10</span><span style="color: #7388d6;">]</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+   cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"&#20197;&#24341;&#29992;&#24418;&#24335;&#20256;&#36882;&#30340;&#25968;&#32452;&#21442;&#25968;&#65292;&#35745;&#31639;&#20869;&#23384;&#21344;&#29992;&#20540;&#20026;&#65306;"</span>;
+   cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic;">p</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">display_array_from_span</span><span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">v</span>: p<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        cout &lt;&lt; v &lt;&lt; <span style="color: #2A00FF;">" "</span>;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">display_array_from_span</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic;">gsl</span>::<span style="color: #000000; font-style: italic;">span</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic;">auto</span> v: p<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> v <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span>;
     <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
-   <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arr</span><span style="color: #7388d6;">[</span>10<span style="color: #7388d6;">]</span> = <span style="color: #7388d6;">{</span>1, 2, <span style="color: #7388d6;">}</span>;
-   cout &lt;&lt; <span style="color: #2A00FF;">"&#25968;&#32452;&#23454;&#38469;&#21344;&#29992;&#20869;&#23384;&#31354;&#38388;&#26159;&#65306;"</span>;
-   cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span> &lt;&lt; endl;
-   display_array_from_value_with_size<span style="color: #7388d6;">(</span>arr, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span>arr<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
-   display_array_from_reference<span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span>;
-   display_array_from_span<span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span>;
-   <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+   <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">arr</span><span style="color: #7388d6;">[</span><span style="color: #110099;">10</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span>, <span style="color: #7388d6;">}</span>;
+   cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"&#25968;&#32452;&#23454;&#38469;&#21344;&#29992;&#20869;&#23384;&#31354;&#38388;&#26159;&#65306;"</span>;
+   cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic;">arr</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+   <span style="color: #3a5fcd; font-weight: bold;">display_array_from_value_with_size</span><span style="color: #7388d6;">(</span>arr, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span>arr<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+   <span style="color: #3a5fcd; font-weight: bold;">display_array_from_reference</span><span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span>;
+   <span style="color: #3a5fcd; font-weight: bold;">display_array_from_span</span><span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span>;
+   <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <pre class="example">
 数组实际占用内存空间是：40
-参数传入的内存占用值：40
-以数值形式传递的数组参数，计算内存占用值为：40
-1 2 0 0 0 0 0 0 0 0
+通过额外参数传入的内存占用值：40
+以引用形式传递的数组参数，计算内存占用值为：40
+1 2 0 0 0 0 0 0 0 0 
+</pre>
+
+
+<p>
+注意，添加 gsl 的方式：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">git clone git@github.com:microsoft/GSL.git
+cp GSL/include/gsl /ucrt64/include
 </pre>
 </div>
-</div>
 
-<div id="outline-container-orgff862bc" class="outline-3">
-<h3 id="orgff862bc"><span class="section-number-3">2.3.</span> 范围错误</h3>
-<div class="outline-text-3" id="text-2-3">
+<p>
+<b>范围错误</b>
+</p>
+
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">access_out_of_range</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> *<span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    cout &lt;&lt; p<span style="color: #7388d6;">[</span>3<span style="color: #7388d6;">]</span> &lt;&lt; endl;
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">access_out_of_range</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> p<span style="color: #7388d6;">[</span><span style="color: #110099;">3</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">pass_span</span><span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    cout &lt;&lt; p<span style="color: #7388d6;">[</span>1<span style="color: #7388d6;">]</span> &lt;&lt;endl;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">pass_span</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic;">gsl</span>::<span style="color: #000000; font-style: italic;">span</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> p<span style="color: #7388d6;">[</span><span style="color: #110099;">1</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span>endl;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
-   <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">arr</span><span style="color: #7388d6;">[</span>2<span style="color: #7388d6;">]</span> = <span style="color: #7388d6;">{</span>1, 2<span style="color: #7388d6;">}</span>;
-   access_out_of_range<span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span>;
-   pass_span<span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span>;
-   <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+   <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">arr</span><span style="color: #7388d6;">[</span><span style="color: #110099;">2</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span><span style="color: #7388d6;">}</span>;
+   <span style="color: #3a5fcd; font-weight: bold;">access_out_of_range</span><span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span>;
+   <span style="color: #3a5fcd; font-weight: bold;">pass_span</span><span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span>;
+   <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <pre class="example">
-454
+260653
 2
 </pre>
-</div>
-</div>
 
-<div id="outline-container-org979c035" class="outline-3">
-<h3 id="org979c035"><span class="section-number-3">2.4.</span> 收缩转换</h3>
-<div class="outline-text-3" id="text-2-4">
+
+<p>
+这里打印出来的第一个值已经超出数组的范围了，所以是内存当前的一个不确定的数据。
+</p>
+
+<p>
+<b>收缩转换</b>
+</p>
+
 <p>
 <code>gsl::narrow</code> 在收缩转换出错的时候，会异常。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">var1</span> = -42;
-cout &lt;&lt; <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">)</span>var1 &lt;&lt; endl;
-cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;(</span>var1<span style="color: #707183;">)</span> &lt;&lt; endl;
-cout &lt;&lt; <span style="color: #110099;">gsl</span>::narrow_cast<span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;(</span>var1<span style="color: #707183;">)</span> &lt;&lt; endl;
-<span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #707183;">{</span>
-    cout &lt;&lt; <span style="color: #110099;">gsl</span>::narrow<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;(</span>var1<span style="color: #7388d6;">)</span> &lt;&lt; endl;
-<span style="color: #707183;">}</span> <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">narrowing_error</span> &amp;<span style="color: #000000;">e</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    cout &lt;&lt; e.what<span style="color: #7388d6;">()</span> &lt;&lt; endl;
-<span style="color: #707183;">}</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">var1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">-42</span>;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">unsigned int</span><span style="color: #707183;">)</span>var1 <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">static_cast</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">unsigned int</span><span style="color: #707183; font-weight: bold;">&gt;</span><span style="color: #707183;">(</span>var1<span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">var2</span> = 10;
-cout &lt;&lt; <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">)</span>var2 &lt;&lt; endl;
-cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;(</span>var2<span style="color: #707183;">)</span> &lt;&lt; endl;
-cout &lt;&lt; <span style="color: #110099;">gsl</span>::narrow_cast<span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;(</span>var2<span style="color: #707183;">)</span> &lt;&lt; endl;
-<span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #707183;">{</span>
-    cout &lt;&lt; <span style="color: #110099;">gsl</span>::narrow<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;(</span>var2<span style="color: #7388d6;">)</span> &lt;&lt; endl;
-<span style="color: #707183;">}</span> <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #707183;">(</span><span style="color: #110099;">gsl</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">narrowing_error</span> &amp;<span style="color: #000000;">e</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    cout &lt;&lt; e.what<span style="color: #7388d6;">()</span> &lt;&lt; endl;
-<span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">var2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">10</span>;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">unsigned int</span><span style="color: #707183;">)</span>var2 <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">static_cast</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">unsigned int</span><span style="color: #707183; font-weight: bold;">&gt;</span><span style="color: #707183;">(</span>var2<span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 </pre>
 </div>
 
 <pre class="example">
 4294967254
 4294967254
-4294967254
-std::exception
-10
-10
 10
 10
 </pre>
+
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">var1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">-42</span>;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #000000; font-style: italic;">gsl</span>::<span style="color: #3a5fcd; font-weight: bold;">narrow_cast</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #3a5fcd; font-weight: bold;">unsigned int</span><span style="color: #707183; font-weight: bold;">&gt;</span><span style="color: #707183;">(</span>var1<span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+<span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #707183;">{</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #000000; font-style: italic;">gsl</span>::<span style="color: #3a5fcd; font-weight: bold;">narrow</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #3a5fcd; font-weight: bold;">unsigned int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span>var1<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+<span style="color: #707183;">}</span> <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic;">gsl</span>::<span style="color: #000000; font-style: italic;">narrowing_error</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #000000;">e</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> e.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">what</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+<span style="color: #707183;">}</span>
+
+<span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">var2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">10</span>;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #000000; font-style: italic;">gsl</span>::<span style="color: #3a5fcd; font-weight: bold;">narrow_cast</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #3a5fcd; font-weight: bold;">unsigned int</span><span style="color: #707183; font-weight: bold;">&gt;</span><span style="color: #707183;">(</span>var2<span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+<span style="color: #7F0055; font-weight: bold;">try</span> <span style="color: #707183;">{</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #000000; font-style: italic;">gsl</span>::<span style="color: #3a5fcd; font-weight: bold;">narrow</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #3a5fcd; font-weight: bold;">unsigned int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span>var2<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+<span style="color: #707183;">}</span> <span style="color: #7F0055; font-weight: bold;">catch</span> <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic;">gsl</span>::<span style="color: #000000; font-style: italic;">narrowing_error</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #000000;">e</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> e.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">what</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+<span style="color: #707183;">}</span>
+</pre>
 </div>
-</div>
-</div>
+
+<pre class="example">
+4294967254
+narrowing_error
+10
+10
+</pre>
