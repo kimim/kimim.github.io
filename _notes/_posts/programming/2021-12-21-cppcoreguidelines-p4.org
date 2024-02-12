@@ -5,6 +5,8 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
+"Ideally, a program should be statically type safe"
+
 *理由*
 
 理想情况下，我们写程序要能做到完全的静态（编译期）类型安全。但是，在实
