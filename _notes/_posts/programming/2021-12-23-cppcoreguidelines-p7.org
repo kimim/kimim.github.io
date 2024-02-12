@@ -1,22 +1,29 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines P.7 尽早捕获运行时错误
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines P.7 尽早捕获运行时错误
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-这条指南背后的原因是尽早发现错误，避免导致诡异的 bug。
+"Catch run-time errors early"
 
-以下程序传给 ~increment1~ 数组指针和数组大小作为参数。如果数组大小不小心
-写错了，会导致数组越界。程序可能会继续执行，但是随时可能运行奔溃。
+*理由*
 
-#+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
-#include <iostream>
-using namespace std;
+尽早发现错误，避免导致诡异的 bug。
+
+
+*例子*
+
+以下程序传给 ~increment1~ 函数一个数组指针和数组的大小作为参数。如果数组
+大小不小心写错了，会导致数组越界。程序可能会继续执行，但是随时可能运行
+奔溃。
+
+#+attr_html: :class bad
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
 void increment1(int* p, int n)    // bad: error-prone
 {
     for (int i = 0; i < n; ++i) ++p[i];
@@ -27,7 +34,7 @@ void use1(int m)
     const int n = 10;
     int a[n] = {};
     for (int i = 10; i < m; i++) cout << a[i] << " ";
-    cout << endl;
+    cout << "\n";
     increment1(a, m);   // maybe typo, maybe m <= n is supposed
                         // but assume that m == 20
     for (int i = 10; i < m; i++) cout << a[i] << " ";
@@ -36,21 +43,23 @@ void use1(int m)
 int main()
 {
     use1(20);
-    return 0;
 }
 #+end_src
 
 #+RESULTS:
-: 24 0 0 10 0 15 1925183920 163 1207703186 32758
-: 25 1 1 11 14 21 1925183921 164 1207703187 32759
+: -1500637744 32759 2 10 2 15 1805646800 85 -1500637797 32759 
+: -1500637743 32760 3 11 14 21 1805646801 86 -1500637796 32760 
+
+
+*例子*
 
 以下代码用了 ~span~ ，但是数组大小还是分开设置了，依然会导致越界访问：
 
-#+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
-#include <iostream>
-#include <gsl/gsl>
-using namespace std;
-using namespace gsl;
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std gsl :includes  <iostream> <vector> <algorithm>  <gsl/gsl>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
 void increment2(span<int> p)
 {
     for (int& x : p) ++x;
@@ -77,14 +86,17 @@ int main()
 : 0 0 -2018306080 32758 24 0 0 10 0 19
 : 1 1 21 1 281016609 124 1 11 18 21
 
+
+*例子*
+
 直接传递一个带数组长度信息的 ~span~ 给 ~increment2~ 就不会出错了：
 
-#+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
-#include <iostream>
-#include <gsl/gsl>
-using namespace std;
-using namespace gsl;
-void increment2(span<int> p)
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm> <gsl/gsl>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+void increment2(gsl::span<int> p)
 {
     for (int& x : p) ++x;
 }
@@ -107,13 +119,20 @@ int main()
 #+end_src
 
 #+RESULTS:
-: 0 0 0 0 0 0 0 0 0 0 0 0 1600133072 32758 24 0 0 10 0 19
-: 1 1 1 1 1 1 1 1 1 1 0 0 10 0 1119876608 149 0 10 18 20
+: 0 0 0 0 0 0 0 0 0 0 142747757 32759 1858343536 32760 142743120 32759 2 10 2 19 
+: 1 1 1 1 1 1 1 1 1 1 142747757 32759 10 0 937425632 128 2 10 18 20 
+
+从以上输出结果可见， ~increment2~ 只增加了数组的 10 个元素，数组后的两个
+数据前后没有变化。
+
+
+*例子*
 
 以下代码定义了 ~Date~ 对象，在 ~user2~ 中，获取到了 ~Date~ 却又把它转成
 ~string~ 。之后，又用 ~extract_date~ 把 ~string~ 转成 ~Date~ 。做了一次多余的
 数据转换操作，实在没有必要。
 
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
 Date read_date(istream& is);    // read date from istream
 
@@ -134,10 +153,47 @@ void user2()
 }
 #+end_src
 
-注意事项：
-- 避免多余的、过早的检查
-- 避免在 =O(1)= 算法中添加 =O(n)= 的检查
-- 查看指针和数组：是否进行范围检测，检测是否重复多多余？
-- 查看类型转换：能否避免窄化转换？
-- 查看未检测的输入值
+
+*例子*
+
+过度的代码检测开销过大。很多时候过早的检测也效率低下。不要在复杂度为
+=O(1)= 的接口上增加 =O(n)= 的检查。
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+class Jet {    // Physics says: e * e < x * x + y * y + z * z
+    float x;
+    float y;
+    float z;
+    float e;
+public:
+    Jet(float x, float y, float z, float e)
+        :x(x), y(y), z(z), e(e)
+    {
+        // Should I check here that the values are physically meaningful?
+    }
+
+    float m() const
+    {
+        // Should I handle the degenerate case here?
+        return sqrt(x * x + y * y + z * z - e * e);
+    }
+
+    //???
+};
+#+end_src
+
+以上代码定义了喷气式飞机的物理参数。物理规律规定 ~e * e < x * x + y *
+y + z * z~ 。但是这个规律不是一个不变式，比如测量错误会出现违反物理规律
+的情况。
+
+
+*强化*
+
+- 查看指针和数组：是否尽早进行了范围检测，检测是否重复多多余？
+- 查看类型转换：能否避免窄转换？
+- 查看没有进行检测的输入值
 - 查看结构化数据是否又转成字符串使用？
