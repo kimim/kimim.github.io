@@ -1,23 +1,29 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines P.8 不要泄漏任何资源
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines P.8 资源不可泄漏
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-如果系统长期运行的，哪怕没有及时释放很小的资源，都有可能导致系统资源耗
-尽。因此，及时释放系统资源是一种负责任的编程态度。
+"Don't leak any resources"
 
+*理由*
+
+如果系统长期运行的，哪怕是没有及时释放的很小的资源，也有可能耗尽系统的
+资源。所以，对于长期运行的系统，切不可泄漏资源。另外，及时释放系统资源
+也是一种负责任的编程态度。
+
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
 void f(char* name)
 {
     FILE* input = fopen(name, "r");
     // ...
-    if (something) return;   // bad: if something == true, a file handle is leaked
+    if (something) return;
+    // bad: if something == true, a file handle is leaked
     // ...
     fclose(input);
 }
@@ -25,6 +31,9 @@ void f(char* name)
 
 以上例程中，如果 ~something~ 为真，函数直接返回了，没有及时关闭 ~input~ 文
 件结构体，产生资源泄漏。
+
+应该使用 [[./2023-02-07-cppcoreguidelines-r1][RAII]] 模式。RAII = Resource Acquisition Is Initialization 意思
+是分配资源的时候初始化，资源使用结束后，自动释放。
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :eval no-export
 void f(char* name)
@@ -37,21 +46,39 @@ void f(char* name)
 #+end_src
 
 改用 ~ifstream~ 文件输入对象可以避免资源泄漏。当函数返回的时候，自动调用
-解构函数释放内存数据。
+析构函数释放内存数据。
 
-所谓的泄漏（leak）通俗的讲，就是出现任何没有及时释放的资源（anything
-that isn't cleaned up）。细分下去，更重要的一类泄漏是：任何不能被释放
-的资源（anything that can no longer be cleaned up）。比如在堆中分配一
-个对象，然后运行过程中，对象的地址指针被覆盖掉了。于是，就再也没办法释
-放这个对象了。所以，对任何中途结束的程序，要么释放内存，要么把分配的对
-象返回给上层函数继续使用或者晚些时候释放。
 
-建议：
-- 审查指针的使用。区分有主和无主指针。如以上例子用标准库资源句柄替换。
-  或者用 GSL 中的 ~unique_ptr~ 和 ~shared_ptr~ 标记指针所有权。
-- 审查暴露的 ~new~ 和 ~delete~ ，相对的是定义了释放规则的封装的 ~new~ ：
+*注意*
+
+所谓的泄漏（leak）通俗的讲，就是出现资源没有及时释放的情况。细分下去，
+更重要的一类泄漏是：存在无法被释放的资源。比如，你在内存堆中创建了一个
+对象，然后在程序运行过程中，该对象的地址指针被其他数据覆盖掉了。因为这
+个对象的地址信息丢失了，你就无法释放这个对象了。所以，对任何中途结束的
+函数，要么及时释放内存，要么把函数分配的对象返回给上层函数继续使用或者
+晚些时候释放。
+
+不过，我们也不要求你在程序结束的时候一定要返回某个常驻对象的地址。因为
+程序结束的时候，系统会自动清理分配给该程序的内存。
+
+然而，最简单、最安全的方法还是应该利用抽象机制隐式地释放资源。
+
+
+*注意*
+
+通过强化“生命周期安全规范”，可以避免资源泄漏。再结合 RAII，就不需要垃
+圾回收机制。再结合“类型和边界检测规范”，我们就可以通过工具实现完整的类
+型和资源安全。
+
+
+*强化*
+
+- 检查指针的使用。区分有主和无主指针。如以上例子用标准库资源输入流对象
+  替换文件句柄。或者可能的话，用 GSL 中的 ~owner~ 所有权指针标记资源所有
+  权。
+- 检查原始的 ~new~ 和 ~delete~ 操作。考虑使用定义了释放规则的接口封装：
   #+begin_src C++
   shared_ptr<int> p(new int[10]， [](int* p) {delete []p;})
   #+end_src
-- 审查返回裸指针（raw pointer）的资源分配函数。比如： ~fopen~, ~malloc~,
+- 检查返回值是原始指针（raw pointer）的资源分配函数。比如： ~fopen~, ~malloc~,
   ~strdup~.

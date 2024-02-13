@@ -1,26 +1,39 @@
 ---
 layout: post
-title: CppCoreGuidelines P.8 不要泄漏任何资源
-categories: [technology]
+title: CppCoreGuidelines P.8 资源不可泄漏
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-如果系统长期运行的，哪怕没有及时释放很小的资源，都有可能导致系统资源耗尽。因此，及时释放系统资源是一种负责任的编程态度。
+&ldquo;Don&rsquo;t leak any resources&rdquo;
+</p>
+
+<p>
+<b>理由</b>
+</p>
+
+<p>
+如果系统长期运行的，哪怕是没有及时释放的很小的资源，也有可能耗尽系统的资源。所以，对于长期运行的系统，切不可泄漏资源。另外，及时释放系统资源也是一种负责任的编程态度。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">name</span><span style="color: #707183;">)</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">name</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">FILE</span>* <span style="color: #000000;">input</span> = fopen<span style="color: #7388d6;">(</span>name, <span style="color: #2A00FF;">"r"</span><span style="color: #7388d6;">)</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>something<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: if something == true, a file handle is leaked</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    fclose<span style="color: #7388d6;">(</span>input<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic;">FILE</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">input</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">fopen</span><span style="color: #7388d6;">(</span>name, <span style="color: #2A00FF;">"r"</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>something<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;
+    <span style="color: #3F7F5F;">// bad: if something == true, a file handle is leaked</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #3a5fcd; font-weight: bold;">fclose</span><span style="color: #7388d6;">(</span>input<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -29,38 +42,65 @@ tags: [CppCoreGuidelines]
 以上例程中，如果 <code>something</code> 为真，函数直接返回了，没有及时关闭 <code>input</code> 文件结构体，产生资源泄漏。
 </p>
 
+<p>
+应该使用 <a href="./2023-02-07-cppcoreguidelines-r1">RAII</a> 模式。RAII = Resource Acquisition Is Initialization 意思是分配资源的时候初始化，资源使用结束后，自动释放。
+</p>
+
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">name</span><span style="color: #707183;">)</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">name</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">ifstream</span> <span style="color: #000000;">input</span> <span style="color: #7388d6;">{</span>name<span style="color: #7388d6;">}</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>something<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: no leak</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic;">ifstream</span> <span style="color: #000000;">input</span> <span style="color: #7388d6;">{</span>name<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>something<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>;   <span style="color: #3F7F5F;">// OK: no leak</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-改用 <code>ifstream</code> 文件输入对象可以避免资源泄漏。当函数返回的时候，自动调用解构函数释放内存数据。
+改用 <code>ifstream</code> 文件输入对象可以避免资源泄漏。当函数返回的时候，自动调用析构函数释放内存数据。
+</p>
+
+
+<p>
+<b>注意</b>
 </p>
 
 <p>
-所谓的泄漏（leak）通俗的讲，就是出现任何没有及时释放的资源（anything
-that isn&rsquo;t cleaned up）。细分下去，更重要的一类泄漏是：任何不能被释放的资源（anything that can no longer be cleaned up）。比如在堆中分配一个对象，然后运行过程中，对象的地址指针被覆盖掉了。于是，就再也没办法释放这个对象了。所以，对任何中途结束的程序，要么释放内存，要么把分配的对象返回给上层函数继续使用或者晚些时候释放。
+所谓的泄漏（ leak ）通俗的讲，就是出现资源没有及时释放的情况。细分下去，更重要的一类泄漏是：存在无法被释放的资源。比如，你在内存堆中创建了一个对象，然后在程序运行过程中，该对象的地址指针被其他数据覆盖掉了。因为这个对象的地址信息丢失了，你就无法释放这个对象了。所以，对任何中途结束的函数，要么及时释放内存，要么把函数分配的对象返回给上层函数继续使用或者晚些时候释放。
 </p>
 
 <p>
-建议：
+不过，我们也不要求你在程序结束的时候一定要返回某个常驻对象的地址。因为程序结束的时候，系统会自动清理分配给该程序的内存。
 </p>
+
+<p>
+然而，最简单、最安全的方法还是应该利用抽象机制隐式地释放资源。
+</p>
+
+
+<p>
+<b>注意</b>
+</p>
+
+<p>
+通过强化“生命周期安全规范”，可以避免资源泄漏。再结合 RAII，就不需要垃圾回收机制。再结合“类型和边界检测规范”，我们就可以通过工具实现完整的类型和资源安全。
+</p>
+
+
+<p>
+<b>强化</b>
+</p>
+
 <ul class="org-ul">
-<li>审查指针的使用。区分有主和无主指针。如以上例子用标准库资源句柄替换。或者用 GSL 中的 <code>unique_ptr</code> 和 <code>shared_ptr</code> 标记指针所有权。</li>
+<li>检查指针的使用。区分有主和无主指针。如以上例子用标准库资源输入流对象替换文件句柄。或者可能的话，用 GSL 中的 <code>owner</code> 所有权指针标记资源所有权。</li>
 <li><p>
-审查暴露的 <code>new</code> 和 <code>delete</code> ，相对的是定义了释放规则的封装的 <code>new</code> ：
+检查原始的 <code>new</code> 和 <code>delete</code> 操作。考虑使用定义了释放规则的接口封装：
 </p>
 <div class="org-src-container">
-<pre class="src src-C++">  <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">[</span>10<span style="color: #7388d6;">]</span>&#65292; <span style="color: #7388d6;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span><span style="color: #7F0055; font-weight: bold;">delete</span> <span style="color: #909183;">[]</span>p;<span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>
+<pre class="src src- src-C++">  <span style="color: #000000; font-style: italic;">shared_ptr</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">p</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">[</span><span style="color: #110099;">10</span><span style="color: #7388d6;">]</span>&#65292; <span style="color: #7388d6;">[]</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span><span style="color: #7F0055; font-weight: bold;">delete</span> <span style="color: #909183;">[]</span>p;<span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>
 </pre>
 </div></li>
-<li>审查返回裸指针（raw pointer）的资源分配函数。比如： <code>fopen</code>, <code>malloc</code>,
+<li>检查返回值是原始指针（raw pointer）的资源分配函数。比如： <code>fopen</code>, <code>malloc</code>,
 <code>strdup</code>.</li>
 </ul>
