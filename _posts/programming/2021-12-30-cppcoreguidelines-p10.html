@@ -1,17 +1,24 @@
 ---
 layout: post
 title: CppCoreGuidelines P.10 能用不可变数据就不用可变数据
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
+<p>
+Prefer immutable data to mutable data
+</p>
+
+<p>
+<b>理由</b>
+</p>
+
 <ul class="org-ul">
 <li>常量的计算更容易进行推导。</li>
-<li>不可变数据能避免异常变动。</li>
+<li>不可变数据能避免一些未知的改变。</li>
 <li>不可变数据能更好的优化。</li>
 <li>不会产生数据竞争。</li>
 </ul>
