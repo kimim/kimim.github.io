@@ -31,7 +31,7 @@ directly in code]] 这个章节讲的是如何直接地用代码表达编程设�
 接下来，学习学习第一条指南：P.1 Express ideas directly in code 直接用
 代码表达设计想法。
 
-"Express ideas directly in code"
+Express ideas directly in code
 
 *理由*
 

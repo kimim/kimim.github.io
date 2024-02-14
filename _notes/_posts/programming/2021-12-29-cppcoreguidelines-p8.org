@@ -5,7 +5,7 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Don't leak any resources"
+Don't leak any resources
 
 *理由*
 

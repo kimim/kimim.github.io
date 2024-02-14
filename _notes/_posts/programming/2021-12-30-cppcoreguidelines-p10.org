@@ -1,13 +1,13 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines P.10 能用不可变数据就不用可变数据
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines P.10 能用不可变数据就不用可变数据
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+Prefer immutable data to mutable data
+
+*理由*
 
 - 常量的计算更容易进行推导。
 - 不可变数据能避免异常变动。

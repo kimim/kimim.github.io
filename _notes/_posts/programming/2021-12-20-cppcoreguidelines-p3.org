@@ -5,10 +5,15 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
+Express intent
+
+*理由*
+
 如果要读代码的注释才能理解代码的意图，那可能就意味着，你写的代码不够清
 晰，你没有很明确地表达出代码的意图。
 
-例如，以下例子：
+
+*例子*
 
 #+attr_html :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
@@ -124,13 +129,14 @@ draw_line(int, int, int, int);  // obscure
 draw_line(Point, Point);        // clearer
 #+end_src
 
-一些建议：
+一个优秀的程序员应该：
 - 熟悉掌握指南支持的程序库（guidelines support library, gsl）
 - 熟悉了解 ISO C++ 标准库
 - 其他项目中使用的基础库
 
 
-一些需要注意的地方：
+*强化*
+
 - 弄清楚简单的 ~for~ 循环和带范围的 ~for_each~ 的差异，什么时候可以选用 ~for_each~
 - 了解 ~f(T*, int)~ 接口和 ~f(span<T>)~ 接口的差异
 - 避免只在循环中用到的变量，不要超出循环体范围

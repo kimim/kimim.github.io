@@ -9,11 +9,20 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-如果要读代码的注释才能理解代码的意图，那可能就意味着，你写的代码不够清晰，你没有很明确地表达出代码的意图。
+Express intent
 </p>
 
 <p>
-例如，以下例子：
+<b>理由</b>
+</p>
+
+<p>
+如果要读代码的注释才能理解代码的意图，那可能就意味着，你写的代码不够清晰，你没有很明确地表达出代码的意图。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <p>
@@ -160,7 +169,7 @@ C-src-eO7Jst.cpp:14:15: error: increment of read-only reference 'x'
 </div>
 
 <p>
-一些建议：
+一个优秀的程序员应该：
 </p>
 <ul class="org-ul">
 <li>熟悉掌握指南支持的程序库（guidelines support library, gsl）</li>
@@ -170,8 +179,9 @@ C-src-eO7Jst.cpp:14:15: error: increment of read-only reference 'x'
 
 
 <p>
-一些需要注意的地方：
+<b>强化</b>
 </p>
+
 <ul class="org-ul">
 <li>弄清楚简单的 <code>for</code> 循环和带范围的<code>for_each</code>的差异，什么时候可以选用 <code>for_each</code></li>
 <li>了解<code>f(T*, int)</code>接口和<code>f(span&lt;T&gt;)</code>接口的差异</li>

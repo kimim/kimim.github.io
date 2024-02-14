@@ -5,7 +5,7 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Ideally, a program should be statically type safe"
+Ideally, a program should be statically type safe
 
 *理由*
 

@@ -5,7 +5,7 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"What cannot be checked at compile time should be checkable at run time"
+What cannot be checked at compile time should be checkable at run time
 
 *理由*
 

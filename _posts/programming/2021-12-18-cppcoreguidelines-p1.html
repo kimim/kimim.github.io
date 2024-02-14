@@ -9,13 +9,13 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-Github 上有个 <a href="https://github.com/isocpp/CppCoreGuidelines">C++ 核心指南</a>。C++ 创始人 <a href="https://github.com/isocpp/CppCoreGuidelines/commits?author=BjarneStroustrup">Bjarne Stroustrup</a> 亲自参与维护。值得好好学习。
+Github 上有个<a href="https://github.com/isocpp/CppCoreGuidelines">C++核心指南</a>。C++ 创始人<a href="https://github.com/isocpp/CppCoreGuidelines/commits?author=BjarneStroustrup">Bjarne Stroustrup</a>亲自参与维护。值得好好学习。
 </p>
 
 <p>
 这个指南根据不同主题，分为多个章节，比如 P 代表编程 Philosophy 哲学，I
 代表 Interface 接口设计，F 表示 Function 函数，C 表示 Class and Class
-Hierarchies 类与类层级，R 表示 Resource Management 资源管理，Per 表示
+Hierarchies 类与类层级，R 表示Resource Management资源管理，Per 表示
 Performance 性能，CP 表示 Concurrency 并发与并行计算，Con 表示
 Constants and Immutability 常量与不变性等。
 </p>
@@ -45,7 +45,7 @@ directly in code</a> 这个章节讲的是如何直接地用代码表达编程�
 </p>
 
 <p>
-&ldquo;Express ideas directly in code&rdquo;
+Express ideas directly in code
 </p>
 
 <p>
@@ -62,9 +62,9 @@ directly in code</a> 这个章节讲的是如何直接地用代码表达编程�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic;">Date</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">month</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+    <span style="color: #000000; font-style: italic;">Month</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">month</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
     <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">month</span><span style="color: #7388d6;">()</span>;
 <span style="color: #707183;">}</span>;
 </pre>
@@ -75,18 +75,18 @@ directly in code</a> 这个章节讲的是如何直接地用代码表达编程�
 </p>
 
 <p>
-相比较而言，第二个函数 <code>int month()</code> 的声明，所表达的代码信息和设计理念较少。别的程序员在使用你设计的接口函数的时候，可能就要连蒙带猜、费尽心思了。这就会导致更多的代码缺陷、程序 bug。
+相比较而言，第二个函数<code>int month()</code>的声明，所表达的代码信息和设计理念较少。别的程序员在使用你设计的接口函数的时候，可能就要连蒙带猜、费尽心思了。这就会导致更多的代码缺陷、程序 bug。
 </p>
 
 
 <p>
-<b>坏例子</b> ：其实只是标准库函数 <code>std::find</code> 的一个特定应用。
+<b>坏例子</b> ：其实只是标准库函数<code>std::find</code>的一个特定应用。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic;">string</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">val</span>;
+    <span style="color: #000000; font-style: italic;">string</span> <span style="color: #000000;">val</span>;
     cin <span style="color: #7F0055; font-weight: bold;">&gt;&gt;</span> val;
     <span style="color: #3F7F5F;">// ...</span>
     <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">index</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">-1</span>;                    <span style="color: #3F7F5F;">// bad, plus should use gsl::index</span>
@@ -106,12 +106,12 @@ directly in code</a> 这个章节讲的是如何直接地用代码表达编程�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">v</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">val</span><span style="color: #707183;">)</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic;">string</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">v</span>, <span style="color: #000000; font-style: italic;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">val</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
     <span style="color: #3F7F5F;">//string val;</span>
     <span style="color: #3F7F5F;">//cin &gt;&gt; val;</span>
     <span style="color: #3F7F5F;">// ...</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">find</span><span style="color: #7388d6;">(</span><span style="color: #3a5fcd; font-weight: bold;">begin</span><span style="color: #909183;">(</span>v<span style="color: #909183;">)</span>, <span style="color: #3a5fcd; font-weight: bold;">end</span><span style="color: #909183;">(</span>v<span style="color: #909183;">)</span>, val<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// better</span>
+    <span style="color: #000000; font-style: italic;">auto</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">find</span><span style="color: #7388d6;">(</span><span style="color: #3a5fcd; font-weight: bold;">begin</span><span style="color: #909183;">(</span>v<span style="color: #909183;">)</span>, <span style="color: #3a5fcd; font-weight: bold;">end</span><span style="color: #909183;">(</span>v<span style="color: #909183;">)</span>, val<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// better</span>
     <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>p <span style="color: #7F0055; font-weight: bold;">==</span> <span style="color: #3a5fcd; font-weight: bold;">end</span><span style="color: #909183;">(</span>v<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
         cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"can't find \""</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> val <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"\"\n"</span>;
     <span style="color: #7F0055; font-weight: bold;">else</span>
@@ -120,8 +120,8 @@ directly in code</a> 这个章节讲的是如何直接地用代码表达编程�
 <span style="color: #707183;">}</span>
 <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">vec</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"Mon"</span>, <span style="color: #2A00FF;">"Tue"</span>, <span style="color: #2A00FF;">"Wed"</span>, <span style="color: #2A00FF;">"Thu"</span>, <span style="color: #2A00FF;">"Fri"</span>, <span style="color: #2A00FF;">"Sat"</span>, <span style="color: #2A00FF;">"Sun"</span><span style="color: #7388d6;">}</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">day</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"Fri"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic;">string</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">vec</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"Mon"</span>, <span style="color: #2A00FF;">"Tue"</span>, <span style="color: #2A00FF;">"Wed"</span>, <span style="color: #2A00FF;">"Thu"</span>, <span style="color: #2A00FF;">"Fri"</span>, <span style="color: #2A00FF;">"Sat"</span>, <span style="color: #2A00FF;">"Sun"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic;">string</span> <span style="color: #000000;">day</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"Fri"</span><span style="color: #7388d6;">}</span>;
     <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>vec, day<span style="color: #7388d6;">)</span>;
     <span style="color: #000000;">day</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"&#21608;&#20116;"</span>;
     <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>vec, day<span style="color: #7388d6;">)</span>;    
@@ -148,7 +148,7 @@ C++ 程序员要熟悉标准库和 <a href="https://github.com/isocpp/CppCoreGui
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #0000ff; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// bad: what does s signify?</span>
+<pre class="src src- src-C++"><span style="color: #0000ff; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// bad: what does s signify?</span>
 <span style="color: #3a5fcd; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #110099;">2.3</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
@@ -158,11 +158,11 @@ C++ 程序员要熟悉标准库和 <a href="https://github.com/isocpp/CppCoreGui
 </p>
 
 <p>
-以下例子中，最后一个使用了 C++ 的字面量后缀。可以用来表示不同的物理量。
+以下例子中，最后一个使用了C++的字面量后缀。可以用来表示不同的物理量。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #0000ff; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Speed</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// better: the meaning of s is specified</span>
+<pre class="src src- src-C++"><span style="color: #0000ff; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic;">Speed</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// better: the meaning of s is specified</span>
 <span style="color: #3a5fcd; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #110099;">2.3</span><span style="color: #707183;">)</span>;        <span style="color: #3F7F5F;">// error: no unit</span>
 <span style="color: #3a5fcd; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #110099;">23</span>_m <span style="color: #7F0055; font-weight: bold;">/</span> <span style="color: #110099;">10</span>s<span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// meters per second</span>
 </pre>
@@ -173,20 +173,20 @@ C++ 程序员要熟悉标准库和 <a href="https://github.com/isocpp/CppCoreGui
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #0000ff; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Delta</span> <span style="color: #000000;">d</span><span style="color: #707183;">)</span>;
+<pre class="src src- src-C++"><span style="color: #0000ff; font-weight: bold;">change_speed</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic;">Delta</span> <span style="color: #000000;">d</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 
 <p>
-以下程序定义了 <code>_m</code> 和 <code>_s</code> 后缀，这样就可以很直观的表达速度是如何计算出来的，即：米/秒。
+以下程序定义了<code>_m</code>和 <code>_s</code> 后缀，这样就可以很直观的表达速度是如何计算出来的，即：米/秒。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">long double</span> operator""_m<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">long double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">return</span> x;<span style="color: #707183;">}</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">long double</span> operator""_m<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">long double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">return</span> x;<span style="color: #707183;">}</span>
 <span style="color: #7F0055; font-weight: bold;">long double</span> operator""_s<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">long double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">return</span> x;<span style="color: #707183;">}</span>
 <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">speed</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">23.1</span>_m <span style="color: #7F0055; font-weight: bold;">/</span> <span style="color: #110099;">10.0</span>_s;
+    <span style="color: #000000; font-style: italic;">auto</span> <span style="color: #000000;">speed</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">23.1</span>_m <span style="color: #7F0055; font-weight: bold;">/</span> <span style="color: #110099;">10.0</span>_s;
     cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> speed <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 <span style="color: #707183;">}</span>
 </pre>
@@ -198,11 +198,11 @@ C++ 程序员要熟悉标准库和 <a href="https://github.com/isocpp/CppCoreGui
 
 
 <p>
-需要注意的是，根据 C++11 标准，只有以下数据类型才是合法的 <code>operator""_xx</code> 参数：
+需要注意的是，根据C++11标准，只有以下数据类型才是合法的<code>operator""_xx</code>参数：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">*</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">*</span>
 unsigned <span style="color: #7F0055; font-weight: bold;">long long</span>
 <span style="color: #7F0055; font-weight: bold;">long double</span>
 char <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">*</span>, <span style="color: #7F0055; font-weight: bold;">size_t</span>
@@ -217,7 +217,7 @@ char32_t <span style="color: #7F0055; font-weight: bold;">const</span> <span sty
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">size_t</span> operator""_sz<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #000000;">str</span>, <span style="color: #7F0055; font-weight: bold;">size_t</span> <span style="color: #000000;">sz</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">return</span> sz;<span style="color: #707183;">}</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">size_t</span> operator""_sz<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #000000;">str</span>, <span style="color: #7F0055; font-weight: bold;">size_t</span> <span style="color: #000000;">sz</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">return</span> sz;<span style="color: #707183;">}</span>
 <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"size of \'hello world\' is: "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"hello world"</span>_sz <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;

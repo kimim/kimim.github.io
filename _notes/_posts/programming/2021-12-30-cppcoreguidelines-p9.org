@@ -1,33 +1,47 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines P.9 不要浪费计算时间和计算空间
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines P.9 不要浪费计算时间和计算空间
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+P.9: Don't waste time or space
+
+*理由*
+
+This is C++.
+
+
+*注意*
 
 为更好达到既定目的，可以消耗更多计算时间和计算空间。比如加快开发进度、
 保障资源安全、简化系统测试。
 
-亚历山大·斯特潘诺夫 [fn:1] 曾说过：追求效率的另一个好处是，这个过程可
-以迫使你更深入地理解所要解决的问题。
+亚历山大·斯特潘诺夫曾说过：追求效率的另一个好处是，这个过程可以迫使你
+更深入地理解所要解决的问题。
 
 #+begin_quote
 "Another benefit of striving for efficiency is that the process forces
 you to understand the problem in more depth." - Alex Stepanov
 #+end_quote
 
+注：亚历山大·斯特潘诺夫（[[http://stepanovpapers.com/][Alexander Stepanov]]），Alex Stepanov，
+STL（标准模板库）之父，并因此在1995年获得了第一届 Dr. Dobb's 程序设计
+杰出奖，他曾任 Compaq 公司副总裁和首席科学家，AT&T 实验室副总裁和首席
+构架师，SGI服务器和巨型计算机公司技术总监。Alexander 曾先后在 HP 实验
+室、AT&T 实验室、通用电气公司 R&D、Polytechnic University of New York
+大学控制研究所和复杂自动化研究所工作和研究了 25 年。他的研究工作涉及程
+序设计、语言设计、存贮系统、路径计划算法、实时操作系统等。
 
-#+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std  :eval no-export
-#include <iostream>
-#include <exception>
-#include <cstring>
-#include <gsl/gsl>
-using namespace std;
-using namespace gsl;
+
+*例子*
+
+#+attr_html: :class bad
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std gsl :includes  <iostream> <vector> <algorithm> <exception> <cstring> <gsl/gsl>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
 struct X {
     char ch;
     int i;
@@ -74,11 +88,11 @@ int main()
 #+RESULTS:
 : Typical argument
 
-以上例子以夸张的手法，展现了计算资源如何被无情的浪费。 ~X~ 的内部内部数
-据布局至少浪费了 6 字节（每个 ~char~ 处浪费 3 字节）。 ~buf~ 多余的创建和
-删除操作。
+以上例子以夸张的手法，展现了计算资源如何被无情的浪费。 ~X~ 的内部数据布
+局至少浪费了 6 字节（每个 ~char~ 处浪费 3 字节）。 ~buf~ 多余的创建和删除
+操作。
 
-
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void lower(zstring s)
 {
@@ -98,12 +112,15 @@ void lower(zstring s)
 #+end_src
 
 
-* Footnotes
+*注意*
 
-[fn:1] 亚历山大·斯特潘诺夫（[[http://stepanovpapers.com/][Alexander Stepanov]]），Alex Stepanov，
-STL（标准模板库）之父，并因此在1995年获得了第一届 Dr. Dobb's 程序设计
-杰出奖，他曾任 Compaq 公司副总裁和首席科学家，AT&T 实验室副总裁和首席
-构架师，SGI服务器和巨型计算机公司技术总监。Alexander 曾先后在 HP 实验
-室、AT&T 实验室、通用电气公司 R&D、Polytechnic University of New York
-大学控制研究所和复杂自动化研究所工作和研究了 25 年。他的研究工作涉及程
-序设计、语言设计、存贮系统、路径计划算法、实时操作系统等。
+个别例子中，我们很容易发现浪费资源的情况，也很容易修复。但是，如果整个
+代码库中都分散着浪费资源的情况，我们就很难及时发现并修复了。所以，本条
+指南期望能够在使用 C++ 前发现大部分浪费资源的情况。然后，通过检查算法
+和需求，发现更深层次的资源浪费的情况。不过，这些超出了本指南的范围。
+
+
+*强化*
+
+- 检查标记返回值未被使用的，某些用户自定义的，非默认的后缀操作，如
+  ~operator++~ 和 ~operator--~ 函数。选择使用前缀形式。

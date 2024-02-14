@@ -5,7 +5,7 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Prefer compile-time checking to run-time checking"
+Prefer compile-time checking to run-time checking
 
 *理由*
 
