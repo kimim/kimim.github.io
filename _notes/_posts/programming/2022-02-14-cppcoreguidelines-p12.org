@@ -1,16 +1,22 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines P.12 选用适当的工具
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines P.12 选用适当的工具
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-这条原则明白。机器比人更擅长重复性的工作。人的精力要用在创新性的事情上。
+P.12: Use supporting tools as appropriate
+
+*理由*
+
+机器比人更擅长重复性的工作。人的精力要用在创新性的事情上。
+
+
+*例子*
 
 可以使用静态代码检查工具、并行计算分析工具、测试工具来执行重复性的任务。
+
+
+*注意*
 
 注意不要太依赖于太过专门的、太过细致的工具，后果是代码移植困难。

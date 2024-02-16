@@ -1,18 +1,21 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines P.13 选用适当的库
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines P.13 选用适当的库
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+P.13: Use support libraries as appropriate
+
+*理由*
 
 设计精良、文档丰富、支持给力的程序库，可以节省大量的时间和精力。代码和
 文档的质量一般来说会比自己开发的更好。因为多个用户共享成果，分摊的时间、
 精力和金钱也更少。应用广泛的程序库，有更好的维护，也能更快适配新的系统，
 节省移植成本。
+
+
+*例子*
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 vector v = {4, 3, 6, 1, 9};
@@ -26,6 +29,14 @@ std::for_each(begin(v), end(v), [](auto x){std::cout<< x << " ";});
 通常标准库提供的排序算法执行效率比较高。尽量使用标准库，除非有特殊原因，
 需要自己实现排序等标准库中的算法。
 
+*注意*
+
 尽量使用：
 - ISO C++ 标准库
 - Guidelines Support Library (GSL)
+
+
+*注意*
+
+如果某个领域没有合适的设计精良、文档清晰、支持良好的程序库，或许你应该
+自己实现一套，然后在代码中使用。
