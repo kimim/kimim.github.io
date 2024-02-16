@@ -5,7 +5,7 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-Prefer immutable data to mutable data
+P.10 Prefer immutable data to mutable data
 
 *理由*
 

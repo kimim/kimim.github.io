@@ -5,7 +5,7 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-Catch run-time errors early
+P.7 Catch run-time errors early
 
 *理由*
 

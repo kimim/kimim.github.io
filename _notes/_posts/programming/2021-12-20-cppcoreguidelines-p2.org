@@ -5,7 +5,7 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-Write in ISO Standard C++
+P.2 Write in ISO Standard C++
 
 这条指南是说尽量按照 ISO C++ 国际标准写代码。
 
