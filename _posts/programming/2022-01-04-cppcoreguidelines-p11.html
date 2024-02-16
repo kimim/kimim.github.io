@@ -1,44 +1,49 @@
 ---
 layout: post
 title: CppCoreGuidelines P.11 通过封装整理混乱代码
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-代码散乱既难维护又容易隐藏 bug。尽量通过接口封装代码。
+P.11: Encapsulate messy constructs, rather than spreading through the code
+</p>
+
+<p>
+<b>理由</b>
+</p>
+
+<p>
+代码散乱既难维护又容易隐藏 bug。尽量通过接口封装代码，好的接口易用有安全。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">algorithm</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
-<span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sz</span> = 10;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span> = <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">)</span> malloc<span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">)</span> * sz<span style="color: #7388d6;">)</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">count</span> = 0;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">input_max</span> = 20;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">input_val</span> = 0;
-    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span>;;<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = input_val++;
-        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>input_val &gt; input_max<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">break</span>;
-        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>count == sz<span style="color: #909183;">)</span>
-            p = <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #909183;">)</span> realloc<span style="color: #909183;">(</span>p, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #709870;">)</span> * sz * 2<span style="color: #909183;">)</span>;
-        p<span style="color: #909183;">[</span>count++<span style="color: #909183;">]</span> = x;
-    <span style="color: #7388d6;">}</span>
-    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>=0; i&lt;count; i++<span style="color: #7388d6;">)</span> cout &lt;&lt; p<span style="color: #7388d6;">[</span>i<span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">" "</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">sz</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">10</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #707183;">)</span> <span style="color: #3a5fcd; font-weight: bold;">malloc</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">*</span> sz<span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">count</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">input_max</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">20</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">input_val</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span>;;<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">input_val</span><span style="color: #7F0055; font-weight: bold;">++</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>input_val <span style="color: #7F0055; font-weight: bold;">&gt;</span> input_max<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">break</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>count <span style="color: #7F0055; font-weight: bold;">==</span> sz<span style="color: #7388d6;">)</span>
+        <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6;">)</span> <span style="color: #3a5fcd; font-weight: bold;">realloc</span><span style="color: #7388d6;">(</span>p, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">*</span> sz <span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #110099;">2</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000;">p</span><span style="color: #7388d6;">[</span><span style="color: #000000;">count</span><span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> x;
 <span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span><span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #110099;">0</span>; i<span style="color: #7F0055; font-weight: bold;">&lt;</span>count; <span style="color: #000000;">i</span><span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #707183;">)</span> cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> p<span style="color: #707183;">[</span>i<span style="color: #707183;">]</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span>;
 </pre>
 </div>
 
 <pre class="example">
-0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
 </pre>
 
 
@@ -47,32 +52,38 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">vector</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">algorithm</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
-<span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span>;
-    v.reserve<span style="color: #7388d6;">(</span>10<span style="color: #7388d6;">)</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">input_max</span> = 20;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">input_val</span> = 0;
-    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span>;;<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = input_val++;
-        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>input_val &gt; input_max<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">break</span>;
-        v.push_back<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
-    <span style="color: #7388d6;">}</span>
-    <span style="color: #110099;">ranges</span>::for_each<span style="color: #7388d6;">(</span>v, <span style="color: #909183;">[](</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">auto</span> &amp;<span style="color: #000000;">x</span><span style="color: #909183;">){</span>cout &lt;&lt; x &lt;&lt; <span style="color: #2A00FF;">" "</span>;<span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">v</span>;
+v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">reserve</span><span style="color: #707183;">(</span><span style="color: #110099;">100</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">input_max</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">20</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">input_val</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+<span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #707183;">(</span>;;<span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">input_val</span><span style="color: #7F0055; font-weight: bold;">++</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>input_val <span style="color: #7F0055; font-weight: bold;">&gt;</span> input_max<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">break</span>;
+    v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">push_back</span><span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic;">std</span>::<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">ranges</span><span style="color: #3a5fcd; font-weight: bold;">::for_each</span><span style="color: #707183;">(</span>v, <span style="color: #7388d6;">[](</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic;">auto</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #000000;">x</span><span style="color: #7388d6;">){</span>cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> x <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span>;<span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 
 <pre class="example">
-0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 
 </pre>
 
 
+
 <p>
-用抽象层次更高的 <code>vector</code> ， <code>span</code> ， <code>lock_guard</code> 以及 <code>future</code> 。避免处理数组、联合体、类型转换和 <code>gsl::owner</code> 。尽量使用标准库和 GSL。
+<b>注意</b>
 </p>
+
+<p>
+标准库和 GSL 是符合本条原则指南的。比如，为了避免数组、联合体、类型转换等诡异的生命周期管理。<code>gsl::owner</code>等工具可以实现关键的抽象机制，比如
+<code>vector</code> , <code>span</code>, <code>lock_guard</code>, <code>future</code> 等。我们应该使用那些由更专业的时间花费大量时间开发的程序库。同样的，我们应当设计实现更多专业的程序库给用户使用，而不是让他们（很多时候是我们自己）重复的处理底层代码。
+</p>
+
+
+<p>
+<b>强化</b>
+</p>
+<ul class="org-ul">
+<li>检查“混乱的代码”，比如复杂的指针操作、抽象实现之外的类型转换。</li>
+</ul>
