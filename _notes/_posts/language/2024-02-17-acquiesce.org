@@ -3,13 +3,12 @@
 #+TAGS: English
 #+CATEGORIES: language
 
-《人类简史》写到美国在1860年通过一场血腥的内战才让南方各州勉强接受了非
-洲奴隶也是应当享有自由权利的人类：
+《人类简史》[[cite:&harari2014sapiens]] 写到美国在1860年通过一场血腥的内战
+才让南方各州勉强接受了非洲奴隶也是应当享有自由权利的人类：
 
-[[cite:&harari2014sapiens]]: When, in 1860, a majority of American
-citizens concluded that African slaves are human beings and must
-therefore enjoy the right of liberty, it took a bloody civil war to
-make the southern states *acquiesce*.
+When, in 1860, a majority of American citizens concluded that African
+slaves are human beings and must therefore enjoy the right of liberty,
+it took a bloody civil war to make the southern states *acquiesce*.
 
 *acquiesce* 这个单词的意思是默许、勉强同意。
 
@@ -32,3 +31,13 @@ Social-Media 'Anti-Vaxx-Misinformation' Case).
 
 acquiescent 则是 acquiesce 的形容词，比如：But insiders believe Hudson
 does not want to be seen as too *acquiescent* to industrial action.
+
+* References
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
