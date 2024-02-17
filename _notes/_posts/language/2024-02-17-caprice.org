@@ -1,0 +1,42 @@
+#+LAYOUT: post
+#+TITLE: 单词本：caprice
+#+TAGS: English
+#+CATEGORIES: language
+
+还是来自人类简史 [[cite:&harari2014sapiens]] 的一句话：
+
+Religions assert that our laws are not the result of human *caprice*,
+but are ordained by an absolute and supreme authority.
+
+Yuval Noah Harari 的意思是说宗教强调说我们的法律不是源自人类的突发奇想，
+而是由绝对的神的权威颁布规定的。
+
+单词 caprice 指的是人类的反复无常、任性、怪想和突发奇想。
+
+比如说：A hailstorm in July is a *caprice* of nature. 七月时节的冰雹风暴
+是大自然的突发奇想。
+
+这个词据有两种可能的来源。
+
+其一，拉丁语 capreolus 是野山羊的意思。野山羊灵活矫健，能很快地跳腾一
+下。Capricornus 摩羯座大概就是野山羊变过来的。还有一个词 capric 意为
+“公羊的”。
+
+其二，意大利语 capo 为头，riccio 为卷曲，人在受惊吓的时候会头发卷曲。
+就像刺猬 hedgehog 受到惊吓会竖起它的刺。而 riccio 则来自拉丁语 ericius，
+ericius 正是拉丁语刺猬。
+
+不管是由于惊吓还是自身活跃，caprice 就是一种任性的想法和行为。
+
+caprice 还是音乐术语：幻想曲。
+
+caprice 的形容词形式 capricious 反复无常的、任性的、变化莫测的、不合逻
+辑的。
+
+保罗·科埃略（Paulo Coelho）在《牧羊少年奇幻之旅》（the Alchemist）
+[[cite:&coelho1988alchemist]] 中写到过：The desert is a *capricious* lady,
+and sometimes she drives men crazy. 沙漠是个反复无常的女士，有时候却会
+让男人发狂。
+
+*References*
+[[bibliography:~/docs/references.bib]]
