@@ -32,7 +32,7 @@ Social-Media 'Anti-Vaxx-Misinformation' Case).
 acquiescent 则是 acquiesce 的形容词，比如：But insiders believe Hudson
 does not want to be seen as too *acquiescent* to industrial action.
 
-* References
+*References*
 #+BEGIN_EXPORT latex
 \iffalse % multiline comment
 #+END_EXPORT
