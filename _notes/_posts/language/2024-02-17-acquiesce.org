@@ -1,0 +1,34 @@
+#+LAYOUT: post
+#+TITLE: 单词本：acquiesce
+#+TAGS: English
+#+CATEGORIES: language
+
+《人类简史》写到美国在1860年通过一场血腥的内战才让南方各州勉强接受了非
+洲奴隶也是应当享有自由权利的人类：
+
+[[cite:&harari2014sapiens]]: When, in 1860, a majority of American
+citizens concluded that African slaves are human beings and must
+therefore enjoy the right of liberty, it took a bloody civil war to
+make the southern states *acquiesce*.
+
+*acquiesce* 这个单词的意思是默许、勉强同意。
+
+其实，从词源上看，ac- 源自拉丁语 ad- 即英语 to 的意思，而 quiesce 则源
+自 quiescere 安静。那么，连在一起就是 become quiet 的意思，也就是静下
+来。所以，看起来有些被动的意味，所以可以表达被迫的勉强的静下来接受他人
+的要求的意思。
+
+法语的 acquiescer 也是这个意思。比如 il *acquiesça* d'un signe de tête
+他点头答应了。
+
+但是，因为英语 -er 后缀是行动者的意思，所以英语里 acquiescer 是默许者，
+就是那种不表示反对或抗议，而默认接受他人意见或决定的人。
+
+acquiesce 的名词化单词为 acquiescence，譬如说：An alternative
+characterization of *acquiescence* might well be considered "public
+spiritedness," as attempted by Zuckerberg in his recent Congressional
+apology – or perhaps better PR. (from Life v. Liberty Goes to Court:
+Social-Media 'Anti-Vaxx-Misinformation' Case).
+
+acquiescent 则是 acquiesce 的形容词，比如：But insiders believe Hudson
+does not want to be seen as too *acquiescent* to industrial action.
