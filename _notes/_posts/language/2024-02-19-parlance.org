@@ -20,6 +20,16 @@ European Union, these concepts are "modern *parlance* for perennial
 phenomena such as propaganda and conspiracy theories". 即根据现代的说
 法，误导信息传播是一个一直存在的现象。
 
+再比如：The network perimeter protection idea comes from the ancient
+technique of using walls such as Hadrian's Wall or the Great Wall for
+protecting a city. In networking *parlance*, a zone called a
+Demilitarised Zone (DMZ), aka a perimeter network, is
+created. [[cite:&cybok1.1.0]]
+
+In the *parlance* of the IEEE standard, tininess is detected after
+rounding: Detecting tininess after rounding results in fewer spurious
+underflow signals. [[cite:&waterman2019risc]]
+
 另外一个词，parley 似乎也是和 parler, parlance 同源，它的意思是和谈。
 比如说：We arranged a *parley* with her. 我们跟她安排了一场和谈/谈判。
 
