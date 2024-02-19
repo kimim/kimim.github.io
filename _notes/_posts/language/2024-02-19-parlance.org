@@ -1,0 +1,27 @@
+#+LAYOUT: post
+#+TITLE: 单词本：parlance
+#+TAGS: English Français
+#+CATEGORIES: language
+
+David Myers 的《犹太简史》[[cite:&myers2017jewish]] 中提到犹太人之间的关系
+时，用到了 parlance 这个词：
+
+In jocular *parlance* today, Jews often refer to one another as "members
+of the tribe" (MOTs).
+
+这句话的意思是说，根据开玩笑的说法，犹太人把自己的同伴称为部落成员
+（MOT）。
+
+学法语的同学看到这个 parlance 是不是觉得很熟悉呀？ 法语“说”的动作
+parler 似乎跟这个词同源的么。而 parlance 则是说的名词化，即“说法”。
+
+再举个例子，这篇关于错误信息传播的文章中用到了这个词：According to the
+European Union, these concepts are "modern *parlance* for perennial
+phenomena such as propaganda and conspiracy theories". 即根据现代的说
+法，误导信息传播是一个一直存在的现象。
+
+另外一个词，parley 似乎也是和 parler, parlance 同源，它的意思是和谈。
+比如说：We arranged a *parley* with her. 我们跟她安排了一场和谈/谈判。
+
+*References*
+[[bibliography:~/docs/references.bib]]
