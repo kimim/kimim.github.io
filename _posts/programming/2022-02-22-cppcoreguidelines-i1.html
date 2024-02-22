@@ -1,52 +1,68 @@
 ---
 layout: post
 title: CppCoreGuidelines I.1 接口定义要清晰明确
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：正确性。没有定义的接口推测，很容易忽视，很难测试。
+I.1: Make interfaces explicit
 </p>
 
 <p>
-坏例子：通过全局变量控制函数行为。很容易造成误解。
+<b>理由</b>
+</p>
+
+<p>
+正确性。没有定义的接口推测，很容易忽视，很难测试。
+</p>
+
+
+<p>
+<b>例子</b>
+</p>
+
+<p>
+通过全局变量控制函数行为。很容易造成误解。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">round</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">d</span><span style="color: #707183;">)</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">round</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #000000;">d</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7388d6;">(</span>round_up<span style="color: #7388d6;">)</span> ? ceil<span style="color: #7388d6;">(</span>d<span style="color: #7388d6;">)</span> : d;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't: "invisible" dependency</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7388d6;">(</span>round_up<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">?</span> <span style="color: #3a5fcd; font-weight: bold;">ceil</span><span style="color: #7388d6;">(</span>d<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">:</span> d;    <span style="color: #3F7F5F;">// don't: "invisible" dependency</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-一旦 <code>round_up</code> 变了，传入相同的参数，返回不同的结果。
+一旦<code>round_up</code>变了，传入相同的参数，返回不同的结果。
 </p>
 
 <p>
 例外：有时需要通过环境变量来切换一组操作，比如：
 </p>
 <ul class="org-ul">
-<li>正常输出（normal）</li>
-<li>详细输出（verbose）</li>
+<li>正常输出（ normal ）</li>
+<li>详细输出（ verbose ）</li>
 <li>debug</li>
-<li>优化（optimized）</li>
+<li>优化（ optimized ）</li>
 </ul>
 
 
 <p>
-坏例子：通过 <code>errno</code> 等非局部变量报错，容易被忽略。
+<b>例子</b>
+</p>
+
+<p>
+通过 <code>errno</code> 等非局部变量报错，容易被忽略。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't: no test of printf's return value</span>
-fprintf<span style="color: #707183;">(</span>connection, <span style="color: #2A00FF;">"logging: %d %d %d\n"</span>, x, y, s<span style="color: #707183;">)</span>;
+<pre class="src src-bad src-C++"><span style="color: #3F7F5F;">// don't: no test of printf's return value</span>
+<span style="color: #3a5fcd; font-weight: bold;">fprintf</span><span style="color: #707183;">(</span>connection, <span style="color: #2A00FF;">"logging: %d %d %d\n"</span>, x, y, s<span style="color: #707183;">)</span>;
 </pre>
 </div>
 
@@ -56,25 +72,36 @@ fprintf<span style="color: #707183;">(</span>connection, <span style="color: #2A
 
 
 <p>
-替代选项：抛出一个异常。异常不会被忽略。
+<b>替代方案</b>
+</p>
+
+<p>
+出错的时候，抛出一个异常。异常不会被忽略。
 </p>
 
 
 <p>
-替代配方：避免在接口之间以非局部的或隐藏状态来传递信息。比如非 <code>const</code>
-成员函数通过对象状态传递信息给其他成员函数。
+<b>替代方案</b>
+</p>
+
+<p>
+避免在接口之间以全局或隐藏的状态变量来传递信息。比如不是 <code>const</code> 的成员函数通过修改对象的状态，来传递信息给其他成员函数。
 </p>
 
 
 <p>
-替代配方：接口应该是一个函数或一组函数。函数可以是函数模板；一组函数可以是类或类模板。
+<b>替代方案</b>
+</p>
+
+<p>
+传递信息的接口应该是一个函数或一组函数。函数可以是函数模板；一组函数可以是类或类模板。
 </p>
 
 
 <p>
-加强：
+<b>加强</b>
 </p>
 <ul class="org-ul">
-<li>函数不该通过 namespace 作用域的变量决定控制流</li>
-<li>函数不可往 namespace 作用域的变量写数据</li>
+<li>函数不该通过 <code>namespace</code> 作用域的变量决定控制流</li>
+<li>函数不可往 <code>namespace</code> 作用域的变量写数据</li>
 </ul>
