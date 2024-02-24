@@ -1,81 +1,119 @@
 ---
 layout: post
 title: CppCoreGuidelines I.2 避免使用全局变量
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：非 <code>const</code> 的全局变量隐藏依赖关系，会导致不可预料的结果。比如：
+I.2: Avoid non-const global variables
+</p>
+
+<p>
+<b>理由</b>
+</p>
+
+<p>
+没有 <code>const</code> 修饰的全局变量，即可变全局变量，会隐藏依赖关系，从而导致不可预料的结果。比如：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Data</span> <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... lots of stuff ...</span>
-<span style="color: #707183;">}</span> <span style="color: #000000;">data</span>;             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">non-const data</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic;">Data</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ... lots of stuff ...</span>
+<span style="color: #707183;">}</span> <span style="color: #000000;">data</span>;             <span style="color: #3F7F5F;">// non-const data</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">compute</span><span style="color: #707183;">()</span>      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">compute</span><span style="color: #707183;">()</span>      <span style="color: #3F7F5F;">// don't</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... use data ...</span>
+    <span style="color: #3F7F5F;">// ... use data ...</span>
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">output</span><span style="color: #707183;">()</span>       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">output</span><span style="color: #707183;">()</span>       <span style="color: #3F7F5F;">// don't</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... use data ...</span>
+    <span style="color: #3F7F5F;">// ... use data ...</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-可能还有其他地方会修改数据。这样的话， <code>compute</code> 和 <code>output</code> 的计算结果就不可预料了。
+可能还有其他地方会修改数据。这样的话， <code>compute</code> 计算出来的数据结果，在
+<code>output</code> 函数中可能不是那个结果，因为中间其他某个地方也会修改这个数据。
+</p>
+
+
+<p>
+<b>警告</b>
 </p>
 
 <p>
-警告：全局的对象初始化的时候，不一定完全按顺序进行。 <code>const</code> 对象的初始化顺序是无序进行的。因此，最好把全局对象初始化为常量。
+全局的对象初始化的时候，不一定完全按顺序进行。因此，如果一定要用全局变量，最好用常数设置全局对象的值。需要注意的是 <code>const</code> 对象的初始化顺序也是无序进行的。
+</p>
+
+
+<p>
+<b>例外</b>
 </p>
 
 <p>
-例外：
+全局对象一般来说比单实例 singleton 好。
 </p>
-<ul class="org-ul">
-<li>全局对象一般来说比单实例 singleton 好。</li>
-<li>全局常量自有其妙用。</li>
-</ul>
+
 
 <p>
-针对名字空间范围的变量，此规则也适用。
+<b>注意</b>
 </p>
 
 <p>
-其他选项：如果你要用全局（名字空间）变量来避免重复copy，可以考虑以指向
-<code>const</code> 的引用形式传递数据。另一个解决办法是把数据定义为某个对象的状态，把数据的操作函数设定为对象的成员方法。
+全局常量自有其妙用。
 </p>
 
 <p>
-警告：注意数据竞争情况。如果一个线程能访问非局部数据（或作为引用传进来的数据），而另一个线程执行的时候调用函数修改数据，就会造成数据竞争。任何可变数据的指针或引用都可能导致数据竞争。
+此规则也适用于名字空间范围的变量。
+</p>
+
+
+<p>
+<b>其他选项</b>
 </p>
 
 <p>
-使用全局指针或引用访问/修改非 const，非全局的变量，依然避免不了隐藏的数据依赖关系，也可能导致数据竞争情况。
+如果你要用全局（名字空间）变量来避免重复的复制传递参数，可以考虑以指向
+<code>const</code> 的引用形式传递数据。另一个解决办法是把数据定义为某个对象的状态，把该数据的操作函数设计成对象的成员方法。
+</p>
+
+
+<p>
+<b>警告</b>
+</p>
+
+<p>
+小心避免数据竞争。如果一个线程能访问非局部数据（或作为引用传进来的数据），而另一个线程执行的时候修改该数据，就会造成数据竞争。任何可变数据的指针或引用都可能导致数据竞争。
+</p>
+
+<p>
+使用全局指针或引用访问/修改非 <code>const</code> ，非全局的变量，依然避免不了隐藏的数据依赖关系，也可能导致数据竞争情况。
 </p>
 
 <p>
 不可变数据不会造成竞争情况。
 </p>
 
+
 <p>
-交叉参考：查看调用函数的规则。
+<b>注意</b>
 </p>
 
 <p>
-当然也有例外情况，比如 cin, cout, 以及 cerr.
+当然也有例外情况，比如<code>cin</code>, <code>cout</code>,以及 <code>cerr</code>.
+</p>
+
+
+<p>
+<b>强化</b>
 </p>
 
 <p>
-强化：清点所有在名字空间作用域的非 const 变量，以及全局范围的指向非
-const 数据的指针和引用。
+清点所有在名字空间作用域的非 <code>const</code> 变量，以及全局范围的指向非 <code>const</code> 数据的指针和引用。
 </p>
