@@ -1,38 +1,45 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines I.4 精确强化接口的类型
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines I.4 精确强化接口的类型
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+I.4: Make interfaces precisely and strongly typed
 
-类型乃文档之最简最佳者。其明确其定义，提升可读性，又支持运行时检测。另
-外，类型精确的代码，编译器和运行系统可以做更好的优化。反例：
+*理由*
 
+类型乃文档之最简最佳者。其定义明确，可读性好，又支持运行时检测。另外，
+类型精确的代码，编译器和执行系统可以更好的进行优化。
+
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void pass(void* data);    // 弱且无类型的  void* 很可疑
 #+end_src
 
-调用者不确定能传入什么类型的数据，因为没有标注为 ~const~ 也不知道数据是
-不是会被改变。因为所有的指针类型都能默默地转成 ~void*~ ，对调用者来说，
+调用者不确定能传入了什么类型的数据，因为没有标记为 ~const~ 也不知道能不
+能修改数据值。因为所有的指针类型都能默默地转成 ~void*~ ，对调用者来说，
 倒是很容易提供这类数据。
 
 然而，被调用的函数，却需要用 ~static_cast~ 转化成没有验证过的类型使用。
 这样又容易出错，又繁琐。
 
-只有设计 C++ 程序时描述不了数据类型的时候，小范围内使用 ~const void*~ 。
-考虑下，能否改用 ~variant~ 或指向基类的指针。
+在进行设计 C++ 程序时，只有当无法描述数据类型的时候，小范围内使用
+~const void*~ 。考虑下，能否改用 ~variant~ 或指向基类的指针。
 
-替代方案：模板参数往往能避免 ~void*~ ，就可以用 ~T*~ 或 ~T&~ 替代。对于泛型
-代码来说， ~T~ 可以是通用的类型，或是模板参数设定的类型。
 
-反例：
+*替代方案*
 
+模板参数往往能避免 ~void*~ ，就可以用 ~T*~ 或 ~T&~ 替代。对于泛型代码来说，
+~T~ 可以是通用的类型，或是模板参数设定的类型。
+
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 draw_rect(100, 200, 100, 500);  // 这些数字指的是什么？
 
@@ -41,7 +48,7 @@ draw_rect(p.x, p.y, 10, 20);    // 10 和 20 的单位是啥？
 
 清楚的是：调用者用这四个参数描述一个长方形。但是不清楚这些参数代表长方
 形的哪部分。另外，整数类型 ~int~ 可以表示多种信息：不同单位的数值。这样，
-我们就只能猜测这四个整数类型代表了什么。很可能，前两个是坐标 x 和y ，
+我们就只能猜测这四个整数类型代表了什么。很可能，前两个是坐标 ~x~ 和 ~y~ ，
 那么后两个是什么呢？
 
 使用注释和参数名可以提供一些信息，但是我们可以在明确一些：
@@ -58,15 +65,16 @@ draw_rectangle(p, Size{10, 20});   // 一个角，一对边长
 如果调用者传进其他位置，而不是左上角的点。可能需要注释和变量名来澄清。
 
 
-坏例子：
+*例子*
 
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 set_settings(true, false, 42); // 这个数指的是什么？
 #+end_src
 
 从参数类型和参数值看不出来这个函数是要设置什么东西。
 
-按照以下改发，看起来就比较明确、安全，且可读性更好：
+按照以下改法，看起来就比较明确、安全，且可读性更好：
 
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 alarm_settings s{};
@@ -84,10 +92,11 @@ enable_lamp_options(lamp_option::on | lamp_option::animate_state_transitions);
 #+end_src
 
 
-坏例子：
+*例子*
 
 以下例子，从接口看不出 ~time_to_blink~ 是秒还是毫秒？
 
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void blink_led(int time_to_blink) // 不好 -- 单位不清
 {
@@ -101,7 +110,8 @@ void use()
 #+end_src
 
 
-好例子：
+
+*例子*
 
 ~std::chrono::duration~ 类型可以帮助明确时间长度的单位。
 
@@ -145,7 +155,8 @@ int main()
 : blink 2000 ms
 : blink 150 ms
 
-强化：
+
+*强化*
 - （简单）统计多少使用 ~void*~ 作为参数和返回类型
 - （简单）统计超过1个以上的布尔量作为参数的接口
 - （困难）检查过多使用原生类型作为参数的函数

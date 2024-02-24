@@ -1,20 +1,20 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines I.7 声明后置条件
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines I.7 声明后置条件
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+I.7: State postconditions
 
-检测到针对输出结果可能的误解，可能捕捉到错误的实现。
+*理由*
 
-坏例子：
+检测到针对输出结果可能的误解，可能可以发现代码实现错误。
 
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 int area(int height, int width) { return height * width; }  // bad
 #+end_src
@@ -22,7 +22,8 @@ int area(int height, int width) { return height * width; }  // bad
 此处，我们故意不做前置条件判断，因此长宽不一定是正数。我们也没有检查后
 置条件，长宽的乘积可能超过最大整数，从而产生溢出。
 
-考虑使用：
+
+可以这么写：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 #include <gsl/gsl_assert>
@@ -43,10 +44,11 @@ int main()
 : terminate called without an active exception
 
 
-坏例子：
+*例子*
 
-考虑这个著名的安全bug：
+考虑这个著名的安全 bug：
 
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 #include <string.h>
 const int MAX = 10;
@@ -63,9 +65,7 @@ int main()
 }
 #+end_src
 
-#+RESULTS:
-
-因为没有后置条件说 buffer 必须清零，所以显然多余的 ~memset()~ 调用可能会
+为没有后置条件说 ~buffer~ 必须清零，所以显然多余的 ~memset()~ 调用可能会
 被编译优化掉（实际执行看不出来）。
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
@@ -86,22 +86,23 @@ int main()
 }
 #+end_src
 
-#+RESULTS:
 
-
-注意：
+*注意*
 
 后置条件经常在注释中非正式的介绍函数的目的； ~Ensures()~ 可以更系统化、
 更明显、更容易检查。
 
-注意：
+
+*注意*
 
 除了直接返回结果的情况，后置条件也可用于其他如数据结构状态的检查。
 
-例如：
+
+*例子*
 
 一个操作 ~Record~ 的函数，使用互斥锁避免竞争条件：
 
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 mutex m;
 
@@ -154,10 +155,13 @@ int main()
 : 2
 : 1
 
-注意：
+*注意*
+
 - 理想情况下，最好可以在接口声明中标明后置条件，用户可以方便看到。
 - 只有与用户相关的后置条件展示在接口定义中。
 - 内部状态相关的后置条件放在实现和定义中。
 
-强化：
+
+*强化*
+
 - 比较难。工具可以支持锁的状态检查。

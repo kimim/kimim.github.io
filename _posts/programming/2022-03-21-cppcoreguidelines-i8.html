@@ -1,72 +1,81 @@
 ---
 layout: post
-title: CppCoreGuidelines I.8 首选 Ensures() 表达后置条件
-categories: [technology]
+title: CppCoreGuidelines I.8 用 Ensures() 表达后置条件
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：
+I.8: Prefer Ensures() for expressing postconditions
 </p>
 
 <p>
-明确后置条件，引入工具支持。
+<b>理由</b>
 </p>
 
 <p>
-例子：
+可以明确后置条件，可以通过某些外部工具进行检查确保。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl_assert</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">string.h</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">MAX</span> = 10;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">problematic</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl_assert&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;string.h&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">MAX</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">10</span>;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">buffer</span><span style="color: #7388d6;">[</span>MAX<span style="color: #7388d6;">]</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    memset<span style="color: #7388d6;">(</span>buffer, 0, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span>buffer<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
-    Ensures<span style="color: #7388d6;">(</span>buffer<span style="color: #909183;">[</span>0<span style="color: #909183;">]</span> == 0<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">buffer</span><span style="color: #7388d6;">[</span><span style="color: #000000;">MAX</span><span style="color: #7388d6;">]</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #3a5fcd; font-weight: bold;">memset</span><span style="color: #7388d6;">(</span>buffer, <span style="color: #110099;">0</span>, <span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span>buffer<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">Ensures</span><span style="color: #7388d6;">(</span>buffer<span style="color: #909183;">[</span><span style="color: #110099;">0</span><span style="color: #909183;">]</span> <span style="color: #7F0055; font-weight: bold;">==</span> <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    f<span style="color: #7388d6;">()</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
+
 <p>
-注意：
+<b>注意</b>
 </p>
 
 <p>
-有多种方式标明后置条件，包括代码注释、条件判断、 <code>assert()</code> 。然而，这些方式要么很难和普通代码区分开，要么很难更新，要么很难让工具处理，而且可能语义上是错的。
+有多种方式标明后置条件，包括代码注释、条件判断、<code>assert()</code>。然而，这些方式要么很难和普通代码区分开，要么很难更新，要么很难让工具处理，而且可能语义上是错的。
 </p>
 
+
 <p>
-替代方案：
+<b>替代方案</b>
 </p>
 
 <p>
 某些函数调用完后必须释放的资源，最好通过 RAII 表达。
 </p>
 
+
 <p>
-注意：
+<b>注意</b>
 </p>
 
 <p>
 理想情况， <code>Ensures</code> 最好是接口的一部分，但是比较难实现。目前我们放在接口定义内。一旦<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0380r1.pdf">语言支持</a>，核心指南会引入标准的前置条件、后置条件与断言判断。
 </p>
 
+
 <p>
-强化：
+<b>强化</b>
 </p>
+
 <ul class="org-ul">
-<li>目前语言层面还不支持，请检查 <code>assert()</code> 判断是否合理。</li>
+<li>目前语言层面还不支持，请检查<code>assert()</code>判断是否合理。</li>
 </ul>

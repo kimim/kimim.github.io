@@ -1,17 +1,20 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines I.3 避免使用单例模式
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines I.3 避免使用单例模式
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+I.3: Avoid singletons
 
-单例（Singleton）其实只不过是伪装的复杂全局对象:
+*理由*
+
+单例（Singleton）其实只不过是伪装了的复杂的全局对象:
+
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 class Singleton {
     // ... lots of stuff to ensure that only one Singleton object is created,
@@ -21,11 +24,13 @@ class Singleton {
 
 另外一个问题是，单例的形式也有很多种……
 
-注意：
 
-如果不想改变全局对象，把它声明为 ~const~ 或 ~constexpr~ 。
+*注意*
 
-例外：
+如果希望全局对象的值不可变，可以把它声明为 ~const~ 或 ~constexpr~ 。
+
+
+*例外*
 
 可以用最简单的单例模式。第一次使用的时候，把它初始化。
 
@@ -64,13 +69,17 @@ X& myX()
 #+end_src
 
 以上代码返回的是一个指针，就需要在某个地方以恰当的线程安全的方式删除其
-存储。这样就容易出错，所以尽量避免使用，除非： ~myX~ 是一个多线程代码，
-~X~ 对象需要释放， ~X~ 的解构器代码同步进行。
+存储。这样就容易出错，所以尽量避免，除非：
+- ~myX~ 是一个多线程代码，
+- ~X~ 对象需要释放，
+- ~X~ 的解构器代码同步进行。
 
 如果定义了单实例类，该类只创建了一个对象，那么 ~myX~ 函数就不是单实例。
 此种情况，也非本规则的例外。即也要遵循本规则。
 
-强化办法：
+
+*强化*
+
 - 找到名字中有 singleton 的类
 - 找到只创建一个对象的类：数对象数，检查构造器
 - 如类有一公开静态函数，函数里本地静态构造了此类的一对象，并作为指针或

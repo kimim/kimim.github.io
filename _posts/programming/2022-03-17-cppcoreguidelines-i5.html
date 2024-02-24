@@ -1,28 +1,32 @@
 ---
 layout: post
-title: CppCoreGuidelines I.5 尽量声明输入条件
-categories: [technology]
+title: CppCoreGuidelines I.5 尽量声明输入值的前置条件
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：
+I.5: State preconditions (if any)
+</p>
+
+<p>
+<b>理由</b>
 </p>
 
 <p>
 函数参数的实际意义会限制函数调用者的使用。
 </p>
 
+
 <p>
-例如：
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>;
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #0000ff; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 
@@ -31,7 +35,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">x &#39035;&#20026;&#38750;&#36127;</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #0000ff; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// x &#39035;&#20026;&#38750;&#36127;</span>
 </pre>
 </div>
 
@@ -40,12 +44,12 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl_assert</span><span style="color: #707183;">&gt;</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #0000ff; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> Expects<span style="color: #7388d6;">(</span>x &gt;= 0<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl_assert&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #0000ff; font-weight: bold;">sqrt</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #3a5fcd; font-weight: bold;">Expects</span><span style="color: #7388d6;">(</span>x <span style="color: #7F0055; font-weight: bold;">&gt;=</span> <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">/* ... */</span> <span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    sqrt<span style="color: #7388d6;">(</span>-1.0<span style="color: #7388d6;">)</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #3a5fcd; font-weight: bold;">sqrt</span><span style="color: #7388d6;">(</span><span style="color: #110099;">-1.0</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -56,23 +60,29 @@ terminate called without an active exception
 
 
 <p>
-理想的情况， <code>Expects(x &gt;= 0)</code> 应该是 <code>sqrt()</code> 接口的一部分。但是很难实现，目前，我们暂时可以将断言放在函数体定义内。
+理想的情况，<code>Expects(x &gt;= 0)</code>应该是<code>sqrt()</code>接口的一部分。但是很难实现，目前，我们暂时可以将断言放在函数体定义内。
+</p>
+
+
+<p>
+<b>注意</b>
 </p>
 
 <p>
-注意：尽量选择以正式的规格需求表达，如 <code>Expects(p);</code> 如果不可行，就在注释中写：
+尽量选择以正式的规格需求表达，如<code>Expects(p);</code>如果不可行，就在注释中写：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the sequence [p:q) is ordered using &lt;.</span>
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">&#24207;&#21015; [p:q) &#20197; &lt; &#25490;&#24207;</span>
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// the sequence [p:q) is ordered using &lt;.</span>
+<span style="color: #3F7F5F;">// &#24207;&#21015; [p:q) &#20197; &lt; &#25490;&#24207;</span>
 </pre>
 </div>
 
+
 <p>
-注意（以下文字，我看不懂了！）：
+<b>注意</b>
 </p>
 
 <p>
-Most member functions have as a precondition that some class invariant holds. That invariant is established by a constructor and must be reestablished upon exit by every member function called from outside the class. We don’t need to mention it for each member function.
+大部分的成员函数有一个隐含的前置条件，即类中数据满足某个不变式。这个不变式条件是通过构造函数建立的。必须在每次成员函数调用之后依然保证这个不变式约束条件。当然，我们无需在每个成员函数中明确指出这个不变式约束条件。
 </p>

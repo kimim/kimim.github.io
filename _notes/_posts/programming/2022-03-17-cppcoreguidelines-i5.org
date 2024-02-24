@@ -1,20 +1,20 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines I.5 尽量声明输入条件
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines I.5 尽量声明输入值的前置条件
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+I.5: State preconditions (if any)
+
+*理由*
 
 函数参数的实际意义会限制函数调用者的使用。
 
-例如：
 
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++17 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 double sqrt(double x);
 #+end_src
@@ -44,7 +44,9 @@ int main()
 理想的情况， ~Expects(x >= 0)~ 应该是 ~sqrt()~ 接口的一部分。但是很难实现，
 目前，我们暂时可以将断言放在函数体定义内。
 
-注意：
+
+*注意*
+
 尽量选择以正式的规格需求表达，如 ~Expects(p);~ 如果不可行，就在注释中写：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
@@ -52,6 +54,9 @@ int main()
 // 序列 [p:q) 以 < 排序
 #+end_src
 
-注意（以下文字，我看不懂了！）：
 
-Most member functions have as a precondition that some class invariant holds. That invariant is established by a constructor and must be reestablished upon exit by every member function called from outside the class. We don’t need to mention it for each member function.
+*注意*
+
+大部分的成员函数有一个隐含的前置条件，即类中数据满足某个不变式。这个不
+变式条件是通过构造函数建立的。必须在每次成员函数调用之后依然保证这个不
+变式约束条件。当然，我们无需在每个成员函数中明确指出这个不变式约束条件。

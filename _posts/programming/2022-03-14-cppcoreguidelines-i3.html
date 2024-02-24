@@ -1,25 +1,34 @@
 ---
 layout: post
 title: CppCoreGuidelines I.3 避免使用单例模式
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：
+I.3: Avoid singletons
 </p>
 
 <p>
-单例（Singleton）其实只不过是伪装的复杂全局对象:
+<b>理由</b>
 </p>
+
+<p>
+单例（ Singleton ）其实只不过是伪装了的复杂的全局对象:
+</p>
+
+
+<p>
+<b>例子</b>
+</p>
+
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Singleton</span> <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... lots of stuff to ensure that only one Singleton object is created,</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">that it is initialized properly, etc.</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic;">Singleton</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ... lots of stuff to ensure that only one Singleton object is created,</span>
+    <span style="color: #3F7F5F;">// that it is initialized properly, etc.</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
@@ -28,16 +37,18 @@ tags: [CppCoreGuidelines]
 另外一个问题是，单例的形式也有很多种……
 </p>
 
+
 <p>
-注意：
+<b>注意</b>
 </p>
 
 <p>
-如果不想改变全局对象，把它声明为 <code>const</code> 或 <code>constexpr</code> 。
+如果希望全局对象的值不可变，可以把它声明为 <code>const</code> 或 <code>constexpr</code> 。
 </p>
 
+
 <p>
-例外：
+<b>例外</b>
 </p>
 
 <p>
@@ -45,18 +56,18 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">typedef</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #0000ff; font-weight: bold;">myX</span><span style="color: #707183;">()</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">typedef</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">X</span>;
+<span style="color: #000000; font-style: italic;">X</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #0000ff; font-weight: bold;">myX</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">my_x</span> <span style="color: #7388d6;">{</span>3<span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic;">X</span> <span style="color: #000000;">my_x</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">3</span><span style="color: #7388d6;">}</span>;
     <span style="color: #7F0055; font-weight: bold;">return</span> my_x;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    cout &lt;&lt; myX<span style="color: #7388d6;">()</span> &lt;&lt; endl;
-    cout &lt;&lt; myX<span style="color: #7388d6;">()</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">myX</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">myX</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -76,26 +87,32 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #0000ff; font-weight: bold;">myX</span><span style="color: #707183;">()</span>
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic;">X</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #0000ff; font-weight: bold;">myX</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #7388d6;">{</span>3<span style="color: #7388d6;">}</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> *p;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">potential leak</span>
+    <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic;">auto</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic;">X</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">3</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">*</span>p;  <span style="color: #3F7F5F;">// potential leak</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-以上代码返回的是一个指针，就需要在某个地方以恰当的线程安全的方式删除其存储。这样就容易出错，所以尽量避免使用，除非： <code>myX</code> 是一个多线程代码，
-<code>X</code> 对象需要释放， <code>X</code> 的解构器代码同步进行。
+以上代码返回的是一个指针，就需要在某个地方以恰当的线程安全的方式删除其存储。这样就容易出错，所以尽量避免，除非：
 </p>
+<ul class="org-ul">
+<li><code>myX</code> 是一个多线程代码，</li>
+<li><code>X</code> 对象需要释放，</li>
+<li><code>X</code> 的解构器代码同步进行。</li>
+</ul>
 
 <p>
 如果定义了单实例类，该类只创建了一个对象，那么 <code>myX</code> 函数就不是单实例。此种情况，也非本规则的例外。即也要遵循本规则。
 </p>
 
+
 <p>
-强化办法：
+<b>强化</b>
 </p>
+
 <ul class="org-ul">
 <li>找到名字中有 singleton 的类</li>
 <li>找到只创建一个对象的类：数对象数，检查构造器</li>
