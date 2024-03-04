@@ -1,52 +1,50 @@
 ---
 layout: post
 title: CppCoreGuidelines I.9 如果是模板接口，用 concept 编写参数文档
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：
+I.9: If an interface is a template, document its parameters using concepts
 </p>
 
 <p>
-使接口更清晰，编译时能检查。
+<b>理由</b>
 </p>
 
 <p>
-比如：
+可以使接口更清晰，可以在编译时进行检查。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <p>
-使用 C++20 风格的需求规格（requirements specification）
+使用C++20风格的要求规格（requirements specification）
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span>, <span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Val</span><span style="color: #707183;">&gt;</span>
-requires <span style="color: #000000; font-style: italic; text-decoration: underline;">input_iterator</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span><span style="color: #707183;">&gt;</span> &amp;&amp; <span style="color: #000000; font-style: italic; text-decoration: underline;">equality_comparable</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ValueType</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span><span style="color: #7388d6;">&gt;</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Val</span><span style="color: #707183;">&gt;</span>
-Iter find<span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">first</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">last</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Val</span> <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span>, <span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Val</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">requires</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">input_iterator</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">equality_comparable</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ValueType</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span><span style="color: #7388d6; font-weight: bold;">&gt;</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Val</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #0000ff; font-weight: bold;">find</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">first</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Iter</span> <span style="color: #000000;">last</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Val</span> <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
+
 <p>
-注意：
+<b>强化</b>
 </p>
 
 <p>
-很快编译器就能支持 C++20 的 <code>requires</code> 语句。GCC 6.1 之后的版本已经支持了。
-</p>
-
-<p>
-强化：
-</p>
-
-<p>
-目前编程语言还不支持。等标准制定后，警告不符合 <code>requires</code> 的不可变模板参数。
+如果出现任何没有约束的非可变参数模板，就进行警告。约束条件可以是声明或
+<code>requires</code> 语句。
 </p>

@@ -1,21 +1,20 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines I.9 如果是模板接口，用 concept 编写参数文档
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines I.9 如果是模板接口，用 concept 编写参数文档
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+I.9: If an interface is a template, document its parameters using concepts
 
-使接口更清晰，编译时能检查。
+*理由*
 
-比如：
+可以使接口更清晰，可以在编译时进行检查。
 
-使用 C++20 风格的需求规格（requirements specification）
+
+*例子*
+
+使用 C++20 风格的要求规格（requirements specification）
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 template<typename Iter, typename Val>
@@ -26,11 +25,8 @@ Iter find(Iter first, Iter last, Val v)
 }
 #+end_src
 
-注意：
 
-很快编译器就能支持 C++20 的 ~requires~ 语句。GCC 6.1 之后的版本已经支持了。
+*强化*
 
-强化：
-
-目前编程语言还不支持。等标准制定后，警告不符合 ~requires~ 的不可变模板参
-数。
+如果出现任何没有约束的非可变参数模板，就进行警告。约束条件可以是声明或
+~requires~ 语句。
