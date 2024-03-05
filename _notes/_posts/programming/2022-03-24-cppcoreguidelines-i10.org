@@ -1,35 +1,45 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines I.10 使用异常
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines I.10 使用异常
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+I.10: Use exceptions to signal a failure to perform a required task
 
-不可忽视错误，错误导致不可预期的系统状态或计算结果。大部分系统错误是因
-为这种疏忽导致的。
+*理由*
 
-例子：
+不可忽视那种会导致不可预期的系统状态或计算结果的错误。大部分系统错误是
+因为这种疏忽导致的。
 
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 int printf(const char* ...);    // bad: return negative number if output fails
+#+end_src
 
+如果输出失败， ~printf~ 的返回值会是负数。如果检查返回值的话，这个故障就
+被我们忽视了。
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
 template<class F, class ...Args>
 // good: throw system_error if unable to start the new thread
 explicit thread(F&& f, Args&&... args);
 #+end_src
 
-备注：
+~thread~ 如果构造失败，就会抛出异常：
 1) 构造函数被 ~explicit~ 修饰后, 就不能再被隐式调用了。
-2) ~thread~ 构造函数出错 ~errc::resource_unavailable_try_again~ 会抛出
-   ~system_error~ （[[https://www.cplusplus.com/reference/thread/thread/thread/][thread]]）
+2) ~thread~ 构造函数出错 ~errc::resource_unavailable_try_again~ 会抛
+   出 ~system_error~ （[[https://www.cplusplus.com/reference/thread/thread/thread/][thread]]）
 
-注意：
+
+*注意*
 
 什么是错误？
 
@@ -96,18 +106,15 @@ int main()
 : val= 1, error= 2
 
 
-注意：
+*注意*
 
-我们不认为性能是不用异常处理的原因。
+- 我们不认为性能是不用异常处理的原因。
+- 通常情况，显式的出错检查和处理消耗的时间和空间与异常处理差不多。
+- 通常，使用异常处理，简洁清晰的代码性能更好（通过程序优化，简化出错分支处理）。
+- 对于性能要求高的代码，可以将出错检查移到性能关键代码外。
+- 长期来看，普通的代码能更好的优化。声明性能指标前，最好仔细测量。
 
-通常情况，显式的出错检查和处理消耗的时间和空间与异常处理差不多。
 
-通常，使用异常处理，简洁清晰的代码性能更好（通过程序优化，简化出错分支处理）。
-
-对于性能要求高的代码，可以将出错检查移到性能关键代码外。
-
-长期来看，普通的代码能更好的优化。声明性能指标前，最好仔细测量。
-
-强化：
+*强化*
 - 本理论指南，无法直接检查。
 - 审查使用 ~errno~ 的地方
