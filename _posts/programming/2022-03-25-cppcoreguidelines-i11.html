@@ -1,40 +1,44 @@
 ---
 layout: post
 title: CppCoreGuidelines I.11 切不可通过原始指针（T*）或引用（T&）转移所有权
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：
+I.11: Never transfer ownership by a raw pointer (<code>T*</code>) or reference (<code>T&amp;</code>)
 </p>
 
 <p>
-当不清楚某对象的所有权是属于调用者和被调用者时，可能会导致内存泄漏，或产生不恰当的结构。
+<b>理由</b>
 </p>
 
 <p>
-例如：
+如果不清楚某对象的所有权是属于调用者还是被调用者，可能会导致内存泄漏，或不完全的对象析构。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;<span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>* <span style="color: #0000ff; font-weight: bold;">compute</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">don't</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">x</span>; <span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #0000ff; font-weight: bold;">compute</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">y</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// don't</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>* <span style="color: #000000;">res</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6;">{}</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    cout &lt;&lt; res &lt;&lt; endl;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">res</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6;">{}</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> res <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
     <span style="color: #7F0055; font-weight: bold;">return</span> res;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">xx</span> = compute<span style="color: #7388d6;">(</span>0<span style="color: #7388d6;">)</span>;
-    cout &lt;&lt; xx;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">xx</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">compute</span><span style="color: #7388d6;">(</span><span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> xx;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -47,22 +51,22 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-谁来删除返回的 <code>X</code> ？如果返回的是引用，此问题更难定位。考虑返回值（如果结果很大，使用移动）。
+谁来删除函数 <code>compute</code> 返回的 <code>X</code> ？如果 <code>compute</code> 返回的是引用，则此问题更难定位。考虑数值返回。如果返回结果很大，可以使用移动机制。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">compute</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">compute</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>  <span style="color: #3F7F5F;">// good</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">res</span><span style="color: #7388d6;">(</span>10000<span style="color: #7388d6;">)</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    res<span style="color: #7388d6;">[</span>0<span style="color: #7388d6;">]</span> = x;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">res</span><span style="color: #7388d6;">(</span><span style="color: #110099;">10000</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #000000;">res</span><span style="color: #7388d6;">[</span><span style="color: #110099;">0</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> x;
     <span style="color: #7F0055; font-weight: bold;">return</span> res;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">xx</span> = compute<span style="color: #7388d6;">(</span>999<span style="color: #7388d6;">)</span>;
-    cout &lt;&lt; xx<span style="color: #7388d6;">[</span>0<span style="color: #7388d6;">]</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">xx</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">compute</span><span style="color: #7388d6;">(</span><span style="color: #110099;">999</span><span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> xx<span style="color: #7388d6;">[</span><span style="color: #110099;">0</span><span style="color: #7388d6;">]</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -72,31 +76,40 @@ tags: [CppCoreGuidelines]
 </pre>
 
 
+
 <p>
-替代选项：通过智能型指针传递所有权。比如 <code>unique_ptr</code> （所有权互斥），
-<code>shared_ptr</code> （所有权共享）。然后，这个方法并不优雅，可能比返回对象本身性能差。
+<b>替代方案</b>
 </p>
 
 <p>
-替代选项：有时候因为 ABI 兼容要求，无法修改老的代码，或资源不足。这时，可以使用 GSL 标注指针所有者。
+通过智能型指针传递所有权。比如<code>unique_ptr</code>（所有权互斥）， <code>shared_ptr</code>
+（所有权共享）。然而，这个方法并不优雅，相比返回对象本身，性能可能会差。
+</p>
+
+<p>
+<b>替代方案</b>
+</p>
+
+<p>
+有时候因为 ABI 兼容要求，无法修改老的代码，或因为资源不足。这时，可以使用 GSL 的 <code>owner</code> 标注指针所有者。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
-<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;<span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>*<span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">compute</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">It is now clear that ownership is transferred</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> gsl;
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">x</span>;<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">compute</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// It is now clear that ownership is transferred</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>*<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">res</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6;">{}</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    cout &lt;&lt; res &lt;&lt; endl;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">res</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6;">{}</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> res <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
     <span style="color: #7F0055; font-weight: bold;">return</span> res;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">xx</span> = compute<span style="color: #7388d6;">(</span>10<span style="color: #7388d6;">)</span>;
-    cout &lt;&lt; xx;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">xx</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">compute</span><span style="color: #7388d6;">(</span><span style="color: #110099;">10</span><span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> xx;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -112,20 +125,18 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-注意：
+<b>注意</b>
 </p>
 
 <p>
-以原始指针传递的对象，其所有者默认就是调用者。因此，其生存周期由调用者处理。Viewed another way: ownership transferring APIs are relatively
-rare compared to pointer-passing APIs, so the default is &ldquo;no ownership
-transfer.&rdquo;
+以原始指针传递的对象，其所有者默认就是调用者。因此，其生存周期由调用者处理。从另一个角度看，所有权转移的接口比指针传递接口用的更少，所以默认是不进行所有权转移的。
 </p>
 
 <p>
-加强：
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>（简单） <code>delete</code> 非 <code>owner&lt;T&gt;</code> 的原始指针的时候，报警。建议使用标准库的资源处理程序，或使用 <code>owner&lt;T&gt;</code></li>
-<li>（简单） 在重置或显示删除有主指针的时候，报警。</li>
-<li>（简单）返回值是 <code>new</code> 或函数调用返回值是 <code>owner</code> 指针但是赋给原始指针或无主引用的时候，报警。</li>
+<li>（简单） <code>delete</code> 非 <code>owner&lt;T&gt;</code> 的原始指针的时候，发出警告。建议使用标准库的资源处理程序，或使用 <code>owner&lt;T&gt;</code></li>
+<li>（简单） 在重置或显示删除有主指针的时候，发出警告。</li>
+<li>（简单）返回值是 <code>new</code> 或函数调用返回值是 <code>owner</code> 指针但是赋给原始指针或无主引用的时候，发出警告。</li>
 </ul>
