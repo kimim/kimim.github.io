@@ -1,55 +1,59 @@
 ---
 layout: post
 title: CppCoreGuidelines I.13 不要以单独指针传递数组
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：
+I.13: Do not pass an array as a single pointer
 </p>
 
 <p>
-用数组指针+数组大小作为参数的接口很容易出错。指向数组的指针必须依靠其他途径传递其大小。
+<b>理由</b>
 </p>
 
 <p>
-举例：
+接口的参数如果是用数组指针+数组大小的方式传递，很容易出错。我们只能依靠其他途径获取指针所指的数组的大小。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">copy_n</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">q</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy from [p:p+n) to [q:q+n)</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">copy_n</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">q</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// copy from [p:p+n) to [q:q+n)</span>
 </pre>
 </div>
 
 <p>
-如果 <code>q</code> 的元素数少于 <code>n</code> 会怎么样？我们会覆盖一些无关的内存。如果 <code>p</code> 的长度小于 <code>n</code> 会怎么样？我们可能复制了一些无关的内存。任何一种情况，都导致了未定义的行为，可能是很难处理的 bug。
+如果 <code>q</code> 的元素数少于 <code>n</code> 会怎么样？我们会覆盖一些无关的内存。如果 <code>p</code> 的长度小于 <code>n</code> 会怎么样？我们可能复制了一些无关的内存。任何一种情况，都导致了未定义的行为，很可能是很难对付的一种 bug。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">my_copy_n</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">q</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span>; n&gt;0 ; n--<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        *q = *p; p++; q++;
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">my_copy_n</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span>, <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">q</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span>; n<span style="color: #7F0055; font-weight: bold;">&gt;</span><span style="color: #110099;">0</span> ; <span style="color: #000000;">n</span><span style="color: #7F0055; font-weight: bold;">--</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #000000;">q</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">*</span>p; <span style="color: #000000;">p</span><span style="color: #7F0055; font-weight: bold;">++</span>; <span style="color: #000000;">q</span><span style="color: #7F0055; font-weight: bold;">++</span>;
     <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">pp</span><span style="color: #7388d6;">[]</span> = <span style="color: #2A00FF;">"hello"</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">qq</span><span style="color: #7388d6;">[]</span> = <span style="color: #2A00FF;">"hel"</span>;
-    cout &lt;&lt; qq &lt;&lt; endl;
-    my_copy_n<span style="color: #7388d6;">(</span>pp, qq, 5<span style="color: #7388d6;">)</span>;
-    cout &lt;&lt; qq &lt;&lt; endl;
+    <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">pp</span><span style="color: #7388d6;">[]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"hello"</span>;
+    <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">qq</span><span style="color: #7388d6;">[]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"hel"</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> qq <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    <span style="color: #3a5fcd; font-weight: bold;">my_copy_n</span><span style="color: #7388d6;">(</span>pp, qq, <span style="color: #110099;">5</span><span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> qq <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">pp1</span><span style="color: #7388d6;">[]</span> = <span style="color: #2A00FF;">"hel"</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">qq1</span><span style="color: #7388d6;">[]</span> = <span style="color: #2A00FF;">"hello"</span>;
-    cout &lt;&lt; qq1 &lt;&lt; endl;
-    my_copy_n<span style="color: #7388d6;">(</span>pp1, qq1, 5<span style="color: #7388d6;">)</span>;
-    cout &lt;&lt; qq1;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">pp1</span><span style="color: #7388d6;">[]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"hel"</span>;
+    <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">qq1</span><span style="color: #7388d6;">[]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"hello"</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> qq1 <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    <span style="color: #3a5fcd; font-weight: bold;">my_copy_n</span><span style="color: #7388d6;">(</span>pp1, qq1, <span style="color: #110099;">5</span><span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> qq1;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -62,79 +66,84 @@ hel
 </pre>
 
 
+
 <p>
-替代方案：
+<b>替代方案</b>
 </p>
 
 <p>
-考虑显式地用 <code>span</code>
+考虑显式地用 <code>span</code> 作为参数。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">copy</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">r</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">r2</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy r to r2</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">copy</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">r</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">r2</span><span style="color: #707183;">)</span>; <span style="color: #3F7F5F;">// copy r to r2</span>
+</pre>
+</div>
+
+
+<p>
+<b>例子</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// poor interface; poor code</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Circle</span> <span style="color: #000000;">arr</span><span style="color: #707183;">[</span><span style="color: #110099;">10</span><span style="color: #707183;">]</span>;
+<span style="color: #3F7F5F;">// ...</span>
+<span style="color: #3a5fcd; font-weight: bold;">draw</span><span style="color: #707183;">(</span>arr, <span style="color: #110099;">10</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 
 <p>
-反例：
+给参数 <code>n</code> 的值如果是 10 可能会出错： C 语言里数组下标的不成文的习俗是
+[0:n) 即包括 0 ，不包括 n。更坏的情况是，调用<code>draw()</code>函数在编译时没有问题，数组隐式的转换成了指针（数组衰减），另一个隐式转换： <code>Circle</code> 转成了 <code>Shape</code> 。 <code>draw()</code> 函数无法逐个访问数组的元素，因为无从知道元素本身的大小（ <code>Shape</code> 和 <code>Circle</code> 大小不一）。
+</p>
+
+
+<p>
+<b>替代方案</b>
+</p>
+
+<p>
+使用提供支持作用的类，确保元素数量可知，避免危险的隐式转换。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">poor interface; poor code</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Circle</span> <span style="color: #000000;">arr</span><span style="color: #707183;">[</span>10<span style="color: #707183;">]</span>;
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-draw<span style="color: #707183;">(</span>arr, 10<span style="color: #707183;">)</span>;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">draw2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Circle</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Circle</span> <span style="color: #000000;">arr</span><span style="color: #707183;">[</span><span style="color: #110099;">10</span><span style="color: #707183;">]</span>;
+<span style="color: #3F7F5F;">// ...</span>
+<span style="color: #3a5fcd; font-weight: bold;">draw2</span><span style="color: #707183;">(</span><span style="color: #3a5fcd; font-weight: bold;">span</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Circle</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span>arr<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// deduce the number of elements</span>
+<span style="color: #3a5fcd; font-weight: bold;">draw2</span><span style="color: #707183;">(</span>arr<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// deduce the element type and array size</span>
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">draw3</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #707183;">)</span>;
+<span style="color: #3a5fcd; font-weight: bold;">draw3</span><span style="color: #707183;">(</span>arr<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// error: cannot convert Circle[10] to span&lt;Shape&gt;</span>
 </pre>
 </div>
 
 <p>
-给参数 <code>n</code> 的值如果是 10 可能会出错：C语言里数组下标的不成文的习俗是
-[0:n) 即包括 0，不包括 n。更坏的情况是， 调用 <code>draw()</code> 函数在编译时没有问题，数组隐式的转换成了指针（数组衰减），另一个隐式转换： <code>Circle</code> 转成了 <code>Shape</code> 。 <code>draw()</code> 函数无法逐个访问数组的元素，因为无从知道元素本身的大小（ <code>Shape</code> 和 <code>Circle</code> 大小不一）。
+<code>draw2()</code> 得到与<code>draw()</code>同样数量的信息。但是不会再隐式转换 <code>Circle</code> 类型。
+</p>
+
+
+<p>
+<b>例外</b>
 </p>
 
 <p>
-替代方案：
+使用 <code>zstring</code> 和 <code>czstring</code> 表示 C 风格的<code>\0</code>结尾的字符串。这时候，要用
+GSL 的<code>std::string_view</code>或 <code>span&lt;char&gt;</code> 来避免错误的范围。
 </p>
 
-<p>
-使用支持类，确保元素数量可知，避免危险的隐式转换。
-</p>
 
 <p>
-比如：
-</p>
-
-<div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span>Circle<span style="color: #7388d6;">&gt;</span><span style="color: #707183;">)</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Circle</span> <span style="color: #000000;">arr</span><span style="color: #707183;">[</span>10<span style="color: #707183;">]</span>;
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-draw2<span style="color: #707183;">(</span>span<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Circle</span><span style="color: #7388d6;">&gt;(</span>arr<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">deduce the number of elements</span>
-draw2<span style="color: #707183;">(</span>arr<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">deduce the element type and array size</span>
-
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw3</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span>Shape<span style="color: #7388d6;">&gt;</span><span style="color: #707183;">)</span>;
-draw3<span style="color: #707183;">(</span>arr<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: cannot convert Circle[10] to span&lt;Shape&gt;</span>
-</pre>
-</div>
-
-<p>
-<code>draw2()</code> 得到与 <code>draw()</code> 同样数量的信息。但是不在会隐式转换 <code>Circle</code> 类型。
-</p>
-
-<p>
-例外：
-</p>
-
-<p>
-使用 <code>zstring</code> 和 <code>czstring</code> 表示 C 风格的 <code>\0</code> 结尾的字符串。这时候，要用
-GSL 的 <code>std::string_view</code> 或 <code>span&lt;char&gt;</code> 避免错误的范围。
-</p>
-
-<p>
-强化：
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>（简单）隐式的将数组类型转换成指针类型的地方，报警。允许例外情况：
+<li>（简单）检查隐式的将数组类型转换成指针类型的地方，如果发现，发起警告。允许例外情况： <code>zstring</code> 和 <code>czstring</code> 指针。</li>
+<li>（简单）出现指针类型的数值计算的代码，发起警告。允许例外情况：
 <code>zstring</code> 和 <code>czstring</code> 指针。</li>
-<li>（简单）指针类型的数值计算，报警。允许例外情况： <code>zstring</code> 和 <code>czstring</code>
-指针。</li>
 </ul>
