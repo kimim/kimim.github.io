@@ -1,39 +1,43 @@
 ---
 layout: post
 title: CppCoreGuidelines I.26 如果需要跨编译器的 ABI，使用 C 风格子集
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-所谓 ABI 就是 Application Binary Interface 的缩写。编程语言的 ABI 决定了底层实现的细节。编译出来的模块遵循相同的 ABI，就可以互相链接，一起工作。不同的 C++ 编译器的 ABI 会略有差异，因此为了确保不同编译器编译出来的代码能一起工作，最好相对精简且稳定的使用 C 风格子集。
+I.26: If you want a cross-compiler ABI, use a C-style subset
+</p>
+
+<p>
+<b>理由</b>
+</p>
+
+<p>
+所谓 ABI 就是Application Binary Interface的缩写。编程语言的 ABI 决定了底层实现的细节。编译出来的模块遵循相同的 ABI ，就可以互相链接，一起工作。不同的 C++编译器的 ABI 会略有差异，因此为了确保不同编译器编译出来的代码能一起工作，最好相对精简且稳定的使用 C 风格子集。
+</p>
+
+<p>
+对于类、异常处理过程、函数名以及其他实现细节，不同的编译器实现了不同的二进制机器码布局。
 </p>
 
 
 <p>
-理由：
+<b>例外</b>
 </p>
 
 <p>
-对于类、异常处理过程、函数名以及其他实现细节，不同的编译器实现了不同的二进制布局。
+通用的 ABI 已经在某些平台上融合了，减少了一些严苛的限制。
+</p>
+
+
+<p>
+<b>注意</b>
 </p>
 
 <p>
-例外：
-</p>
-
-<p>
-某些平台上，通用的 API 已经融合，减少了一些严苛的限制。
-</p>
-
-<p>
-注意：
-</p>
-
-<p>
-如果只使用单一编译器，可以完全用 C++ 接口。更换或升级编译器的话，可能需要重新编译。
+如果只使用单一编译器，可以完全用C++接口。更换或升级编译器的话，可能需要重新编译。
 </p>

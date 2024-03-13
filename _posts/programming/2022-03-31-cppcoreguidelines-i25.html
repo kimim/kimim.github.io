@@ -1,47 +1,51 @@
 ---
 layout: post
 title: CppCoreGuidelines I.25 用空抽象类作为类层级的接口
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：
+I.25: Prefer empty abstract classes as interfaces to class hierarchies
 </p>
 
 <p>
-抽象类是空的，没有非静态成员数据。比有状态的基类更稳定。
+<b>理由</b>
 </p>
 
 <p>
-反例：
+抽象类是空的，除了 <code>static</code> 成员，没有其他成员数据。比有状态的基类更稳定。
+</p>
+
+
+<p>
+<b>反例</b>
 </p>
 
 <p>
-含有数据的类，只知道 <code>Shape</code> 会出现在某个地方：
+含有数据的类
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: interface class loaded with data</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// bad: interface class loaded with data</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #0000ff; font-weight: bold;">center</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> c; <span style="color: #7388d6;">}</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">rotate</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">center</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> c; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">draw</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">rotate</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">private</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">c</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">outline</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Color</span> <span style="color: #000000;">col</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000; font-style: italic;">c</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic;">outline</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Color</span> <span style="color: #000000; font-style: italic;">col</span>;
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 <p>
-这会要求所有继承的类去计算 <code>center</code> 。可能 <code>center</code> 从来不会用到。同样的，不是所有形状 <code>Shape</code> 都有颜色 <code>Color</code> ，比如那些以点组成的形状。
+这会要求所有继承的子类去计算 <code>center</code> 。可能在子类中 <code>center</code> 的值从来不会用到。同样的，不是所有形状 <code>Shape</code> 都有颜色 <code>Color</code> ，还有些形状可能没有轮廓，只是由几个点组成。
 </p>
 
 <p>
@@ -49,21 +53,21 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better: Shape is a pure interface</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>    <span style="color: #3F7F5F;">// better: Shape is a pure interface</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #0000ff; font-weight: bold;">center</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> = 0;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">pure virtual functions</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> = 0;
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">rotate</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span> = 0;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no data members ...</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">Shape</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">center</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;   <span style="color: #3F7F5F;">// pure virtual functions</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">draw</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">rotate</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #3F7F5F;">// ... no data members ...</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">~</span>Shape<span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">default</span>;
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 <p>
-强化：
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>（简单）如果一个叫 C 的类，它的指针或引用赋值给 C 的基类指针或引用，而基类又有成员数据。警告。</li>

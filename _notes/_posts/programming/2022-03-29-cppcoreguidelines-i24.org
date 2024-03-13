@@ -1,40 +1,42 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines I.24 避免相邻参数类型一样的情况下，交换其顺序，意义却不同
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines I.24 避免相邻参数类型一样的情况下，交换其顺序，意义却不同
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+I.24: Avoid adjacent parameters that can be invoked by the same arguments in either order with different meaning
+
+*理由*
 
 两个相邻参数，如果类型相同，很容易顺序颠倒。比如
 
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void copy_n(T* p, T* q, int n);  // copy from [p:p + n) to [q:q + n)
 #+end_src
 
-这是 K&R C 风格接口的一个讨厌的变体，目标和源头参数很容易颠倒。
+这是 K&R C 风格接口的一个讨厌的变体，数据目标和数据来源参数很容易颠倒。
 
-把源头参数声明成 ~const~ 就比较容易识别他们的关系了。因为，我们复制的时
-候，一般不会去改变数据源。
+把来源参数声明成 ~const~ 就比较容易识别他们的关系了。因为，我们复制的时
+候，一般不会去改变数据来源。
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void copy_n(const T* p, T* q, int n);  // copy from [p:p + n) to [q:q + n)
 #+end_src
 
-例外：
 
-如果不关心参数顺序，那就不存在这个问题，就不需要 ~const~ 修饰了：
+*例外*
+
+如果函数的计算过程不关心参数的顺序，那就不存在这个问题，就不需要 ~const~
+修饰了：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 int max(int a, int b);
 #+end_src
 
-替代方案：
+
+*替代方案*
 
 不要用指针传递数组。可以通过 ~span~ 表示一个序列对象：
 
@@ -42,7 +44,7 @@ int max(int a, int b);
 void copy_n(span<const T> p, span<T> q);  // copy from p to q
 #+end_src
 
-替代方案：
+*替代方案*
 
 定义结构体，用结构体的成员名表示相应的参数：
 
@@ -58,5 +60,6 @@ void initialize(SystemParams p);
 因为调用的时候，要把参数填到带名字的成员变量中，这样可以明确参数的意义。
 
 
-强化策略：
+*强化策略*
+
 - （简单）如果出现连续两个相同类型的参数，警告。

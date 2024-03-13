@@ -1,44 +1,40 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines I.22 避免对全局对象进行复杂的初始化
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines I.22 避免对全局对象进行复杂的初始化
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-奇怪，13后面没有14，直接跳到22了。
+I.22: Avoid complex initialization of global objects
 
-理由：
+*理由*
 
-复杂的初始化会导致执行顺序的不确定性。
+语言标准对复杂的初始化过程的执行顺序没有进行规定。
 
-例子：
+
+*例子*
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 // file1.c
-
 extern const X x;
-
 const Y y = f(x);   // read x; write y
 
 // file2.c
-
 extern const Y y;
-
 const X x = g(y);   // read y; write x
 #+end_src
 
-因为 ~x~ 和 ~y~ 在不同编译单元里， ~f()~ 和 ~g()~ 的调用顺序不确定。其中一个函
-数会访问到一个未初始化的 ~const~ 。
+因为 ~x~ 和 ~y~ 在不同的编译单元里， ~f()~ 和 ~g()~ 的调用顺序没有特定的规定标
+准。其中一个函数会可能会访问到一个没有初始化的 ~const~ 变量。这里我们可
+以看到，初始化顺序问题会出现在全局的对象上，且不仅仅发生在全局变量上，
+也可能发生在全局常量上。
 
 
-注意：
+*注意*
 
 在并发执行的代码中初始化顺序的问题会更加难处理。最好避免使用全局对象。
 
-强化：
-- 标注调用非 ~constexpr~ 函数的全局初始化函数
-- 标注访问 ~extern~ 对象的全局初始化函数
+
+*强化*
+- 标注调用了不是 ~constexpr~ 函数的全局对象初始化函数
+- 标注访问 ~extern~ 对象的全局对象初始化函数

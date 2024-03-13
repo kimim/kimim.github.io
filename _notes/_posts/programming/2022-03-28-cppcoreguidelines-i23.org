@@ -1,31 +1,35 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines I.23 函数参数的数量不要太多
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines I.23 函数参数的数量不要太多
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+I.23: Keep the number of function arguments low
 
-参数的数量太多容易混乱出错。传递太多参数，成本也通常会很高。
+*理由*
 
-讨论：
+参数的数量太多容易造成混乱。传递太多参数的性能成本也通常会很高。
+
+
+*讨论*
 
 导致函数的参数太多，通常有两个理由：
-- 缺少抽象。因为缺少抽象，本该组合的对象被分散为单个传递。因为没有一个
-  不变的框架来约束参数的数值，不仅参数的数量变大，也容易出错。
+- 缺少抽象。因为缺少抽象，本该组合在一起传递的参数对象被分散为单个的变
+  量进行传递。因为一起传递的参数之间没有不变式限制，不仅参数的数量变多，
+  参数之间也没有约束关系，容易出错。
 - 违背了“一个函数一个职责”的原则。函数的工作超越了其本该完成的单个任务。
+  通常这时候就需要对该函数进行重构。
 
-例子：
 
-标准库函数 ~merge()~ 是我们能舒服处理的极限：
+*例子*
 
+标准库函数 ~merge()~ 是我们能舒舒服服地处理参数的极限：
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
-template<class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
+template<class InputIterator1, class InputIterator2,
+         class OutputIterator, class Compare>
 OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
                      InputIterator2 first2, InputIterator2 last2,
                      OutputIterator result, Compare comp);
@@ -36,6 +40,7 @@ OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
 这里，我们有4个模板参数，6个函数参数。如果我们默认比较器参数为 “<”，则
 可以改写成下面代码：
 
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 template<class InputIterator1, class InputIterator2, class OutputIterator>
 OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
@@ -43,8 +48,8 @@ OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
                      OutputIterator result);
 #+end_src
 
-降低了一些表面的复杂度，但是没有降低整体复杂度。要真正减少参数数量，我
-们需要把参数捆绑到更高层的抽象：
+这样降低了一些表面的复杂度，但是没有降低整体复杂度。要真正减少参数数量，
+我们需要把参数捆绑到更高层的抽象：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 template<class InputRange1, class InputRange2, class OutputIterator>
@@ -53,17 +58,20 @@ OutputIterator merge(InputRange1 r1, InputRange2 r2, OutputIterator result);
 
 把参数分组打包是一种常用的减少参数数量的技术。并且还可以提升可检查性。
 
-另外，我们也可以用 ISO TS 中的定义概念，指定必须有三个类型用于合并：
+另外，我们也可以用 ISO TS 中的定义概念，指定这三个类型必须能用于合并操
+作：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 Mergeable{In1, In2, Out}
 OutputIterator merge(In1 r1, In2 r2, Out result);
 #+end_src
 
-例子：
 
-安全配置建议将以下函数
+*例子*
 
+本指南的安全规范建议修改以下函数
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void f(int* some_ints, int some_ints_length);  // BAD: C style, unsafe
 #+end_src
@@ -76,15 +84,24 @@ void f(gsl::span<int> some_ints);              // GOOD: safe, bounds-checked
 
 此处使用抽象，更安全，更可靠，同时减少了参数的数量。
 
-注意：
+
+*注意*
 
 多少参数算太多？尽量少于 4 个参数。尽管有的函数需要用四个参数很好的表
-达，但是不多。
+达，但是不多。有一些指令集的 ABI 只提供四个寄存器用来存取参数。如果参
+数太多，就要用到内存堆栈存取参数，这样就多了额外的堆栈寄存器操作和内存
+存取操作，产生额外的性能损耗。
 
-替代方案：用更好的抽象。把参数分组到有意义的对象，（以值或引用）传递对
-象。
 
-替代方案：用默认参数或重载。这样常用的调用要少一些参数。
+*替代方案*
 
-强化：
+用更好的抽象。把参数分组到有意义的对象，（以值或引用）传递对象。
+
+
+*替代方案*
+
+用默认参数或重载。这样常用的调用要少一些参数。
+
+
+*强化*
 - 函数声明了两个类型一样的迭代器或指针，而没用 ~range~ 或 ~view~ ，警告。

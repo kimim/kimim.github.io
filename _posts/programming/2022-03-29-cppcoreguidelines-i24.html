@@ -1,16 +1,19 @@
 ---
 layout: post
 title: CppCoreGuidelines I.24 避免相邻参数类型一样的情况下，交换其顺序，意义却不同
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：
+I.24: Avoid adjacent parameters that can be invoked by the same arguments in either order with different meaning
+</p>
+
+<p>
+<b>理由</b>
 </p>
 
 <p>
@@ -18,38 +21,41 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">copy_n</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">q</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy from [p:p + n) to [q:q + n)</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">copy_n</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">q</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// copy from [p:p + n) to [q:q + n)</span>
 </pre>
 </div>
 
 <p>
-这是 K&amp;R C 风格接口的一个讨厌的变体，目标和源头参数很容易颠倒。
+这是K&amp;R C风格接口的一个讨厌的变体，数据目标和数据来源参数很容易颠倒。
 </p>
 
 <p>
-把源头参数声明成 <code>const</code> 就比较容易识别他们的关系了。因为，我们复制的时候，一般不会去改变数据源。
+把来源参数声明成 <code>const</code> 就比较容易识别他们的关系了。因为，我们复制的时候，一般不会去改变数据来源。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">copy_n</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">q</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy from [p:p + n) to [q:q + n)</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">copy_n</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">q</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// copy from [p:p + n) to [q:q + n)</span>
 </pre>
 </div>
 
+
 <p>
-例外：
+<b>例外</b>
 </p>
 
 <p>
-如果不关心参数顺序，那就不存在这个问题，就不需要 <code>const</code> 修饰了：
+如果函数的计算过程不关心参数的顺序，那就不存在这个问题，就不需要 <code>const</code>
+修饰了：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">max</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">max</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 
+
 <p>
-替代方案：
+<b>替代方案</b>
 </p>
 
 <p>
@@ -57,12 +63,12 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">copy_n</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">q</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy from p to q</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">copy_n</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">q</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// copy from p to q</span>
 </pre>
 </div>
 
 <p>
-替代方案：
+<b>替代方案</b>
 </p>
 
 <p>
@@ -70,12 +76,12 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">SystemParams</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">config_file</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">output_path</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">seconds</span> <span style="color: #000000;">timeout</span>;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">SystemParams</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">config_file</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">output_path</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">seconds</span> <span style="color: #000000; font-style: italic;">timeout</span>;
 <span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">initialize</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">SystemParams</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">initialize</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">SystemParams</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 
@@ -85,8 +91,9 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-强化策略：
+<b>强化策略</b>
 </p>
+
 <ul class="org-ul">
 <li>（简单）如果出现连续两个相同类型的参数，警告。</li>
 </ul>
