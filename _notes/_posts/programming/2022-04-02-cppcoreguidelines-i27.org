@@ -1,25 +1,25 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines I.27 对于稳定库 ABI，考虑 Pimpl 惯例
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines I.27 对于稳定库 ABI，考虑用 Pimpl 封装
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+I.27: For stable library ABI, consider the Pimpl idiom
+
+*理由*
 
 因为私有成员变量构成类的内部布局，私有成员函数则参与函数重载解析，修改
 了类的底层实现，就要求重新编译使用该类的所有文件。
 
 通过让一个非多态的接口保管一个指向实现的指针（Pimpl），就可以分离代码
-实现的变动。其成本是不能直接访问底层实现。
+实现的变动。付出的代价就是无法直接访问底层的实现。
 
-例子：
+
+*例子*
 
 接口 (widget.h)
+
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 class widget {
     class impl;
@@ -29,14 +29,15 @@ public:
     widget(int); // defined in the implementation file
     ~widget();   // defined in the implementation file,
                  // where impl is a complete type
-    widget(widget&&); // defined in the implementation file
+    widget(widget&&) noexcept; // defined in the implementation file
     widget(const widget&) = delete;
-    widget& operator=(widget&&); // defined in the implementation file
+    widget& operator=(widget&&) noexcept; // defined in the implementation file
     widget& operator=(const widget&) = delete;
 };
 #+end_src
 
 widget的底层实现 (widget.cpp)
+
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 class widget::impl {
     int n; // private data
@@ -46,11 +47,12 @@ public:
 };
 void widget::draw() { pimpl->draw(*this); }
 widget::widget(int n) : pimpl{std::make_unique<impl>(n)} {}
-widget::widget(widget&&) = default;
+widget::widget(widget&&) noexcept = default;
 widget::~widget() = default;
-widget& widget::operator=(widget&&) = default;
+widget& widget::operator=(widget&&) noexcept = default;
 #+end_src
 
-注意：
+
+*注意*
 
 更多实现细节 [[https://herbsutter.com/gotw/_100/][GOTW #100]] [[https://en.cppreference.com/w/cpp/language/pimpl][cppreference]]

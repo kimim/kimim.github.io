@@ -1,26 +1,26 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines I.30 把例外的操作封装隔离起来
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines I.30 把违背规则的操作封装隔离起来
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+I.30: Encapsulate rule violations
+
+*理由*
 
 保持代码简洁、安全。但是有时候为了逻辑清晰和性能考量，需要用到一些丑陋、
 不安全、容易出错的技巧。如果用到了，那么将这些代码保持在本地，而不要影
-响到接口。这样使用接口的程序员就不需要关注细节。那些复杂的实现，尽可能
-不要通过接口流到用户代码中。
+响到外部接口。这样使用外部接口的程序员就不需要关注内部细节。那些复杂的
+代码实现，尽可能不要通过接口流到用户代码中。
 
-例子：
 
-考虑这样一个程序，会通过文件、命令行、标准输入等不同的输入（main函数的
-参数）执行。我们可能写成这样：
+*例子*
 
+考虑这样一个程序，通过文件、命令行、标准输入等不同的输入（main函数的参
+数）执行。我们可能写成这样：
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 bool owned;
 owner<istream*> inp;
@@ -35,10 +35,11 @@ istream& in = *inp;
 以上代码违反了这些规则：
 - 不要有未初始化的变量
 - 不要忽略所有权
-- 不要用魔法常量
+- 不要用魔数常量
 
-最后还得清理资源：
+最后还得有人去清理销毁资源：
 
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 if (owned) delete inp;
 #+end_src
