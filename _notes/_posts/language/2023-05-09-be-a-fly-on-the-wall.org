@@ -6,6 +6,7 @@
 在 Allen Kelly 关于产品负责人描述中，写到： *Being a fly on the wall*
 can provide useful insights to the Product Manager. 上下文大致意思是说
 产品经理跟销售去见客户，在旁边看看，也可以了解洞察客户需求。
+[[cite:&kelly2019po]]
 
 *be a fly on the wall* 确实很形象，一只苍蝇静静地趴在墙上偷偷看着听着，
 肯定能获得不少机密消息。所以，这个词组的意思在一旁静静观察。
@@ -27,3 +28,12 @@ the precursor to reality television. 这是一部观察型纪录片，被很多�
 the Duke of Cambridge, is set to feature in a new ITV documentary
 series called "Prince William: *Fly on the Wall*" releasing on 7th May.
 
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
