@@ -1,40 +1,44 @@
 ---
 layout: post
 title: CppCoreGuidelines F.1 把一组相关的操作封装成仔细命名的函数
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：
+F.1: “ Package ” meaningful operations as carefully named functions
 </p>
 
 <p>
-提取公用代码，可以提高代码可读性和重用性，避免代码太复杂导致的错误。如果有些操作已经明确定义了，可以将其从代码中提取出来，起一个有意义的函数名。
+<b>理由</b>
 </p>
 
 <p>
-错误例子：
+提取公用代码，可以提高代码可读性和提升代码的可复用度，避免代码太复杂导致的错误。如果有些操作已经明确定义了，可以将其从代码中提取出来，起一个有意义的函数名。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">read_and_print</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read and print an int</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">read_and_print</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">is</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// read and print an int</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>is &gt;&gt; x<span style="color: #7388d6;">)</span>
-        cout &lt;&lt; <span style="color: #2A00FF;">"the int is "</span> &lt;&lt; x &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>is <span style="color: #7F0055; font-weight: bold;">&gt;&gt;</span> x<span style="color: #7388d6;">)</span>
+        cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"the int is "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> x <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #110099;">'\n'</span>;
     <span style="color: #7F0055; font-weight: bold;">else</span>
-        cerr &lt;&lt; <span style="color: #2A00FF;">"no int on input\n"</span>;
+        cerr <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"no int on input\n"</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-<code>read_and_print</code> 函数几乎全错了。输出到一个固定的输出流、只处理 <code>int</code> 类型，不可重用，逻辑上不相关的操作混在一起，局部变量在作用域范围外使用。
+<code>read_and_print</code> 函数几乎全错了。该函数输出数据到一个固定的输出流、只处理 <code>int</code> 类型数据的输出，很难在别的地方复用这个函数，把逻辑上不相关的操作混在一起，在作用域范围外使用局部变量。
 </p>
 
 <p>
@@ -42,14 +46,23 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++">sort<span style="color: #707183;">(</span>a, b, <span style="color: #7388d6;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">y</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x.rank<span style="color: #909183;">()</span> &lt; y.rank<span style="color: #909183;">()</span> &amp;&amp; x.value<span style="color: #909183;">()</span> &lt; y.value<span style="color: #909183;">()</span>;<span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+<pre class="src src- src-C++"><span style="color: #3a5fcd; font-weight: bold;">sort</span><span style="color: #707183;">(</span>a, b, <span style="color: #7388d6;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">y</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> x.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">rank</span><span style="color: #909183;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;</span> y.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">rank</span><span style="color: #909183;">()</span> <span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> x.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">value</span><span style="color: #909183;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;</span> y.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">value</span><span style="color: #909183;">()</span>;
+<span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
 
-<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">lessT</span> = <span style="color: #707183;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">y</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x.rank<span style="color: #7388d6;">()</span> &lt; y.rank<span style="color: #7388d6;">()</span> &amp;&amp; x.value<span style="color: #7388d6;">()</span> &lt; y.value<span style="color: #7388d6;">()</span>;<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">lessT</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">y</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> x.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">rank</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;</span> y.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">rank</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> x.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">value</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;</span> y.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">value</span><span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>;
 
-sort<span style="color: #707183;">(</span>a, b, lessT<span style="color: #707183;">)</span>;
-find_if<span style="color: #707183;">(</span>a, b, lessT<span style="color: #707183;">)</span>;
+<span style="color: #3a5fcd; font-weight: bold;">sort</span><span style="color: #707183;">(</span>a, b, lessT<span style="color: #707183;">)</span>;
+<span style="color: #3a5fcd; font-weight: bold;">find_if</span><span style="color: #707183;">(</span>a, b, lessT<span style="color: #707183;">)</span>;
 </pre>
 </div>
+
+
+<p>
+<b>注意</b>
+</p>
 
 <p>
 最短的代码，不一定是性能最好、最易维护的代码。
@@ -57,19 +70,18 @@ find_if<span style="color: #707183;">(</span>a, b, lessT<span style="color: #707
 
 
 <p>
-例外：
+<b>例外</b>
 </p>
 
 <ul class="org-ul">
-<li>循环体中的代码很少会重用。循环体要保持尽量短。</li>
-<li>同样的，回调函数也很少重用。</li>
+<li>循环体中的代码很少会重用。循环体要保持尽量短。循环体内如果有几十行代码，甚至超过好几页代码，肯定是有问题的。保持函数精简的原则也意味着要保持循环体精简短小。相同的，作为回调函数的 <code>lambda</code> 也应该保持精简短小。</li>
 </ul>
 
 
 <p>
-强化：
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>保持代码简短</li>
-<li>标注代码中相似的 lambda 函数，可能可以给 lambda 命名，从而可以在别处重用</li>
+<li>标注代码中相似的 <code>lambda</code> 函数，可能可以给 <code>lambda</code> 命名，从而可以在别处重用</li>
 </ul>

@@ -1,20 +1,21 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.3 函数要短小、简洁
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.3 函数要短小、简洁
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+F.3: Keep functions short and simple
 
-长函数复杂难读、变量范围也易过大。复杂逻辑结构过长，容易隐藏逻辑错误。
 
-例子：
+*理由*
 
+长函数复杂难读、导致变量范围过大。复杂逻辑结构过长，容易隐藏逻辑错误。
+
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 double simple_func(double val, int flag1, int flag2)
     // simple_func: takes a value and calculates the expected ASIC output,
@@ -73,14 +74,20 @@ double simple_func(double val, int flag1, int flag2)
 }
 #+end_src
 
-注意：
 
-一个函数“无法满屏显示”就太长了。5行以内的函数比较正常。
+*注意*
 
-注意：
+一个函数“无法满屏显示”就太长了。5 行以内的函数比较正常。
 
-把长函数拆成高内聚的独立函数。小函数也很容易内联，函数调用消耗也不大。
 
-强化：
-- 标注无法“一个屏幕显示”的函数。一屏多大？140 字符 x 60 行。差不多一张书页大小。
-- 标注太复杂的函数。多复杂？可以使用圈复杂度分析。10 个逻辑分支以上就够复杂的了。
+*注意*
+
+把长函数拆成高内聚的独立函数。小函数也很容易内联，这样函数调用也不会带
+来太大开销。
+
+
+*强化*
+- 标注无法“一个屏幕显示”的函数。一屏多大？140 字符 x 60 行。差不多一张
+  书页大小。
+- 标注太复杂的函数。多复杂？可以使用圈复杂度分析。10 个逻辑分支以上就
+  够复杂的了。

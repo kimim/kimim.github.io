@@ -1,20 +1,21 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.2 一个函数只处理一个逻辑操作
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.2 一个函数只处理一个逻辑操作
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+F.2: A function should perform a single logical operation
+
+
+*理由*
 
 一个函数一次只处理一个逻辑上相关的操作，更容易理解、测试、重用。
 
-例子：
 
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void read_and_print()    // bad
 {
@@ -25,8 +26,8 @@ void read_and_print()    // bad
 }
 #+end_src
 
-这样的整块代码，需要特定输入，很难重用。相反，拆分成多个逻辑相关的函数，
-并参数化，更清晰，更可重用：
+这样的整块代码，限定了需要特定的输入，很难复用。相反，拆分成多个逻辑相
+关的函数，并参数化，就变得更清晰，更容易复用：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 int read(istream& is)    // better
@@ -53,8 +54,8 @@ void read_and_print()
 }
 #+end_src
 
-如果需要，还可以进一步将 ~read()~ 和 ~print()~ 的数据类型，输入输出机制，
-错误处理等参数化。
+如果需要，还可以进一步将 ~read()~ 和 ~print()~ 的数据类型、输入输出机制、
+以及错误处理等进行参数化。
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 auto read = [](auto& input, auto& value)    // better
@@ -69,8 +70,9 @@ auto print(auto& output, const auto& value)
 }
 #+end_src
 
-强化：
+
+*强化*
 
 - 遇到有多个输出参数的函数，看看可不可以用返回值，或者用 ~tuple~ 返回多个值。
-- 看到不能一个屏幕显示的函数，考虑是否可以拆分成命名良好、规模小的子函数
-- 看到 7 个以上参数的函数，考虑是否能优化
+- 遇到无法在一个页屏幕显示的函数，考虑是否可以拆分成命名良好、规模小的子函数
+- 看到有 7 个以上参数的函数，考虑是否能进行优化

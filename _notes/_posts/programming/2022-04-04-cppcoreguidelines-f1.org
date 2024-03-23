@@ -1,22 +1,22 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.1 把一组相关的操作封装成仔细命名的函数
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.1 把一组相关的操作封装成仔细命名的函数
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+F.1: “Package” meaningful operations as carefully named functions
 
-提取公用代码，可以提高代码可读性和重用性，避免代码太复杂导致的错误。如
-果有些操作已经明确定义了，可以将其从代码中提取出来，起一个有意义的函数
-名。
+*理由*
 
-错误例子：
+提取公用代码，可以提高代码可读性和提升代码的可复用度，避免代码太复杂导
+致的错误。如果有些操作已经明确定义了，可以将其从代码中提取出来，起一个
+有意义的函数名。
 
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void read_and_print(istream& is)    // read and print an int
 {
@@ -28,29 +28,38 @@ void read_and_print(istream& is)    // read and print an int
 }
 #+end_src
 
-~read_and_print~ 函数几乎全错了。输出到一个固定的输出流、只处理 ~int~ 类型，
-不可重用，逻辑上不相关的操作混在一起，局部变量在作用域范围外使用。
+~read_and_print~ 函数几乎全错了。该函数输出数据到一个固定的输出流、只处
+理 ~int~ 类型数据的输出，很难在别的地方复用这个函数，把逻辑上不相关的操
+作混在一起，在作用域范围外使用局部变量。
 
 如果一个 ~lambda~ 需要在多处使用，可以给把它赋值给一个变量：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
-sort(a, b, [](T x, T y) { return x.rank() < y.rank() && x.value() < y.value();});
+sort(a, b, [](T x, T y) {
+    return x.rank() < y.rank() && x.value() < y.value();
+});
 
-auto lessT = [](T x, T y) { return x.rank() < y.rank() && x.value() < y.value();};
+auto lessT = [](T x, T y) {
+    return x.rank() < y.rank() && x.value() < y.value();
+};
 
 sort(a, b, lessT);
 find_if(a, b, lessT);
 #+end_src
 
+
+*注意*
+
 最短的代码，不一定是性能最好、最易维护的代码。
 
 
-例外：
+*例外*
 
-- 循环体中的代码很少会重用。循环体要保持尽量短。
-- 同样的，回调函数也很少重用。
+- 循环体中的代码很少会重用。循环体要保持尽量短。循环体内如果有几十行代
+  码，甚至超过好几页代码，肯定是有问题的。保持函数精简的原则也意味着要
+  保持循环体精简短小。相同的，作为回调函数的 ~lambda~ 也应该保持精简短小。
 
 
-强化：
+*强化*
 - 保持代码简短
-- 标注代码中相似的 lambda 函数，可能可以给 lambda 命名，从而可以在别处重用
+- 标注代码中相似的 ~lambda~ 函数，可能可以给 ~lambda~ 命名，从而可以在别处重用

@@ -1,41 +1,49 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.5 把时延敏感的小函数声明为 inline
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.5 把时延敏感的小函数声明为 inline
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+F.5: If a function is very small and time-critical, declare it ~inline~
+
+
+*理由*
 
 不能依靠编译器去优化内联函数。40 年前我们承诺编译器比人类优化的更好。
-但是我们还在等待。把类内部的成员函数标注成 ~inline~ 可以让编译器优化的更
-好。
+但是直到现在，我们还在等待更好的优化机制。手动地把类内部的成员函数标注
+成 ~inline~ 可以让编译器优化的更好。
 
-例子：
+
+*例子*
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 inline string cat(const string& s, const string& s2) { return s + s2; }
 #+end_src
 
-例外：
 
-不要把内联函数放在还没稳定的接口。内联函数是一种 ABI。
+*例外*
+
+不要把内联函数放在还没稳定的接口。内联函数是 ABI 的一部分。
+
+
+*注意*
 
 ~constexpr~ 默认是 ~inline~
 
-注意：
 
-类定义内的成员函数默认为 ~inline~
+*注意*
 
-例外：
+类的定义声明中的成员函数默认为 ~inline~ 内联的。
 
-函数模板（包括类模板的成员函数 ~A<T>::function()~ 以及成员函数模板
-~A::function<T>()~ 一般定义在头文件中，所以是 ~inline~ 函数。
 
-强化：
+*例外*
 
-超过3个语句的函数，如果声明为 ~inline~ 的需要注意下。可能要声明成非 ~inline~ 的。
+函数模板（包括类模板的成员函数 ~A<T>::function()~ 以及成员函数模
+板 ~A::function<T>()~ 一般定义在头文件中，所以是 ~inline~ 函数。
+
+
+*强化*
+
+超过 3 个语句的函数，如果声明为 ~inline~ 的需要注意下。可能还是不要声明
+为 ~inline~ 比较好。

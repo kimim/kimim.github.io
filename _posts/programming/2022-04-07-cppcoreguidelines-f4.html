@@ -1,45 +1,52 @@
 ---
 layout: post
 title: CppCoreGuidelines F.4 如果函数可以在编译期计算出结果，可以声明为 constexpr
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：
+F.4: If a function might have to be evaluated at compile time, declare
+it <code>constexpr</code>
+</p>
+
+
+<p>
+<b>理由</b>
 </p>
 
 <p>
 通过 <code>constexpr</code> 让编译器在编译期进行计算。
 </p>
 
+
 <p>
-例子：
+<b>例子</b>
 </p>
 
 <p>
-著名的阶乘计算：
+著名（臭名昭著？）的阶乘计算：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">fac</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">fac</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">constexpr enables max_exp to be used in Expects</span>
-    <span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">max_exp</span> = 17;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">prevent silliness and overflow</span>
-    Expects<span style="color: #7388d6;">(</span>0 &lt;= n &amp;&amp; n &lt; max_exp<span style="color: #7388d6;">)</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> = 1;
-    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> = 2; i &lt;= n; ++i<span style="color: #7388d6;">)</span> x *= i;
+    <span style="color: #3F7F5F;">// constexpr enables max_exp to be used in Expects</span>
+    <span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">max_exp</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">17</span>;
+    <span style="color: #3F7F5F;">// prevent silliness and overflow</span>
+    <span style="color: #3a5fcd; font-weight: bold;">Expects</span><span style="color: #7388d6;">(</span><span style="color: #110099;">0</span> <span style="color: #7F0055; font-weight: bold;">&lt;=</span> n <span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> n <span style="color: #7F0055; font-weight: bold;">&lt;</span> max_exp<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">1</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">2</span>; i <span style="color: #7F0055; font-weight: bold;">&lt;=</span> n; <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">i</span><span style="color: #7388d6;">)</span>
+        <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">*=</span> i;
     <span style="color: #7F0055; font-weight: bold;">return</span> x;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    cout &lt;&lt; fac<span style="color: #7388d6;">(</span>10<span style="color: #7388d6;">)</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">fac</span><span style="color: #7388d6;">(</span><span style="color: #110099;">10</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -53,28 +60,29 @@ tags: [CppCoreGuidelines]
 C++14 可以这么玩。C++11 可以用递归方式计算。
 </p>
 
+
 <p>
-注意：
+<b>注意</b>
 </p>
 
 <p>
-<code>constexpr</code> 不保证编译时能计算出来。它只是保证，在程序员要求下或编译器进行优化的时候，常量表达式参数可以在编译时计算。
+<code>constexpr</code> 不保证编译时能计算出来。它只是保证，在程序员要求的时候，或在编译器进行优化的时候，常量表达式参数可以在编译时计算。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">min</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x &lt; y ? x : y; <span style="color: #707183;">}</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">min</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">y</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x <span style="color: #7F0055; font-weight: bold;">&lt;</span> y <span style="color: #7F0055; font-weight: bold;">?</span> x <span style="color: #7F0055; font-weight: bold;">:</span> y; <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">test</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">test</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">v</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m1</span> = min<span style="color: #7388d6;">(</span>-1, 2<span style="color: #7388d6;">)</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">probably compile-time evaluation</span>
-    <span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m2</span> = min<span style="color: #7388d6;">(</span>-1, 2<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">compile-time evaluation</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m3</span> = min<span style="color: #7388d6;">(</span>-1, v<span style="color: #7388d6;">)</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">run-time evaluation</span>
-    <span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m4</span> = min<span style="color: #7388d6;">(</span>-1, v<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: cannot evaluate at compile time</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">m1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">min</span><span style="color: #7388d6;">(</span><span style="color: #110099;">-1</span>, <span style="color: #110099;">2</span><span style="color: #7388d6;">)</span>;            <span style="color: #3F7F5F;">// probably compile-time evaluation</span>
+    <span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">m2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">min</span><span style="color: #7388d6;">(</span><span style="color: #110099;">-1</span>, <span style="color: #110099;">2</span><span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// compile-time evaluation</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">m3</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">min</span><span style="color: #7388d6;">(</span><span style="color: #110099;">-1</span>, v<span style="color: #7388d6;">)</span>;            <span style="color: #3F7F5F;">// run-time evaluation</span>
+    <span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">m4</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">min</span><span style="color: #7388d6;">(</span><span style="color: #110099;">-1</span>, v<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// error: cannot evaluate at compile time</span>
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    test<span style="color: #7388d6;">(</span>10<span style="color: #7388d6;">)</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #3a5fcd; font-weight: bold;">test</span><span style="color: #7388d6;">(</span><span style="color: #110099;">10</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -90,24 +98,30 @@ C++14 可以这么玩。C++11 可以用递归方式计算。
 </pre>
 
 
+
 <p>
-注意：
+<b>注意</b>
 </p>
 
 <p>
 不要把所有函数的声明为 <code>constexpr</code> 。很多计算适合在运行时进行。
 </p>
 
+
 <p>
-API 如果需要在更高一层级运行时进行配置计算或业务逻辑运算的，这类 API
-不能是 <code>constexpr</code> 的。因为编译器无法优化。任何依靠这些 API 的 <code>constexpr</code>
-函数最终都要重构，或去掉 <code>constexpr</code> 。
+<b>注意</b>
 </p>
 
 <p>
-强化：
+如果是需要在更高一层级运行时进行配置计算或业务逻辑运算的 API，不能是
+<code>constexpr</code> 的。因为编译器无法优化。任何依靠这些 API 的 <code>constexpr</code> 函数最终都要重构，或去掉 <code>constexpr</code> 。
+</p>
+
+
+<p>
+<b>强化</b>
 </p>
 
 <p>
-编译器遇到声明为 <code>constexpr</code> 的调用中使用了非常量变量，会报错。
+编译器调用到声明为 <code>constexpr</code> 的函数时，如果函数中使用了可变变量，就会报错。
 </p>
