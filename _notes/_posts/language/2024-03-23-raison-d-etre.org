@@ -58,6 +58,13 @@ Raison d'être 也就是 «raison d’exister»。比如，Ricard, boissons 一�
 “哺育世界”。Facebook的存在理由是“为人们构建连接”。奈飞的存在理由“为世
 界带来娱乐”。苹果“创造创新产品改变世界”。
 
+容我想想。我负责的产品的 raison d'être 是什么？
+
+大概是：方便快捷且安全地连接工业设备。
+
+那么，你做的产品的 raison d'être 是什么？你所在的组织的 raison d'être
+是什么？
+
 *References*
 #+BEGIN_EXPORT latex
 \iffalse % multiline comment
