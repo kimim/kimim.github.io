@@ -1,0 +1,69 @@
+#+LAYOUT: post
+#+TITLE: 单词本：raison d'être
+#+TAGS: English Français
+#+CATEGORIES: language
+
+去年担任了一个市场占有率第一的工业总线产品的产品负责人（Product Owner）
+角色。所以补补课，了解下产品负责人的职责有哪些。于是上个星期又看了一遍
+Allan Kelly 的书《The Art of Agile Product Ownership》
+[[cite:&kelly2019po]]。
+
+项目经理关心的是什么时候交付产品，而产品负责人要关心的是，我们要交付什
+么样的产品。Allan 写到：
+
+Since the "what are we building?" question is the *raison d'être* for
+the Product Owner role, the role becomes very important.
+
+这里，我们遇到了一个法语词组 *raison d'être* ，字面意思就是存在的理由。
+上面这句话，就可以翻译成：因为“我们要构建什么产品？”这个问题是产品负责
+人角色存在的理由，所以这个角色很重要。
+
+很巧的是，昨天看到一个新的开源项目，叫
+lispx（ https://github.com/lispx/lispx ），在项目介绍里也用到了这个词：
+
+LispX's *raison d'être* is to solve JavaScript's async problem. It does
+this with delimited continuations. It faithfully implements the
+delimcc API as well as delimited dynamic binding by Oleg et al. and
+can run the full test suite from the delimcc distribution. With
+continuations, all async JS APIs (promise- and callback-based) can be
+used as if they were synchronous.
+
+这里说到 LispX 存在的理由就是为了解决 JavaScript 的异步操作问题。
+
+这里还有篇文章“Raison d'être, vision, mission: quelles différences?”
+说的是企业存在的理由，愿景，使命之间的差异。 (
+https://www.lesaffaires.com/strategie-d-entreprise/entreprendre/raison-d-etre-vision-mission-quelles-differences/648136
+)
+
+Raison d'être 存在的理由回答的是 le pourquoir? 为什么的问题。
+
+vision 回答的是 le où? 方向问题。
+
+mission 回答的是 le quoi? 做什么的问题。
+
+ambition 回答的是 le combien? 怎么做的问题。
+
+Raison d'être 这一节，作者这么写：
+
+Elle exprime la contribution de l’entreprise à la société. Elle a une
+portée très large et à long terme. C’est, comme le nom le dit, sa
+«raison d’exister». Des exemples? «Créateur de convivialités» (Ricard,
+boissons); «On nourrit le monde» (Olymel); «Rapprocher les gens»
+(Facebook); «Divertir le monde» (Netflix); «Créer des produits
+innovants qui changent le monde» (Apple). La raison d’être est le
+«pourquoi nous existons comme organisation».
+
+Raison d'être 也就是 «raison d’exister»。比如，Ricard, boissons 一个酒
+品饮料品牌的存在理由是“宴会快乐的创造者”。Olymel 香肠品牌的存在理由是
+“哺育世界”。Facebook的存在理由是“为人们构建连接”。奈飞的存在理由“为世
+界带来娱乐”。苹果“创造创新产品改变世界”。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
