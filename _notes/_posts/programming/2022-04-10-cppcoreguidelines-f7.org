@@ -1,18 +1,17 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.7 一般情况使用 T* 或 T&，不要使用智能指针
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.7 一般情况使用 T* 或 T&，不要使用智能指针
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+F.7: For general use, take ~T*~ or ~T&~ arguments rather than smart pointers
 
-智能指针可以传递所有权或共享所有权。只有在需要所有权机制的时候使用。不操
-作生存周期的函数，应该只接受原始指针 ~T*~ 或引用 ~T&~ 。
+
+*理由*
+
+智能指针可以传递所有权或共享所有权。只有在需要所有权机制的时候使用。不
+操作生存周期的函数，应该只接受原始指针 ~T*~ 或引用 ~T&~ 。
 
 函数的参数如果是智能指针的话，就要求调用它的地方也使用智能指针。函数应
 该能以各种方式接受对象，而不能依靠智能指针，因为智能指针需要相应的生存
@@ -20,7 +19,8 @@ tags: [CppCoreGuidelines]
 
 使用共享指针做参数，会产生潜在的运行时成本。
 
-例子
+
+*例子*
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 // accepts any int*

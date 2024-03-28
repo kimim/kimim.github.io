@@ -1,0 +1,37 @@
+#+LAYOUT: post
+#+TITLE: 单词本：Entscheidung
+#+TAGS: Deutsch
+#+CATEGORIES: language
+
+今天看到心理学家 Daniel Kahneman 90 岁过世的新闻。他曾得过诺贝尔经济学
+奖，研究社会心理学，写了一本畅销书《Thinking, fast and slow》，讲的是
+我们大脑的两个决策系统。一个无意识系统，它基于情感、记忆和经验，能迅速
+做出判断，但往往会上当受骗；另一个有意识系统，它调动注意力来分析和解决
+问题。新闻是这么介绍 Daniel Kahneman 的：
+
+Der Autor des Bestsellers "Schnelles Denken, langsames Denken" vertrat
+die Ansicht, dass das Verhalten von Menschen nicht auf einem
+rationalen *Entscheidungsprozess*, sondern oft auf instinktivem Handeln
+basiert.
+
+
+这里，我们看到个德语单词 *Entscheidungsprozess* ，即决策过程的意思。它是
+由 Enscheidung 和 Prozess 组成的。Enscheidung 在德语里就是 Decision 决
+策的名词形式。
+
+比如 Sie werden dann in Kürze über die *Entscheidung* des
+Kunden informiert. You will then be quickly informed about the
+client's decision.
+
+Wir haben den angemessenen *Entscheidungsprozess* und maximieren das
+kollektive Wohlergehen. (We have the reasonable decision making
+process, maximizing the collective welfare.)
+
+如果我们把英语 Decision 和德语 Entscheidung 放在一起，越看会觉得它们越
+像。de- 是分开的意思，而 ent- 也是分开的意思。cision 源自拉丁语
+caedere 切开的意思，而 scheidung 比 cision 更像拉丁语 caedere 。
+decision，Entscheidung 就是 cut off，也就是作决定。正如我们常说的快刀
+斩乱麻、斩钉截铁、当机立断等。
+
+所以，为了更好的做出决策，还是值得看一看《Schnelles Denken, langsames
+Denken》这本书的。
