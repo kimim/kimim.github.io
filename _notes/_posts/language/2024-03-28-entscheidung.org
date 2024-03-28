@@ -3,11 +3,11 @@
 #+TAGS: Deutsch
 #+CATEGORIES: language
 
-今天看到心理学家 Daniel Kahneman 90 岁过世的新闻。他曾得过诺贝尔经济学
-奖，研究社会心理学，写了一本畅销书《Thinking, fast and slow》，讲的是
-我们大脑的两个决策系统。一个无意识系统，它基于情感、记忆和经验，能迅速
-做出判断，但往往会上当受骗；另一个有意识系统，它调动注意力来分析和解决
-问题。新闻是这么介绍 Daniel Kahneman 的：
+今天看到新闻说心理学家 Daniel Kahneman 去世了，享年 90 岁。他曾得过诺
+贝尔经济学奖，研究社会心理学，写了一本畅销书《Thinking, fast and slow》，
+讲的是我们大脑的两个决策系统。一个无意识系统，它基于情感、记忆和经验，
+能迅速做出判断，但往往会上当受骗；另一个有意识系统，它调动注意力来分析
+和解决问题。新闻是这么介绍 Daniel Kahneman 的：
 
 Der Autor des Bestsellers "Schnelles Denken, langsames Denken" vertrat
 die Ansicht, dass das Verhalten von Menschen nicht auf einem
