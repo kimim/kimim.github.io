@@ -1,5 +1,5 @@
 #+LAYOUT: post
-#+TITLE: 单词表：villain
+#+TITLE: 单词本：villain
 #+TAGS: English
 #+CATEGORIES: language
 
