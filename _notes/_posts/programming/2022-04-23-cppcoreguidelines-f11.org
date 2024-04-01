@@ -1,0 +1,32 @@
+#+layout: post
+#+title: CppCoreGuidelines F.11 如果只是需要一个简单的函数，可以用未命名的 lambda
+#+categories: programming
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+F.11: Use an unnamed lambda if you need a simple function object in one place only
+
+*理由*
+
+使得代码更简洁，更好的局部性。
+
+*例子*
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+auto earlyUsersEnd = std::remove_if(users.begin(), users.end(),
+                                    [](const User &a) { return a.id > 100; });
+#+end_src
+
+
+*例外*
+- 给 ~lambda~ 命名可以使代码显得更清晰，哪怕只用到一次
+
+
+*强化*
+- 找到完全一样的 ~lambda~ ，可以考虑换成函数或命名的 ~lambda~
+  

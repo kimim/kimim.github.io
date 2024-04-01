@@ -1,24 +1,26 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.9 不用给没有用到的参数命名
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.9 不用给没有用到的参数命名
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.9: Unused parameters should be unnamed
+
+*理由*
 
 更好的可读性。免除“参数未被使用”的警告。
 
-例子
+
+*例子*
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 // once upon a time, a hint was used
 X* find(map<Blob>& m, const string& s, Hint);
 #+end_src
+
+
+*例子*
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void print_params(const int i, const string& s, double) {
@@ -35,10 +37,29 @@ int main()
 #+RESULTS:
 : 10 hello
 
-注意
+*注意*
 
-早在 1980 年就允许没有名称的参数。
+允许不命名没使用的参数是在 1980 年代早期引入标准的。为的是解决接口兼容性问题。
 
-强化
+但是，如果函数在某些条件下才会用到某个参数的话，可以把这个参数声明成
+~[[maybe_unused]]~ 属性。
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+template <typename Value>
+Value* find(const set<Value>& s, const Value& v, [[maybe_unused]] Hint h)
+{
+    if constexpr (sizeof(Value) > CacheSize)
+    {
+        // a hint is used only if Value is of a certain size
+    }
+}
+#+end_src
+
+
+*强化*
 
 - 标记出有名称但是没有用到的参数

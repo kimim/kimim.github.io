@@ -1,41 +1,50 @@
 ---
 layout: post
 title: CppCoreGuidelines F.9 不用给没有用到的参数命名
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由
+F.9: Unused parameters should be unnamed
+</p>
+
+<p>
+<b>理由</b>
 </p>
 
 <p>
 更好的可读性。免除“参数未被使用”的警告。
 </p>
 
+
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">once upon a time, a hint was used</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>* <span style="color: #0000ff; font-weight: bold;">find</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">map</span><span style="color: #7388d6;">&lt;</span>Blob<span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">m</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span>, Hint<span style="color: #707183;">)</span>;
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// once upon a time, a hint was used</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #0000ff; font-weight: bold;">find</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">map</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Blob</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">m</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">s</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Hint</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 
+
+<p>
+<b>例子</b>
+</p>
+
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print_params</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    cout &lt;&lt; i &lt;&lt; <span style="color: #2A00FF;">" "</span> &lt;&lt; s &lt;&lt; endl;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print_params</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">s</span>, <span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> i <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> s <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    print_params<span style="color: #7388d6;">(</span>10, <span style="color: #2A00FF;">"hello"</span>, 1.1<span style="color: #7388d6;">)</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #3a5fcd; font-weight: bold;">print_params</span><span style="color: #7388d6;">(</span><span style="color: #110099;">10</span>, <span style="color: #2A00FF;">"hello"</span>, <span style="color: #110099;">1.1</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -46,15 +55,33 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-早在 1980 年就允许没有名称的参数。
+允许不命名没使用的参数是在 1980 年代早期引入标准的。为的是解决接口兼容性问题。
 </p>
 
 <p>
-强化
+但是，如果函数在某些条件下才会用到某个参数的话，可以把这个参数声明成
+<code>[[maybe_unused]]</code> 属性。
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">template</span> <span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #0000ff; font-weight: bold;">find</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">set</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">s</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Value</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">v</span>, <span style="color: #7388d6;">[</span><span style="color: #909183;">[</span>maybe_unused<span style="color: #909183;">]</span><span style="color: #7388d6;">]</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Hint</span> <span style="color: #000000;">h</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7F0055; font-weight: bold;">constexpr</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">sizeof</span><span style="color: #909183;">(</span>Value<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">&gt;</span> CacheSize<span style="color: #7388d6;">)</span>
+    <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// a hint is used only if Value is of a certain size</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+
+<p>
+<b>强化</b>
 </p>
 
 <ul class="org-ul">

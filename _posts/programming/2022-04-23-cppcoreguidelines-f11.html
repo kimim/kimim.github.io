@@ -1,0 +1,47 @@
+---
+layout: post
+title: CppCoreGuidelines F.11 如果只是需要一个简单的函数，可以用未命名的 lambda
+categories: [programming]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+F.11: Use an unnamed lambda if you need a simple function object in one place only
+</p>
+
+<p>
+<b>理由</b>
+</p>
+
+<p>
+使得代码更简洁，更好的局部性。
+</p>
+
+<p>
+<b>例子</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">earlyUsersEnd</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #3a5fcd; font-weight: bold;">remove_if</span><span style="color: #707183;">(</span>users.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">begin</span><span style="color: #7388d6;">()</span>, users.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">end</span><span style="color: #7388d6;">()</span>,
+                                    <span style="color: #7388d6;">[](</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">User</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> a.<span style="color: #110099; font-style: italic;">id</span> <span style="color: #7F0055; font-weight: bold;">&gt;</span> <span style="color: #110099;">100</span>; <span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+<b>例外</b>
+</p>
+<ul class="org-ul">
+<li>给 <code>lambda</code> 命名可以使代码显得更清晰，哪怕只用到一次</li>
+</ul>
+
+
+<p>
+<b>强化</b>
+</p>
+<ul class="org-ul">
+<li>找到完全一样的 <code>lambda</code> ，可以考虑换成函数或命名的 <code>lambda</code></li>
+</ul>

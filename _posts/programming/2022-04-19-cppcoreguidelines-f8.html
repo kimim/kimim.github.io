@@ -1,40 +1,43 @@
 ---
 layout: post
 title: CppCoreGuidelines F.8 首选纯函数
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由
+F.8: Prefer pure functions
 </p>
 
 <p>
-纯函数更容易推导，更容易优化（甚至并行处理），更容易做成记忆函数（memoize）。
+<b>理由</b>
 </p>
 
 <p>
-所谓的纯函数（pure function）即在任何时候，只要输入一样的参数，它就会返回一样的结果。不会产生任何副作用：修改参数、调用IO输入输出流。
+纯函数更容易推导，更容易优化（甚至并行处理），更容易做成记忆函数（ memoize ）。
 </p>
-
 
 <p>
-例子：
+所谓的纯函数（pure function）即在任何时候，只要输入一样的参数，它就会返回一样的结果。不会产生任何副作用，副作用包括修改输入的参数原来的变量、调用 IO 输入输出流，即改变 IO 输出值。
 </p>
+
+<p>
+<b>例子</b>
+</p>
+
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #0000ff; font-weight: bold;">square</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">t</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> t * t; <span style="color: #707183;">}</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #0000ff; font-weight: bold;">square</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #000000;">t</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> t <span style="color: #7F0055; font-weight: bold;">*</span> t; <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    cout &lt;&lt; square<span style="color: #7388d6;">(</span>10<span style="color: #7388d6;">)</span> &lt;&lt; endl;
-    cout &lt;&lt; square<span style="color: #7388d6;">(</span>10.1<span style="color: #7388d6;">)</span> &lt;&lt; endl;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">square</span><span style="color: #7388d6;">(</span><span style="color: #110099;">10</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">square</span><span style="color: #7388d6;">(</span><span style="color: #110099;">10.1</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -46,57 +49,57 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-再看看以下例子，我们把一个纯函数做成memoize之后，可以极大的提升计算速度：
+再看看以下例子，我们把一个纯函数做成 memoize 之后，可以极大的提升计算速度：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">chrono</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">map</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>::<span style="color: #110099;">chrono</span>;
-<span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">function</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span><span style="color: #7388d6;">)</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">fib</span> = <span style="color: #707183;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// -*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;chrono&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;map&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> gsl;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::chrono;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">function</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">unsigned</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">unsigned</span><span style="color: #7388d6;">)</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">fib</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">[](</span><span style="color: #7F0055; font-weight: bold;">unsigned</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">if</span><span style="color: #7388d6;">(</span>n&lt;=1<span style="color: #7388d6;">)</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span><span style="color: #7388d6;">(</span>n<span style="color: #7F0055; font-weight: bold;">&lt;=</span><span style="color: #110099;">1</span><span style="color: #7388d6;">)</span>
         <span style="color: #7F0055; font-weight: bold;">return</span> n;
-    <span style="color: #7F0055; font-weight: bold;">return</span> fib<span style="color: #7388d6;">(</span>n-1<span style="color: #7388d6;">)</span>+fib<span style="color: #7388d6;">(</span>n-2<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #3a5fcd; font-weight: bold;">fib</span><span style="color: #7388d6;">(</span>n<span style="color: #7F0055; font-weight: bold;">-</span><span style="color: #110099;">1</span><span style="color: #7388d6;">)</span><span style="color: #7F0055; font-weight: bold;">+</span><span style="color: #3a5fcd; font-weight: bold;">fib</span><span style="color: #7388d6;">(</span>n<span style="color: #7F0055; font-weight: bold;">-</span><span style="color: #110099;">2</span><span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>;
-<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">InType</span>, <span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">OutType</span><span style="color: #707183;">&gt;</span>
-<span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">function</span><span style="color: #707183;">&lt;</span>OutType<span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">InType</span><span style="color: #7388d6;">)</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">memoize</span><span style="color: #707183;">(</span><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">function</span><span style="color: #7388d6;">&lt;</span>OutType<span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">InType</span><span style="color: #909183;">)</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">foo</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">InType</span>, <span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">OutType</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">function</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">OutType</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">InType</span><span style="color: #7388d6;">)</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">memoize</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">function</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">OutType</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">InType</span><span style="color: #909183;">)</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">foo</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
     <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7388d6;">[</span>foo<span style="color: #7388d6;">](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">InType</span> <span style="color: #000000;">n</span><span style="color: #7388d6;">){</span>
-        <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">map</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">InType</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">OutType</span><span style="color: #909183;">&gt;</span> <span style="color: #000000;">memo</span>;
+        <span style="color: #7F0055; font-weight: bold;">static</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">map</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">InType</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">OutType</span><span style="color: #909183; font-weight: bold;">&gt;</span> <span style="color: #000000;">memo</span>;
 
         <span style="color: #000000; font-style: italic; text-decoration: underline;">OutType</span> <span style="color: #000000;">ret</span>;
-        <span style="color: #7F0055; font-weight: bold;">if</span><span style="color: #909183;">(</span>memo.count<span style="color: #709870;">(</span>n<span style="color: #709870;">)</span>&gt;0<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
-            ret =memo<span style="color: #709870;">[</span>n<span style="color: #709870;">]</span>;
+        <span style="color: #7F0055; font-weight: bold;">if</span><span style="color: #909183;">(</span>memo.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">count</span><span style="color: #709870;">(</span>n<span style="color: #709870;">)</span><span style="color: #7F0055; font-weight: bold;">&gt;</span><span style="color: #110099;">0</span><span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            <span style="color: #000000;">ret</span> <span style="color: #7F0055; font-weight: bold;">=</span>memo<span style="color: #709870;">[</span>n<span style="color: #709870;">]</span>;
             <span style="color: #7F0055; font-weight: bold;">return</span> ret;
         <span style="color: #909183;">}</span>
-        ret=foo<span style="color: #909183;">(</span>n<span style="color: #909183;">)</span>;
-        memo<span style="color: #909183;">[</span>n<span style="color: #909183;">]</span>=ret;
+        <span style="color: #000000;">ret</span><span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #3a5fcd; font-weight: bold;">foo</span><span style="color: #909183;">(</span>n<span style="color: #909183;">)</span>;
+        <span style="color: #000000;">memo</span><span style="color: #909183;">[</span>n<span style="color: #909183;">]</span><span style="color: #7F0055; font-weight: bold;">=</span>ret;
         <span style="color: #7F0055; font-weight: bold;">return</span> ret;
     <span style="color: #7388d6;">}</span>;
 <span style="color: #707183;">}</span>
 
-<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">fib1</span> = memoize<span style="color: #707183;">(</span>fib<span style="color: #707183;">)</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">fib1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">memoize</span><span style="color: #707183;">(</span>fib<span style="color: #707183;">)</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">calc_time</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unsigned</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    <span style="color: #110099;">steady_clock</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">time_point</span> <span style="color: #000000;">begin</span> = <span style="color: #110099;">steady_clock</span>::now<span style="color: #7388d6;">()</span>;
-    fib1<span style="color: #7388d6;">(</span>n<span style="color: #7388d6;">)</span>;
-    <span style="color: #110099;">steady_clock</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">time_point</span> <span style="color: #000000;">end</span> = <span style="color: #110099;">steady_clock</span>::now<span style="color: #7388d6;">()</span>;
-    <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"Time difference = "</span>
-              &lt;&lt; duration_cast<span style="color: #7388d6;">&lt;</span>nanoseconds<span style="color: #7388d6;">&gt;</span> <span style="color: #7388d6;">(</span>end - begin<span style="color: #7388d6;">)</span>.count<span style="color: #7388d6;">()</span>
-              &lt;&lt; <span style="color: #2A00FF;">"[ns]"</span>
-              &lt;&lt; <span style="color: #110099;">std</span>::endl;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">calc_time</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">unsigned</span> <span style="color: #000000;">n</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">steady_clock</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">time_point</span> <span style="color: #000000;">begin</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">steady_clock</span>::<span style="color: #3a5fcd; font-weight: bold;">now</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">fib1</span><span style="color: #7388d6;">(</span>n<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">steady_clock</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">time_point</span> <span style="color: #000000;">end</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">steady_clock</span>::<span style="color: #3a5fcd; font-weight: bold;">now</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"Time difference = "</span>
+              <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">duration_cast</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">nanoseconds</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #7388d6;">(</span>end <span style="color: #7F0055; font-weight: bold;">-</span> begin<span style="color: #7388d6;">)</span>.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">count</span><span style="color: #7388d6;">()</span>
+              <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"[ns]"</span>
+              <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::endl;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    calc_time<span style="color: #7388d6;">(</span>20<span style="color: #7388d6;">)</span>;
-    calc_time<span style="color: #7388d6;">(</span>20<span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">calc_time</span><span style="color: #7388d6;">(</span><span style="color: #110099;">20</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">calc_time</span><span style="color: #7388d6;">(</span><span style="color: #110099;">20</span><span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>

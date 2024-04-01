@@ -1,0 +1,82 @@
+#+layout: post
+#+title: CppCoreGuidelines F.10 如果是一个可复用的操作，给它设置个名字
+#+categories: programming
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+F.10: If an operation can be reused, give it a name
+
+*理由*
+
+代码自文档，可读性好，可复用。
+
+
+*例子*
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+struct Rec {
+    string name;
+    string addr;
+    int id;         // unique identifier
+};
+
+bool same(const Rec& a, const Rec& b)
+{
+    return a.id == b.id;
+}
+
+vector<Rec*> find_id(const string& name);    // find all records for "name"
+
+auto x = find_if(vr.begin(), vr.end(),
+    [&](Rec& r) {
+        if (r.name.size() != n.size()) return false; // name to compare to is in n
+        for (int i = 0; i < r.name.size(); ++i)
+            if (tolower(r.name[i]) != tolower(n[i])) return false;
+        return true;
+    }
+);
+#+end_src
+
+这里隐藏这一个有用的函数（大小写敏感的字符串比较函数）。一般 ~lambda~ 比
+较长的地方，都可能隐藏这一个可复用的函数。
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+bool compare_insensitive(const string& a, const string& b)
+{
+    if (a.size() != b.size()) return false;
+    for (int i = 0; i < a.size(); ++i) if (tolower(a[i]) != tolower(b[i])) return false;
+    return true;
+}
+
+auto x = find_if(vr.begin(), vr.end(),
+    [&](Rec& r) { return compare_insensitive(r.name, n); }
+);
+#+end_src
+
+或者，你可能不想显式得绑定 ~n~
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+auto cmp_to_n = [&n](const string& a) { return compare_insensitive(a, n); };
+
+auto x = find_if(vr.begin(), vr.end(),
+    [](const Rec& r) { return cmp_to_n(r.name); }
+);
+#+end_src
+
+
+*例外*
+- 只是局部使用的 ~lambda~ 如 ~for_each~ 的参数，或分支控制算法等。
+- ~lambda~ 作为初始化函数

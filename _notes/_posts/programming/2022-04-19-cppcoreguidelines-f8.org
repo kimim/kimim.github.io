@@ -1,23 +1,22 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.8 首选纯函数
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.8 首选纯函数
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.8: Prefer pure functions
+
+*理由*
 
 纯函数更容易推导，更容易优化（甚至并行处理），更容易做成记忆函数（memoize）。
 
 所谓的纯函数（pure function）即在任何时候，只要输入一样的参数，它就会
-返回一样的结果。不会产生任何副作用：修改参数、调用IO输入输出流。
+返回一样的结果。不会产生任何副作用，副作用包括修改输入的参数原来的变量、
+调用 IO 输入输出流，即改变 IO 输出值。
 
+*例子*
 
-例子：
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 template<class T>
@@ -35,8 +34,8 @@ int main()
 : 100
 : 102.01
 
-再看看以下例子，我们把一个纯函数做成memoize之后，可以极大的提升计算速
-度：
+再看看以下例子，我们把一个纯函数做成 memoize 之后，可以极大的提升计算
+速度：
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 // -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-

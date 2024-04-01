@@ -1,0 +1,91 @@
+---
+layout: post
+title: CppCoreGuidelines F.10 如果是一个可复用的操作，给它设置个名字
+categories: [programming]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+F.10: If an operation can be reused, give it a name
+</p>
+
+<p>
+<b>理由</b>
+</p>
+
+<p>
+代码自文档，可读性好，可复用。
+</p>
+
+
+<p>
+<b>例子</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">name</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">addr</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">id</span>;         <span style="color: #3F7F5F;">// unique identifier</span>
+<span style="color: #707183;">}</span>;
+
+<span style="color: #7F0055; font-weight: bold;">bool</span> <span style="color: #0000ff; font-weight: bold;">same</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> a.<span style="color: #110099; font-style: italic;">id</span> <span style="color: #7F0055; font-weight: bold;">==</span> b.<span style="color: #110099; font-style: italic;">id</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">find_id</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">name</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// find all records for "name"</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">find_if</span><span style="color: #707183;">(</span>vr.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">begin</span><span style="color: #7388d6;">()</span>, vr.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">end</span><span style="color: #7388d6;">()</span>,
+    <span style="color: #7388d6;">[</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #7388d6;">](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">r</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>r.<span style="color: #110099; font-style: italic;">name</span>.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #709870;">()</span> <span style="color: #7F0055; font-weight: bold;">!=</span> n.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #709870;">()</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">false</span>; <span style="color: #3F7F5F;">// name to compare to is in n</span>
+        <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>; i <span style="color: #7F0055; font-weight: bold;">&lt;</span> r.<span style="color: #110099; font-style: italic;">name</span>.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #709870;">()</span>; <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">i</span><span style="color: #909183;">)</span>
+            <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span><span style="color: #3a5fcd; font-weight: bold;">tolower</span><span style="color: #709870;">(</span>r.<span style="color: #110099; font-style: italic;">name</span><span style="color: #907373;">[</span>i<span style="color: #907373;">]</span><span style="color: #709870;">)</span> <span style="color: #7F0055; font-weight: bold;">!=</span> <span style="color: #3a5fcd; font-weight: bold;">tolower</span><span style="color: #709870;">(</span>n<span style="color: #907373;">[</span>i<span style="color: #907373;">]</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">false</span>;
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">true</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+这里隐藏这一个有用的函数（大小写敏感的字符串比较函数）。一般 <code>lambda</code> 比较长的地方，都可能隐藏这一个可复用的函数。
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">bool</span> <span style="color: #0000ff; font-weight: bold;">compare_insensitive</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>a.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #909183;">()</span> <span style="color: #7F0055; font-weight: bold;">!=</span> b.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #909183;">()</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">false</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>; i <span style="color: #7F0055; font-weight: bold;">&lt;</span> a.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #909183;">()</span>; <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #3a5fcd; font-weight: bold;">tolower</span><span style="color: #909183;">(</span>a<span style="color: #709870;">[</span>i<span style="color: #709870;">]</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">!=</span> <span style="color: #3a5fcd; font-weight: bold;">tolower</span><span style="color: #909183;">(</span>b<span style="color: #709870;">[</span>i<span style="color: #709870;">]</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">false</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">true</span>;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">find_if</span><span style="color: #707183;">(</span>vr.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">begin</span><span style="color: #7388d6;">()</span>, vr.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">end</span><span style="color: #7388d6;">()</span>,
+    <span style="color: #7388d6;">[</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #7388d6;">](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">r</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #3a5fcd; font-weight: bold;">compare_insensitive</span><span style="color: #909183;">(</span>r.<span style="color: #110099; font-style: italic;">name</span>, n<span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+<p>
+或者，你可能不想显式得绑定 <code>n</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">cmp_to_n</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #707183;">[</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>n<span style="color: #707183;">](</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #3a5fcd; font-weight: bold;">compare_insensitive</span><span style="color: #7388d6;">(</span>a, n<span style="color: #7388d6;">)</span>; <span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">find_if</span><span style="color: #707183;">(</span>vr.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">begin</span><span style="color: #7388d6;">()</span>, vr.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">end</span><span style="color: #7388d6;">()</span>,
+    <span style="color: #7388d6;">[](</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">r</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #3a5fcd; font-weight: bold;">cmp_to_n</span><span style="color: #909183;">(</span>r.<span style="color: #110099; font-style: italic;">name</span><span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+<b>例外</b>
+</p>
+<ul class="org-ul">
+<li>只是局部使用的 <code>lambda</code> 如 <code>for_each</code> 的参数，或分支控制算法等。</li>
+<li><code>lambda</code> 作为初始化函数</li>
+</ul>
