@@ -1,20 +1,24 @@
 ---
 layout: post
 title: CppCoreGuidelines F.7 一般情况使用 T* 或 T&，不要使用智能指针
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：
+F.7: For general use, take <code>T*</code> or <code>T&amp;</code> arguments rather than smart pointers
+</p>
+
+
+<p>
+<b>理由</b>
 </p>
 
 <p>
-智能指针可以传递所有权或共享所有权。只有在需要所有权机制的时候使用。不操作生存周期的函数，应该只接受原始指针 <code>T*</code> 或引用 <code>T&amp;</code> 。
+智能指针可以传递所有权或共享所有权。只有在需要所有权机制的时候才使用智能指针。不需要操作生存周期的函数，应该只接受原始指针<code>T*</code>或引用<code>T&amp;</code>。
 </p>
 
 <p>
@@ -25,25 +29,26 @@ tags: [CppCoreGuidelines]
 使用共享指针做参数，会产生潜在的运行时成本。
 </p>
 
+
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">accepts any int*</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #707183;">)</span>;
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// accepts any int*</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #707183;">)</span>;
 
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">can only accept ints for which you want to transfer ownership</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span><span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// can only accept ints for which you want to transfer ownership</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #707183;">)</span>;
 
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">can only accept ints for which you are willing to share ownership</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span><span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// can only accept ints for which you are willing to share ownership</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #707183;">)</span>;
 
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">doesn't change ownership, but requires a particular ownership of the caller</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp;<span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// doesn't change ownership, but requires a particular ownership of the caller</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #707183;">)</span>;
 
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">accepts any int</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>&amp;<span style="color: #707183;">)</span>;
+<span style="color: #3F7F5F;">// accepts any int</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 
@@ -52,31 +57,31 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">memory</span><span style="color: #707183;">&gt;</span>
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">callee</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">w</span><span style="color: #707183;">)</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;memory&gt;</span>
+<span style="color: #3F7F5F;">// callee</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">w</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    cout &lt;&lt; *w &lt;&lt; endl; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">only use of w -- the lifetime is not used at all</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #7F0055; font-weight: bold;">*</span>w <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl; <span style="color: #3F7F5F;">// only use of w -- the lifetime is not used at all</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">caller</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #3F7F5F;">// caller</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">my_widget</span> = make_shared<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;(</span>111<span style="color: #7388d6;">)</span>;
-    f<span style="color: #7388d6;">(</span>my_widget<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">my_widget</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_shared</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span><span style="color: #110099;">111</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>my_widget<span style="color: #7388d6;">)</span>;
 
-    <span style="color: #3F7F5F;">//</span><span style="color: #3F7F5F;">int* stack_widget =  new int(111);;</span>
-    <span style="color: #3F7F5F;">//</span><span style="color: #3F7F5F;">f(stack_widget);</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: invalid initialization of reference of type</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">'std::shared_ptr&lt;int&gt;&amp;' from expression of type 'int*'</span>
-    <span style="color: #3F7F5F;">//</span><span style="color: #3F7F5F;">26 |     f(stack_widget);</span>
-    <span style="color: #3F7F5F;">//   </span><span style="color: #3F7F5F;">|       ^~~~~~~~~~~~</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">note: in passing argument 1 of 'void f(std::shared_ptr&lt;int&gt;&amp;)'</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">12 | void f(shared_ptr&lt;int&gt;&amp; w)</span>
-    <span style="color: #3F7F5F;">//    </span><span style="color: #3F7F5F;">|        ~~~~~~~~~~~~~~~~~^</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #3F7F5F;">//int* stack_widget =  new int(111);;</span>
+    <span style="color: #3F7F5F;">//f(stack_widget);</span>
+    <span style="color: #3F7F5F;">// error: invalid initialization of reference of type</span>
+    <span style="color: #3F7F5F;">// 'std::shared_ptr&lt;int&gt;&amp;' from expression of type 'int*'</span>
+    <span style="color: #3F7F5F;">//26 |     f(stack_widget);</span>
+    <span style="color: #3F7F5F;">//   |       ^~~~~~~~~~~~</span>
+    <span style="color: #3F7F5F;">// note: in passing argument 1 of 'void f(std::shared_ptr&lt;int&gt;&amp;)'</span>
+    <span style="color: #3F7F5F;">// 12 | void f(shared_ptr&lt;int&gt;&amp; w)</span>
+    <span style="color: #3F7F5F;">//    |        ~~~~~~~~~~~~~~~~~^</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -91,25 +96,25 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">memory</span><span style="color: #707183;">&gt;</span>
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">callee</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>&amp; <span style="color: #000000;">w</span><span style="color: #707183;">)</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;memory&gt;</span>
+<span style="color: #3F7F5F;">// callee</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">w</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    cout &lt;&lt; w &lt;&lt; endl;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> w <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">caller</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #3F7F5F;">// caller</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">my_widget</span> = make_shared<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;(</span>111<span style="color: #7388d6;">)</span>;
-    f<span style="color: #7388d6;">(</span>*my_widget<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">my_widget</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_shared</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span><span style="color: #110099;">111</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">*</span>my_widget<span style="color: #7388d6;">)</span>;
 
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">stack_widget</span> = 222;
-    f<span style="color: #7388d6;">(</span>stack_widget<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok -- now this works</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">stack_widget</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">222</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>stack_widget<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// ok -- now this works</span>
 
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -120,8 +125,9 @@ tags: [CppCoreGuidelines]
 </pre>
 
 
+
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
@@ -130,11 +136,11 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 
 <ul class="org-ul">
 <li>（简单）如果一个函数接受智能指针类型，但是这个函数只调用 <code>operator*</code>
-， <code>operator-&gt;</code> 以及 <code>get()</code> 。建议使用 <code>T*</code> 或 <code>T&amp;</code> 。</li>
-<li>如果一个参数是可复制、可移动的智能指针类型，但是在函数体或进一步的调用中没有被复制或移动，那么，就不需要所有权机制。建议使用 <code>T*</code> 或 <code>T&amp;</code> 。</li>
+，<code>operator-&gt;</code>以及<code>get()</code>。建议使用<code>T*</code>或 <code>T&amp;</code> 。</li>
+<li>如果一个参数是可复制、可移动的智能指针类型，但是在函数体或进一步的调用中没有被复制或移动，那么，就不需要所有权机制。建议使用<code>T*</code>或 <code>T&amp;</code> 。</li>
 </ul>
