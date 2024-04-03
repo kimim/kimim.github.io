@@ -1,46 +1,51 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.16 入参：复制成本低的用值传递；其他用 const 引用
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.16 入参：复制成本低的用值传递；其他用 const 引用
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+F.16: For "in" parameters, pass cheaply-copied types by value and others by reference to ~const~
 
-值传递和 ~const~ 引用标明函数不会修改参数，允许用右值初始化。
+*理由*
 
-“复制成本低”与机器的体系架构相关。一般 2 到 3 word 的数据（double，指
-针，引用）通过值传递。对于几个 word 的小对象，因为无需间接访问，值传递
-也比引用传递速度快。
+值拷贝传递参数和 ~const~ 引用传递参数都表明函数不会修改参数，这样，就允
+许用右值初始化这些参数。
 
-例子
+所谓的“复制成本低”，是与机器的体系架构相关的。一般 2 到 3 word 的数据
+（双精度浮点值，指针，引用）是通过值传递。对于几个 word 的小对象，因为
+无需间接访问，值传递也比引用传递速度快。
+
+*例子*
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 void f1(const string& s);  // OK: pass by reference to const; always cheap
-
-void f2(string s);         // bad: potentially expensive
-
 void f3(int x);            // OK: Unbeatable
-
-void f4(const int& x);     // bad: overhead on access in f4()
 #+end_src
 
+*例子*
+#+attr_html: :class bad
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+void f2(string s);         // bad: potentially expensive
+void f4(const int& x);     // bad: overhead on access
+#+end_src
 
-什么情况需要用右值传递“只读输入”参数：
-- 如果函数任何情况下都会移入参数，用右值引用 ~&&~ 。详见 F.18
-- 如果函数保留一份参数副本，除了可以用 ~const&~ 进行左值传递；也可以重载
-  函数，接收 ~&&~ 右值引用，并在函数体内通过 ~std::move~ “移动”到目的地。
-  事实上， ~std::move~ 并不能移动任何东西，其功能是将一个左值强制转化为
-  右值引用，继而可以通过右值引用使用该值。从实现上讲， ~std::move~ 基本等
-  同于一个类型转换： ~static_cast<T&&>(lvalue);~ 详见 F.18
+什么情况需要用右值传递“只读入参”呢？
+- 如果函数任何情况下都会移动参数，用右值引用 ~&&~ 。详见 F.18
+- 如果函数保留一份参数副本的话，除了可以用 ~const&~ 进行左值传递；也可以
+  重载函数，接收 ~&&~ 右值引用，并在函数体内通过 ~std::move~ “移动”到目的
+  地。事实上， ~std::move~ 并不能移动任何东西，其功能是将一个左值强制转
+  化为右值引用，继而可以通过右值引用使用该值。从实现上讲， ~std::move~
+  基本等同于一个类型转换： ~static_cast<T&&>(lvalue);~ 详见 F.18
 - 一些特殊情况，如多个“输入+复制”参数，考虑使用完美转发
   ~std::forward<Args>(args)~ 。详见 F.19
 
-例子
+
+*例子*
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 int multiply(int, int); // just input ints, pass by value
@@ -56,7 +61,8 @@ void sink(unique_ptr<widget>);  // input only, and moves ownership of the widget
   不可靠的。（详见 F.18 F.19）
 - 通过 ~const T&~ 返回。（详见 F.47）
 
-例子
+
+*例子*
 
 假设 ~Matrix~ 有移动操作（比如把元素保留在 ~std::vector~ ）：
 
@@ -73,17 +79,22 @@ Matrix x = m1 + m2;  // move constructor
 y = m3 + m3;         // move assignment
 #+end_src
 
-注意
 
-The return value optimization doesn't handle the assignment case, but
-the move assignment does.
+*注意*
 
-引用指向有效的对象，不存在空引用的情况。如果需要表示可选值，请使用指针，
-~std::optional~ 或能表示“无值”的特殊值。
+我们可以假定一个引用肯定指向了一个有效的对象，语言层面不存在空引用的情
+况。如果需要表达一个值可能为空，请使用指针。另外 ~std::optional~ 也能用
+来表示“没有数值”的情况。
 
-强化
-- （简单）（基础）值的空间大于 ~2 * sizeof(void*)~ 却通过值传递时，报警。
+
+*强化*
+- （简单）（基础）值的空间大于 ~2 * sizeof(void*)~ 却通过值传递时，警告。
   建议使用 ~const&~ 常量引用。
 - （简单）（基础）值的空间小于 ~2 * sizeof(void*)~ 却通过常量引用传递时，
-  报警。建议使用值传递。
-- （简单）（基础）当参数通过常量引用传递，却被移动了，报警。
+  警告。建议使用值传递。
+- （简单）（基础）当参数通过常量引用传递，却被移动了，警告。
+
+
+*例外*
+
+如果要表达共享所有权的情况，可以用 ~shared_ptr~ 类型。

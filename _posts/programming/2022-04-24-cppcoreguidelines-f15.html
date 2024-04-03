@@ -1,28 +1,33 @@
 ---
 layout: post
 title: CppCoreGuidelines F.15 首选简单、常规的方式传递信息
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由
+F.15: Prefer simple and conventional ways of passing information
 </p>
 
 <p>
-“不寻常的、聪明的”技巧会让其他程序员吃惊、难以理解、容易出bug。如果确实觉得不走寻常路是代码优化的需要，请进行测试，是否提升性能，并用文档和注释解释原因。
+<b>理由</b>
 </p>
 
 <p>
-以下表格总结了 F.16-21 的建议。
+“不同寻常的奇技淫巧”会让其他程序员感到吃惊、难以理解、并且代码容易出
+bug。如果确实觉得优化代码的时候需要不走寻常路，那么，请对其进行测试，看看是否能提升性能，并且要用文档和注释解释说明原因。
 </p>
 
 <p>
-常规传参表：
+以下表格总结了F.16-21的建议。
+</p>
+
+
+<p>
+常规传参方式：
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -76,8 +81,9 @@ tags: [CppCoreGuidelines]
 </tbody>
 </table>
 
+
 <p>
-高级传参表：
+高级传参方式：
 </p>
 
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
@@ -138,6 +144,7 @@ tags: [CppCoreGuidelines]
 </tbody>
 </table>
 
+
 <p>
 其中：
 </p>
@@ -145,17 +152,17 @@ tags: [CppCoreGuidelines]
 <li>[1]
 <ul class="org-ul">
 <li>复制成本低</li>
-<li>无法复制（如 <code>int</code>, <code>unique_ptr</code> ）</li>
+<li>无法复制（如<code>int</code>, <code>unique_ptr</code>）</li>
 </ul></li>
 <li>[2]
 <ul class="org-ul">
-<li>移动成本低（如 <code>vector&lt;T&gt;</code>, <code>string</code> ）</li>
-<li>移动成本适中（如 <code>array&lt;vector&gt;</code>, <code>BigPOD</code> ）</li>
+<li>移动成本低（如<code>vector&lt;T&gt;</code>, <code>string</code>）</li>
+<li>移动成本适中（如<code>array&lt;vector&gt;</code>, <code>BigPOD</code>）</li>
 <li>未知（如：未知类型，模板）</li>
 </ul></li>
 <li>[3]
 <ul class="org-ul">
-<li>移动成本高（如 <code>BigPOD[]</code>, <code>array&lt;BigPOD&gt;</code> ）</li>
+<li>移动成本高（如<code>BigPOD[]</code>, <code>array&lt;BigPOD&gt;</code>）</li>
 </ul></li>
 </ul>
 
@@ -164,7 +171,7 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-【注】 <code>&amp;&amp;</code> 是 C++11 标准定义的新的引用操作符：右值引用 (rvalue
-reference)。 <code>int&amp;&amp; a</code> 表示 <code>a</code> 是一个右值（r-value）引用。一般用于声明函数的参数。简单来说：右值没有内存地址，如数字 6 或字符 &rsquo;v&rsquo;。 <code>int a</code> ， <code>a</code>
-是一个左值（l-value）。不过 <code>a+2</code> 是一个右值。
+【注】<code>&amp;&amp;</code>是 C++11 标准定义的新的引用操作符：右值引用 (rvalue
+reference)。<code>int&amp;&amp; a</code>表示 <code>a</code> 是一个右值（ r-value ）引用。一般用于声明函数的参数。简单来说：右值没有内存地址，如数字 6 或字符&rsquo;v&rsquo;。 <code>int a</code>， <code>a</code>
+是一个左值（ l-value ）。不过<code>a+2</code>是一个右值。
 </p>

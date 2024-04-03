@@ -1,21 +1,22 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.15 首选简单、常规的方式传递信息
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.15 首选简单、常规的方式传递信息
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.15: Prefer simple and conventional ways of passing information
 
-“不寻常的、聪明的”技巧会让其他程序员吃惊、难以理解、容易出bug。如果确实觉得不走寻常路是代码优化的需要，请进行测试，是否提升性能，并用文档和注释解释原因。
+*理由*
+
+“不同寻常的奇技淫巧”会让其他程序员感到吃惊、难以理解、并且代码容易出
+bug。如果确实觉得优化代码的时候需要不走寻常路，那么，请对其进行测试，
+看看是否能提升性能，并且要用文档和注释解释说明原因。
 
 以下表格总结了 F.16-21 的建议。
 
-常规传参表：
+
+常规传参方式：
 
 |                | 复制成本低[1] | 移动成本低/适中[2] | 移动成本高[3] |
 |----------------+---------------+--------------------+---------------|
@@ -24,7 +25,8 @@ tags: [CppCoreGuidelines]
 | 入参           | ~f(X)~          | ~f(const X&)~        | ~f(const X&)~   |
 | 入参，保留副本 | ~f(X)~          | ~f(const X&)~        | ~f(const X&)~   |
 
-高级传参表：
+
+高级传参方式：
 
 |                | 复制成本低[1] | 移动成本低/适中[2]          | 移动成本高[3] |
 |----------------+---------------+-----------------------------+---------------|
@@ -33,6 +35,7 @@ tags: [CppCoreGuidelines]
 | 入参           | ~f(X)~          | ~f(const X&)~                 | ~f(const X&)~   |
 | 入参，保留副本 | ~f(X)~          | ~f(const X&)~ + ~f(X&&)~ & move | ~f(const X&)~   |
 | 入参，移入     | ~f(X&&)~        | ~f(X&&)~                      | ~f(X&&)~        |
+
 
 其中：
 - [1]

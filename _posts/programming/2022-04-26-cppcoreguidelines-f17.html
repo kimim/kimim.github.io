@@ -1,57 +1,79 @@
 ---
 layout: post
 title: CppCoreGuidelines F.17 输入输出参数，通过非 const 引用传递
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由
+F.17: For “ in-out ” parameters, pass by reference to non-<code>const</code>
 </p>
 
 <p>
-非 <code>const</code> 引用表示函数会修改参数。
+<b>理由</b>
 </p>
 
 <p>
-例子
+以非 <code>const</code> 引用的方式传递参数，表示函数会修改该参数。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">update</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span>&amp; <span style="color: #000000;">r</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assume that update writes to r</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">update</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Record</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">r</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// assume that update writes to r</span>
+</pre>
+</div>
+
+
+<p>
+<b>注意</b>
+</p>
+
+<p>
+有些用户自定义的类型和标准库类型的拷贝成本比较低，可以通过值传递给参数。比如<code>span&lt;T&gt;</code>和 <code>iterator</code> 。这也意味着，这些参数是以可变的入参 - 出参的机制传递。
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">increment_all</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">a</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+  <span style="color: #7F0055; font-weight: bold;">for</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> e : a<span style="color: #7388d6;">)</span>
+    <span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #000000;">e</span>;
+<span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-<code>T&amp;</code> 参数能传入数据，也能传出数据。所以 <code>T&amp;</code> 可以作为输入输出参数。不过可能导致一些错误：
+<code>T&amp;</code> 参数能传入数据，也能传出数据。所以<code>T&amp;</code>可以作为“出参入参”使用。不过可能导致一些错误：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">s</span><span style="color: #707183;">)</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    s = <span style="color: #2A00FF;">"New York"</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">non-obvious error</span>
+    <span style="color: #000000;">s</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"New York"</span>;  <span style="color: #3F7F5F;">// non-obvious error</span>
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">buffer</span> = <span style="color: #2A00FF;">"................................."</span>;
-    f<span style="color: #7388d6;">(</span>buffer<span style="color: #7388d6;">)</span>;
-    cout &lt;&lt; buffer &lt;&lt; endl;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">buffer2</span> = <span style="color: #2A00FF;">"."</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">size is too short</span>
-    f<span style="color: #7388d6;">(</span>buffer2<span style="color: #7388d6;">)</span>;
-    cout &lt;&lt; buffer2 &lt;&lt; endl;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">buffer</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"................................."</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>buffer<span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> buffer <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">buffer2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">"."</span>;  <span style="color: #3F7F5F;">// size is too short</span>
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>buffer2<span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> buffer2 <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    g<span style="color: #7388d6;">()</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #3a5fcd; font-weight: bold;">g</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -63,11 +85,12 @@ New York
 
 
 <p>
-这里，函数 <code>g()</code> 提供 <code>buffer</code> 给 <code>f()</code> 填充，但是 <code>f()</code> 只是简单的把它替换掉。有一个潜在的逻辑层错误，比如 <code>g()</code> 函数的程序员可能错误假定 <code>buffer</code> 的长度。
+这里，函数<code>g()</code>提供 <code>buffer</code> 给 <code>f()</code> 填充，但是<code>f()</code>只是简单的把它替换掉。有一个潜在的逻辑层错误，比如<code>g()</code>函数的程序员可能错误假定 <code>buffer</code> 的长度。
 </p>
 
+
 <p>
-强化：
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>（适中）（基础）函数用了非常量引用，却没有往参数写东西。警告。</li>
