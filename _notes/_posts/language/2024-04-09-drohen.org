@@ -1,0 +1,73 @@
+#+LAYOUT: post
+#+TITLE: drohen
+#+TAGS: English, German
+#+CATEGORIES: language
+
+今天，美国财政部长耶伦结束了在中国的五天访问。德意志日报 Deutsche
+Tageszeitung 有一则新闻报道：
+
+Grundsätzlich wurde Yellens Besuch in China aber als weiterer Schritt
+hin zu einer Stabilisierung der Beziehungen zwischen den USA und der
+Volksrepublik gewertet. Beide Seiten vereinbarten weitere Gespräche,
+um das Problem *drohender* Überkapazitäten zu lösen. [DT2024Yellen]
+
+这里提到了美丽国关心的事情，即中国在新能源领域对美国造成的威胁：das
+Problem *drohender* Überkapazitäten.
+
+*drohend* 的意思是有威胁的。动词形式是 *drohen* 威胁。
+
+做及物动词的时候，如 jdm mit etw drohen 用某事威胁某人。
+
+Meine Frau droht mir mit der Scheidung. 我妻子用离婚威胁我。顺便说下，
+上次我们了解到 Entscheidung 是决策的意思，源于拉丁语 caedere 切开。切
+开的名词形式 Scheidung 就有分离、离婚之意了。
+
+还有如：
+- jdm mit der Faust drohen 用拳头威胁某人
+- jdm mit Selbstmord drohen 用自杀威胁某人
+
+另外，今天的新闻提到南非议会选举，执政党 ANC 非洲国民大会可能遭遇丢失
+多数党统治地位的威胁。这里也用到了 *drohen* 这个词：
+
+Der seit Ende der Apartheid regierende Afrikanische Nationalkongress
+(ANC) *droht* den Umfragen zufolge erstmals die Mehrheit im Parlament zu
+verlieren. [DT2024Zuma]
+
+其实德语 drohen 和英语 throe 是同源的，而 throe 是分娩阵痛的意思。是不
+是可以理解 drohen 的意思就是用 throe 一样的痛苦来吓唬他人，就是德语里
+的威胁之意。
+
+不过 throe 这个词似乎在英语里用的不多，找到一首阿里斯托芬（古希腊作家
+喜剧之父）的诗，用到了 throe，应该也是后人翻译成英语的。说地球母亲的镇
+痛带来了水果的丰收。
+
+#+begin_verse
+The Harvest
+            by Aristophanes
+
+Oh, 'tis sweet, when fields are ringing
+With the merry cricket's singing,
+Oft to mark with curious eye
+If the vine-tree's time be nigh:
+Here is now the fruit whose birth
+Cost a throe to Mother Earth.
+Sweet it is, too, to be telling,
+How the luscious figs are swelling;
+Then to riot without measure
+In the rich, nectareous treasure,
+While our grateful voices chime,--
+Happy season! blessed time.
+#+end_verse
+
+另外，drohen 作为不及物动词有即将来临之意：
+- Es droht zu regnen. 恐怕要下雨了。
+- Das Haus droht einzufallen. 房子恐怕要倒了。
+
+
+*References*
+[[bibliography:~/docs/references.bib]]
+
+[DT2024Yellen] US-FINANZMINISTERIN YELLEN WARNT CHINA VOR INDUSTRIELLEN ÜBERKAPAZITÄTEN, Deutsche Tageszeitung, 08.04.2024
+
+[DT2024Zuma] SÜDAFRIKANISCHES GERICHT ENTSCHEIDET ÜBER WAHLAUSSCHLUSS
+VON EX-PRÄSIDENT ZUMA, Deutsche Tageszeitung, 08.04.2024
