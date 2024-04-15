@@ -1,20 +1,18 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.18 要移动的参数，通过 X&& 传递，并用 std::move 移动
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.18 要移动的参数，通过 X&& 传递，并用 std::move 移动
+#+categories: [technology]
+#+tags: [CppCoreGuidelines]
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.18: For “will-move-from” parameters, pass by ~X&&~ and ~std::move~ the parameter
+
+*理由*
 
 如果在调用的地方需要显式的用 ~std::move~ 转移一个左值，这个参数最好是以
 ~X&&~ 的方式传入。这样效率高，且避免调用处产生 bug。
 
-例子：
+*例子*
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 // sink takes ownership of whatever the argument owned
@@ -26,17 +24,19 @@ void sink(vector<int>&& v)
 }
 #+end_src
 
-注意， ~std::move(v)~ 会让 ~store_somewhere()~ 把 ~v~ 留在移动之前的状态。比
-较危险。
+注意，通过 ~std::move(v)~ 移动参数后， ~store_somewhere()~ 函数会把 ~v~ 变量
+留在移动之前的状态。这样是比较危险的。
 
-例外
 
-如 ~unique_ptr~ 这样拥有唯一所有者的类型只能移动，且移动成本低。
+*例外*
 
-也能以值传递达到同样的效果。不过值传递会有一些额外的移动操作。然而，能
-够做到简洁和清晰，也是值得的。
+唯一所有权的变量只能通过移动进行参数传递，这类变量移动传参性能损耗也相
+对不太高。比如 ~unique_ptr~ 这样的变量，只能进行移动。所以传参的时候进行
+值传递也能达到一样的效果。而且，这样还能能够做到简洁和清晰，所以可以规
+避显式的移动操作。
 
-例子：
+
+*例子*
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 template<class T>
@@ -46,7 +46,8 @@ void sink(std::unique_ptr<T> p)
 }   // p gets destroyed
 #+end_src
 
-强化：
+
+*强化*
 - 标注函数体内没有进行 ~std::move~ 操作的 ~X&&~ 参数
 - 标注对象转移后还进行访问的地方
 - 不要在条件分支里进行移动
