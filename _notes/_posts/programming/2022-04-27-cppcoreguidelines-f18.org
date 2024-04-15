@@ -1,7 +1,7 @@
 #+layout: post
 #+title: CppCoreGuidelines F.18 要移动的参数，通过 X&& 传递，并用 std::move 移动
-#+categories: [technology]
-#+tags: [CppCoreGuidelines]
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
