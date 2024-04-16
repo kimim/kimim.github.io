@@ -1,11 +1,7 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.20 需要输出值的话，返回值比输出参数更好
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.20 需要输出值的话，返回值比输出参数更好
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
