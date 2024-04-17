@@ -1,92 +1,163 @@
 ---
 layout: post
-title: CppCoreGuidelines F.20 需要输出值的话，返回值比输出参数更好
-categories: [technology]
+title: CppCoreGuidelines F.20 如果需要输出结果，值返回比出参更好
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由：
+F.20: For “ out ” output values, prefer return values to output parameters
 </p>
 
 <p>
-返回值本身就是代码的显式文档。然而如果用 <code>&amp;</code> 引用参数，就可能是输入输出参数，也可能只是输出参数，容易被误用。
+<b>理由</b>
 </p>
 
 <p>
-此指南也适用于标准容器这类大对象，在返回过程中，为了保证性能，隐式的用了移动操作，避免了显式的内存管理。
+返回值类型声明还有代码文档化的作用，即在代码中就能说明函数的输出值类型。然而，一个带<code>&amp;</code>符号的参数可以是一个入参，也同时可以是出参，这样就很容易造成误解了。
 </p>
 
 <p>
-如果有多个值需要返回，可以用元组或类似的多成员类型。
+此指南也适用于标准容器这类大对象，在返回结果的过程中，为了保证执行性能，标准容器类用了隐式的移动操作，减少了显式手动的内存管理代码。
 </p>
 
 <p>
-例子：
+如果有多个值需要返回，可以用元组（ tupple ）或类似的多成员类型。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: return pointers to elements with the value x</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">find_all_ok</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">v</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">rv</span> = vector<span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">&gt;()</span>;
-    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #110099;">vector</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">&gt;</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">const_iterator</span> <span style="color: #000000;">it</span>=v.begin<span style="color: #909183;">()</span>; it!=v.end<span style="color: #909183;">()</span>; it++<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>*it == x<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
-            rv.push_back<span style="color: #709870;">(</span>&amp;*it<span style="color: #709870;">)</span>;
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// OK: return pointers to elements with the value x</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">find_all_ok</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">v</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">rv</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #909183; font-weight: bold;">&gt;</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">const_iterator</span> <span style="color: #000000;">it</span><span style="color: #7F0055; font-weight: bold;">=</span>v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">begin</span><span style="color: #909183;">()</span>; it<span style="color: #7F0055; font-weight: bold;">!=</span>v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">end</span><span style="color: #909183;">()</span>; <span style="color: #000000;">it</span><span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">*</span>it <span style="color: #7F0055; font-weight: bold;">==</span> x<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            rv.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">push_back</span><span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;*</span>it<span style="color: #709870;">)</span>;
         <span style="color: #909183;">}</span>
     <span style="color: #7388d6;">}</span>
     <span style="color: #7F0055; font-weight: bold;">return</span> rv;
 <span style="color: #707183;">}</span>
 
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: place pointers to elements with value x in-out</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">find_all_bad</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">v</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">out</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #110099;">vector</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">&gt;</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">const_iterator</span> <span style="color: #000000;">it</span>=v.begin<span style="color: #909183;">()</span>; it!=v.end<span style="color: #909183;">()</span>; it++<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>*it == x<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
-            out.push_back<span style="color: #709870;">(</span>&amp;*it<span style="color: #709870;">)</span>;
-        <span style="color: #909183;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">vv</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">{</span><span style="color: #110099;">1</span>,<span style="color: #110099;">2</span>,<span style="color: #110099;">3</span>,<span style="color: #110099;">4</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">vvv</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">find_all_ok</span><span style="color: #7388d6;">(</span>vv, <span style="color: #110099;">3</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span><span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #110099;">0</span>; i<span style="color: #7F0055; font-weight: bold;">&lt;</span>vvv.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #909183;">()</span>; <span style="color: #000000;">i</span><span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #7F0055; font-weight: bold;">*</span>vvv<span style="color: #909183;">[</span>i<span style="color: #909183;">]</span>;
     <span style="color: #7388d6;">}</span>
-<span style="color: #707183;">}</span>
-
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
-<span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">vv</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;{</span>1,2,3,4<span style="color: #7388d6;">}</span>;
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">vvv</span> = find_all_ok<span style="color: #7388d6;">(</span>vv, 3<span style="color: #7388d6;">)</span>;
-    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>=0; i&lt;vvv.size<span style="color: #909183;">()</span>; i++<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        cout &lt;&lt; *vvv<span style="color: #909183;">[</span>i<span style="color: #909183;">]</span>;
-    <span style="color: #7388d6;">}</span>
-    cout &lt;&lt; endl;
-    vvv = vector<span style="color: #7388d6;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">&gt;()</span>;
-    find_all_bad<span style="color: #7388d6;">(</span>vv, vvv, 3<span style="color: #7388d6;">)</span>;
-    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>=0; i&lt;vvv.size<span style="color: #909183;">()</span>; i++<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        cout &lt;&lt; *vvv<span style="color: #909183;">[</span>i<span style="color: #909183;">]</span>;
-    <span style="color: #7388d6;">}</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <pre class="example">
 3
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-bad src-C++">
+<span style="color: #3F7F5F;">// Bad: place pointers to elements with value x in-out</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">find_all_bad</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">v</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">out</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #909183; font-weight: bold;">&gt;</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">const_iterator</span> <span style="color: #000000;">it</span><span style="color: #7F0055; font-weight: bold;">=</span>v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">begin</span><span style="color: #909183;">()</span>; it<span style="color: #7F0055; font-weight: bold;">!=</span>v.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">end</span><span style="color: #909183;">()</span>; <span style="color: #000000;">it</span><span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">*</span>it <span style="color: #7F0055; font-weight: bold;">==</span> x<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
+            out.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">push_back</span><span style="color: #709870;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;*</span>it<span style="color: #709870;">)</span>;
+        <span style="color: #909183;">}</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">vv</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">{</span><span style="color: #110099;">1</span>,<span style="color: #110099;">2</span>,<span style="color: #110099;">3</span>,<span style="color: #110099;">4</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">vvv</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">find_all_bad</span><span style="color: #7388d6;">(</span>vv, vvv, <span style="color: #110099;">3</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">for</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span><span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #110099;">0</span>; i<span style="color: #7F0055; font-weight: bold;">&lt;</span>vvv.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #909183;">()</span>; <span style="color: #000000;">i</span><span style="color: #7F0055; font-weight: bold;">++</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #7F0055; font-weight: bold;">*</span>vvv<span style="color: #909183;">[</span>i<span style="color: #909183;">]</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<pre class="example">
 3
 </pre>
 
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-移动含有多个小对象的结构体，性能可能较差。
+被移动的结构体中含有多个小对象的话，性能可能较差。
 </p>
 
 
 <p>
-注意
+<b>例外</b>
+</p>
+<ul class="org-ul">
+<li>通过<code>unique_ptr</code>或者<code>shared_ptr</code>返回还没具体化的类型。所谓还没有具体化的类型指的是类层级结构中间的那些类型。</li>
+<li>如果某个类型的移动成本很高，比如<code>array&lt;BigTrivial&gt;</code>，考虑在自由存储区分配内存，然后通过<code>unique_ptr</code>返回一个句柄。或者通过一个读写引用参数作为出入参。</li>
+<li>如果要利用某个容器类持续保持一些列对象给多个函数进行处理的话，可以通过读写引用作为出入参传给各个函数。</li>
+</ul>
+
+
+<p>
+<b>例子</b>
+</p>
+
+<p>
+假设 <code>Matrix</code> 类有移动操作：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Matrix</span> operator<span style="color: #7F0055; font-weight: bold;">+</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Matrix</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Matrix</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Matrix</span> <span style="color: #000000;">res</span>;
+    <span style="color: #3F7F5F;">// ... fill res with the sum ...</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> res;
+<span style="color: #707183;">}</span>
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Matrix</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> m1 <span style="color: #7F0055; font-weight: bold;">+</span> m2;  <span style="color: #3F7F5F;">// move constructor</span>
+
+<span style="color: #000000;">y</span> <span style="color: #7F0055; font-weight: bold;">=</span> m3 <span style="color: #7F0055; font-weight: bold;">+</span> m3;         <span style="color: #3F7F5F;">// move assignment</span>
+</pre>
+</div>
+
+
+<p>
+<b>注意</b>
+</p>
+
+<p>
+返回值优化过程不处理赋值情况，但是会优化移动赋值的过程。
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Package</span> <span style="color: #707183;">{</span>      <span style="color: #3F7F5F;">// exceptional case: expensive-to-move object</span>
+    <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #110099; font-style: italic;">header</span><span style="color: #7388d6;">[</span><span style="color: #110099;">16</span><span style="color: #7388d6;">]</span>;
+    <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #110099; font-style: italic;">load</span><span style="color: #7388d6;">[</span><span style="color: #110099;">2024</span> <span style="color: #7F0055; font-weight: bold;">-</span> <span style="color: #110099;">16</span><span style="color: #7388d6;">]</span>;
+<span style="color: #707183;">}</span>;
+
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Package</span> <span style="color: #0000ff; font-weight: bold;">fill</span><span style="color: #707183;">()</span>;       <span style="color: #3F7F5F;">// Bad: large return value</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">fill</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Package</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// OK</span>
+
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">val</span><span style="color: #707183;">()</span>;            <span style="color: #3F7F5F;">// OK</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">val</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #707183;">)</span>;       <span style="color: #3F7F5F;">// Bad: Is val reading its argument</span>
+</pre>
+</div>
+
+
+<p>
+<b>注意</b>
 </p>
 
 <p>
@@ -94,17 +165,17 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: that "const" is more trouble than it is worth</span>
-<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">fct</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;{</span>1,2,3<span style="color: #7388d6;">}</span>;
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// bad: that "const" is more trouble than it is worth</span>
+<span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">fct</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">{</span><span style="color: #110099;">1</span>,<span style="color: #110099;">2</span>,<span style="color: #110099;">3</span><span style="color: #7388d6;">}</span>;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">vx</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">vx</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    fct<span style="color: #7388d6;">()</span> = vx;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">prevented by the "const"</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    vx = fct<span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">expensive copy: move semantics suppressed by the "const"</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #3a5fcd; font-weight: bold;">fct</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> vx;   <span style="color: #3F7F5F;">// prevented by the "const"</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #000000;">vx</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">fct</span><span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// expensive copy: move semantics suppressed by the "const"</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -116,42 +187,7 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-例外
-</p>
-
-<p>
-如果是继承层级中的非具体类型，可通过 <code>unique_ptr</code> 或 <code>shared_ptr</code> 返回对象。
-</p>
-
-<p>
-如果类型的移动成本很高（如 <code>array&lt;BiPOD&gt;</code> ），考虑先分配内存，再返回指针（如 <code>unique_ptr</code> ），或传入一个非 <code>const</code> 的目标对象，把数据填入此对象。
-</p>
-
-<p>
-如果要在一个内部循环中多次调用函数，需要重用一个对象保存数据（如
-<code>std::string</code> <code>std::vector</code> ），可以设置为输入输出参数，通过引用传递。
-</p>
-
-<p>
-例子
-</p>
-
-<div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Package</span> <span style="color: #707183;">{</span>      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">exceptional case: expensive-to-move object</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">header</span><span style="color: #7388d6;">[</span>16<span style="color: #7388d6;">]</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">load</span><span style="color: #7388d6;">[</span>2024 - 16<span style="color: #7388d6;">]</span>;
-<span style="color: #707183;">}</span>;
-
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Package</span> <span style="color: #0000ff; font-weight: bold;">fill</span><span style="color: #707183;">()</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: large return value</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">fill</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Package</span>&amp;<span style="color: #707183;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
-
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">val</span><span style="color: #707183;">()</span>;            <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">val</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>&amp;<span style="color: #707183;">)</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: Is val reading its argument</span>
-</pre>
-</div>
-
-<p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>非 <code>const</code> 参数，改写之前没有读取操作，其实可以用低成本的返回值的方式。标注告警。</li>
