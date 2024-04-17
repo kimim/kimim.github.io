@@ -1,14 +1,17 @@
 #+layout: post
-#+title: CppCoreGuidelines F.20 需要输出值的话，返回值比输出参数更好
+#+title: CppCoreGuidelines F.20 如果需要输出结果，值返回比出参更好
 #+categories: programming
 #+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由：
+F.20: For “out” output values, prefer return values to output parameters
 
-返回值本身就是代码的显式文档。然而如果用 ~&~ 引用参数，就可能是输入输出
-参数，也可能只是输出参数，容易被误用。
+*理由*
+
+返回值类型声明还有代码文档化的作用，即在代码中就能说明函数的输出值类型。
+然而，一个带 ~&~ 符号的参数可以是一个入参，也同时可以是出参，这样就很容易
+造成误解了。
 
 此指南也适用于标准容器这类大对象，在返回过程中，为了保证性能，隐式的用
 了移动操作，避免了显式的内存管理。

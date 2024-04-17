@@ -17,9 +17,9 @@ F.18: For “ will-move-from ” parameters, pass by <code>X&amp;&amp;</code> an
 </p>
 
 <p>
-如果在调用的地方需要显式的用<code>std::move</code>转移一个左值，这个参数最好是以
-<code>X&amp;&amp;</code> 的方式传入。这样效率高，且避免调用处产生 bug。
+如果在调用的地方需要显式的用<code>std::move</code>转移一个左值，那么，这个形参的类型最好是<code>X&amp;&amp;</code>这样的形式定义。如此处理，可以保证效率较高，避免调用处产生 bug。
 </p>
+
 
 <p>
 <b>例子</b>
