@@ -1,24 +1,28 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.21 如果要输出多个值，返回结构体或元组更好
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.21 如果要返回多个值，可以返回一个结构
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.21: To return multiple “out” values, prefer returning a struct
 
-函数结果通过返回值的方式返回，代码更容易理解。C++ 里可以返回多个值。其
-一是用元组（包括数值对），可能在调用处需要额外的结构绑定（C++17）；其
-二是结构体，可以通过成员名能提供语义解释（推荐）。不命名的元组在泛型代
-码中用的比较多。
+*理由*
 
-例子
+函数结果通过返回值的方式返回，意义明确，代码更容易理解。C++ 里可以用类
+似 ~tuple~ 的类型（包括 ~struct~, ~array~, ~tuple~ ）返回多个值，还可以直接在
+调用处进行结构绑定（C++17）；最好使用定义了类型名的结构体，这样可以通
+过成员名能提供语义解释（推荐）。不命名的元组在泛型模板代码中用的比较多。
 
-#+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
+
+*例子*
+
+#+attr_html: :class bad
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
 // BAD: output-only parameter documented in a comment
 int f1(const string& input, /*output only*/ string& output_data)
 {
@@ -28,6 +32,23 @@ int f1(const string& input, /*output only*/ string& output_data)
     return status;
 }
 
+int main()
+{
+    auto ss = string();
+    if(f1("bonjour,", ss)) {
+        cout << ss << endl;
+    }
+}
+#+end_src
+
+#+RESULTS:
+: bonjour, hello
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
 // GOOD: self-documenting
 tuple<int, string> f2(const string& input)
 {
@@ -37,21 +58,14 @@ tuple<int, string> f2(const string& input)
 }
 int main()
 {
-    auto ss = string();
-    if(f1("bonjour,", ss)) {
-        cout << ss << endl;
-    }
-
     auto tt = f2("bonjour,");
     if(get<int>(tt)) {
         cout << get<string>(tt) << endl;
     }
-    return 0;
 }
 #+end_src
 
 #+RESULTS:
-: bonjour, hello
 : bonjour, hello
 
 C++98 标准库就已经在用这个方法返回值。比如下面代码中， ~pair~ 其实就是有
@@ -96,8 +110,10 @@ if (auto [ iter, success ] = my_set.insert("Hello"); success)
 #+RESULTS:
 : Hello
 
+结构体中的每个变量都有名字，更好理解。比如 ~ranges::min_max_result~ ,
+~from_chars_result~ 等。
 
-例外
+*例外*
 
 有时，我们要传一个对象给函数，让函数修改其状态。这时候，最好通过引用
 ~T&~ 传递对象。通常不需要显式的传一个 in-out 参数做为返回值。
@@ -120,22 +136,26 @@ for (string s; cin >> s; ) {
 
 对比的，如果全部值都要返回的话，要写成这样：
 
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
-pair<istream&, string> get_string(istream& is)  // not recommended
+struct get_string_result { istream& in; string s; };
+
+get_string_result get_string(istream& in)  // not recommended
 {
     string s;
-    is >> s;
-    return {is, s};
+    in >> s;
+    return { in, move(s) };
 }
 
-for (auto p = get_string(cin); p.first; ) {
-    // do something with p.second
+for (auto [in, s] = get_string(cin); in; s = get_string(in).s) {
+    // do something with string
 }
 #+end_src
 
 我们认为这样很不优雅，性能较差。
 
-注意：
+
+*注意*
 
 很多情况，返回一个自定义的类型比较有用，比如：
 
@@ -153,10 +173,49 @@ auto [x, y] = measure(obj4);        // don't; it's likely to be confusing
 #+end_src
 
 当返回值是互相独立的数据实体的时候，可以用极度泛型的 ~pair~ 和 ~tuple~ 解
-构返回值。但不要用于良好封装的抽象实体。
+构返回值。但不要用于封装得很好的抽象实体。
 
-也可以用 ~variant<T, error_code>~ 这种类型来接收返回值。
+另外，也可以用 ~optional<T>~ 或 ~expected<T, error_code>~ 来返回可能不同的
+类型值。尽量避免用 ~pair~ 和 ~tuple~ 。像 ~pair<T, bool>~ 和 ~pair<T,
+error_code>~ 这种类型描述不够直观。
 
-强化
-- 用返回值替换输出参数。输出参数指的是：1）函数会改写；2）函数修改参数
-  的成员变量，且变量不是常量；3）以非 ~const~ 的形式传入。
+
+*注意*
+
+如果从局部组成的对象太大，不适合复制，可以考虑显式的 ~move~ 移动操作，从
+而避免产生复制。
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+pair<LargeObject, LargeObject> f(const string& input)
+{
+    LargeObject large1 = g(input);
+    LargeObject large2 = h(input);
+    // ...
+    return { move(large1), move(large2) }; // no copies
+}
+#+end_src
+
+也可以这样写：
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+pair<LargeObject, LargeObject> f(const string& input)
+{
+    // ...
+    return { g(input), h(input) }; // no copies, no moves
+}
+#+end_src
+
+
+*强化*
+- 用返回值替换出参。出参指的是：1）函数会改写；2）函数修改参数的成员变
+  量，且变量不是常量；3）以非 ~const~ 的形式传入。
+- 用结构体作为返回值类型，不要用 ~pair~ 或 ~tuple~ 。不过在泛型模板中，
+  ~tuple~ 可能无法避免。
