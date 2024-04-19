@@ -1,36 +1,40 @@
 ---
 layout: post
 title: CppCoreGuidelines F.22 用 T* 或 owner<T*> 表示单个对象
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由
+F.22: Use T* or owner&lt;T*&gt; to designate a single object
 </p>
 
 <p>
-可读性好：指针的意义更清晰。可以较好地让工具支持。
+<b>理由</b>
 </p>
 
 <p>
-注意
+可读性好：指针的意义更清晰。可以更好的利用工具提供的支持优化代码。
+</p>
+
+
+<p>
+<b>注意</b>
 </p>
 
 <p>
-传统 C 和 C++ 代码，用到很多 <code>T*</code> 这样的指针：
+传统 C 和 C++ 代码，用到很多<code>T*</code>这样的指针：
 </p>
 <ul class="org-ul">
 <li>表示一个（单独）对象（不会在函数中删除）</li>
 <li>指向自由存储区分配的对象（之后会删除）</li>
-<li>一个 <code>nullptr</code></li>
+<li>一个 <code>nullptr</code> 指针</li>
 <li>表示一个 C 风格的字符串（空字符结尾的字符数组）</li>
-<li>表示一个数组，长度另外提供</li>
-<li>表示数组中的一个位置</li>
+<li>表示一个数组，长度则是另外一个变量指定</li>
+<li>表示在数组中的一个位置</li>
 </ul>
 
 <p>
@@ -42,16 +46,16 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">n</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">s</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">q</span><span style="color: #707183;">)</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">n</span>, <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">s</span>, <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">q</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    p<span style="color: #7388d6;">[</span>n - 1<span style="color: #7388d6;">]</span> = 666; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: we don't know if p points to n elements;</span>
-                    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assume it does not or use span&lt;int&gt;</span>
-    cout &lt;&lt; s;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: we don't know if that s points to a</span>
-                    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">zero-terminated array of char;</span>
-                    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assume it does not or use zstring</span>
-    <span style="color: #7F0055; font-weight: bold;">delete</span> q;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: we don't know if *q is allocated</span>
-                    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">on the free store;</span>
-                    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assume it does not or use owner</span>
+    <span style="color: #000000;">p</span><span style="color: #7388d6;">[</span>n <span style="color: #7F0055; font-weight: bold;">-</span> <span style="color: #110099;">1</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">666</span>; <span style="color: #3F7F5F;">// Bad: we don't know if p points to n elements;</span>
+                    <span style="color: #3F7F5F;">// assume it does not or use span&lt;int&gt;</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> s;      <span style="color: #3F7F5F;">// Bad: we don't know if that s points to a</span>
+                    <span style="color: #3F7F5F;">// zero-terminated array of char;</span>
+                    <span style="color: #3F7F5F;">// assume it does not or use zstring</span>
+    <span style="color: #7F0055; font-weight: bold;">delete</span> q;       <span style="color: #3F7F5F;">// Bad: we don't know if *q is allocated</span>
+                    <span style="color: #3F7F5F;">// on the free store;</span>
+                    <span style="color: #3F7F5F;">// assume it does not or use owner</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -61,17 +65,18 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">zstring</span> <span style="color: #000000;">s</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>*<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">q</span><span style="color: #707183;">)</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">zstring</span> <span style="color: #000000;">s</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">q</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    p<span style="color: #7388d6;">[</span>p.size<span style="color: #909183;">()</span> - 1<span style="color: #7388d6;">]</span> = 666; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, a range error can be caught</span>
-    cout &lt;&lt; s; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
-    <span style="color: #7F0055; font-weight: bold;">delete</span> q;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    <span style="color: #000000;">p</span><span style="color: #7388d6;">[</span>p.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #909183;">()</span> <span style="color: #7F0055; font-weight: bold;">-</span> <span style="color: #110099;">1</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">666</span>; <span style="color: #3F7F5F;">// OK, a range error can be caught</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> s; <span style="color: #3F7F5F;">// OK</span>
+    <span style="color: #7F0055; font-weight: bold;">delete</span> q;  <span style="color: #3F7F5F;">// OK</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
+
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
