@@ -1,0 +1,62 @@
+---
+layout: post
+title: 在 macOS 上使用 emacs
+tags: [emacs]
+categories: [productivity]
+---
+<p>
+上周末（ 2024 年4月 14 日）买的 Macbook M3 Air，拿回家，装上 homebrew。
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src- src-shell">brew tap railwaycat/emacsmacport
+brew install emacs-mac --with-native-compilation <span style="color: #2A00FF;">\</span>
+     --with-natural-title-bar --with-imagemagick --with-librsvgemacs-mac
+</pre>
+</div>
+
+<p>
+解决了一些在 macOS 上的配置问题。
+</p>
+
+<p>
+Emacs 无法获得系统环境变量
+</p>
+
+<p>
+原因是 GUI 应用不能从.zsh继承环境变量，而是有 <code>launchctl</code> 控制的。需要在<code>/etc/launchd.conf</code>中设置环境变量，比如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">setenv JAVA_HOME /opt/homebrew/opt/openjdk
+setenv PATH /opt/homebrew/bin:$<span style="color: #000000;">JAVA_HOME</span>/bin:/opt/homebrew/Caskroom/drawio/24.2.5/draw.io.app/Contents/MacOS:$<span style="color: #000000;">PATH</span>
+</pre>
+</div>
+
+<p>
+也可以这样给 launchd 配置环境变量进行测试：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">launchctl setenv PATH /opt/homebrew/bin:$<span style="color: #000000;">JAVA_HOME</span>/bin:/opt/homebrew/Caskroom/drawio/24.2.5/draw.io.app/Contents/MacOS:$<span style="color: #000000;">PATH</span>
+</pre>
+</div>
+
+<p>
+另外，还有一个奇怪的问题。
+</p>
+
+<p>
+一开始，我发现 emacs-mac 的最大化按钮无法进行最大化，靠左靠右分屏。后来发现是因为把 <code>menu-bar</code> 给取消掉的缘故，加回来就可以了。
+</p>
+
+<p>
+还有一个更奇怪的问题， <code>sis</code> 在 inline 英文切换中文的时候，会多添加一个英文句号点。不知道是怎么回事，写文章多的话，觉得挺讨厌的。
+</p>
+
+<p>
+我一开始以为是 <code>sis</code> 的问题，后来发现是 macOS 系统自带的功能，连续快速的两个 space 空格会自动添加一个标点符号。可以在系统设置-&gt;键盘 Keyboard
+-&gt; 输入Text Input -&gt;输入源Input Source中关掉 &ldquo;Add period with
+double space&rdquo;.
+</p>

@@ -1,15 +1,14 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.23 用 not_null<T> 表示“null”是无效的
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.23 用 not_null<T> 表示“null”是无效的
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.23: Use a ~not_null<T>~ to indicate that “null” is not a valid value
+
+
+*理由*
 
 使得代码更清晰。函数的参数是 ~not_null<T>~ 就要求函数被调用的地方确保参
 数不是空的。类似的，函数返回值是 ~not_null<T>~ 就是告诉调用者，这个函数

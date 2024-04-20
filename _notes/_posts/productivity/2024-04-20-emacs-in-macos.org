@@ -1,0 +1,45 @@
+#+LAYOUT: post
+#+TITLE: 在 macOS 上使用 emacs
+#+TAGS: emacs
+#+CATEGORIES: productivity
+
+上周末（2024年4月14日）买的 Macbook M3 Air，拿回家，装上 homebrew。
+
+
+#+begin_src shell
+brew tap railwaycat/emacsmacport
+brew install emacs-mac --with-native-compilation \
+     --with-natural-title-bar --with-imagemagick --with-librsvgemacs-mac
+#+end_src
+
+解决了一些在 macOS 上的配置问题。
+
+Emacs 无法获得系统环境变量
+
+原因是 GUI 应用不能从 .zsh 继承环境变量，而是有 ~launchctl~ 控制的。需要
+在 =/etc/launchd.conf= 中设置环境变量，比如：
+
+#+begin_src shell
+setenv JAVA_HOME /opt/homebrew/opt/openjdk
+setenv PATH /opt/homebrew/bin:$JAVA_HOME/bin:/opt/homebrew/Caskroom/drawio/24.2.5/draw.io.app/Contents/MacOS:$PATH
+#+end_src
+
+也可以这样给 launchd 配置环境变量进行测试：
+
+#+begin_src shell
+launchctl setenv PATH /opt/homebrew/bin:$JAVA_HOME/bin:/opt/homebrew/Caskroom/drawio/24.2.5/draw.io.app/Contents/MacOS:$PATH
+#+end_src
+
+另外，还有一个奇怪的问题。
+
+一开始，我发现 emacs-mac 的最大化按钮无法进行最大化，靠左靠右分屏。后
+来发现是因为把 ~menu-bar~ 给取消掉的缘故，加回来就可以了。
+
+还有一个更奇怪的问题， ~sis~ 在 inline 英文切换中文的时候，会多添加一个
+英文句号点。不知道是怎么回事，写文章多的话，觉得挺讨厌的。
+
+我一开始以为是 ~sis~ 的问题，后来发现是 macOS 系统自带的功能，连续快速的
+两个 space 空格会自动添加一个标点符号。可以在系统设置 -> 键盘 Keyboard
+-> 输入 Text Input -> 输入源 Input Source 中关掉 "Add period with
+double space".
+
