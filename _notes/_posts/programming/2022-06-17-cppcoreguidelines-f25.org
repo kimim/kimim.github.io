@@ -1,25 +1,25 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.25 用 zstring 或 not_null<zstring> 表示 C 风格字符串
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.25 用 zstring 或 not_null<zstring> 表示 C 风格字符串
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.25: Use a ~zstring~ or a ~not_null<zstring>~ to designate a C-style string
 
-C 风格字符串很普遍。是一种惯例约定：空字符结尾的字符串数组。我们必须区
-分 C 风格字符串、指向单个字符的指针还是指向字符串数组的指针。
+*理由*
+
+C 风格字符串很普遍。一般约定为以空字符结尾的字符串数组。我们必须区分 C
+风格字符串、指向单个字符的指针还是指向字符串数组的指针。
 
 如果不需要 ~null~ 结尾，可以用 ~string_view~
 
-例子
+
+*例子*
 
 考虑以下函数
 
+#+attr_html: :class bad
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 int length(const char* p);
 #+end_src
@@ -38,6 +38,6 @@ int length(not_null<zstring> p);
 则要求函数的调用方确保传进来的参数不能是空指针。
 
 
-注意
+*注意*
 
 ~zstring~ 不带所有权信息

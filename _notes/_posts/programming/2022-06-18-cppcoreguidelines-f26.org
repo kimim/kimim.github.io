@@ -1,22 +1,22 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.26 用 unique_ptr<T> 传递指针所有权
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.26 用 unique_ptr<T> 传递指针所有权
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.26: Use a ~unique_ptr<T>~ to transfer ownership where a pointer is needed
+
+*理由*
 
 ~unique_ptr~ 是安全传递指针的最轻量的方法。
 
+如果返回值是 ~shared_ptr~ 请查看 [[https://kimi.im/2022-10-20-cppcoreguidelines-c50][CppCoreGuidelines C.50 如果初始化阶段需
+要一些虚行为，可以用工厂函数]]
 
-See also: C.50 regarding when to return a ~shared_ptr~ from a factory.
 
-例子
+*例子*
+
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 // -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
 #include <iostream>
@@ -144,9 +144,12 @@ int main()
 : Triangle
 : ~Triangle
 
-注意
 
-如果你要传递一个子类对象到一个父类对象，请使用指针。
+*注意*
 
-强化
-- （简单）警告：返回一个本地原始指针的情况。建议使用 ~unique_ptr~ 或 ~shared_ptr~ 。
+如果需要运用类层级上基类的接口函数的话，你需要传递一个指针而不是对象。
+
+
+*强化*
+- （简单）如果函数返回一个局部的原始指针的话，需要进行警告。建议使用
+  ~unique_ptr~ 或 ~shared_ptr~ 。

@@ -5,11 +5,11 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-F.22: Use T* or owner<T*> to designate a single object
+F.22: Use ~T*~ or ~owner<T*>~ to designate a single object
 
 *理由*
 
-可读性好：指针的意义更清晰。可以更好的利用工具提供的支持优化代码。
+可读性好：使得指针的意义更清晰。可以更好的利用工具提供的支持优化代码。
 
 
 *注意*

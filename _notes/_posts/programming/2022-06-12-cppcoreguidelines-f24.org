@@ -1,19 +1,20 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.24 用 span<T> 或 span_t<T> 表示半开序列
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.24 用 span<T> 或 span_t<T> 表示半开序列
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.24: Use a ~span<T>~ or a ~span_p<T>~ to designate a half-open sequence
+
+
+*理由*
 
 不正式的/不明确的范围，容易导致错误。
 
-例子
+
+*例子*
+
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 X* find(span<X> r, const X& v);    // find v in r
@@ -23,14 +24,17 @@ vector<X> vec;
 auto p = find({vec.begin(), vec.end()}, X{});  // find X{} in vec
 #+end_src
 
-注意
+
+*注意*
 
 C++ 代码中，范围的使用很普遍。一般都是隐式的，很难确保正确使用。尤其是，
 ~(p, n)~ 表示一个数组 ~[p:p+n)~ ，很难理清楚是要访问 ~*p~ 后面有 ~n~ 个元素。
-~span<T>~ 和 ~span_p<T>~ 表示一个范围 ~[p:q)~ ，以 ~p~ 开始，以预测条件为真结
-束。
+~span<T>~ 和 ~span_p<T>~ 表示一个范围 ~[p:q)~ 。
 
-例子
+
+*例子*
+
+~span~ 表示一组元素，但是我们如何对这组元素进行操作呢？
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std gsl :includes <iostream> <vector> <algorithm> <gsl/gsl> :eval no-export
 void f(span<int> s)
@@ -62,11 +66,13 @@ int main()
 : 4 3 2 1 2 3
 : 3 4 9 1 2 3
 
-注意
+
+*注意*
 
 ~span<T>~ 并不保留其元素值，非常轻量，所以可以以值传递。
 
 传递 ~span~ 对象的效率跟传递两个指针对，或指针+数量一样。
 
-强化
+
+*强化*
 - （复杂）警告：访问指针参数的时候，其范围又由另外参数指定。建议使用 ~span~
