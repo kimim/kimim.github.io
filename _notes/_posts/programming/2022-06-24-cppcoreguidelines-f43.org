@@ -1,7 +1,7 @@
 #+layout: post
 #+title: CppCoreGuidelines F.43 不要（直接或间接）返回指向局部对象的指针或引用
-#+categories: [technology]
-#+tags: [CppCoreGuidelines]
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
