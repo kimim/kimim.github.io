@@ -1,27 +1,28 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.43 不要（直接或间接）返回指向局部对象的指针或引用
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.43 不要（直接或间接）返回指向局部对象的指针或引用
+#+categories: [technology]
+#+tags: [CppCoreGuidelines]
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.43: Never (directly or indirectly) return a pointer or a reference to a local object
 
-悬空指针会导致程序崩溃，数据破坏。
+*理由*
 
-坏例子
+悬空指针（dangling pointer）会导致程序崩溃，数据破坏。
 
-从函数返回后，本地对象已经没了。
+*例子*
 
-#+begin_src C++ :results output :exports both :eval no-export
-// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
-#include <iostream>
+虽然我们可以把函数内部的局部变量的地址返回出去，但是在函数执行完后，局
+部变量的内存已经被覆盖或者清空了。
+
+#+attr_html: :class bad
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20 -I/opt/homebrew/include
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no :results output
+#+begin_src C++ :noweb strip-export
 #include <gsl/gsl>
-using namespace std;
 using namespace gsl;
 int* f()
 {
@@ -51,34 +52,35 @@ int main()
 }
 #+end_src
 
-#+RESULTS:
-
-可能的结果：
+这里，我们可能会得到如下结果：
 
 #+begin_example
 *p == 999
 gx == 999
 #+end_example
 
-可能的原因是 ~g()~ 重用了 ~f()~ 函数不用了的堆栈空间。所有 ~*p~ 指向了 ~gx~ 的堆栈空间。
+原因可能是 ~g()~ 重用了 ~f()~ 函数不再使用的堆栈空间。所有 ~*p~ 指向了 ~gx~ 的堆栈空间。
 
-以下情况都可能发生，想象下：
+那么，我们再考虑下如下几种情况：
 - ~fx~ 和 ~gx~ 不是同一类型
 - ~fx~ 和 ~gx~ 是同一类型的变体
-- 一组函数调用过程中有更多悬挂指针
-- 黑客可以利用悬挂指针做什么事情
+- 这个悬空指针在一组函数之间传来传去
+- 这个悬空指针被黑客发现了，会用来做什么事情
 
 幸运的是，大部分现代编译器都会对简单的情况进行警告
 
-注意
 
-引用有一样的情况
+*注意*
 
-#+begin_src C++ :results output :exports both :eval no-export
-// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
-#include <iostream>
+返回值是引用的话，也会出现一样的问题
+
+#+attr_html: :class bad
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20 -I/opt/homebrew/include
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
 #include <gsl/gsl>
-using namespace std;
 using namespace gsl;
 int& f()
 {
@@ -94,22 +96,62 @@ int main()
 #+end_src
 
 #+RESULTS:
+: 7
 
 
-注意
+*注意*
 
-只针对非静态局部变量会。静态变量静态分配存储空间，指向他们的指针不会悬空。
+静态局部变量的地址或引用返回不会出现此类问题。因为静态变量静态地分配了
+存储空间，指向他们的指针不会悬空。
 
-
-坏例子
-
-有些泄漏局部变量指针的情况不太明显
-
-#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
-// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
-#include <iostream>
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20 -I/opt/homebrew/include
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
 #include <gsl/gsl>
-using namespace std;
+using namespace gsl;
+int& f()
+{
+    static int x = 7;
+    return x;
+}
+
+int* g()
+{
+    static int x = 7;
+    cout << &x << '\n';        
+    return &x;
+}
+
+int main()
+{
+    cout << f() << '\n';
+    cout << *g() << '\n';
+    cout << g() << '\n';
+    return 0;
+}
+#+end_src
+
+#+RESULTS:
+: 7
+: 0x100328004
+: 7
+: 0x100328004
+: 0x100328004
+
+
+*例子*
+
+有些局部变量指针悬空的情况不太明显
+
+#+attr_html: :class bad
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20 -I/opt/homebrew/include
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+#include <gsl/gsl>
 using namespace gsl;
 int* glob;       // global variables are bad in so many ways
 
@@ -136,29 +178,29 @@ int main()
 #+end_src
 
 #+RESULTS:
-: address of glob = 0
-: address of i    = 0xbdc97ffb0c
+: address of glob = 0x0
+: address of i    = 0x16ae6b2bc
 : 99
-: address of glob = 0xbdc97ffb0c
+: address of glob = 0x16ae6b2bc
 
-这里我们在函数 ~f()~ 中把本地变量的引用赋值给了 ~glob~ ，后续代码使用 ~glob~
-会产生不可预测的结果。
+这里我们在函数 ~f()~ 中把局部变量的引用赋值给了 ~glob~ ，后续代码使用 ~glob~
+会产生一些不确定的结果。
 
 
-注意
+*注意*
 
-本地变量地址会通过返回、 ~T&~ 输出参数、返回对象的成员、返回数组的元素等
+局部变量地址会通过返回、 ~T&~ 入出参数、返回对象的成员、返回数组的元素等
 方式泄漏出来。
 
 
-注意
+*注意*
 
-内部作用域的变量，也可能通过类似方式泄漏到外层作用域。
+内层作用域的变量，也可能通过类似方式泄漏到外层作用域。
 
-此问题的另一个变体是将指针放在一个容器内，此容器的生存周期比指针指向的
-对象生存周期长。
+此问题的另一个变体是将指针放在一个容器内，此容器的生存周期却比指针指向
+的对象的生存周期长。
 
 
-强化
+*强化*
 - 编译器捕捉返回值为指向局部对象的引用和指针。
 - 静态代码分析确认用指针表示对象位置的情况。
