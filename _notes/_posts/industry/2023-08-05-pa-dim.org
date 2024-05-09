@@ -3,32 +3,73 @@
 #+TAGS: OPCUA industry IIoT
 #+CATEGORIES: industry
 
-本文介绍 PA-DIM。PA-DIM 的英文全称是 Process Automation - Device
-Information Model ，即过程自动化-设备信息模型。
+工业物联网、工业互联网等概念闹了很久，那么从工业设备角度来看，到底怎么
+样拥抱这些概念呢？PA-DIM 可能是一个不错的入口。
 
-首先，我们回顾下过程自动化行业的发展里程。过程自动化行业的工业现场仪器
-仪表设备、控制通信网络经过了几十年的发展，已经有了很好的基础。像
-PROFIBUS, MODBUS, FOUNDATION Field, HART, WirelessHART 等工业现场协议，
-可以在 DCS/PLC 和各种现场仪器和执行器之间，建立稳定、安全、可靠的通信
-链接。
+PA-DIM 的英文全称是 Process Automation - Device Information Model ，即
+过程自动化-设备信息模型。
 
-如图所示 [[purdue-architecture]] ，上世纪 90 年代提出的普渡自动化金字
-塔层级架构，把工业企业的自动化应用和控制分成多个层级。最底下是所要管控
-的工业现场；往上一层是部署在现场的传感器、执行器和 SIS ，它们直接和物
-理世界进行交互；在这些现场设备上一层是 PLC ，DCS ，SCADA 等执行监控任
-务的控制设备；再上一层是数据历史系统、生产执行系统等运营管理软件；最上
-层则是企业信息系统，包括供应商管理软件、客户管理软件、财务管理软件等。
+首先，我们来回顾一下工业总线的发展历史。
 
+工业上普遍需要测量各种物理量，比如温度、压力、速度、角度、液位高度等。
+它们都需要转换成模拟量电信号才可以传输到控制室进行显示。工业上最广泛采
+用的是 4-20 mA 的电流进行传输。比如，测量范围是 0-100 摄氏度的温度传感
+器，发送 4mA 信号给控制器，表示 0 摄氏度，发送 20mA 信号给控制器，表示
+100 摄氏度。
+
+然而，用电流信号传输数据有很多限制。第一，连线多。控制器和现场设备之间
+是一对一的连线。距离越远，电路越长，安装成本、空间占用就越大。第二，调
+试困难。设备和控制室两边要来回对数据。第三，精度低。现场仪表要把物理量
+转换成电流值，转换过程必定损失一些精度。第四，管理难。控制器只能读到测
+量数据，没法获取设备标识信息和诊断信息。
+
+为了解决部分问题，上世纪 80 年代，人们想到了个办法，在 4-20mA 的电流信
+号上叠加一个所谓的 FSK 频移键控信号，使得模拟信号和数字信号互不干扰在
+同一根物理导线上传输。频移键控就是设定两组不同的信号频率表示数字信号比
+特位 0 和 1 。这种协议就叫 HART - Highway Addressable Remote
+Transducer。
+
+#+chatu: :drawio "~/draws/Fieldbus-logos"
+[[file:./draws_out/Fieldbus-logos.svg]]
+
+这一时期，也出现了各种工业总线。比如 Modbus，CAN，FOUNDATION Feildbus，
+PROFIBUS 等串行通信总线，以及后来基于以太网的 PowerLink，HART-IP，
+PROFINET，FF HSE，Modbus TCP 等。可以在 DCS/PLC 和各种现场仪器和执行器
+之间，建立稳定、安全、可靠的通信链接。
+
+如今，IT/OT融合，企业对数据利用的要求越来越多，行业内提出了工业 4.0 ，
+智能智造、工业物联网、工业互联网等愿景，为的是如何降低数据获取的复杂度，
+提升数据的利用度，获取数据的价值。正如 FieldComm Group （FCG）的 Paul
+Sereiko 所说：“There's a big thirst for plant-floor-to-cloud
+communication.”
+
+所以，现场设备越来越多的需要通过移动设备进行便捷地访问，通过边缘服务器
+快速分析本地数据，通过云服务进行大数据的训练和分析。最基本的，控制系统
+要能获取现场设备的数据。然后现场操作员想要在移动终端进行现场诊断。现场
+车间的边缘分析服务器需要设备数据进行计算，做局部优化分析。而工业云则可
+以利用全局数据进行挖掘，辅助决策。这就对数据采集的便捷性、兼容性、通用
+型提出更高要求。
+
+比如说，一套工具如果能通吃各种设备的话，不管是 PROFIBUS 还是 MODBUS 设
+备，只要连上设备，我就可以配置设备参数，调试设备功能，使用设备进行现场
+测量控制了。
+
+#+chatu: :drawio "~/draws/PA-DIM-Context.drawio"
+#+results:  
+[[file:./draws_out/PA-DIM-Context.svg]]
+  
+而目前的现状如图所示 [[purdue-architecture]] ，上世纪 90 年代提出的普渡自
+动化金字塔层级架构，把工业企业的自动化应用和控制分成多个层级。最底下是
+所要管控的工业现场；往上一层是部署在现场的传感器、执行器和 SIS ，它们
+直接和物理世界进行交互；在这些现场设备上一层是 PLC ，DCS ，SCADA 等执
+行监控任务的控制设备；再上一层是数据历史系统、生产执行系统等运营管理软
+件；最上层则是企业信息系统，包括供应商管理软件、客户管理软件、财务管理
+软件等。
+
+#+chatu: :drawio "~/draws/purdue-architecture.drawio"
 #+name: purdue-architecture
-#+header: :output-dir images :file purdue-architecture.svg
-#+begin_src shell :exports results :results file graphics :eval no-export
-draw.io -x ~/draw/purdue-architecture.drawio \
-        -o ./images/purdue-architecture.pdf && \
-pdf2svg ./images/purdue-architecture.pdf \
-        ./images/purdue-architecture.svg
-#+end_src
-#+RESULTS: purdue-architecture
-[[file:images/purdue-architecture.svg]]
+#+results:
+[[file:./draws_out/purdue-architecture.svg]]
 
 普渡自动化金字塔层级架构在过去几十年，构成了工业企业信息化的参考模型。
 但是，随着流程工业对数据的获取、理解、分析、利用的要求越来越高。如果们
@@ -43,54 +84,82 @@ pdf2svg ./images/purdue-architecture.pdf \
   各不相同，数据的格式也不统一，所以数据处理的过程、展示数据的过程也各
   不相同。
 
-#+name: PA-DIM-Context
-#+begin_src shell :exports results :results file graphics :eval no-export :output-dir images :file PA-DIM-Context.svg
-draw.io -x ~/draw/PA-DIM-Context.drawio \
-        -o ./images/PA-DIM-Context.pdf && \
-pdf2svg ./images/PA-DIM-Context.pdf \
-        ./images/PA-DIM-Context.svg
-#+end_src
-
-#+RESULTS: PA-DIM-Context
-[[file:images/PA-DIM-Context.svg]]
-
 从普渡自动化金字塔层级结构中，我们可以看到，过程自动化现场有分析仪器、
 测量仪器、执行仪器等，他们传统的来说会连接到工业主机控制器，由工程配置
 软件通过主机控制器对这些仪器进行配置，HMI 软件又通过主机控制器获取实时
 测量数据、实时运行参数、设备状态数据，并根据情况调整工艺参数、修改输出
-数据。但是，随着对数据利用的要求越来越多，行业内提出了工业 4.0 ，智能
-智造、工业物联网、工业互联网等愿景，为的是如何降低数据获取的复杂度，提
-升数据的利用度，获取数据的价值。所以，现场设备越来越多的需要通过移动设
-备进行便捷地访问，通过边缘服务器快速分析本地数据，通过云服务进行大数据
-的训练和分析。
+数据。
 
-针对这些诉求，现场通信组（FieldComm Group, FCG)、OPC 基金会（OPC
-Foundation, OPCF）、NAMUR 化学行业测量和控制技术标准工作组（Normen
+首选，是要明确，为了实现数据互联互通的愿景，需要获取哪些数据？比如：
+- 设备能提供什么样的功能？
+- 应用程序可以调用设备的哪些服务？
+- 需要用什么样的协议传输数据？什么样的格式保存数据？
+- 设备和设备之间是什么关系？
+- 实现这些功能需要哪些信息安全保障机制？
+
+#+chatu: :drawio "~/draws/Field-Device-Model"
+#+results:
+[[file:./draws_out/Field-Device-Model.svg]]
+
+于是，针对这些个问题，各种现场总线的协会和标准组织也提出了很多解决方案：
+- 工业 4.0 组织提出了资产管理壳（Asset Administration Shell，简称 AAS）
+- W3C WoT 提出了 Thing Description 方案
+- NAMUR 提出 Module Type Package 方案，简称 MTP
+- Automation Markup Language，简称 AutomationML
+- FDT Group 提出 Field Device Tool，简称 FDT
+- FieldComm Group 提出了 Field Device Integration 方案，简称 FDI
+- 以及 OPC UA 的 PA-DIM 过程自动化信息模型方案
+
+以 FDT 和 FDI 为例，我们看看他们是怎么进行集成的。
+
+#+chatu: :drawio "~/draws/Compare-FDT-FDI-PA-DIM" :page 0
+#+results:
+[[file:./draws_out/Compare-FDT-FDI-PA-DIM-0.svg]]
+
+FDT 的全称是 Field Device Tool/Technology，国际标准编号为 IEC 62453。
+FDT 定义了一套厂商和协议中立的现场设备集成接口。FDT 提供一套叫作 FDT
+Frame 的应用框架来承载运行 DTM 模块（Device Type Manager）。不同的设备
+有一套自己的 DTM 程序，这套程序按照 FDT 的接口开发，导入到 FDT 应用框
+架中，就能把设备用起来。这个方式打印机的安装方式。我们如果想要用特定打
+印机，就要安装打印机的驱动程序。而 DTM 正是设备的驱动程序。
+
+FDI 的全称是 Field Device Integration，国际标准编号为 IEC 62769。FDI
+改进了 FDT 的设备描述机制，不再使用程序开发的 DTM 作为设备驱动，而是用
+EDDL 编写的设备描述文件。FDI 也有一个应用框架叫作 FDI Host System，它
+可以执行导入的 FDI Package，FDI Package 包含了核心的 EDD 设备描述文件
+外，还有 UIP 和附件。UIP 是 User Interface Plug-in，即用户界面插件。通
+过 UIP 可以定义配置使用设备的工具界面。而附件则是设备的说明书、认证证
+书等。这样一来，就可以利用描述文件来构造程序，而不需要写代码开发 DTM
+了。
+
+后来，FDT 和 FDI 都支持在其运行系统之上提供 OPC UA 服务器，这样一来，
+各种不同的工业总线就可以通过 FDT/FDI 集成，提供数据给 OPC UA 客户端了。
+
+但是，不同的现场总线的集成技术会设计出不同的 OPC UA 地址空间，互相不兼
+容。于是，多个厂商、用户协会共同开发了过程自动化设备信息模型（PA-DIM）。
+这些组织包括：现场通信组（FieldComm Group, FCG)、OPC 基金会（OPC
+Foundation, OPCF）、NAMUR 德国化学行业测量和控制技术标准工作组（Normen
 Arbeitsgemeinschaft für Mess- und Regeltechnik in der chemischen
-Industrie, NAMUR）、ZVEI（Zentralverband Elektrotechnik und
-Elektronikindustrie e. V.）、PROFIBUS & PROFINET 国际组织（PROFIBUS &
-PROFINET International, PI）、ODVA（Open DeviceNet Vendors
-Association）、ISA100（International Society of Automation）、
-VDMA（Der Verband Deutscher Maschinen- und Anlagenbau e.V.）、FDT
-Group（Field Device Technology Group） 合作开发了过程自动化-设备信息模
-型 PA-DIM。为的是更轻松的采集数据；又能兼容支持工业现场已经安装的设备；
-并且要基于最新的面向未来的技术标准推广现有设备集成技术；最后，任何设备
-供应商、任何协议，都能以标准化的方式集成设备。PA-DIM 的主要技术内容如
-下：
-- PA-DIM 定义了设备标识、设备诊断、过程变量等常见参数。
-- 用统一的层级结构和数据结构呈现这些参数数据。
+Industrie, NAMUR）、ZVEI 德国电气电子厂商协会（Zentralverband
+Elektrotechnik und Elektronikindustrie e. V.）、PROFIBUS & PROFINET 国
+际组织（PROFIBUS & PROFINET International, PI）、ODVA 开放 DeviceNet
+厂商协会（Open DeviceNet Vendors Association）、ISA100 国际自动化协会
+（International Society of Automation）、VDMA 德国机械设备制造业联合会
+（Der Verband Deutscher Maschinen- und Anlagenbau e.V.）、FDT
+Group（Field Device Technology Group）。
+
+PA-DIM 的目的是为了更轻松的采集数据；又能兼容支持工业现场已经安装的设
+备；并且要基于最新的、面向未来的技术标准；同时又能沿用现有的设备集成技
+术。最终目的是，确保任何设备供应商、任何协议，都能以标准化的方式集成设
+备。PA-DIM 的主要技术内容如下：
+- 定义了设备标识、设备诊断、过程变量等常见参数。
+- 用统一的层级数据结构呈现这些参数数据。
 - 套用标准的数据语义字典，确保数据名称的一致性。
 
+#+chatu: :drawio "~/draws/PA-DIM-PROTOCOLS.drawio"
 #+name: PA-DIM-PROTOCOLS
-#+header: :output-dir images :file PA-DIM-PROTOCOLS.svg
-#+begin_src shell :exports results :results file graphics :eval no-export
-draw.io -x ~/draw/PA-DIM-PROTOCOLS.drawio \
-        -o ./images/PA-DIM-PROTOCOLS.pdf && \
-pdf2svg ./images/PA-DIM-PROTOCOLS.pdf \
-        ./images/PA-DIM-PROTOCOLS.svg
-#+end_src
-#+RESULTS: PA-DIM-PROTOCOLS
-[[file:images/PA-DIM-PROTOCOLS.svg]]
+#+results:
+[[file:./draws_out/PA-DIM-PROTOCOLS.svg]]
 
 如图[[PA-DIM-PROTOCOLS]]所示，PA-DIM 给那些支持不同工业总线协议的设备扩展
 了 OPC UA 设备信息模型。在这个信息模型中定义了设备的核心参数，建立设备
@@ -99,8 +168,7 @@ pdf2svg ./images/PA-DIM-PROTOCOLS.pdf \
 
 #+NAME: PA-DIM-OVERVIEW
 #+CAPTION: PA-DIM 信息模型基本结构
-[[./images/PADIM-Overview.svg]]
-
+[[./draws_out/PA-DIM-Overview.svg]]
 
 如图 [[PA-DIM-OVERVIEW]] 所示，PA-DIM 通过扩展 OPC UA 地址空间，简化设备的
 数据访问：
@@ -116,48 +184,67 @@ pdf2svg ./images/PA-DIM-PROTOCOLS.pdf \
   - 可以扫描设备外部的二维码获取。
   - 可以从基于 IEEE 802.1AR IDevID 的设备出厂安全数字证书中获取。
 
-    
+#+chatu: :drawio "~/draws/Compare-FDT-FDI-PA-DIM" :page 1
+#+name: Compare-FDT-FDI-PA-DIM-1
+#+results:
+[[file:./draws_out/Compare-FDT-FDI-PA-DIM-1.svg]]
+
+如图[[Compare-FDT-FDI-PA-DIM-1]]所示，有了 PA-DIM 数据模型，就可以在 FDT
+和 FDI 的基础上提供一个统一的数据模型给 OPC UA 客户端访问。这样同一个
+客户端实现就能访问各种不同的设备数据了。这就更不用关心现场的设备是通过
+什么总线通信，或者是通过什么设备总线集成技术了。
+
+更进一步，如图[[Compare-FDT-FDI-PA-DIM-2]]，如果设备本身支持 OPC UA，并实
+现了 PA-DIM 就可以直接通过 OPC UA 客户端访问现场设备的数据了。不过，这
+时候，需要 Ethernet-APL 物理层通信技术的支持。
+
+#+chatu: :drawio "~/draws/Compare-FDT-FDI-PA-DIM" :page 2
+#+name: Compare-FDT-FDI-PA-DIM-2
+#+results:
+[[file:./draws_out/Compare-FDT-FDI-PA-DIM-2.svg]]
+
+理顺了工业总线以及工业总线集成技术的发展之后，我们再来看看 PA-DIM 和各个
+
 #+NAME: PA-DIM-STANDARDS
-#+begin_src plantuml :output-dir images :file padim-noa.svg :eval no-export :cmdline -charset utf-8 :exports results
-[I4.0 AAS] -> [PA-DIM] : 使用
-[NOA] --> [PA-DIM] : 使用
+#+begin_src plantuml :output-dir draws_out :file padim-noa.svg :eval no-export :cmdline -charset utf-8 :exports results
+[NOA] -> [PA-DIM] : 使用
 [O-PAS] --> [PA-DIM] : 使用
+[FDT/FDI] --> [PA-DIM] : 使用
 [PA-DIM] -> [APL] : 基于 IP 的设备使用
 [PA-DIM] --> [OPC UA] : 使用
 [PA-DIM] --> [CDD] : 使用
 #+end_src
 
 #+RESULTS: PA-DIM-STANDARDS
-[[file:images/padim-noa.svg]]
+[[file:draws_out/padim-noa.svg]]
 
 前面提到， PA-DIM 定义了过程设备数据的访问的标准方式，那么 PA-DIM 与其
 他工业标准有什么关系呢？如图 [[PA-DIM-STANDARDS]] 所示：
-- 工业 4.0 AAS 使用 PA-DIM
-- NOA NAMUR 开放架构（NE175）以 PA-DIM 为参考信息模型
-  - 满足 NOA 的用例需求
-  - 遵循 IEC 61987 CCD 的设备参数语义标识
-- OPAF "开放流程自动化论坛”开放过程自动化系统正在和 FCG 合作，计划将
-  PA-DIM 纳入 O-PAS 标准。
-- 基于 OPC UA 通信协议和信息模型
+- NAMUR 开放架构（NAMUR Open Architecture, NOA, NE175）以 PA-DIM 为参
+  考信息模型
+- "开放流程自动化论坛”（Open Process Automation Forum，OPAF）开放过程
+  自动化系统正在和 FCG 合作，计划将PA-DIM 纳入 O-PAS 标准（Open
+  Process Automation Standard）。
+- FDT/FDI 利用 PA-DIM 扩展 FDT 应用框架和 FDI Host 系统
+- PA-DIM 基于 OPC UA 通信协议和一些现成信息模型
   - OPC UA part 100 设备信息模型 [[cite:&OPC10000-100]] 是 PA-DIM 设备模型
     的基础
   - OPC UA part 8 数据访问模型 [[cite:&OPC10000-08]] 是 PA-DIM 设备信号数
     据的基础
-- 支持 FLC/OPC UA FX 现场层通信倡议，基于 IP 的设备使用 Ethernet-APL
-
+- 通过 FLC/OPC UA FX 现场层通信倡议，设备的 PA-DIM 数据可以直接通过
+  Ethernet-APL 网络访问
   
 PA-DIM 的开发计划：
 - 第一步，主要目的是要保持现有的 DCS/PLC 和现有的现场通信技术。通过边
   缘网关把现场设备的数据映射到基于 OPC UA 的 PA-DIM 信息模型。提供 IT
   层应用的访问通路，同时又保持 OT 层的独立运行。
-- 第二，通过 APL 和 IP 协议把 OPC-UA PA-DIM 引入到现场侧的部分设备中。
-  此时，系统有两个通道，一个是，基于传统模拟信号和/或现场总线的通信信
-  道。另一个是，基于 OPC-UA 和 PA-DIM 的现场设备将可以直接与边缘网关甚
-  至上层系统建立联系。
+- 第二，通过 APL 和 IP 协议把 PA-DIM 引入到现场侧的部分设备中。此时，
+  系统有两个通道，一个是，基于传统模拟信号或现场总线的通信信道。另一个
+  是，基于 OPC-UA 和 PA-DIM 的现场设备将可以直接与边缘网关甚至上层系统
+  建立通信。
 - 第三阶段，实现全面的 APL 以及实现单一的通信协议。即不管是用于生产控
   制、亦或是用于诊断/运维，都是用统一的 OPC UA 和统一的 APL 物理层，实
-  现真正的开放架构，以及无缝的信息流。只是通过特定的网关兼容传统的现场
-  设备。
+  现无缝的信息流。只通过特定的网关兼容传统的现场设备。
 
 
 最后，总接一下。
