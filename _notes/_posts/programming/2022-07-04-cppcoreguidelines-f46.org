@@ -5,7 +5,7 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-F.46: int is the return type for main()
+F.46: int is the return type for ~main()~
 
 
 *理由*

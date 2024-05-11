@@ -1,13 +1,11 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.47 赋值操作符返回 T&
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.47 赋值操作符返回 T&
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+F.47: Return ~T&~ from assignment operators
 
 理由
 
