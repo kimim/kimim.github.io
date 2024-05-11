@@ -1,21 +1,20 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.44 在不需要复制且不要返回空对象的时候返回引用 T&
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.44 在不需要复制且无需返回空对象的时候返回引用 T&
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.44: Return a ~T&~ when copy is undesirable and “returning no object” isn’t needed
 
-编程语言确保 ~T&~ 指向一个对象。所以不需要测试是否为 ~nullptr~
+*理由*
+
+编程语言会确保 ~T&~ 一定指向某个对象。所以不需要测试 ~T&~ 的值是否为 ~nullptr~
 
 返回引用不转移所有权。
 
-例子
+
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 // -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
@@ -63,5 +62,6 @@ int main()
 #+RESULTS:
 : wheel's pressure is 100
 
-强化
+
+*强化*
 - 注意函数返回值是引用的话，函数是不可能返回 ~nullptr~ 的

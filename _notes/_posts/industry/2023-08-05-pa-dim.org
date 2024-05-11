@@ -203,7 +203,8 @@ PA-DIM 的目的是为了更轻松的采集数据；又能兼容支持工业现�
 #+results:
 [[file:./draws_out/Compare-FDT-FDI-PA-DIM-2.svg]]
 
-理顺了工业总线以及工业总线集成技术的发展之后，我们再来看看 PA-DIM 和各个
+理顺了工业总线以及工业总线集成技术的发展之后，我们再来看看 PA-DIM 和各
+个标准及组织之间的关系。
 
 #+NAME: PA-DIM-STANDARDS
 #+begin_src plantuml :output-dir draws_out :file padim-noa.svg :eval no-export :cmdline -charset utf-8 :exports results

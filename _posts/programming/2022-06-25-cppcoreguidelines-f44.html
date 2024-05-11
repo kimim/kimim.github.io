@@ -1,70 +1,74 @@
 ---
 layout: post
-title: CppCoreGuidelines F.44 在不需要复制且不要返回空对象的时候返回引用 T&
-categories: [technology]
+title: CppCoreGuidelines F.44 在不需要复制且无需返回空对象的时候返回引用 T&
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由
+F.44: Return a <code>T&amp;</code> when copy is undesirable and “returning no object” isn’t needed
 </p>
 
 <p>
-编程语言确保 <code>T&amp;</code> 指向一个对象。所以不需要测试是否为 <code>nullptr</code>
+<b>理由</b>
+</p>
+
+<p>
+编程语言会确保<code>T&amp;</code>一定指向某个对象。所以不需要测试<code>T&amp;</code>的值是否为 <code>nullptr</code>
 </p>
 
 <p>
 返回引用不转移所有权。
 </p>
 
+
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">array</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// -*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;array&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> gsl;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">wheel</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">float</span> <span style="color: #000000;">pressure</span>;
+    <span style="color: #7F0055; font-weight: bold;">float</span> <span style="color: #000000; font-style: italic;">pressure</span>;
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #0000ff; font-weight: bold;">wheel</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">float</span> <span style="color: #000000;">p</span> = 100<span style="color: #7388d6;">)</span>: <span style="color: #0000ff; font-weight: bold;">pressure</span><span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">){}</span>
-    <span style="color: #7F0055; font-weight: bold;">friend</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">&lt;&lt;</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #000000;">o</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">wheel</span>&amp; <span style="color: #000000;">w</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #0000ff; font-weight: bold;">wheel</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">float</span> p <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">100</span><span style="color: #7388d6;">)</span>: <span style="color: #110099; font-style: italic;">pressure</span><span style="color: #7388d6;">(</span>p<span style="color: #7388d6;">){}</span>
+    <span style="color: #7F0055; font-weight: bold;">friend</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">o</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">wheel</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">w</span><span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">&lt;&lt;</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #000000;">o</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">wheel</span>&amp; <span style="color: #000000;">w</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    o &lt;&lt; <span style="color: #2A00FF;">"wheel's pressure is "</span> &lt;&lt; w.pressure &lt;&lt; endl;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">o</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">wheel</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">w</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    o <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"wheel's pressure is "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> w.<span style="color: #110099; font-style: italic;">pressure</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 <span style="color: #707183;">}</span>
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Car</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">array</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">wheel</span>, 4<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">w</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">array</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">wheel</span>, <span style="color: #110099;">4</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic;">w</span>;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
     <span style="color: #0000ff; font-weight: bold;">Car</span><span style="color: #7388d6;">(){}</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">wheel</span>&amp; <span style="color: #0000ff; font-weight: bold;">get_wheel</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> Expects<span style="color: #909183;">(</span>i &lt; w.size<span style="color: #709870;">()</span><span style="color: #909183;">)</span>; <span style="color: #7F0055; font-weight: bold;">return</span> w<span style="color: #909183;">[</span>i<span style="color: #909183;">]</span>; <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">wheel</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">get_wheel</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3a5fcd; font-weight: bold;">Expects</span><span style="color: #909183;">(</span>i <span style="color: #7F0055; font-weight: bold;">&lt;</span> w.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #709870;">()</span><span style="color: #909183;">)</span>; <span style="color: #7F0055; font-weight: bold;">return</span> w<span style="color: #909183;">[</span>i<span style="color: #909183;">]</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">Car</span> <span style="color: #000000;">c</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">wheel</span>&amp; <span style="color: #000000;">w0</span> = c.get_wheel<span style="color: #7388d6;">(</span>0<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">w0 has the same lifetime as c</span>
-    cout &lt;&lt; w0;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">wheel</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">w0</span> <span style="color: #7F0055; font-weight: bold;">=</span> c.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">get_wheel</span><span style="color: #7388d6;">(</span><span style="color: #110099;">0</span><span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// w0 has the same lifetime as c</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> w0;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    use<span style="color: #7388d6;">()</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #3a5fcd; font-weight: bold;">use</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -74,8 +78,9 @@ wheel's pressure is 100
 </pre>
 
 
+
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>注意函数返回值是引用的话，函数是不可能返回 <code>nullptr</code> 的</li>
