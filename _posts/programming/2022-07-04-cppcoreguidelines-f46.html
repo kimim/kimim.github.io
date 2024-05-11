@@ -1,26 +1,29 @@
 ---
 layout: post
 title: CppCoreGuidelines F.46 main() 的返回值类型是 int
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由
+F.46: int is the return type for main()
+</p>
+
+
+<p>
+<b>理由</b>
 </p>
 
 <p>
-这个是语言规则，把 <code>main</code> 声明成 <code>void</code> 可能会跟某些系统不兼容。
+这个是一个编程语言规则，把 <code>main</code> 声明成 <code>void</code> 可能会跟某些系统不兼容。
 </p>
 
-
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span><span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad, not C++</span>
+<pre class="src src-bad src-C++"><span style="color: #3F7F5F;">// -*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span><span style="color: #3F7F5F;">/* ... */</span> <span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// bad, not C++</span>
 </pre>
 </div>
 
@@ -34,11 +37,11 @@ error: '::main' must return 'int'
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// -*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #110099;">std</span>::cout &lt;&lt; <span style="color: #2A00FF;">"This is the way to do it\n"</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"This is the way to do it\n"</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -50,16 +53,16 @@ This is the way to do it
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-我们提这个规则，是因为总是有人坚持以错误的方式写代码。
+我们之所以提一遍这个规则，是因为总是有人坚持以错误的方式写代码。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>编译器会报错</li>

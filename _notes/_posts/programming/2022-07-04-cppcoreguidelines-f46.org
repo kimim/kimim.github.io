@@ -1,19 +1,18 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.46 main() 的返回值类型是 int
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.46 main() 的返回值类型是 int
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
-
-这个是语言规则，把 ~main~ 声明成 ~void~ 可能会跟某些系统不兼容。
+F.46: int is the return type for main()
 
 
+*理由*
+
+这个是一个编程语言规则，把 ~main~ 声明成 ~void~ 可能会跟某些系统不兼容。
+
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 // -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
 void main() {/* ... */ };  // bad, not C++
@@ -37,11 +36,11 @@ int main()
 : This is the way to do it
 
 
-注意
+*注意*
 
-我们提这个规则，是因为总是有人坚持以错误的方式写代码。
+我们之所以提一遍这个规则，是因为总是有人坚持以错误的方式写代码。
 
 
-强化
+*强化*
 - 编译器会报错
 - 如果编译器不报错，让代码检查工具标记错误
