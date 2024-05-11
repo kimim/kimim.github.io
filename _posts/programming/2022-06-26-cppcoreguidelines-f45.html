@@ -1,34 +1,37 @@
 ---
 layout: post
 title: CppCoreGuidelines F.45 不要返回 T&&
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由
+F.45: Don’t return a <code>T&amp;&amp;</code>
 </p>
 
 <p>
-返回 <code>T&amp;&amp;</code> 意味着返回已经销毁的临时对象。 <code>&amp;&amp;</code> 是吸附临时对象的磁铁。
+<b>理由</b>
+</p>
+
+<p>
+返回<code>T&amp;&amp;</code>意味着返回已经销毁的临时对象。<code>&amp;&amp;</code> 就好比是吸附临时对象的磁铁。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <p>
-返回的右值引用的作用域只在返回语句结束前。
+当你返回一个右值引用时，它的作用域范围在返回语句前已经结束了！
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">auto</span>&amp;&amp; <span style="color: #000000;">x</span> = max<span style="color: #707183;">(</span>0, 1<span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, so far</span>
-foo<span style="color: #707183;">(</span>x<span style="color: #707183;">)</span>;                 <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Undefined behavior</span>
+<pre class="src src-bad src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">max</span><span style="color: #707183;">(</span><span style="color: #110099;">0</span>, <span style="color: #110099;">1</span><span style="color: #707183;">)</span>;   <span style="color: #3F7F5F;">// OK, so far</span>
+<span style="color: #3a5fcd; font-weight: bold;">foo</span><span style="color: #707183;">(</span>x<span style="color: #707183;">)</span>;                 <span style="color: #3F7F5F;">// Undefined behavior</span>
 </pre>
 </div>
 
@@ -42,65 +45,65 @@ foo<span style="color: #707183;">(</span>x<span style="color: #707183;">)</span>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <p>
-临时的返回的右值引用可以再次转交给调用的函数。但是不能向上返回给上一层函数内使用。对于引用或完美传递（perfect forwarding）传入参数，又要返回值的，可以用 <code>auto</code> 推演返回类型（不是 <code>auto&amp;&amp;</code> ）
+临时返回的右值引用，可以再次转交给调用的函数。但是不能向上返回给上一层函数内使用。对于引用或完美传递（perfect forwarding）方式传入的参数，又要返回值的，可以用 <code>auto</code> 推演返回类型（注意不是<code>auto&amp;&amp;</code>）
 </p>
 
 <p>
-假设 <code>F</code> 返回值：
+假设 <code>F</code> 通过值返回：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
-<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">F</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">auto</span>&amp;&amp; <span style="color: #0000ff; font-weight: bold;">wrapper</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">F</span> <span style="color: #000000;">f</span><span style="color: #707183;">)</span>
+<pre class="src src-bad src-C++"><span style="color: #3F7F5F;">// -*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> gsl;
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">F</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #0000ff; font-weight: bold;">wrapper</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">F</span> <span style="color: #000000;">f</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">typeid</span><span style="color: #7388d6;">(</span>f<span style="color: #7388d6;">)</span>.name<span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">or whatever instrumentation</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> f<span style="color: #7388d6;">()</span>;               <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: returns a reference to a temporary</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">typeid</span><span style="color: #7388d6;">(</span>f<span style="color: #7388d6;">)</span>.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">name</span><span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// or whatever instrumentation</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">()</span>;               <span style="color: #3F7F5F;">// BAD: returns a reference to a temporary</span>
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">func</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> 100;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">func</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">100</span>;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    wrapper<span style="color: #7388d6;">(</span>func<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">no way to get return value</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #3a5fcd; font-weight: bold;">wrapper</span><span style="color: #7388d6;">(</span>func<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// no way to get return value</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-好一些
+以下写法更好一些：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
-<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">F</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #0000ff; font-weight: bold;">wrapper</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">F</span> <span style="color: #000000;">f</span><span style="color: #707183;">)</span>
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// -*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> gsl;
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">F</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #0000ff; font-weight: bold;">wrapper</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">F</span> <span style="color: #000000;">f</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    cout &lt;&lt; <span style="color: #7F0055; font-weight: bold;">typeid</span><span style="color: #7388d6;">(</span>f<span style="color: #7388d6;">)</span>.name<span style="color: #7388d6;">()</span> &lt;&lt; endl; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">or whatever instrumentation</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> f<span style="color: #7388d6;">()</span>;          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">typeid</span><span style="color: #7388d6;">(</span>f<span style="color: #7388d6;">)</span>.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">name</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl; <span style="color: #3F7F5F;">// or whatever instrumentation</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">()</span>;          <span style="color: #3F7F5F;">// OK</span>
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">func</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> 100;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">func</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">100</span>;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    cout &lt;&lt; wrapper<span style="color: #7388d6;">(</span>func<span style="color: #7388d6;">)</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">wrapper</span><span style="color: #7388d6;">(</span>func<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -113,17 +116,17 @@ PFivE
 
 
 <p>
-例外
+<b>例外</b>
 </p>
 
 <p>
-<code>std::move</code> 与 <code>std::forward</code> 返回 <code>&amp;&amp;</code> ，不过只是一次类型转换，用于在临时对象没有销毁前，将其引用传递出去。
+<code>std::move</code> 与<code>std::forward</code>确实返回<code>&amp;&amp;</code>，不过只是一次类型转换，用于在临时对象还没有被销毁前，将其引用传递出去。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>除了 <code>std::move</code> 与 <code>std::forward</code> 之外，返回 <code>&amp;&amp;</code> 的都要标记警告。</li>
+<li>除了<code>std::move</code>与 <code>std::forward</code> 之外，返回<code>&amp;&amp;</code>的都要标记警告。</li>
 </ul>

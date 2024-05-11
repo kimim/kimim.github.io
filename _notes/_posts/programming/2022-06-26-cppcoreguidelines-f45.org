@@ -1,23 +1,22 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.45 不要返回 T&&
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.45 不要返回 T&&
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.45: Don’t return a ~T&&~
 
-返回 ~T&&~ 意味着返回已经销毁的临时对象。 ~&&~ 是吸附临时对象的磁铁。
+*理由*
+
+返回 ~T&&~ 意味着返回已经销毁的临时对象。 ~&&~  就好比是吸附临时对象的磁铁。
 
 
-例子
+*例子*
 
-返回的右值引用的作用域只在返回语句结束前。
+当你返回一个右值引用时，它的作用域范围在返回语句前已经结束了！
 
+#+attr_html: :class bad
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 auto&& x = max(0, 1);   // OK, so far
 foo(x);                 // Undefined behavior
@@ -28,12 +27,15 @@ foo(x);                 // Undefined behavior
 安全生命周期开发要求及时发现这种问题。
 
 
-例子
+*例子*
 
-临时的返回的右值引用可以再次转交给调用的函数。但是不能向上返回给上一层函数内使用。对于引用或完美传递（perfect forwarding）传入参数，又要返回值的，可以用 ~auto~ 推演返回类型（不是 ~auto&&~ ）
+临时返回的右值引用，可以再次转交给调用的函数。但是不能向上返回给上一层
+函数内使用。对于引用或完美传递（perfect forwarding）方式传入的参数，又
+要返回值的，可以用 ~auto~ 推演返回类型（注意不是 ~auto&&~ ）
 
-假设 ~F~ 返回值：
+假设 ~F~ 通过值返回：
 
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 // -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
 #include <iostream>
@@ -60,7 +62,7 @@ int main()
 #+RESULTS:
 
 
-好一些
+以下写法更好一些：
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 // -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
@@ -90,11 +92,11 @@ int main()
 : 100
 
 
-例外
+*例外*
 
-~std::move~ 与 ~std::forward~ 返回 ~&&~ ，不过只是一次类型转换，用于在临时对
-象没有销毁前，将其引用传递出去。
+~std::move~ 与 ~std::forward~ 确实返回 ~&&~ ，不过只是一次类型转换，用于在临
+时对象还没有被销毁前，将其引用传递出去。
 
 
-强化
+*强化*
 - 除了 ~std::move~ 与 ~std::forward~ 之外，返回 ~&&~ 的都要标记警告。
