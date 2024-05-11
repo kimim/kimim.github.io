@@ -1,55 +1,59 @@
 ---
 layout: post
-title: CppCoreGuidelines F.48 不要返回 std::move(local)
-categories: [technology]
+title: CppCoreGuidelines F.48 不要这样写 return std::move(local)
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由
+F.48: Don’t <code>return std::move(local)</code>
+</p>
+
+
+<p>
+<b>理由</b>
 </p>
 
 <p>
-因为 C++ 有复制省略机制，在返回值的时候就不需要 <code>std::move</code> 了。
+因为C++有复制省略机制，在返回值的时候就不需要<code>std::move</code>了。
 </p>
 
 <p>
-在返回语句中，如果返回的是一个自动存储区的 non-volatile 对象；并且该对象不是函数参数，不是 catch 语句的参数；并且对象类型和返回值的类型一样（不考虑 const 和 volatile 修饰符）。那么编译器就会使用复制省略机制，避免复制构造一个新的对象。这种机制叫“有名称的返回值优化（Named Return
+在返回语句中，如果返回的是一个自动存储区的非 <code>volatile</code> 对象；并且该对象不是函数参数，不是 <code>catch</code> 语句的参数；并且对象类型和返回值的类型一样（不考虑 <code>const</code> 和 <code>volatile</code> 修饰符）。那么编译器就会使用复制省略机制，避免复制构造一个新的对象。这种机制叫“有名称的返回值优化（Named Return
 Value Optimization，简称 NRVO）”。
 </p>
 
 
 <p>
-坏例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<pre class="src src-bad src-C++"><span style="color: #3F7F5F;">// -*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> gsl;
 <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m_i</span>;
-    <span style="color: #0000ff; font-weight: bold;">S</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> : m_i<span style="color: #7388d6;">(</span>i<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">m_i</span>;
+    <span style="color: #0000ff; font-weight: bold;">S</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> : <span style="color: #110099; font-style: italic;">m_i</span><span style="color: #7388d6;">(</span>i<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{}</span>
 <span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">&lt;&lt;</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span> &amp;<span style="color: #000000;">o</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    o &lt;&lt; s.m_i;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #000000;">o</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    o <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> s.<span style="color: #110099; font-style: italic;">m_i</span>;
     <span style="color: #7F0055; font-weight: bold;">return</span> o;
 <span style="color: #707183;">}</span>
 <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-  <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">result</span><span style="color: #7388d6;">{</span>11<span style="color: #7388d6;">}</span>;
-  <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">std</span>::move<span style="color: #7388d6;">(</span>result<span style="color: #7388d6;">)</span>;
+  <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">result</span><span style="color: #7388d6;">{</span><span style="color: #110099;">11</span><span style="color: #7388d6;">}</span>;
+  <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #3a5fcd; font-weight: bold;">move</span><span style="color: #7388d6;">(</span>result<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    cout &lt;&lt; f<span style="color: #7388d6;">()</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -60,32 +64,32 @@ Value Optimization，简称 NRVO）”。
 
 
 <p>
-好例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// -*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> gsl;
 <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">m_i</span>;
-    <span style="color: #0000ff; font-weight: bold;">S</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> : m_i<span style="color: #7388d6;">(</span>i<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">m_i</span>;
+    <span style="color: #0000ff; font-weight: bold;">S</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">i</span><span style="color: #7388d6;">)</span> : <span style="color: #110099; font-style: italic;">m_i</span><span style="color: #7388d6;">(</span>i<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{}</span>
 <span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">&lt;&lt;</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span> &amp;<span style="color: #000000;">o</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    o &lt;&lt; s.m_i;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #000000;">o</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">s</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    o <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> s.<span style="color: #110099; font-style: italic;">m_i</span>;
     <span style="color: #7F0055; font-weight: bold;">return</span> o;
 <span style="color: #707183;">}</span>
 <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-  <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">result</span><span style="color: #7388d6;">{</span>11<span style="color: #7388d6;">}</span>;
+  <span style="color: #000000; font-style: italic; text-decoration: underline;">S</span> <span style="color: #000000;">result</span><span style="color: #7388d6;">{</span><span style="color: #110099;">11</span><span style="color: #7388d6;">}</span>;
   <span style="color: #7F0055; font-weight: bold;">return</span> result;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    cout &lt;&lt; f<span style="color: #7388d6;">()</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -98,7 +102,7 @@ address of result: 0x381ffff70c
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 
 <p>
