@@ -1,0 +1,38 @@
+#+layout: post
+#+title: CppCoreGuidelines F.48 不要返回 const T
+#+categories: programming
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+F.49: Don’t return ~const T~
+
+
+*理由*
+
+返回值类型不建议标记成 ~const~ 。把返回值标记为 ~const~ 已经是一个过失的写法了，还会对移动语义造成影响。
+
+*例子*
+
+#+attr_html: :class bad
+#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
+const vector<int> fct();    // bad: that "const" is more trouble than it is worth
+
+void g(vector<int>& vx)
+{
+    // ...
+    fct() = vx;   // prevented by the "const"
+    // ...
+    vx = fct(); // expensive copy: move semantics suppressed by the "const"
+    // ...
+}
+#+end_src
+
+争论的焦点是这样的。认为返回值类型应该是 ~const~ 的那帮人，他们觉得这样
+可以避免不小心赋值给临时变量。而认为不应该加 ~const~ 的一帮人则认为加了
+~const~ 会影响移动语义。
+
+
+*强化*
+
+找到返回 ~const~ 的函数。建议去掉 ~const~ ，返回非 ~const~ 值。

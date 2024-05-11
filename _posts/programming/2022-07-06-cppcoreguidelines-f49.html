@@ -1,0 +1,54 @@
+---
+layout: post
+title: CppCoreGuidelines F.48 不要返回 const T
+categories: [programming]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+F.49: Don’t return <code>const T</code>
+</p>
+
+
+<p>
+<b>理由</b>
+</p>
+
+<p>
+返回值类型不建议标记成 <code>const</code> 。把返回值标记为 <code>const</code> 已经是一个过失的写法了，还会对移动语义造成影响。
+</p>
+
+<p>
+<b>例子</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">fct</span><span style="color: #707183;">()</span>;    <span style="color: #3F7F5F;">// bad: that "const" is more trouble than it is worth</span>
+
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">vx</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #3a5fcd; font-weight: bold;">fct</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> vx;   <span style="color: #3F7F5F;">// prevented by the "const"</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #000000;">vx</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">fct</span><span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// expensive copy: move semantics suppressed by the "const"</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+
+<p>
+争论的焦点是这样的。认为返回值类型应该是 <code>const</code> 的那帮人，他们觉得这样可以避免不小心赋值给临时变量。而认为不应该加 <code>const</code> 的一帮人则认为加了
+<code>const</code> 会影响移动语义。
+</p>
+
+
+<p>
+<b>强化</b>
+</p>
+
+<p>
+找到返回 <code>const</code> 的函数。建议去掉 <code>const</code> ，返回非 <code>const</code> 值。
+</p>
