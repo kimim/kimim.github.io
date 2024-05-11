@@ -1,65 +1,69 @@
 ---
 layout: post
 title: CppCoreGuidelines F.47 赋值操作符返回 T&
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由
+F.47: Return <code>T&amp;</code> from assignment operators
+</p>
+
+
+<p>
+<b>理由</b>
 </p>
 
 <p>
 <code>operator=(const T&amp;)</code> 操作符重载的通常操作是先进行赋值，然后再返回一个非
-<code>const</code> 的 <code>*this</code> 。这样就和标准库类型保持一致。并遵循“像 int 那样执行”的原则。
+<code>const</code> 的<code>*this</code>。这样就和标准库类型保持一致。并遵循“像 int 那样执行”的原则。
 </p>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-在过去，有些指南说赋值操作符要返回 <code>const T&amp;</code> 。主要是为了避免这种形式的代码 <code>(a = b) =c</code> 。不过这种代码不太常见，所以没必要因此而与标准类型不一致。
+在过去，有些指南说赋值操作符要返回<code>const T&amp;</code>。主要是为了避免这种形式的代码<code>(a = b) = c</code>。不过这种代码不太常见，所以没必要因此而与标准类型不一致。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// -*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> gsl;
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>
 <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #0000ff; font-weight: bold;">Foo</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
-    <span style="color: #0000ff; font-weight: bold;">Foo</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">v</span><span style="color: #7388d6;">)</span> : foo_val<span style="color: #7388d6;">(</span>v<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{}</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #000000;">rhs</span><span style="color: #7388d6;">)</span>
+    <span style="color: #0000ff; font-weight: bold;">Foo</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #0000ff; font-weight: bold;">Foo</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">v</span><span style="color: #7388d6;">)</span> : <span style="color: #110099; font-style: italic;">foo_val</span><span style="color: #7388d6;">(</span>v<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">rhs</span><span style="color: #7388d6;">)</span>
     <span style="color: #7388d6;">{</span>
-        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Copy members.</span>
-        foo_val = rhs.foo_val;
-        <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+        <span style="color: #3F7F5F;">// Copy members.</span>
+        <span style="color: #000000;">foo_val</span> <span style="color: #7F0055; font-weight: bold;">=</span> rhs.<span style="color: #110099; font-style: italic;">foo_val</span>;
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">this</span>;
     <span style="color: #7388d6;">}</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">foo_val</span> = 0;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">foo_val</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #000000;">rhs</span><span style="color: #7388d6;">(</span>10<span style="color: #7388d6;">)</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #000000;">rhs</span><span style="color: #7388d6;">(</span><span style="color: #110099;">10</span><span style="color: #7388d6;">)</span>;
     <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #000000;">n</span>;
-    cout &lt;&lt; n.foo_val &lt;&lt; endl;
-    cout &lt;&lt; <span style="color: #7388d6;">(</span>n = rhs<span style="color: #7388d6;">)</span>.foo_val &lt;&lt; endl;
-    cout &lt;&lt; n.foo_val;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> n.<span style="color: #110099; font-style: italic;">foo_val</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #7388d6;">(</span><span style="color: #000000;">n</span> <span style="color: #7F0055; font-weight: bold;">=</span> rhs<span style="color: #7388d6;">)</span>.<span style="color: #110099; font-style: italic;">foo_val</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> n.<span style="color: #110099; font-style: italic;">foo_val</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -73,7 +77,7 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 
 <p>
