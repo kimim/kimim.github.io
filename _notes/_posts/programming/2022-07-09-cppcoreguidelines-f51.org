@@ -1,28 +1,26 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.51 首选默认参数，其次函数重载
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.51 首选默认参数，其次函数重载
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.51: Where there is a choice, prefer default arguments over overloading
 
-默认参数方式，提供了简单唯一的接口，实现函数变体。为了确保重载的函数能
-够实现了相同的机制，我们还需要额外的精力去检查。但是，使用默认参数能够
-避免重复的代码出现在多个地方。
+*理由*
 
-
-注意
-
-如果使用函数重载的目的是为了实现一组能够接受相同参数的函数变体，那么使
-用默认参数就比较合理。
+默认参数方式，提供了简单唯一的接口，实现函数变体。相反，为了确保重载的
+函数实现了相同的机制，我们还需要额外的精力去进行检查。而且，使用默认参
+数能够避免重复的代码出现在多个地方。
 
 
-例子
+*注意*
+
+如果使用函数重载的目的是为了实现一组函数的多个变体，使得它们能够接受相
+同参数，那么使用默认参数就比较合理。
+
+
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 void print(const string& s, format f = {});
@@ -30,16 +28,17 @@ void print(const string& s, format f = {});
 
 比函数重载简洁：
 
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 void print(const string& s);  // use default format
 void print(const string& s, format f);
 #+end_src
 
+然而，当一组函数针对不同参数的类型，提供相同语义操作，那就没其他选择了，
+只能进行函数重载了。
 
-然而，当一组函数针对不同参数类型提供相同语义操作，那就没其他选择了，只
-能进行函数重载了。
 
-例子
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 void print(const char&);
@@ -50,7 +49,7 @@ void print(zstring);
 see also: 虚函数的默认参数
 
 
-强化
+*强化*
 
 对以下情况进行警告：一组重载函数的声明前面部分都很相似。（比如 ~f(int),
 f(int, const string&), f(int, const string&, double)~ ）

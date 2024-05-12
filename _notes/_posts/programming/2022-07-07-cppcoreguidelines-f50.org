@@ -1,15 +1,15 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.50 当不能用函数实现的时候（使用局部变量，写局部函数），使用 lambda
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.50 当不能用函数实现的时候（使用局部变量，写局部函数），使用 lambda
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.50: Use a ~lambda~ when a function won’t do (to capture local
+variables, or to write a local function)
+
+
+*理由*
 
 函数不能捕获局部变量，也不能在局部范围。如果需要此类操作，尽可能使用
 lambda，不然就写个函数对象。不过 lambda 和函数对象不能重载。如果需要重
