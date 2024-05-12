@@ -1,33 +1,31 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.52 在 lambda 中捕获引用，可局部使用，或传给STL算法
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.52 在 lambda 中捕获引用，可局部使用，或传给STL算法
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+F.52: Prefer capturing by reference in lambdas that will be used locally, including passed to algorithms
+
+
+*理由*
 
 为了保障效率和正确，一般会在 ~lambda~ 中以引用的形式捕获变量，在 ~lambda~
 内局部使用。尤其是编写和调用并行算法时，因为在函数返回时会 ~join~ ，捕获
 了的变量可以在局部进行使用。
 
 
-讨论
+*讨论*
 
-效率性方面，因为对大部分类型来说，引用传递比值传递效率高。
+效率性方面，因为对大部分类型来说，引用传参比值传参效率高。
 
-正确性方面，因为不少函数调用会修改对象，产生一些 side effect，值传递无
-法做到。
+正确性方面，因为不少函数调用会修改对象，产生一些副作用，值传参无法做到。
 
 
-注意
+*注意*
 
-~lambda~ 不能以 ~const~ 引用的方式捕获外部变量。所以也就不能避免在 ~lambda~
-内会有 side effect。
+~lambda~ 不能以 ~const~ 引用的方式捕获外部变量。所以也就无法避免在 ~lambda~
+内会产生副作用。
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 // -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
@@ -49,9 +47,9 @@ int main()
 : now:    11
 
 
-以下我们假设 message 是一个很大的网络消息对象，传递给迭代算法，如果每
-次调用都以复制的方式传递，效率不高，且不一定可行，因为消息对象不一定提
-供复制构造函数。
+以下我们假设 message 是一个很大的网络消息对象，需要传递给迭代算法。如
+果每次调用都以复制的方式传递，效率不高，且不一定可行，因为消息对象不一
+定提供复制构造函数。
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 std::for_each(begin(sockets), end(sockets), [&message](auto& socket)
@@ -61,10 +59,10 @@ std::for_each(begin(sockets), end(sockets), [&message](auto& socket)
 #+end_src
 
 
-例子
+*例子*
 
-以下是一个 three-stage parallel pipeline。每个 stage 对象封装了一个工
-作线程和一个队列。其析构函数会自动等待队列为空才执行。
+以下是一个三个阶段执行的并行流水线。每个阶段对象封装了一个工作线程和
+一个队列。其析构函数会自动等待队列为空才执行。
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 void send_packets(buffers& bufs)
@@ -77,6 +75,6 @@ void send_packets(buffers& bufs)
 #+end_src
 
 
-强化
+*强化*
 
-警告：如果 lambda 捕获了外部变量的引用，但是在函数作用域外使用。
+警告：如果 ~lambda~ 捕获了外部变量的引用，但是在函数作用域外使用。
