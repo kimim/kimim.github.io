@@ -1,0 +1,72 @@
+---
+layout: post
+title: CppCoreGuidelines F.53 如果不在 lambda 内局部使用，包括返回、存入堆、传给其他线程，则不要在 lambda 中捕获引用
+categories: [programming]
+tags: [CppCoreGuidelines]
+---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
+
+<p>
+F.53: Avoid capturing by reference in lambdas that will be used
+non-locally, including returned, stored on the heap, or passed to
+another thread
+</p>
+
+<p>
+<b>理由</b>
+</p>
+
+<p>
+局部的指针和引用，不可以超出其范围而存在。 <code>lambda</code> 的通过引用捕获只是在另一个地方存放指向局部对象的引用，不可以超出其范围而存在。
+</p>
+
+
+<p>
+<b>例子</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">local</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">42</span>;
+
+<span style="color: #3F7F5F;">// Want a reference to local.</span>
+<span style="color: #3F7F5F;">// Note, that after program exits this scope,</span>
+<span style="color: #3F7F5F;">// local no longer exists, therefore</span>
+<span style="color: #3F7F5F;">// process() call will have undefined behavior!</span>
+thread_pool.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">queue_work</span><span style="color: #707183;">(</span><span style="color: #7388d6;">[</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #7388d6;">]</span> <span style="color: #7388d6;">{</span> <span style="color: #3a5fcd; font-weight: bold;">process</span><span style="color: #909183;">(</span>local<span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+<b>例子</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">local</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">42</span>;
+<span style="color: #3F7F5F;">// Want a copy of local.</span>
+<span style="color: #3F7F5F;">// Since a copy of local is made, it will</span>
+<span style="color: #3F7F5F;">// always be available for the call.</span>
+thread_pool.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">queue_work</span><span style="color: #707183;">(</span><span style="color: #7388d6;">[</span><span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #7388d6;">]</span> <span style="color: #7388d6;">{</span> <span style="color: #3a5fcd; font-weight: bold;">process</span><span style="color: #909183;">(</span>local<span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
+
+
+<p>
+<b>注意</b>
+</p>
+
+<p>
+如果一定要捕获一个非局部的指针，可以考虑用<code>unique_ptr</code>，这样就确保了同步和生存周期问题。如果一定要捕获 <code>this</code> 指针，可以使用<code>[*this]</code>捕获，这样会产生整个对象的一个副本。
+</p>
+
+
+<p>
+<b>强化</b>
+</p>
+
+<ul class="org-ul">
+<li>（简单）如果 <code>lambda</code> 的捕获列表里有局部的变量的引用，则产生一个警告。</li>
+<li>（复杂）如果捕获列表里有指向局部变量的引用，且该 <code>lambda</code> 又会传递给一个不是常值的，且不是本地的地方，则高亮标记。</li>
+</ul>

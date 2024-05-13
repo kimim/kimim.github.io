@@ -1,0 +1,61 @@
+#+layout: post
+#+title: CppCoreGuidelines F.53 如果不在 lambda 内局部使用，包括返回、存入堆、传给其他线程，则不要在 lambda 中捕获引用
+#+categories: programming
+#+tags: CppCoreGuidelines
+
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+F.53: Avoid capturing by reference in lambdas that will be used
+non-locally, including returned, stored on the heap, or passed to
+another thread
+
+*理由*
+
+局部的指针和引用，不可以超出其范围而存在。 ~lambda~ 的通过引用捕获只是在另一个地方存放指向局部对象的引用，不可以超出其范围而存在。
+
+
+*例子*
+
+#+attr_html: :class bad
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+int local = 42;
+
+// Want a reference to local.
+// Note, that after program exits this scope,
+// local no longer exists, therefore
+// process() call will have undefined behavior!
+thread_pool.queue_work([&] { process(local); });
+#+end_src
+
+
+*例子*
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+int local = 42;
+// Want a copy of local.
+// Since a copy of local is made, it will
+// always be available for the call.
+thread_pool.queue_work([=] { process(local); });
+#+end_src
+
+
+*注意*
+
+如果一定要捕获一个非局部的指针，可以考虑用 ~unique_ptr~ ，这样就确保了同
+步和生存周期问题。如果一定要捕获 ~this~ 指针，可以使用 ~[*this]~ 捕获，这
+样会产生整个对象的一个副本。
+
+
+*强化*
+
+- （简单）如果 ~lambda~ 的捕获列表里有局部的变量的引用，则产生一个警告。
+- （复杂）如果捕获列表里有指向局部变量的引用，且该 ~lambda~ 又会传递给一
+  个不是常值的，且不是本地的地方，则高亮标记。
