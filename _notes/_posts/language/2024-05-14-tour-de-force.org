@@ -1,0 +1,21 @@
+#+LAYOUT: post
+#+TITLE: 单词本：tour de force
+#+TAGS: English, Français
+#+CATEGORIES: language
+
+最近看了一遍离散数学，发现华人中还是有不少数学大牛的。比如这位 Terence
+Tao 陶哲轩。说他在 2006 年证明的素数猜想时，用到了 *tour de force* 这个
+词组： In 2006, Ben Green and Terence Tao were able to prove this
+conjecture. Their proof, considered to be a mathematical *tour de
+force*, is a nonconstructive proof that combines powerful ideas from
+several advanced areas of mathematics.
+
+这个词组来自法语。环法自行车赛叫 tour de France。这里的 tour 是 trip，
+round 的意思。其实 tour 除了环绕、巡回之外，还有 trick 的意思。比如
+jouer un *tour* à qn. to play trick on sb.
+
+所以，tour de force 的意思是 amazing feat 惊人的壮举。
+
+比如：
+- The painting/book/film is a tour de force. 这画/书/电影是个杰作。
+- Nash: Munster can't waste tour de force in South Africa
