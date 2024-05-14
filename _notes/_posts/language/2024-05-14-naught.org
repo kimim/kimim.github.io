@@ -1,5 +1,5 @@
 #+LAYOUT: post
-#+TITLE: naught
+#+TITLE: 单词本：naught
 #+TAGS: English
 #+CATEGORIES: language
 
