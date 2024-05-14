@@ -1,0 +1,59 @@
+#+LAYOUT: post
+#+TITLE: naught
+#+TAGS: English
+#+CATEGORIES: language
+
+最近在看工业协议的发展历史，在 [[cite:&powell2012catchingtp]] 中，读到这句
+话：In fact, from the control engineer's point of view, where the code
+is executed matters *naught* since it is really just one system to look
+at and modify at will.
+
+这里是说，对于控制工程师来说，控制代码在哪里执行并不重要。 *matter
+naught* 就是无关紧要的意思。
+
+美国英语里 0 是 zero, 而英国英语则叫 naught，比如，英国英语 0.56 读作
+*naught* point five six. 0.009 读作 *naught* point *naught* *naught* nine.
+
+所以，naught 的引申意就是 nothing. 但是，其实 naught 和 nothing 是同源
+的。古英语里 nawit 就是 nothing 的意思，字面看是 no whit。whit 的意思
+是一些些、小生物的意思。nowhit 就是连这些小东西都没有了。德语里 nicht
+(not, nothing) 差不多也是他们的小兄弟吧。
+
+比如 All our effort was for *naught*. 我们的努力都白费了。All their
+plans came to *naught*. 他们的计划都不奏效了。
+
+我还找到了一首诗的英译版本，其中“无妨”就是翻译为 matters naught：
+
+#+begin_verse
+柳梢青茅舍疏篱(杨无咎)
+Liushaoqing Theme: Straw Hut with Sparse Hedges (Yang Wujiu)
+(prepared by: alexcwlin; edited by: Adam Lam)
+
+茅舍疏篱。
+Straw hut has sparse hedges.
+半飘残雪，斜卧低枝。
+Blooms resemble halfway fallen snow.
+They lie on trees’ slanting low branches.
+可更相宜，烟笼修竹，月在寒溪。
+The scene is so very fitting.
+Mist shrouds a lush growth of bamboo.
+Moon is reflected off a chill creek.
+
+宁宁伫立移时。
+I stand musing absorbedly as time passes.
+判瘦损、无妨为伊。
+In slimming down while focusing,
+it matters naught since that is for you.
+谁赋才情，画成幽思，写入新诗。
+Who possesses the talent and feelings,
+to put your serene mood into painting,
+or compose such into a new poem.
+#+end_verse
+
+naught 是什么都没有，但是 naughty 却是调皮的意思。比如，our boss
+treats us all like naughty children.
+
+naughty 除了调皮的意思，却还有少儿不宜的意思，真是奇怪：The film was
+shown on television but they cut out all the naughty scenes. 电影在电
+视机上放映，但是去掉了少儿不宜的部分。还比如 He always buys her
+naughty underwear for her birthday.
