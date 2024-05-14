@@ -57,3 +57,13 @@ naughty 除了调皮的意思，却还有少儿不宜的意思，真是奇怪：
 shown on television but they cut out all the *naughty* scenes. 电影在电
 视机上放映，但是去掉了少儿不宜的部分。还比如 He always buys her
 *naughty* underwear for her birthday.
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
