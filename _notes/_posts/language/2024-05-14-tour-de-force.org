@@ -1,6 +1,6 @@
 #+LAYOUT: post
 #+TITLE: 单词本：tour de force
-#+TAGS: English, Français
+#+TAGS: English,Français
 #+CATEGORIES: language
 
 最近看了一遍离散数学，发现华人中还是有不少数学大牛的。比如这位 Terence
