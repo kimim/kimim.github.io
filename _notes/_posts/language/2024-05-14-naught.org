@@ -43,7 +43,7 @@ Moon is reflected off a chill creek.
 I stand musing absorbedly as time passes.
 判瘦损、无妨为伊。
 In slimming down while focusing,
-it matters naught since that is for you.
+it *matters naught* since that is for you.
 谁赋才情，画成幽思，写入新诗。
 Who possesses the talent and feelings,
 to put your serene mood into painting,
@@ -51,9 +51,9 @@ or compose such into a new poem.
 #+end_verse
 
 naught 是什么都没有，但是 naughty 却是调皮的意思。比如，our boss
-treats us all like naughty children.
+treats us all like *naughty* children.
 
 naughty 除了调皮的意思，却还有少儿不宜的意思，真是奇怪：The film was
-shown on television but they cut out all the naughty scenes. 电影在电
+shown on television but they cut out all the *naughty* scenes. 电影在电
 视机上放映，但是去掉了少儿不宜的部分。还比如 He always buys her
-naughty underwear for her birthday.
+*naughty* underwear for her birthday.
