@@ -1,11 +1,7 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.60 如果参数可以是空的话， T* 比 T& 更合适
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.60 如果参数可以是空的话， T* 比 T& 更合适
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
@@ -14,6 +10,7 @@ tags: [CppCoreGuidelines]
 指针（T*）可以是 ~nullptr~ 而引用（T&）不可以。没有空引用这一说。有时
 ~nullptr~ 是有效参数，表示“无对象”。除了这种情况，最好都用引用。因为用引
 用代码更好更简单。
+
 
 例子
 
