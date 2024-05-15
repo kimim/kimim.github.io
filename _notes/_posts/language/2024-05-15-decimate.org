@@ -1,0 +1,117 @@
+#+LAYOUT: post
+#+TITLE: 单词本：decimate
+#+TAGS: English
+#+CATEGORIES: language
+
+Yuval Noah Harari 的《人类简史》[[cite:&harari2014sapiens]] 中谈及货币的产
+生过程以及以物易物时代。设想一个场景，如果因为疫情，牲畜大量病死，皮草
+就变得稀少，这时候怎么设定定价物就不容易了。
+
+Besides, in recent weeks a disease has *decimated* the focks around
+town, and skins are becoming scarce.
+
+这里， decimate 是大肆杀戮的意思。而 decimate 看起来和 decimal 很像，
+而 decimal 则是十进制，源于拉丁语 decimalis。而 decimus 是第十的意思，
+decem 则是十的意思。
+
+那么，为什么 decimate 是大肆杀戮呢？
+
+原来古罗马对叛军或征服的城市会实施 decimatus 惩罚。而 decimatus 就是说
+是个人里面要找出一个人杀掉，即十抽一杀掉。
+
+所以， decimate 的几个意思，都和十抽一相关：
+- 从十个里抽一个，本意。
+- 大批杀死、大量毁灭。这是后来传播的时候对十抽一杀死的误解，变而成为大
+  量杀死。其实本意是少量杀死么。
+- 征收。这可能和古代的十一税有关，即十份收成征收一份税。
+
+比如：
+- In the New World, European colonists initially enslaved Native
+  Americans, *decimating* the indigenous(土生土长的) populations to
+  one-tenth(这里说欧洲殖民者屠杀了 9/10 的土著，远远超过了 decimate 十
+  抽一屠杀的数量。所以这里 decimate 就是大批杀死的意思) of their
+  original sizes.
+- African slaves were needed to replace Native American populations
+  that had been *decimated* (literally reduced to one-tenth their size)
+  by European conquest.
+
+再比如，美国有个 Section 230 法案，It is a law that protects online
+platforms from liability for user posts and moderation decisions. 最近
+有讨论要废弃这个法案，意味着小的在线企业要支付大笔法律顾问费用。所以有
+新闻这么写：
+
+Sunsetting Competition: Scraping Section 230 Would *Decimate* Small
+Tech, Discourage Free Speech Online [fn:1]
+
+这里 decimate 指的是会消灭大批小技术企业。
+
+Israel and Hamas have been entrenched in a deadly war since that has
+*decimated* Gaza; more than 34,500 Palestinians have been killed, per
+the AP, and more than 1,700 people in Israel have been killed, per ABC
+News. -- Michael Saponara, Billboard, 7 May 2024
+
+这里说以色列哈马斯战争导致加沙地区人口大量死亡。
+
+另外，我们还要区分 annihilate 和 decimate 的区别。正如前面说的，
+decimate 是一种十抽一的惩罚机制，所以不是完全消灭。而 annihilate 则是
+完全消灭，完全歼灭的意思。注意区分两者的区别。
+
+比如 annihilate 往往后面跟着 entire 或 all，表示完全消灭。
+- The bomb was powerful enough to *annihilate* the entire city.
+- The disease threatened to *annihilate* the entire population.
+- The army was ordered to *annihilate* the enemy forces.
+
+而 decimate 往往跟着消灭数量的比例：
+- The hurricane *decimated* the coastal town, leaving only 10% of the
+  buildings standing.
+- The virus *decimated* the population, killing 50% of the infected
+  individuals.
+- The economic crisis *decimated* the company’s profits, reducing them
+  by 90%.
+
+另外，在统计学和信号采样技术中，有个术语叫 decimate，它的意思是下采样
+（downsampling），或者说是减少采样点，比如，我们可以在 R 语言里调用这
+个函数进行下采样，蓝色线条就是 decimate 之后的效果：
+
+#+begin_src R :file decimate.svg :results graphics file :exports both
+# install.packages('signal', repos = "http://cran.r-project.org")
+library('signal')
+t <- seq(0, 2, by = 0.01)
+x <- chirp(t, 2, 0.5, 10, 'quadratic') + sin(2*pi*t*0.4)
+y <- decimate(x, 4)   # factor of 4 decimation
+plot(t, x, type = "l")
+lines(t[seq(1, length(t), by = 4)], y, col = "blue")
+#+end_src
+
+#+RESULTS:
+[[file:decimate.svg]]
+
+  
+还有，当时罗马人十个里面杀一个叛徒或俘虏，是通过抽签决定的。抽签 draw
+lots或 by lot。比如
+- If no one volunteers to be the club's secretary, then we'll have to pick someone *by lot*.
+- We *drew lots* to decide who would go.
+- Competitors *draw lots* to see who gets which boat.
+- We *drew lots* to decide the order in which we would perform.
+- He suggested *drawing lots* for the best seats.
+- There were only two beds, so we *drew lots* to decide who would get them.
+
+在英语里，也常说 pick out of hat, 或 a name from a hat, taken from a
+hat 表示抽签。也许是因为古时候人人都会戴一顶帽子，帽子就能代替人了。
+
+*References*
+#+BEGIN_EXPORT latex
+\iffalse % multiline comment
+#+END_EXPORT
+[[bibliography:~/docs/references.bib]]
+#+BEGIN_EXPORT latex
+\fi
+\printbibliography[heading=none]
+#+END_EXPORT
+
+* Footnotes
+
+[fn:1] Sunsetting Competition: Scraping Section 230 Would Decimate Small Tech, Discourage Free Speech Online by Krista Chavez
+
+https://netchoice.org/sunsetting-competition-scraping-section-230-would-decimate-small-tech-discourage-free-speech-online/
+
