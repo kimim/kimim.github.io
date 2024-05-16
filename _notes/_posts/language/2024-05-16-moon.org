@@ -1,0 +1,127 @@
+#+LAYOUT: post
+#+TITLE: Moon
+#+TAGS: English
+#+CATEGORIES: language
+
+我们管夜空明亮的圆盘叫月亮，英语里叫 moon ，德语叫 der Mond，法语叫 la
+luna。奇怪的是，德语的月亮是阳性的，而法语的月亮是阴性的。一般来说，人
+们会觉得月亮是女生，而太阳是男生，比如罗马神话里，月神叫 Diana 狄安娜
+女神，而希腊神话叫 Artemis 阿尔忒弥斯女神。而罗马神话里太阳神叫 Apollo
+阿波罗，希腊神话里叫 Phobos 福波斯，都是男神。所以，德语月亮是阳性的有
+点奇怪。不过，其实德语的阴性和阳性更多的是语法上的概念，所以并不是和实
+际东西的性别相符，且月亮实际上应该只能算中性的。
+
+难怪，马克·吐温说 "In German, a young lady has no sex, while a turnip
+has." 德语女孩子是中性的，而萝卜 die Rübe 则是阴性的。
+
+其实，星期一，Monday is the week day named after god of the
+moon. Since Tang dynasty, ancient Chinese also learned this from
+western country. In《宿曜历经·七曜直日历品第八》, it said "夫七曜者，
+所谓日月五星，下直人间。一日一易，七日周而复始。故今列诸国人呼七曜如后：
+日曜太阳，胡名蜜，波斯名曜森勿，天竺名阿儞底耶。月曜太阴，胡名莫，波斯
+名娄祸森勿，天竺名苏上摩". So 月曜日 means Monday, it is called 莫 or
+Maq in Sogdiana language. Sogdiana is an ancient country called 索格狄
+亚那 or 康居国, now located in Uzbekistan(乌兹别克斯坦共和国). Maq 估
+计跟 Moon 是有些渊源的。
+
+Originally, the names of week days are from Roman gods' or goddesses'
+names:
+- Monday, 星期一, Lunes, 月曜日, Lundi, 月神 Luna, Montag, 日耳曼月神
+  Mona, Luna, 月亮
+- Tuesday, 星期二, Martes, 火曜日, Mardi, Dienstag, 北欧神话中的战神
+  Tiw/Tyr, Marte, 火星
+- Wednesday, 星期三, Miércoles, mercredi, 日尔曼主神Woden，即大神奥丁
+  （Odin）, 德语 Mittwoch 表示一周的中间，并没用上神的名字, 水曜日,
+  Mercurio, 水星
+- Thursday, 星期四, Jueves, 木曜日, Jeudi, 日尔曼雷神索尔 Thor,
+  Jupiter,木星
+- Friday, 星期五, Viernes, 金曜日, Vendredi, 英语「Friday」和德语
+  「Freitag」则来自日尔曼神话中的大神奥丁的妻子、爱与美女神 Frigg,
+  Venus, 金星
+- Saturday, 星期六, Sábado, 土曜日, 罗马主神朱庇特之父，农神 Saturn,
+  语 Samedi, 德语 Samstag, 源自希伯来语 shabbat, Saturno, 土星
+- Sunday, 星期日, Domingo, 日曜日, dimanche, 太阳神是主神 Domingo 是上
+  帝, Sonntag
+
+Month in German is Monat, and in French is mois.
+
+The Grimm brothers analyzed the pronunciation of European languages
+and they found some rules:
+- l, m, n, s, c are exchangeable
+- oo, u are exchangeable
+
+Then we can see, for "moon", if we change m to l and oo to u, it
+becomes lun, when we add -e, it is "lune", which is moon in French.
+
+In English we have:
+- luna, God of moon, 月神露娜
+- lune, 半月形
+- lunette, 半月形，lunettes 眼镜
+- lunar, adjective, of the moon, 月亮的，月球的，lunar rock 月岩，a
+  lunar eclipse 月食，lunar calendar 月历，阴历
+- lunaria, 月经
+- sublunary, 月下的；地上的；现世的. A marriage where not only esteem,
+  but passion is kept awake, is, I am convinced, the most perfect
+  state of sublunary happiness.
+
+Moon may cause some mind problem, so:
+- lunatic, 精神失常的
+- lunatical
+- lunacy
+- moonhead
+- mooncalf
+
+If we change n to m, we get lum-
+- luminous, 发光的，易懂的，清楚的. luminous clothing 夜光服. The library was lit by the luminous glow of laptops.
+- luminant, 发亮的，发光体
+- luminare, luminary, 发光体，引申为知识渊博的人
+- luminate, 发光
+- luminarism, 印象主义画派的光色主义
+- luminarist 光色主义画家
+- luminance, 亮度
+- lumination, 光照亮
+- luminescence, 冷光. A variety of lighting elements are used, from
+  LED to chemical luminescence.
+- luminesce, （物质）发冷光. Solids that luminesce are called phosphors.
+- luculent透明的；明白的
+- translucent 半透明
+- lucubrate, (在灯下)刻苦钻研；苦思冥想；学究式地写作；详细论述
+    
+光照单位：
+- 光通量 (Luminous Flux)：能够被人的视觉系统所感受到的那部分光辐射功率的大小，单位为lm。
+- 照度 (luminance)： 表面上一点的光照度是入射在包含该点的面元上的光通量dφ除以该面元面积dA。
+- 光照强度（illumination）是指单位面积上所接受可见光的能量，简称照度，
+  光学中一般用E表示，是用于表示光照的强弱和物体表面积被照明程度的量，
+  单位为勒克斯（Lux或1x）
+
+Extended from concrete light to abstract light, we get light in the mind:
+- illumine, 启发
+- illumination, 照亮，阐明，启发
+- allumette is the French word for “matchstick” as allume means to
+  “light up”.
+- illustrate 阐明，插画
+- illustrator 插画家
+- illusion, 幻影，幻觉
+- illusive, illusory, 幻觉的，错觉的，骗人的
+
+???  
+- delusion, 欺骗
+- delusive, 欺瞒的
+- allusion, 映射，暗示，典故. Her novels are packed with literary
+  allusions. 她的小说充满了文学典故。
+- allusive, 影射的，暗指的；间接提到的；引用典故的. Her music is
+  witty, ironic, and allusive. 她的音乐作品诙谐、讽刺，富含典故。
+
+
+Others
+- over the moon, 欣喜若狂,月亮之上,乐疯了. I am over the moon right
+  now . He is planning on coming in 4 weeks and said he would stay for
+  as long as I let him.
+- Reach for the moon, if you miss, you will land among the stars. 把目
+  标放在到达月亮，如果达不到目标，你至少还会登上星星。
+- once in a blue moon. 难得；罕见；千载难逢. How can you let such a
+  golden opportunity to make big money slip through your fingers? It
+  was an opportunity that comes once in a blue moon. 这样一个发大财的
+  机会千载难逢，你怎么能眼睁睁地让它溜掉呢。
+
+There are many more words have relationship with moon!
