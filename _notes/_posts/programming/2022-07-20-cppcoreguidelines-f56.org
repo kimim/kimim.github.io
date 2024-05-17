@@ -1,27 +1,24 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines F.56 避免不必要的嵌套条件判断
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines F.56 避免不必要的嵌套条件判断
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Avoid unnecessary condition nesting"
+F.56: Avoid unnecessary condition nesting
 
 
-理由
+*理由*
 
-浅层嵌套的代码更容易理解；代码意图更清晰。努力用尽量少的代码条件分支判
-断实现程序。
+浅层嵌套的代码更容易理解；代码意图更清晰。尽量把代码放在逻辑判断的最外
+层。不到万不得已，不用多层嵌套逻辑判断。
 
 
-例子
+*例子*
 
 利用保卫语句（guard-clause），让代码早返回或早退出。
 
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 // Bad: Deep nesting
 void foo() {
@@ -44,6 +41,8 @@ void foo() {
 #+end_src
 
 
+*例子*
+
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 // Good: Early return, no redundant else
 void foo() {
@@ -56,8 +55,9 @@ void foo() {
 #+end_src
 
 
-例子
+*例子*
 
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 // Bad: Unnecessary nesting of conditions
 void foo() {
@@ -69,6 +69,9 @@ void foo() {
     }
 }
 #+end_src
+
+
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 // Good: Merge conditions + return early
@@ -82,7 +85,7 @@ void foo() {
 #+end_src
 
 
-强化
+*强化*
 
 - 标记多余的 else。
 - 标记函数体只是简单的通过条件语句包含了代码块。

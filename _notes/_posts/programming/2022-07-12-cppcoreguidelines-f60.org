@@ -5,7 +5,7 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-理由
+*理由*
 
 指针（T*）可以是 ~nullptr~ 而引用（T&）不可以。没有空引用这一说。有时
 ~nullptr~ 是有效参数，表示“无对象”。除了这种情况，最好都用引用。因为用引

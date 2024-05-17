@@ -1,55 +1,55 @@
 ---
 layout: post
 title: CppCoreGuidelines F.55 规避 va_arg
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Don’t use va<sub>arg</sub> arguments&rdquo;
-</p>
-
-<p>
-理由
-</p>
-
-<p>
-从 <code>va_arg</code> 读取参数的时候，我们假设实际参数类型是正确设置的。传递变长参数的时候，我们假定函数会正确解析参数类型。但是两种假定都不一定可靠。
+F.55: Don’t use <code>va_arg</code> arguments
 </p>
 
 
 <p>
-例子
+<b>理由</b>
+</p>
+
+<p>
+从<code>va_arg</code>读取参数的时候，我们假设实际参数类型是正确设置的。传递变长参数的时候，我们假定函数会正确解析参数类型。但是两种假定都不一定可靠。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">cstdarg</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">sum</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">cnt</span> ...<span style="color: #707183;">)</span>
+<pre class="src src-bad src-C++"><span style="color: #3F7F5F;">// -*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;cstdarg&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> gsl;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">sum</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">cnt</span> <span style="color: #7F0055; font-weight: bold;">...</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">result</span> = 0;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">result</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
     <span style="color: #000000; font-style: italic; text-decoration: underline;">va_list</span> <span style="color: #000000;">list</span>;
-    va_start<span style="color: #7388d6;">(</span>list, cnt<span style="color: #7388d6;">)</span>;
-    <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span>cnt &gt; 0<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        cnt--;
-        result += va_arg<span style="color: #909183;">(</span>list, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, assumes it will be passed ints</span>
+    <span style="color: #3a5fcd; font-weight: bold;">va_start</span><span style="color: #7388d6;">(</span>list, cnt<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">while</span> <span style="color: #7388d6;">(</span>cnt <span style="color: #7F0055; font-weight: bold;">&gt;</span> <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000;">cnt</span><span style="color: #7F0055; font-weight: bold;">--</span>;
+        <span style="color: #000000;">result</span> <span style="color: #7F0055; font-weight: bold;">+=</span> <span style="color: #3a5fcd; font-weight: bold;">va_arg</span><span style="color: #909183;">(</span>list, <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// BAD, assumes it will be passed ints</span>
     <span style="color: #7388d6;">}</span>
-    va_end<span style="color: #7388d6;">(</span>list<span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">va_end</span><span style="color: #7388d6;">(</span>list<span style="color: #7388d6;">)</span>;
     <span style="color: #7F0055; font-weight: bold;">return</span> result;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    cout &lt;&lt; sum<span style="color: #7388d6;">(</span>2, 3, 2<span style="color: #7388d6;">)</span> &lt;&lt; endl; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok</span>
-    cout &lt;&lt; sum<span style="color: #7388d6;">(</span>2, 3.14159, 2.71828<span style="color: #7388d6;">)</span> &lt;&lt; endl; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, undefined</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">sum</span><span style="color: #7388d6;">(</span><span style="color: #110099;">2</span>, <span style="color: #110099;">3</span>, <span style="color: #110099;">2</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl; <span style="color: #3F7F5F;">// ok</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">sum</span><span style="color: #7388d6;">(</span><span style="color: #110099;">2</span>, <span style="color: #110099;">3.14159</span>, <span style="color: #110099;">2.71828</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl; <span style="color: #3F7F5F;">// BAD, undefined</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -62,26 +62,26 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-如果用 C++17 的折叠表达式（fold expression)对 <code>Args</code> 进行折叠展开，就比较灵活了：
+如果用C++17的折叠表达式（fold expression)对 <code>Args</code> 进行折叠展开，就比较灵活了：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">-*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
-<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> ...<span style="color: #000000; font-style: italic; text-decoration: underline;">Args</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #0000ff; font-weight: bold;">sum</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Args</span>... <span style="color: #000000;">args</span><span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">GOOD, and much more flexible</span>
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// -*- compile-command: "g++ -std=c++20 code.cpp &amp;&amp; ./a"; -*-</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> gsl;
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #7F0055; font-weight: bold;">...</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Args</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #0000ff; font-weight: bold;">sum</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Args</span><span style="color: #7F0055; font-weight: bold;">...</span> args<span style="color: #707183;">)</span> <span style="color: #3F7F5F;">// GOOD, and much more flexible</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7388d6;">(</span>... + args<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">note: C++17 "fold expression"</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">...</span> <span style="color: #7F0055; font-weight: bold;">+</span> args<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// note: C++17 "fold expression"</span>
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    cout &lt;&lt; sum<span style="color: #7388d6;">(</span>3, 2<span style="color: #7388d6;">)</span> &lt;&lt; endl; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok: 5</span>
-    cout &lt;&lt; sum<span style="color: #7388d6;">(</span>3.14159, 2.71828<span style="color: #7388d6;">)</span> &lt;&lt; endl; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok: ~5.85987</span>
-    cout &lt;&lt; sum<span style="color: #7388d6;">(</span>1, 2, 3, 4.8<span style="color: #7388d6;">)</span> &lt;&lt; endl;
-    cout &lt;&lt; sum<span style="color: #7388d6;">(</span>string<span style="color: #909183;">(</span><span style="color: #2A00FF;">"hello"</span><span style="color: #909183;">)</span>, string<span style="color: #909183;">(</span><span style="color: #2A00FF;">" "</span><span style="color: #909183;">)</span>, string<span style="color: #909183;">(</span><span style="color: #2A00FF;">"world"</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">sum</span><span style="color: #7388d6;">(</span><span style="color: #110099;">3</span>, <span style="color: #110099;">2</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl; <span style="color: #3F7F5F;">// ok: 5</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">sum</span><span style="color: #7388d6;">(</span><span style="color: #110099;">3.14159</span>, <span style="color: #110099;">2.71828</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl; <span style="color: #3F7F5F;">// ok: ~5.85987</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">sum</span><span style="color: #7388d6;">(</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span>, <span style="color: #110099;">3</span>, <span style="color: #110099;">4.8</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">sum</span><span style="color: #7388d6;">(</span><span style="color: #3a5fcd; font-weight: bold;">string</span><span style="color: #909183;">(</span><span style="color: #2A00FF;">"hello"</span><span style="color: #909183;">)</span>, <span style="color: #3a5fcd; font-weight: bold;">string</span><span style="color: #909183;">(</span><span style="color: #2A00FF;">" "</span><span style="color: #909183;">)</span>, <span style="color: #3a5fcd; font-weight: bold;">string</span><span style="color: #909183;">(</span><span style="color: #2A00FF;">"world"</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -96,31 +96,30 @@ hello world
 
 
 <p>
-其他方法：
+<b>其他方法</b>
 </p>
+
 <ul class="org-ul">
-<li>重载（overloading）</li>
+<li>重载（ overloading ）</li>
 <li>可变参数模板（variadic templates）</li>
 <li>变体参数（variant arguments）</li>
-<li>初始化列表（initializer<sub>list</sub>）</li>
+<li>初始化列表（initializer_list）</li>
 </ul>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-Declaring a &#x2026; parameter is sometimes useful for techniques that
-don’t involve actual argument passing, notably to declare
-“take-anything” functions so as to disable “everything else” in an
-overload set or express a catchall case in a template metaprogram.
+声明一个<code>...</code>参数，表示接收所有参数，就可以避免写明实际多少参数，减少不必要的函数重载。
 </p>
 
+
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>如果代码中使用了 <code>va_list</code>, <code>va_start</code>, <code>va_arg</code>, 对其进行诊断。</li>
-<li>如果以 <code>va_arg</code> 的形式传递多个参数给函数，但是没指明什么类型，考虑是否可以通过重载明确参数类型。</li>
+<li>如果代码中使用了<code>va_list</code>, <code>va_start</code>, <code>va_arg</code>,对其进行诊断。</li>
+<li>如果以<code>va_arg</code>的形式传递多个参数给函数，但是没指明什么类型，考虑是否可以通过重载明确参数类型。</li>
 </ul>

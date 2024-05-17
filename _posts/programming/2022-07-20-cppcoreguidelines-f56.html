@@ -1,104 +1,112 @@
 ---
 layout: post
 title: CppCoreGuidelines F.56 避免不必要的嵌套条件判断
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Avoid unnecessary condition nesting&rdquo;
+F.56: Avoid unnecessary condition nesting
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-浅层嵌套的代码更容易理解；代码意图更清晰。努力用尽量少的代码条件分支判断实现程序。
+浅层嵌套的代码更容易理解；代码意图更清晰。尽量把代码放在逻辑判断的最外层。不到万不得已，不用多层嵌套逻辑判断。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <p>
-利用保卫语句（guard-clause），让代码早返回或早退出。
+利用保卫语句（ guard-clause ），让代码早返回或早退出。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: Deep nesting</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+<pre class="src src-bad src-C++"><span style="color: #3F7F5F;">// Bad: Deep nesting</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
     ...
     <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        computeImportantThings<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+        <span style="color: #3a5fcd; font-weight: bold;">computeImportantThings</span><span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
     <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>
 
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: Still a redundant else.</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+<span style="color: #3F7F5F;">// Bad: Still a redundant else.</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
     ...
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">!</span>x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
         <span style="color: #7F0055; font-weight: bold;">return</span>;
     <span style="color: #7388d6;">}</span>
     <span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #7388d6;">{</span>
-        computeImportantThings<span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
+        <span style="color: #3a5fcd; font-weight: bold;">computeImportantThings</span><span style="color: #909183;">(</span>x<span style="color: #909183;">)</span>;
     <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 
+<p>
+<b>例子</b>
+</p>
+
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Good: Early return, no redundant else</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// Good: Early return, no redundant else</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
     ...
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!x<span style="color: #7388d6;">)</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">!</span>x<span style="color: #7388d6;">)</span>
         <span style="color: #7F0055; font-weight: bold;">return</span>;
 
-    computeImportantThings<span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">computeImportantThings</span><span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: Unnecessary nesting of conditions</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+<pre class="src src-bad src-C++"><span style="color: #3F7F5F;">// Bad: Unnecessary nesting of conditions</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
     ...
     <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
         <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>y<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
-            computeImportantThings<span style="color: #709870;">(</span>x<span style="color: #709870;">)</span>;
+            <span style="color: #3a5fcd; font-weight: bold;">computeImportantThings</span><span style="color: #709870;">(</span>x<span style="color: #709870;">)</span>;
         <span style="color: #909183;">}</span>
     <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
+
+<p>
+<b>例子</b>
+</p>
+
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Good: Merge conditions + return early</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// Good: Merge conditions + return early</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
     ...
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!<span style="color: #909183;">(</span>x &amp;&amp; y<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">!</span><span style="color: #909183;">(</span>x <span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> y<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
         <span style="color: #7F0055; font-weight: bold;">return</span>;
 
-    computeImportantThings<span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">computeImportantThings</span><span style="color: #7388d6;">(</span>x<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 
 <ul class="org-ul">
