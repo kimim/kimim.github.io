@@ -1,0 +1,53 @@
+#+LAYOUT: post
+#+TITLE: 单词本：impinge
+#+TAGS: English
+#+CATEGORIES: language
+
+昨天在看以太网高级物理层技术的时候，看到这句话：
+
+Importantly, Ethernet-APL also affords coexistence of application
+protocols in the same architecture, even over the same pair of
+wires. This means that using HART-IP to communicate with process
+instruments and control valves doesn't *impinge* on using an alternative
+protocol for other application domains.
+
+这里说用 Ethernet-APL 打通工业现场层后，就可以在同一根网线上面运行各种
+不同的基于 IP 的协议，而互相不影响。
+
+词组 impinge on/upon sth 的意思是 have an effect on sth, 对某事物起作
+用或有影响。
+
+比如爱沙尼亚反对欧盟的数字经济增值税法案，认为影响中小企业的业务，用到
+了 impinge： the deemed supplier model would *impinge on* the principles
+of VAT neutrality for SME's who work with platforms within the
+aforementioned sectors.
+
+还有苏格兰克拉克曼南郡的一位居民的一个 9 米多高的树，影响了邻居的花园
+生活："The trees *impinge on* the owner's enjoyment of their rear
+garden.
+
+还有丹佛大都会州立学院的学生正在调研影响个体建康和福利的各种因素：
+Students examine the diverse factors that *impinge on* an individual's
+health and well-being.
+
+这是一个比较书面的用语。一般我们口语里不太用。
+
+拆开来看，impinge 是由 im 和 pinge 组成的。im，in，en 等都表示里面的意
+思，pinge 则来自拉丁语 pangere 意思是用力紧固、固定等意思。连在一起，
+就是用力固定到里面，往里用力固定。稍一转化，就是起作用、影响到的意思了。
+
+而 pangere 也有变化形式 pact，pac 等。这就引出了很多词汇：
+- compact 集中紧固，就是紧凑、坚实的意思了。比如
+  - a compact mass of sand, 坚实的沙堆。
+  - Stamp the soil down so that it's compact.
+  - a compact car, 紧凑型汽车
+- impact 这个和 impinge 有点类似，有撞击、冲击、压入等意思。比如：
+  - The bomb exploded on impact. 炸弹在撞击时立即爆炸。
+  - He collapsed under the full impact of the blow. 他受重击而倒下。
+  - Her speech made a tremendous impact on everyone. 她的演讲（在精神
+    上）对大家冲击很大。
+- pacific 平和的、和平的，其实是被压平了。太平洋 The pacific ocean.
+- pacify 使某人息怒，压平火气。
+  - He tried to pacify his creditors by repaying part of the money. 他
+    为了安抚债权人偿还了部分借款。
+- page 也是从 pact 延伸过来的，一页纸，那是压平的纸浆呀。
