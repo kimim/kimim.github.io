@@ -37,7 +37,7 @@ Margo 系统设计的整体架构可以概括为“2-2-3”，即两套仓库，
 是所谓的 “develop once, deploy many” 开发一次，部署多次。
   
 
-[[file:./margo/System-design.drawio.svg]]
+[[file:./System-design.drawio.svg]]
 
 
 项目官网地址：https://margo.org
