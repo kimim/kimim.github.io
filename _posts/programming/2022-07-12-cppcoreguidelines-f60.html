@@ -1,16 +1,15 @@
 ---
 layout: post
 title: CppCoreGuidelines F.60 如果参数可以是空的话， T* 比 T& 更合适
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
@@ -18,33 +17,34 @@ tags: [CppCoreGuidelines]
 <code>nullptr</code> 是有效参数，表示“无对象”。除了这种情况，最好都用引用。因为用引用代码更好更简单。
 </p>
 
+
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">gsl/gsl</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">gsl</span>;
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">zstring is a char*; that is a C-style string</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">zstring_to_string</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">zstring</span><span style="color: #7388d6;">&lt;&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;gsl/gsl&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> gsl;
+<span style="color: #3F7F5F;">// zstring is a char*; that is a C-style string</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">zstring_to_string</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">zstring</span><span style="color: #7388d6; font-weight: bold;">&lt;&gt;</span> <span style="color: #000000;">p</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">p might be nullptr; remember to check</span>
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>!p<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> string<span style="color: #7388d6;">{}</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> string<span style="color: #7388d6;">{</span>p<span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// p might be nullptr; remember to check</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">!</span>p<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6;">{}</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6;">{</span>p<span style="color: #7388d6;">}</span>;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span>&amp; <span style="color: #000000;">r</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">r</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">r refers to a vector&lt;int&gt;; no check needed</span>
-    for_each<span style="color: #7388d6;">(</span>begin<span style="color: #909183;">(</span>r<span style="color: #909183;">)</span>, end<span style="color: #909183;">(</span>r<span style="color: #909183;">)</span>, <span style="color: #909183;">[](</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span><span style="color: #909183;">){</span>cout &lt;&lt; x;<span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// r refers to a vector&lt;int&gt;; no check needed</span>
+    <span style="color: #3a5fcd; font-weight: bold;">for_each</span><span style="color: #7388d6;">(</span><span style="color: #3a5fcd; font-weight: bold;">begin</span><span style="color: #909183;">(</span>r<span style="color: #909183;">)</span>, <span style="color: #3a5fcd; font-weight: bold;">end</span><span style="color: #909183;">(</span>r<span style="color: #909183;">)</span>, <span style="color: #909183;">[](</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span><span style="color: #909183;">){</span>cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> x;<span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">ss</span> = zstring<span style="color: #7388d6;">&lt;&gt;(</span><span style="color: #2A00FF;">"abc"</span><span style="color: #7388d6;">)</span>;
-    cout &lt;&lt; zstring_to_string<span style="color: #7388d6;">(</span>ss<span style="color: #7388d6;">)</span> &lt;&lt; endl;
-    print<span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">&gt;{}</span><span style="color: #7388d6;">)</span>;
-    print<span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #909183;">&gt;{</span>1,2,3<span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
-    <span style="color: #7F0055; font-weight: bold;">return</span> 0;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">ss</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">zstring</span><span style="color: #7388d6; font-weight: bold;">&lt;&gt;</span><span style="color: #7388d6;">(</span><span style="color: #2A00FF;">"abc"</span><span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">zstring_to_string</span><span style="color: #7388d6;">(</span>ss<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    <span style="color: #3a5fcd; font-weight: bold;">print</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #909183; font-weight: bold;">&gt;</span><span style="color: #909183;">{}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">print</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #909183; font-weight: bold;">&gt;</span><span style="color: #909183;">{</span><span style="color: #110099;">1</span>,<span style="color: #110099;">2</span>,<span style="color: #110099;">3</span><span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -55,18 +55,19 @@ abc
 </pre>
 
 
+
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-可以在 C++ 编造出一个空指针 <code>nullptr</code> 的引用。这种错误很少见。
+可以在C++编造出一个空指针 <code>nullptr</code> 的引用。这种错误很少见。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>* <span style="color: #000000;">p</span> = <span style="color: #110099;">nullptr</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>&amp; <span style="color: #000000;">pp</span> = *p;
-cout &lt;&lt; p;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099; font-weight: bold;">nullptr</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">pp</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">*</span>p;
+cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> p;
 </pre>
 </div>
 
@@ -76,5 +77,5 @@ cout &lt;&lt; p;
 
 
 <p>
-如果你更喜欢指针操作（ <code>-&gt;</code> 和 <code>*</code> ）， <code>not_null&lt;T*&gt;</code> 可以提供类似 <code>T&amp;</code> 那样的保障。
+如果你更喜欢指针操作（<code>-&gt;</code>和 <code>*</code> ），<code>not_null&lt;T*&gt;</code>可以提供类似<code>T&amp;</code>那样的保障。
 </p>

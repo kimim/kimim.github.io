@@ -12,7 +12,7 @@
 用代码更好更简单。
 
 
-例子
+*例子*
 
 #+begin_src C++ :results output :exports both :flags -std=c++20 :namespaces std :includes <iostream> <vector> <algorithm> :eval no-export
 #include <gsl/gsl>
@@ -44,7 +44,8 @@ int main()
 : abc
 : 123
 
-注意
+
+*注意*
 
 可以在 C++ 编造出一个空指针 ~nullptr~ 的引用。这种错误很少见。
 
