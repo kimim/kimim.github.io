@@ -1,39 +1,45 @@
 ---
 layout: post
 title: CppCoreGuidelines C.1 把相关数据整理到数据结构中（struct/class）
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
+<p>
+<a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
+</p>
 
 <p>
-&ldquo;Organize related data into structures (structs or classes)&rdquo;
+C.1: Organize related data into structures (structs or classes)
 </p>
 
 
 <p>
-理由
+<b>理由</b>
+</p>
+
+<p>
+更容易理解。相关的数据，也要体现在代码中。
 </p>
 
 
 <p>
-这样更容易理解。相关的数据，也要体现在代码中。
-</p>
-
-<p>
-比如：
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: unnecessary implicit relationships</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x2</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y2</span><span style="color: #707183;">)</span>;
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">better</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">from</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">to</span><span style="color: #707183;">)</span>;
+<pre class="src src-bad src-C++"><span style="color: #3F7F5F;">// BAD: unnecessary implicit relationships</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">y</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">x2</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">y2</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// better</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">draw</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">from</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">to</span><span style="color: #707183;">)</span>;
+</pre>
+</div>
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
@@ -42,16 +48,17 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-从开发语言角度来看，class 和 struct 只是成员默认的可见性不一样。
+从开发语言角度来看， <code>class</code> 和 <code>struct</code> 只是成员默认的可见性不一样。
+<code>class</code> 的成员默认为 <code>private</code> ，而 <code>struct</code> 的成员默认是 <code>public</code> 。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 
 <p>

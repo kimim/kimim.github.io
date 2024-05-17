@@ -1,40 +1,46 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.1 把相关数据整理到数据结构中（struct/class）
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.1 把相关数据整理到数据结构中（struct/class）
+#+categories: programming
+#+tags: CppCoreGuidelines
 
-"Organize related data into structures (structs or classes)"
+[[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
+
+C.1: Organize related data into structures (structs or classes)
 
 
-理由
+*理由*
+
+更容易理解。相关的数据，也要体现在代码中。
 
 
-这样更容易理解。相关的数据，也要体现在代码中。
+*例子*
 
-比如：
-
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 // BAD: unnecessary implicit relationships
 void draw(int x, int y, int x2, int y2);
+#+end_src
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
 // better
 void draw(Point from, Point to);
 #+end_src
 
-
-注意
+*注意*
 
 没有虚函数的简单类，不会导致多余的空间和时间开销。
 
 
-注意
+*注意*
 
-从开发语言角度来看，class 和 struct 只是成员默认的可见性不一样。
+从开发语言角度来看， ~class~ 和 ~struct~ 只是成员默认的可见性不一样。
+~class~ 的成员默认为 ~private~ ，而 ~struct~ 的成员默认是 ~public~ 。
 
 
-强化
+*强化*
 
 比较难。但是可以考虑那些放在一起用的数据，是否属于同一个结构？
