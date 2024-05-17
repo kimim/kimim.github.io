@@ -5,33 +5,38 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-F.50: Use a ~lambda~ when a function won’t do (to capture local
+F.50: Use a ~lambda~ when a function won't do (to capture local
 variables, or to write a local function)
 
 
 *理由*
 
-函数不能捕获局部变量，也不能在局部范围。如果需要此类操作，尽可能使用
-lambda，不然就写个函数对象。不过 lambda 和函数对象不能重载。如果需要重
-载，还是得写个函数（lambda 重载很麻烦）。如果两种方式都可以，就用函数
-吧。尽量使用最简单的工具。
+函数不能捕获局部变量，也不能在局部范围定义变量。如果需要此类操作，尽可
+能使用 ~lambda~ ，不然就写个函数对象。不过 ~lambda~ 和函数对象不能重载。如
+果需要重载，还是得写个函数（ ~lambda~ 重载很麻烦）。如果两种方式都可以，
+就用函数吧。尽量使用最简单的工具。
 
 
-例子
+*例子*
 
-#+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
-// -*- compile-command: "g++ -std=c++20 code.cpp && ./a"; -*-
-#include <iostream>
-#include <gsl/gsl>
-using namespace std;
-using namespace gsl;
-// writing a function that should only take an int or a string
-// -- overloading is natural
+如果函数的参数可以是 ~int~ 也可以是 ~string~ ，那么就用函数重载方法。
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
 void f(int);
 void f(const string&);
+#+end_src
 
-// writing a function object that needs to capture local state and appear
-// at statement or expression scope -- a lambda is natural
+如果需要捕获局部的状态变量，并在程序语句中使用，那么自然就用 ~lambda~ 了。
+
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
 using work = int;
 vector<work> lots_of_work() {
     return vector<work>{1,2,3,4,5,6};
@@ -53,15 +58,14 @@ int main()
 #+end_src
 
 
+*例外*
 
-例外
-
-用泛型 lambda 可以写出简洁的函数模板，所有有时候比普通函数模板编写效率
-更高。不过，不久以后普通函数也能有 ~Concept~ 参数的时候， 泛型 lambda 就
-无此优势了。
+用泛型 ~lambda~ 可以写出简洁的函数模板，所以有时候用起来比普通函数模板编
+写效率更高。不过，不久以后普通函数也能有 ~Concept~ 参数的时候， 泛型
+~lambda~ 就无此优势了。
 
 
-强化
+*强化*
 
-在全局范围内把非泛型 lambda 赋值给变量的情况（如： ~auto x = [](int i)
-{ ...; };)~ 应该给予警告。这时候应该用普通函数。
+在全局范围内出现把非泛型 ~lambda~ 赋值给变量的情况（如： ~auto x = [](int
+i) { ...; };)~ 应该给予警告。这时候应该用普通函数。
