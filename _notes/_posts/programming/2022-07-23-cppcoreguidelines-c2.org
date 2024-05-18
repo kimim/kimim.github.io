@@ -1,32 +1,30 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.2 如果数据结构里面有一些不变要素，用 class，如果成员变量可以互相独立修改，用 struct
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.2 如果数据结构里面有一些不变要素，用 class，如果成员变量可以互相独立修改，用 struct
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Use class if the class has an invariant; use struct if the data
-members can vary independently"
+C.2: Use class if the ~class~ has an invariant; use ~struct~ if the data
+members can vary independently
 
-理由
+*理由*
 
 
-代码更容易阅读。更容易理解。class 提醒程序员，里面用了些不变要素
+代码更容易阅读。更容易理解。 ~class~ 提醒程序员，里面用了些不变要素
 （invariant）。保持这种惯例，大有裨益。
 
-注意
+*注意*
 
 不变要素（invariant）指的是一个对象内部成员之间的一些逻辑约束。这些约
-束必须通过构造函数建立。公开的成员函数调用过程中，也会保持这种逻辑约束。
-这种不变要素可以通过注释等方式声明。也可以通过 Expects 更正式地声明。
+束必须通过构造函数建立。在调用公开的成员函数的过程中，也会保持这种逻辑
+约束。这种不变要素可以通过注释等方式声明。也可以通过 ~Expects~ 更正式地
+声明。
 
-如果所有成员数据都可以互相独立修改，那就没有不变要素了。
+如果所有成员数据都可以互相独立修改，那就无法维持不变要素了。
 
-例子
+
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 struct Pair {  // the members can vary independently
@@ -51,13 +49,12 @@ private:
 #+end_src
 
 
-注意：
-
+*注意*
 
 如果类里面有私有数据，用户不通过构造函数就无法完全初始化此对象。所以，
-类的定义者要提供构造函数。这就意味着开发者需要定义一些不变要素。
+类的开发者要提供构造函数。这就意味着开发者需要定义一些不变要素。
 
 
-强化：
+*强化*
 
-可能有问题的地方：所有成员数据是私有的 struct，或者所有成员都公开的 class
+检查可能有问题的地方：所有成员数据是私有的 ~struct~ ，或者所有成员都公开的 ~class~
