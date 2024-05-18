@@ -1,0 +1,41 @@
+#+LAYOUT: post
+#+TITLE: 单词本：per diems
+#+TAGS: English Latin
+#+CATEGORIES: language
+
+最近在学习自动化系统的模块化设计，了解到自动化领域有个叫 modular skid
+的概念。skid 是滑轨的意思，姑且我们把 modular skid 翻译为模块化滑轨装
+备吧。
+
+传统的过程自动化系统的建设方法会要求把装备的各个部分运输到工厂现场，然
+后一个一个安装起来，进行调试。而模块化滑轨装备则是把过程处理的某个工序，
+如渗透过滤、离心提取、均匀搅拌等做成一个个预制的模块，在模块车间里就调
+试好装备，客户需要的时候，整个运输到工业现场简单调试就能工作了。这就好
+比自己去菜场买菜、加工、烧菜的方式，和预制菜的区别了。预制菜打开包装一
+加热就可以吃啦。
+
+那么，这种模块化滑轨装备的好处就显而易见了：安装快捷、维护方便、成本更
+低。这里说的成本主要是指劳动力成本。所以，《WHAT ARE MODULAR PROCESS
+SKIDS?》这篇文章里这么写到：
+
+“When labor is a limiting factor, you’re left with the same amount of
+work to be done with a smaller crew” Sipes said. “That crew has to
+work more, which means paying premium overtime wages, as well as *per
+diems* and travel expenses. However, taking a modular approach can
+spread the work out geographically to where the workforce is readily
+available, lessening the impact of those costs.” [fn:1]
+
+这里， *per diems* 的意思是就是日津贴了。
+
+传统的自动化装备，因为需要工程师进行现场，所以需要工程师出差，就会产生
+出差补贴，出差补贴一般是按出差天数计算的么。  *per diems* 正是这个。
+
+之前，我介绍过 [[./2022-06-07-latin-carpe-diem.org][carpe diem]]，意思是是抓住今天，及时行乐。diem 就是天的意
+思。per diems 也就是 per days 了。这就是文言和白话的区别了么。当然，
+per diems 有专有的意思，就是 amount or allowance of so much every day。
+
+
+* Footnotes
+
+[fn:1] WHAT ARE MODULAR PROCESS SKIDS? A SIMPLE GUIDE FOR MANUFACTURERS
+by EPIC Systems | EPIC Modular Process

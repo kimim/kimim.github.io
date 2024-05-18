@@ -1,11 +1,7 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: 单词本：carpe diem
-categories: [language]
-tags: [English]
----
-#+END_EXPORT
+#+layout: post
+#+title: 单词本：carpe diem
+#+categories: language
+#+tags: English
 
 电影《死亡诗社》（Dead Poets Society）里的 Keeting 老师很喜欢说的一句
 拉丁语“Carpe Diem”，字面意思就是“抓住今天”，也就是“及时行乐”。
