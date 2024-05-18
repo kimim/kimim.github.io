@@ -1,0 +1,58 @@
+#+LAYOUT: post
+#+TITLE: 单词本：bane
+#+TAGS: English
+#+CATEGORIES: language
+
+我们工业连接的产品要开发前端配置工具的前端界面。用上了 TypeScript，于
+是，我找来相关的书，了解下 TypeScript。
+
+在比较 JavaScript 和 TypeScript 的时候，书中这么说：
+
+The kind of implicit conversion that JavaScript does can be a really
+hard-to-track-down source of errors, and is the *bane* of many
+JavaScript programmers.
+
+这里用到 bane 表示 JavaScript 中的隐式类型转换是很多 JS 程序员的不幸的
+根源。这个 bane 表示毒药和祸害。
+
+经常组成短语 the *bane* of sb's existence/life 表示某人罹祸的根源。
+
+比如 Those noisy neighbours are the *bane* of my life. 那些吵闹的邻居是
+我生活的一大忧患。
+
+Drinking was the *bane* of his existence. 喝酒把他毁了。
+
+bane 本意是毒药、毒草。比如，有个毒草叫 walfsbane ，取这个名字，要么是
+这个毒草跟狼一样恶毒，要么是能毒死饿狼。walfsbane 又叫 badger's
+bane（獾毒草）, hare's bane（野兔毒草）, bear's bane（熊毒草），
+foxbane（狐狸毒草）。据说，又叫平头哥的蜜獾解毒能力超强，专吃毒蛇，被
+毒蛇咬伤，睡一觉就没事了。然而，这个毒草连獾都能毒倒！
+
+walfsbane 其实上它的学名叫 Aconitum napellus 舟形乌头，是一种多年生草
+本植物，长着蓝紫色的花，相当好看。但是，它从花到根都有剧毒。富含一种叫
+乌头碱的剧毒成分。古时候，人们把舟形乌头的毒液涂在箭头上杀人。中毒后，
+会引起神经和心脏跳动紊乱。又因为这个神经毒性，也用于进行一些治疗，比如
+平缓心脏跳动等作用。
+
+还有一种 bane 叫 banewort，颠茄，学名 Atropa belladonna，一种黑色浆果，
+也是剧毒的。。Atropos，即阿特洛波斯，是希腊神话里命运三女神之一。她的
+两个姐姐分别负责纺织生命线和分配生命度数，而阿特洛波斯负责切断生命之线。
+有传说颠茄正是她用来切断生命之线的工具。
+
+还有 belladonna 是美丽夫人的意思，据说文艺复兴时候，女士们把颠茄的汁滴
+到眼睛里，因为有神经毒性，可以括瞳，能让眼睛看起来好看些，也就是美瞳效
+果啦。
+
+还有据说中世纪的女巫们将颠茄、天仙子等茄科植物制作成能够引发梦幻般状态
+的“飞行药膏”，在安息日（the Sabbath）当晚就会擦在身上去野外“与魔鬼做交
+易”。那么具体怎么交易，就不知道了。
+
+还有个毒草叫 oxbane，能毒死牛？中文叫毒芹。毒芹根部位置有毒芹素，食之
+数分钟即中毒，有非常显著的致痉挛作用，严重的甚至可能造成死亡。
+
+狗毒草 dogbane oleander 就是夹竹桃，也是剧毒。前几年的旧闻：女孩嘴含夹
+竹桃拍照后中毒送医，在郑州，有一位网友跟路边的鲜花合拍了一组照片，结果
+第二天就进了医院。有人也有类似经历，是这么形容的“我就说我当时怎么头开
+始晕起来了我还以为是自己身体虚低血糖，万幸的是因为当时花茎的味道有点奇
+怪我吐掉了一些口水，救我一命”。
+
