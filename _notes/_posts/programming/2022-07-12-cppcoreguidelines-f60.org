@@ -5,6 +5,8 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
+F.60: Prefer ~T*~ over ~T&~ when "no argument" is a valid option
+
 *理由*
 
 指针（T*）可以是 ~nullptr~ 而引用（T&）不可以。没有空引用这一说。有时
