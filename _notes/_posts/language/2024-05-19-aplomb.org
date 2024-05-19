@@ -22,24 +22,24 @@ plumbum 铅，所以化学元素里铅的名字就是 plumbum，缩写 Pb。那�
 垂，就是垂直、沉着的意思咯。
 - She passed the test *with aplomb*. 她泰然自若的通过了考试。（往往是在
   面对挑战的情况下展现出来的沉着状态）。
-- Elle répondit avec aplomb. 她自信应对。法语里 aplomb 作为名词使用。
-- Vous ne manquez pas d'aplomb! 你有些紧张，不够沉着。
+- Elle répondit avec *aplomb*. 她自信应对。法语里 aplomb 作为名词使用。
+- Vous ne manquez pas *d'aplomb*! 你有些紧张，不够沉着。
 
 英语里，铅 lead 也有领导的意思，那可能也是铅锤笔直朝向地面，所以就有领
 导、引导的意思。大概铅有润滑作用，所以英语 lead 常形容顺畅、移动快：
-- I had a lead foot in my younger days, and had quite a few
+- I had a *lead* foot in my younger days, and had quite a few
   accidents. 我年轻时候脚踩油门很快，不过很少出事故。
 
 有时候，又形容很沉重：
-- My legs feel like lead.
+- My legs feel like *lead*.
 
 德语里，铅 das Blei，和 plumbum 差别有点大。因为铅的密度大，所以也常用
 来比喻难受、沉重（schwer wie Blei，或直接 wie Blei）：
-- Mir liegt es wie Blei in den Gliedern. 我疲倦得四肢动弹不得。
-- Die Klöße liegen mir schwer wie Blei im Magen.
-- Meine Glieder sind schwer wie Blei.
+- Mir liegt es wie *Blei* in den Gliedern. 我疲倦得四肢动弹不得。
+- Die Klöße liegen mir schwer wie *Blei* im Magen.
+- Meine Glieder sind schwer wie *Blei*.
 
 法语直接 plomb 传承自拉丁语 plumbum
-- ciel de plomb, 形容浅灰色的天空，即 leaden  sky
-- mer de plomb, 形容浅灰色的大海
-- J'ai des jambes de plomb. 我腿像铅般重。
+- ciel de *plomb*, 形容浅灰色的天空，即 leaden  sky
+- mer de *plomb*, 形容浅灰色的大海
+- J'ai des jambes de *plomb*. 我腿像铅般重。
