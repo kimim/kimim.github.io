@@ -1,11 +1,7 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.3 用类区别接口与实现
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.3 用类区别接口与实现
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
