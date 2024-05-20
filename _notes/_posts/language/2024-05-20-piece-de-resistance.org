@@ -39,7 +39,7 @@ Als *Krönung* des Festes wurde das Feuerwerk. 烟花表演成为庆祝活动的
 话说，das Feuerwerk 英语是 firework ，而法语则是 pièce d'artifice 也有
 pièce 呢。
 
-* References
+*References*
 #+BEGIN_EXPORT latex
 \iffalse % multiline comment
 #+END_EXPORT
