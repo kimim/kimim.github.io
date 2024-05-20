@@ -38,7 +38,34 @@ Als *Krönung* des Festes wurde das Feuerwerk. 烟花表演成为庆祝活动的
 
 话说，das Feuerwerk 英语是 firework ，而法语则是 pièce d'artifice 也有
 pièce 呢。
+还是在看看Programming TypeScript (Cherny 2019)的时候，读到这句：
 
+You are now ready for TypeScript’s pièce de résistance (or raison d’être, if you’re a functional programmer): functions.
+
+这里，用到了两个法语外来词。括号里的raison d’ê tre ，之前我看《The Art of Agile Product Ownership》(Kelly 2019)的时候，遇到过，写了 《单词本：raison d’ê tre 》。
+
+而 pièce de résistance 的意思则是 the best and most important or
+exciting thing, often the last in a series of things。本来其实是法餐里
+的主菜 chef-d'œuvre 的意思，引申为代表作品、最精彩的部分。
+
+前面的这段话意思是说函数是 TypeScript 里最精彩的部分，是函数式程序员存在的意义。
+
+比如：
+
+The pièce de résistance was undoubtedly the creme brulee with strawberry compote. 奶油布雷+草莓果盘无疑是主菜。
+The pièce de résistance of the whole concert was when the two bands came onstage to perform together. 两支乐队合奏是整个音乐会最精彩部分。
+The waiter suggested we try the restaurant’s pièce de résistance: the chocolate soufflé. 服务员建议餐馆的必点菜：巧克力舒芙蕾。
+德语的翻译是die Krönung加冕仪式。这是国王的高光时刻，所以就是宴会、演出的精彩部分。
+
+比如 Eine Tanzvorführung bildete die Krönung des Abends. 舞蹈表演成为晚会的精彩部分。
+
+Als Krönung des Festes wurde das Feuerwerk. 烟花表演成为庆祝活动的最精彩部分。
+
+话说，das Feuerwerk 英语是 firework ，而法语则是 pièce d'artifice也有 pièce 呢。
+
+1. References
+Cherny, Boris. 2019. Programming TypeScript: Making Your JavaScript Applications Scale. O’Reilly Media.
+Kelly, Allan. 2019. The Art of Agile Product Ownership, a Guide for Product Managers, Business Analysts, and Entrepreneurs. Springer.
 *References*
 #+BEGIN_EXPORT latex
 \iffalse % multiline comment
