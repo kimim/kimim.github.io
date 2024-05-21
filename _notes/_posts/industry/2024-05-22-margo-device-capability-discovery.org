@@ -1,5 +1,5 @@
 #+LAYOUT: post
-#+TITLE: 边缘计算新标准 Margo：技术术语
+#+TITLE: 边缘计算新标准 Margo：设备能力发现
 #+TAGS: industry
 #+CATEGORIES: industry
 
