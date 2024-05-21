@@ -1,0 +1,50 @@
+#+LAYOUT: post
+#+TITLE: 边缘计算新标准 Margo：技术术语
+#+TAGS: industry
+#+CATEGORIES: industry
+
+Linux 基金会近日联合 ABB，B&R，Capgemini，微软，罗克韦尔自动化，施耐德
+电气，以及西门子，发起了一个新的[[./2024-05-16-margo][开放标准项目 Margo]] 。目的是定义一套灵
+活、简单、易扩展的边缘接口标准。通过边缘编排软件，把边缘应用和边缘设备
+进行有效的管理起来。
+
+之后，我介绍了 Margo [[./2024-05-20-margo-technical-lexicon][技术术语]]、[[./2024-05-19-margo-edge-device][对边缘计算设备的一些要求]]。
+
+这篇稿子介绍下设备能力发现（Margo Device Capability Discovery）。
+
+工作负载编排软件（Workload Orchestration Software，简称 WOS）是一个系
+统服务，帮助用户配置、部署、管理边缘应用。通过 Margo 标准接口与应用仓
+库、设备仓库通信，并编排边缘计算节点。那么，WOS 需要知道边缘计算设备能
+完成什么工作，才可以进行工作负载编排。
+
+这时候，就要用到工作负载编排代理（Workload Orchestration Agent）。它是
+运行在边缘计算设备中的服务，用于和工作负载编排软件通信，接收工作负载和
+配置数据。
+
+要在系统中发现设备的第一步是通过工作负载编排代理发送设备的工作能力清单
+给 WOS。设备厂商在设备中安装设备的能力清单文件。在设备部署过程中，工作
+负载代理把能力清单文件发送给 WOS 。
+
+[[file:./Workload-orchestration-node-capability-discovery.drawio.svg]]
+
+能力清单文件包含以下内容信息：
+- 设备厂商
+- 设备序列号
+- Margo 设备角色
+  - 独立集群服务器
+  - 集群主节点
+  - 集群工作从节点
+  - 独立设备
+  - 嵌入式微设备
+- CPU 架构：ARM，RISC-V 还是 X86，32位还是64位
+- vCPU 数量
+- 内存大小
+- 存储空间大小
+- 设备硬件接口：显卡、声卡等外设
+- 网络接口：wifi、以太网、蜂窝网络
+- 容器运行环境：Kubernetes、Docker Compose
+
+  
+
+
+
