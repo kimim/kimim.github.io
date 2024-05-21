@@ -1,0 +1,29 @@
+#+LAYOUT: post
+#+TITLE: 单词本：mutatis mutandis
+#+TAGS: English
+#+CATEGORIES: language
+
+这几年写了不少专利，我们的专利律师会调整专利的文本描述。比如这是专利律
+师修改的版本：
+
+Any of the optional features or subaspects of the first aspect may be
+applied to the second aspect, *mutatis mutandis*.
+
+意思是说第一方面描述的额外功能也可以经过微调适用于第二方面。
+
+这里，专业的专利的律师用了 *mutatis mutandis* 这组拉丁语。该词组源自
+*mutare* （改变）的过去分词和被动将来分词，字面意思是 "things being
+changed that have to be changed"，引申为 although changes will be
+necessary in order to take account of different situations, the basic
+point remains the same. 大体不变的情况下，经过必要微调。
+
+比如： This complex pattern has been repeated, *mutatis mutandis*, all
+over the country. 这种复杂的模式在全国范围内重复出现，且在各地经过了必
+要微调。
+
+我还了解到拉丁语 *mutare* 的辞源是原始印欧词根 *mei* （变化、移动）。
+
+源自这个词根的词就不胜枚举了：
+- permute 彻底改变, permutation 排列, per “彻底”和 mutare “改变”。
+- amoeba 阿米巴变形虫，会变形呀。
+- emigrate 移居国外，immigrate 移民入境。
