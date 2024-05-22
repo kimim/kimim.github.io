@@ -8,6 +8,8 @@ Linux 基金会近日联合 ABB，B&R，Capgemini，微软，罗克韦尔自动�
 活、简单、易扩展的边缘接口标准。通过边缘编排软件，把边缘应用和边缘设备
 进行有效的管理起来。
 
+[[file:./margo-logo.svg]]
+
 之后，我介绍了 Margo 的部分内容：
 - [[./2024-05-20-margo-technical-lexicon][技术术语]]
 - [[./2024-05-19-margo-edge-device][对边缘计算设备的一些要求]]
