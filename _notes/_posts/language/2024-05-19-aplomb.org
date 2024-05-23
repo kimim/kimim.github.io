@@ -39,7 +39,14 @@ plumbum 铅，所以化学元素里铅的名字就是 plumbum，缩写 Pb。那�
 - Die Klöße liegen mir schwer wie *Blei* im Magen.
 - Meine Glieder sind schwer wie *Blei*.
 
+还有，刚巧，我在周末看《舒伯特和他的世界》 [[cite:&gibbs2014schubert]] 读
+到了德语的铅笔，原来石墨黏土和木头做的铅笔，在德语里也叫铅笔呀： das
+Bleistift
+
 法语直接 plomb 传承自拉丁语 plumbum
 - ciel de *plomb*, 形容浅灰色的天空，即 leaden  sky
 - mer de *plomb*, 形容浅灰色的大海
 - J'ai des jambes de *plomb*. 我腿像铅般重。
+
+*References*
+[[bibliography:~/docs/references.bib]]
