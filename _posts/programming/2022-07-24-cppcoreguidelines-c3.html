@@ -4,23 +4,17 @@ title: CppCoreGuidelines C.3 用类区别接口与实现
 categories: [programming]
 tags: [CppCoreGuidelines]
 ---
----
-layout: post
-title: CppCoreGuidelines C.3 用类区别接口与实现
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Represent the distinction between an interface and an implementation using a class&rdquo;
+C.3: Represent the distinction between an interface and an
+implementation using a class
 </p>
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
@@ -29,32 +23,32 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
     <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">()</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">validate that {yy, mm, dd} is a valid date and initialize</span>
-    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">yy</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #000000;">mm</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #000000;">dd</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// validate that {yy, mm, dd} is a valid date and initialize</span>
+    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">yy</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #000000;">mm</span>, <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #000000;">dd</span><span style="color: #7388d6;">)</span>;
 
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">day</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #0000ff; font-weight: bold;">month</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">day</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Month</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">month</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">private</span>:
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... some representation ...</span>
+    <span style="color: #3F7F5F;">// ... some representation ...</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 <p>
-Date 类提供了初始化和数据访问接口，内部可以有不同的实现。这样，更改内部实现，不需要用户修改代码。（可能需要重新编译）。
+Date 类提供了对象初始化和数据访问的外部接口，类内部的数据结构可以有不同的实现。这样，更改内部实现，不需要用户修改代码。（可能需要重新编译）。
 </p>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
