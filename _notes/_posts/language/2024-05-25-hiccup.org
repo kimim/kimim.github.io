@@ -1,0 +1,27 @@
+#+LAYOUT: post
+#+TITLE: 单词本：hiccup
+#+TAGS: English
+#+CATEGORIES: language
+
+作为一名产品负责人，不断学习产品管理知识是必不可少的。近日读 Richard
+Banfield 的《Product Leadership》 [[cite:&banfield2017product]] 一书，讲到
+产品从概念到发布之间总会遇到些小问题，用到了 *hiccup* 一词：
+
+In fact it's downright rare to find a product leader that can steward
+a product from concept to launch without some major
+*hiccups*.
+
+而实际上， *hiccup* 是打嗝的意思，这里应该是小差错的意思。这就像我们用
+“膈应”表示讨厌的、令人不舒服的，但又未达到呕吐程度的不舒服，多引申为心
+理上的不舒服。比如
+- 这东西真膈应。这里膈应用作形容词。
+- 你不要膈应人了好不好。当作及物动词，使人恶心。
+- 才20出头，甘油三酯就偏高，真膈应人啊。使人发愁。
+
+相比膈应，打嗝的讨厌程度稍微小一些。所以，一般指小问题。比如：A
+Euro-Zone Inflation *Hiccup* Is Unlikely to Thwart ECB Rate
+Cut. [[cite:&stirling2024hiccup]] 这则新闻是说欧洲德法西三国通胀指数略微上
+涨的小问题，不会导致 ECB 降息。
+
+*References*
+[[bibliography:~/docs/references.bib]]
