@@ -1,53 +1,54 @@
 ---
 layout: post
 title: CppCoreGuidelines C.7 不要定义类和枚举的同时声明变量
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Don&rsquo;t define a class or enum and declare a variable of its type in the same statement&rdquo;
+C.7: Don&rsquo;t define a <code>class</code> or <code>enum</code> and declare a variable of its type
+in the same statement
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
 类型的定义和变量的声明放在一起容易令人费解。这种处理也没什么必要性。
 </p>
 
+
 <p>
-错误的例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Data</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/*</span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;">*/</span> <span style="color: #707183;">}</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">data</span><span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/*</span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;">*/</span> <span style="color: #707183;">}</span>;
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Data</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/*...*/</span> <span style="color: #707183;">}</span> <span style="color: #000000;">data</span><span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/*...*/</span> <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-正确的例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Data</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/*</span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;">*/</span> <span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Data</span> <span style="color: #000000;">data</span><span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/*</span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;">*/</span> <span style="color: #707183;">}</span>;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Data</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/*...*/</span> <span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Data</span> <span style="color: #000000;">data</span><span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/*...*/</span> <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 
 <ul class="org-ul">
-<li>标记警告：类和枚举定义结尾处的 <code>}</code> 后面不是 <code>;</code></li>
-<li>标记警告：类和枚举定义结尾处的 <code>}</code> 后面的 <code>;</code> 忘写了</li>
+<li>标记警告：类和枚举定义结尾处的<code>}</code>后面不是 <code>;</code></li>
+<li>标记警告：类和枚举定义结尾处的<code>}</code>后面的<code>;</code>忘写了</li>
 </ul>
