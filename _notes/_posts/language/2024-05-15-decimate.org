@@ -68,6 +68,12 @@ decimate 是一种十抽一的惩罚机制，所以不是完全消灭。而 anni
   individuals.
 - The economic crisis *decimated* the company’s profits, reducing them
   by 90%.
+- In late 2019 and early 2020, Australia was facing one of its worst
+  bushfire seasons in living memory.  The states of Queensland, New
+  South Wales, Victoria and South Australia experienced weeks and
+  months of massive bushfires. Many lives and a huge amount of
+  property were lost, and wildlife was
+  *decimated*. [[cite:&mclean2020political]]
 
 另外，在统计学和信号采样技术中，有个术语叫 decimate，它的意思是下采样
 （downsampling），或者说是减少采样点，比如，我们可以在 R 语言里调用这
