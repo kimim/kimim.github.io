@@ -1,48 +1,47 @@
 ---
 layout: post
 title: CppCoreGuidelines C.5 类的帮助函数跟类放在相同的名字空间里
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Place helper functions in the same namespace as the class they support&rdquo;
+C.5: Place helper functions in the same namespace as the class they support
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-帮助函数（Helper Function）不直接访问类的内部数据，但也是类的有用的接口。帮助函数和类放在一个名字空间里，可以强化他们的关系，查找函数的参数类型也更方便些。
+帮助函数（Helper Function）虽然不需要直接访问类的内部数据，但也是类的有用接口。帮助函数和类放在一个名字空间里，可以强化他们的关系，查找函数时，可以根据参数类型获取提示信息。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">Chrono</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">here we keep time-related services</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Chrono</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// here we keep time-related services</span>
 
-    <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Time</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>;
-    <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Time</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* ... */</span> <span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* ... */</span> <span style="color: #7388d6;">}</span>;
 
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">helper functions:</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// helper functions:</span>
+    <span style="color: #7F0055; font-weight: bold;">bool</span> operator<span style="color: #7F0055; font-weight: bold;">==</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span><span style="color: #7388d6;">)</span>;
     <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #0000ff; font-weight: bold;">next_weekday</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span><span style="color: #7388d6;">)</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
@@ -51,9 +50,9 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 
 <p>
-标注参数都是一个名字空间的全局函数。
+标注那些参数类型都限定在同一个名字空间的全局函数。
 </p>
