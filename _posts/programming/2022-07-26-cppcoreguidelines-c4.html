@@ -1,79 +1,77 @@
 ---
 layout: post
 title: CppCoreGuidelines C.4 成员函数直接访问类的内部数据
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Make a function a member only if it needs direct access to the representation of a class&rdquo;
+C.4: Make a function a member only if it needs direct access to the
+representation of a class
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-非成员函数比成员函数耦合度更低。修改对象内部状态的函数越少越好。对象内部实现变化了，需要修改的地方也越少。
+非成员函数比成员函数耦合度更低。修改对象内部状态的函数越少越好。这类函数越少，对象内部数据结构变化了，需要修改的地方也越少。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... relatively small interface ...</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ... relatively small interface ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">helper functions:</span>
+<span style="color: #3F7F5F;">// helper functions:</span>
 <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #0000ff; font-weight: bold;">next_weekday</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span><span style="color: #707183;">)</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">bool</span> operator<span style="color: #7F0055; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 
-
 <p>
-&ldquo;帮助函数&rdquo;不需要访问 Date 的内部实现。
-</p>
-
-
-
-<p>
-注意
-</p>
-
-<p>
-等到 C++ 支持函数的<a href="http://kimi.im/2022-07-25-uniform-function-call">统一调用格式</a>的时候，这里描述的规则，会变得更恰当合适。
+&ldquo;帮助函数&rdquo;不需要访问 Date 的内部的数据。
 </p>
 
 
 <p>
-例外
+<b>注意</b>
 </p>
 
 <p>
-C++ 语言要求虚函数必须是成员函数。然而，并非所有虚函数都直接访问对象数据。尤其是抽象类的虚函数，很少会去访问成员变量。
-</p>
-
-
-<p>
-例外
-</p>
-
-<p>
-C++ 语言要求以下操作符为成员函数： <code>=</code>, <code>()</code>, <code>[]</code>, <code>-&gt;</code>
+等到C++支持函数的<a href="http://kimi.im/2022-07-25-uniform-function-call">统一调用格式</a>的时候，这里描述的规则，会变得更恰当合适。
 </p>
 
 
 <p>
-例外
+<b>例外</b>
+</p>
+
+<p>
+C++ 语言要求虚函数（ virtual ）必须是成员函数。然而，并非所有虚函数都直接访问对象数据。抽象类的成员函数，很少会去访问成员变量。
+</p>
+
+
+<p>
+<b>例外</b>
+</p>
+
+<p>
+C++ 语言要求以下操作符函数为成员函数： <code>=</code>, <code>()</code>, <code>[]</code>, <code>-&gt;</code>
+</p>
+
+
+<p>
+<b>例外</b>
 </p>
 
 
@@ -82,20 +80,20 @@ C++ 语言要求以下操作符为成员函数： <code>=</code>, <code>()</code
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foobar</span> <span style="color: #707183;">{</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foobar</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">long</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">manipulate private data</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">foo</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> foo<span style="color: #909183;">(</span><span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">lround</span><span style="color: #709870;">(</span><span style="color: #000000;">x</span><span style="color: #709870;">)</span><span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">foo</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">long</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* manipulate private data */</span> <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">foo</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">double</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #3a5fcd; font-weight: bold;">foo</span><span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #3a5fcd; font-weight: bold;">lround</span><span style="color: #709870;">(</span>x<span style="color: #709870;">)</span><span style="color: #909183;">)</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">private</span>:
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-例外
+<b>例外</b>
 </p>
 
 <p>
@@ -103,21 +101,21 @@ C++ 语言要求以下操作符为成员函数： <code>=</code>, <code>()</code
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++">x.scale<span style="color: #707183;">(</span>0.5<span style="color: #707183;">)</span>.rotate<span style="color: #707183;">(</span>45<span style="color: #707183;">)</span>.set_color<span style="color: #707183;">(</span><span style="color: #110099;">Color</span>::red<span style="color: #707183;">)</span>;
+<pre class="src src- src-C++">x.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">scale</span><span style="color: #707183;">(</span><span style="color: #110099;">0.5</span><span style="color: #707183;">)</span>.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">rotate</span><span style="color: #707183;">(</span><span style="color: #110099;">45</span><span style="color: #707183;">)</span>.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">set_color</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Color</span>::red<span style="color: #707183;">)</span>;
 </pre>
 </div>
 
 <p>
-有些函数不一定访问私有数据。
+这里，有些函数不一定会访问到私有数据。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>找到非虚函数，但是却不会直接触碰到私有数据。</li>
 <li>忽略虚函数</li>
-<li>忽略一组重载的函数，其中之一会访问私有数据</li>
+<li>忽略一组重载的函数，至少其中一个会访问到私有数据</li>
 <li>忽略返回 <code>this</code> 指针的函数</li>
 </ul>
