@@ -1,0 +1,37 @@
+#+LAYOUT: post
+#+TITLE: 单词本：omnivore
+#+TAGS: English
+#+CATEGORIES: language
+
+昨天儿童节，去野生动物园撒野。巧的是，还偶遇了一枚前同事。
+
+去动物园的好处很多，可以观赏动物，看看他们的习性，可以健身，昨天就走了
+1万7千步，还能学知识学英语。比如昨天就学了动物食性的英语单词。
+
+动物有肉食性的，也有植食性的，还有杂食性的。比如斑纹鬣狗就是杂食性动物。
+所谓杂食性，就是不偏食，不管是肉还是蔬菜，都能吃。
+
+杂食动物英语里是这么写的：omnivore，形容词为 omnivorous。
+
+omnivore 来自拉丁语 omnivorus。
+
+omnis 意思是 all，全部。vorare 的意思是 devour 吞食 swallow 咽下。合在
+一起就是全部都吞食的杂食动物。
+
+法语英语同源，也是 omnivore。德语则是 der Allesfresser 也用 der
+Omnivore。又因为德语区分动物的吃和人的吃，所以杂食的人，则是 der
+Allesesser 或 die Allesesserin。
+
+形容词杂食的，英语是 omnivorous，法语 omnivore，德语 allesfressend。
+
+与 omnivore 相似的其他还有
+- frugivore 食水果动物
+- carnivore 食肉动物
+- granivore 食谷动物
+- herbivore 食草动物
+- insectivore 食虫动物
+
+西门子跟 NVIDIA 的合作，利用 Omniverse 构建工业元宇宙和数字孪生。
+NVIDIA 的 Omniverse 是一个基于 GPU 实时仿真的 3D 设计协作软件，可以构
+建工业、能源、流程的数字孪生模型。看来 AI 芯片巨头取这个产品名的意图是
+想全宇宙的方方面面都通通吞食，确实有气吞山河的壮志了。
