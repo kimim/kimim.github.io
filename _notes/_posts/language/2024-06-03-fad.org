@@ -1,0 +1,29 @@
+#+LAYOUT: post
+#+TITLE: 单词本：fad
+#+TAGS: English
+#+CATEGORIES: language
+
+今年春天，我在我们厂发起了一个精益6西格玛项目。我在这里
+[[cite:&antony2016l6ssme]] 看到 Lean Six Sigma 的介绍：
+ 
+LSS is not a quick fix or flavour of the month or management *fad*, but
+rather it is a proven business strategy which can deliver bottom-line
+results and a world-class practice for making your business processes
+efficient and effective.
+
+fad 指的是一时的流行、时尚、狂热等。比如：
+
+Will Kimi continue to collect stamps or is it only a passing *fad*?
+
+据说这个词是 fiddle-faddle 的简写，意思是无关紧要的小东西、瞎闹、胡扯。
+
+He's concerned with petty *fiddle-faddle* about his personal
+arrangements.
+
+fiddle-faddle 也就是 nonsense，德语为 Unsin，法语为 foutaise。
+
+也有说 fad 是来自法语的 foutaise。比如：
+
+c'est de la foutaise!
+
+Das ist doch blanker Unsinn! c'est vraiment absurde!
