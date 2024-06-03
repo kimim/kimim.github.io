@@ -27,3 +27,6 @@ fiddle-faddle 也就是 nonsense，德语为 Unsinn，法语为 foutaise。
 c'est de la foutaise!
 
 Das ist doch blanker Unsinn! c'est vraiment absurde!
+
+*References*
+[[bibliography:~/docs/references.bib]]
