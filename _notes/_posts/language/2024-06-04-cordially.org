@@ -1,0 +1,30 @@
+#+LAYOUT: post
+#+TITLE: 单词本：cordially
+#+TAGS: English
+#+CATEGORIES: language
+
+收到一个会议的邀请函。他们是这么邀请的：
+
+We *cordially* invite you to meet us at embedded world on the booth.
+
+这里用到单词 cordially 或 cordial 的意思是由衷的、热诚的、诚恳的。英语
+字典一般翻译为 heartily、warmly。
+
+如果我们追溯它的源头，则来自中世纪拉丁语 cordialis 属于心的。更早则是
+cor 的属格 cordis。而 cor 是心的意思，所以 cordis 以及 cordialis 都是
+“属于心的”的意思。
+
+这么看，cordial/cordially 确实是由衷的意思。因为我们的衷字，本意是中心
+的衣服，即贴身内衣：衷，里亵衣。《说文》。段玉裁注:“亵衣有在外者，衷则
+在内者也。”引申义，则是内心。由衷的意思就是根据内心。就是诚恳、热诚的
+意思了。
+
+法语的心 cœur 是从拉丁语 cor 稍稍变化而来的。比如 Je la tenais pressée
+sur mon cœur 我把她藏在心里。
+
+德语和英语比较接近 das Herz <-> heart。
+
+英语里 core 倒是直接源自 cor，不过是引申义，核心。还有 courage 勇气，
+那是从内心发出的力量呀。
+
+cordial 还是提神兴奋饮料的意思，估计是觉得有强心作用。
