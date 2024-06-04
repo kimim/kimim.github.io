@@ -29,4 +29,5 @@ c'est de la foutaise!
 Das ist doch blanker Unsinn! c'est vraiment absurde!
 
 *References*
+
 [[bibliography:~/docs/references.bib]]
