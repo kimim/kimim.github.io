@@ -1,7 +1,7 @@
 #+LAYOUT: post
 #+TITLE: 单词本：beef
-#+TAGS: OPCUA industry IIoT
-#+CATEGORIES: industry
+#+TAGS: English
+#+CATEGORIES: language
 
 工业设备的通信接口一开始使用 4-20mA 的电流信号，后来，为了解决信号变量
 传输太少的问题，上世纪 80 年代，人们想到了个办法，在 4-20mA 的电流信号
@@ -39,3 +39,6 @@ was sent to earth in *bovine* form.
 
 而且，beef up 增加牛肉，在口语表示增大、扩大的意思。如：Please beef up
 the budget! 请增加预算！
+
+别逼逼，别逼逼了，意思就是别废话了，地方方言，语气里沾着北京地地道道的
+优越感，就是让你别瞎扯了，大多带着不屑听，不屑你说的意思，
