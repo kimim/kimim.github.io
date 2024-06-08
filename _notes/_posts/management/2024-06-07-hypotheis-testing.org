@@ -1,10 +1,10 @@
 #+LAYOUT: post
-#+TITLE: 假设验证 Hypothesis Testing
+#+TITLE: 假设检验 Hypothesis Testing
 #+TAGS: statistics,l6s
 #+CATEGORIES: management
 #+LATEX_HEADER: \usepackage{ctex}
 
-假设验证（Hypothesis Testing）是统计推断的一类重要问题。
+假设检验（Hypothesis Testing）是统计推断的一类重要问题。
 
 在总体的分布函数完全未知或只知其形式，但不知其参数的情况下，为了推断总
 体的某些未知特性，提出关于总体的假设。然后，根据少量样本的观测情况，对
