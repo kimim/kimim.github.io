@@ -106,7 +106,8 @@ If our data produce values that meet or exceed the significance level
 hypothesis \(H_0\); if not, we fail to reject the null.
 
 拒绝原假设 \(H_0\) 的区域成为 *拒绝域（rejection region/critical
-region）* ，拒绝域的边界点称为 *临界点（threshold）* 。备择条件 \(H_1 ：
+region）* ，拒绝域的边界点称为 *临界点（threshold）* 。
+备择条件 \(H_1 ：
 \mu \neq \mu_0\) ， \(\mu\) 可能大于 \(\mu_0\) 也可能小于 \(\mu_0\) 。
 所以称为 *双边备择假设* 。而这样的假设验证称为 *双边假设验证* 。
 

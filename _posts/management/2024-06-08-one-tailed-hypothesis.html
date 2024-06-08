@@ -1,0 +1,170 @@
+---
+layout: post
+title: 单边假设检验 One-Tailed Hypothesis Testing
+tags: [statistics,l6s]
+categories: [management]
+latex_header: \usepackage{amsmath}
+---
+<p>
+有时候，我们只关心总体均值是否增大，则使用单边假设检验，分别有右边假设检验和左边假设检验。
+</p>
+
+<p>
+\[H_0 : \mu \leq \mu_0, ~~ H_1 : \mu > \mu_0\]
+</p>
+
+<p>
+称为右边检验。
+</p>
+
+<p>
+\[H_0 : \mu \geq \mu_0, ~~ H_1 : \mu < \mu_0\]
+</p>
+
+<p>
+称为左边检验。
+</p>
+
+<p>
+以下讨论单边检验的拒绝域。
+</p>
+
+<p>
+设总体\(X \sim N(\mu, \sigma^2)\), /\(\sigma\)为已知，\(X_1, X_2,
+\dots, X_n\) 是\(X\)的样本。求，给定显著性水平 \(\alpha\)下，检验问题：
+</p>
+
+<p>
+\[H_0 : \mu \leq \mu_0, ~~ H_1 : \mu > \mu_0\]
+</p>
+
+<p>
+的拒绝域。
+</p>
+
+<p>
+当\(H_1\)为真时，观察值的\(\bar{x}\)偏大，因此，拒绝域的形式为：
+</p>
+
+<p>
+\[\bar{x} \geq k ~~ (\text{k 是某一正的常数})\]
+</p>
+
+\begin{align*}
+P\{\text{当}H_0\text{为真拒绝}H_0\} &= P_{\mu \in H_0}\{\bar{X} \geq k\} \\
+&= P_{\mu \leq \mu_0} \{ \frac{\bar{X} - \mu_0}{\sigma / \sqrt{n}} \geq \frac{k - \mu_0}{\sigma / \sqrt{n}} \} \\
+&\leq P_{\mu \leq \mu_0} \{ \frac{\bar{X} - \mu}{\sigma / \sqrt{n}} \geq \frac{k - \mu_0}{\sigma / \sqrt{n}}\}
+\end{align*}
+
+<p>
+要控制\(P\{\text{当}H_0\text{为真拒绝}H_0\}\)在 \(\alpha\) 范围内，只需令
+</p>
+
+<p>
+\[P_{\mu \leq \mu_0} \{ \frac{\bar{X} - \mu}{\sigma / \sqrt{n}} \geq \frac{k - \mu_0}{\sigma / \sqrt{n}}\} = \alpha\]
+</p>
+
+<p>
+由于
+</p>
+
+
+<p>
+\[ \frac{\bar{X} - \mu}{\sigma / \sqrt{n}} \sim N(0, 1) \]
+</p>
+
+<p>
+得到
+</p>
+
+<p>
+\[ \frac{k - \mu_0}{\sigma / \sqrt{n}} = z_\alpha\]
+</p>
+
+<p>
+于是
+</p>
+
+<p>
+\[ k = \mu_0 + \frac{\sigma}{\sqrt{n}} z_\alpha\]
+</p>
+
+<p>
+即得到，检验问题的拒绝域为
+</p>
+
+<p>
+\[ \bar{x} \geq \mu_0 + \frac{\sigma}{\sqrt{n}} z_\alpha\]
+</p>
+
+<p>
+即
+</p>
+
+<p>
+\[ z = \frac{\bar{x} - \mu_0}{\sigma / \sqrt{n}} \geq z_\alpha\]
+</p>
+
+<p>
+类似的，可以得到左边检验问题
+</p>
+
+<p>
+\[ H_0 ： \mu \geq \mu_0, ~~ H_1 : \mu < \mu_0\]
+</p>
+
+<p>
+的拒绝域为
+</p>
+
+<p>
+\[ z = \frac{\bar{x} - \mu_0}{\sigma / \sqrt{n}} \leq - z_\alpha\]
+</p>
+
+<p>
+试举一例。某工厂生产的元器件寿命不低于 1000 小时，现在随机抽取样品 25
+件，测得其寿命分别为 950, 920, 970, 949, 920, 920, 955, 950, 990, 910,
+920, 950, 911, 956, 1019, 930, 890, 980, 1020, 990。已知该元器件寿命服从标准差\(\sigma = 100 \)小时的正态分布。试在显著性水平 \(\alpha =
+0.05 \) 下判断这批元器件是否合格。
+</p>
+
+<p>
+<b>解</b>
+</p>
+
+<p>
+按照题意，需要检验左边检验假设：
+</p>
+
+<p>
+\[ H_0 : \mu \geq \mu_0 = 1000\] 认为合格
+</p>
+
+<p>
+\[ H_1 : \mu < \mu_0 \] 认为不合格
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-R"><span style="color: #110099;">library</span><span style="color: #707183;">(</span>rcompanion<span style="color: #707183;">)</span>
+data <span style="color: #110099;">&lt;-</span> c<span style="color: #707183;">(</span>950, 920, 970, 949, 920, 920, 955, 950, 990, 910, 920,
+          950, 911, 956, 1019, 930, 890, 980, 1020, 990<span style="color: #707183;">)</span>
+qqnorm<span style="color: #707183;">(</span>data<span style="color: #707183;">)</span>
+qqline<span style="color: #707183;">(</span>data, col=<span style="color: #2A00FF;">"red"</span><span style="color: #707183;">)</span> 
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src- src-R"><span style="color: #110099;">library</span><span style="color: #707183;">(</span><span style="color: #2A00FF;">"BSDA"</span><span style="color: #707183;">)</span>
+data <span style="color: #110099;">&lt;-</span> c<span style="color: #707183;">(</span>950, 920, 970, 949, 920, 920, 955, 950, 990, 910, 920,
+          950, 911, 956, 1019, 930, 890, 980, 1020, 990<span style="color: #707183;">)</span>
+z.test<span style="color: #707183;">(</span>x = data,
+       alternative = <span style="color: #2A00FF;">"less"</span>,
+       mu = 1000, sigma.x = 100,
+       conf.level = 0.95<span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<p>
+p-value 小于0.05,所以，我们在显著性水平\(\alpha = 0.05 \)下，拒绝
+\(H_0\), 即认为这批产品不合格。
+</p>
