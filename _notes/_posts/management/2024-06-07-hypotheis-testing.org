@@ -109,3 +109,74 @@ hypothesis \(H_0\); if not, we fail to reject the null.
 region）* ，拒绝域的边界点称为 *临界点（threshold）* 。备择条件 \(\H_1 ：
 \mu \neq \mu_0\) ， \(\mu\) 可能大于 \(\mu_0\) 也可能小于 \(\mu_0\) 。
 所以称为 *双边备择假设* 。而这样的假设验证称为 *双边假设验证* 。
+
+接下来，我们用 R 的 ~z.test~ 函数来进行假设验证测试。
+
+首先，我们用直方图看看样本观察值：
+
+#+header: :output-dir images :file R-histo.svg
+#+begin_src R :results file graphics :eval no-export
+library(rcompanion)
+data <- c(0.497, 0.506, 0.518, 0.524, 0.498, 0.511, 0.520, 0.515, 0.512)
+plotNormalHistogram(data)
+#+end_src
+
+#+RESULTS:
+[[file:images/R-histo.svg]]
+
+正态概率图（Normal Quantile-Quantile Plot）:
+
+#+header: :output-dir images :file R-norm.svg
+#+begin_src R :results file graphics :eval no-export
+library(rcompanion)
+data <- c(0.497, 0.506, 0.518, 0.524, 0.498, 0.511, 0.520, 0.515, 0.512)
+qqnorm(data)
+qqline(data, col="red") 
+#+end_src
+
+#+RESULTS:
+[[file:images/R-norm.svg]]
+
+调用 ~z.test~ 进行假设验证测试：
+
+#+begin_src R :results output
+library("BSDA")
+data <- c(0.497, 0.506, 0.518, 0.524, 0.498, 0.511, 0.520, 0.515, 0.512)
+z.test(x = data,
+       alternative = "two.sided",
+       mu = 0.5, sigma.x = 0.015,
+       conf.level = 0.95)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+	One-sample z-Test
+
+data:  data
+z = 2.2444, p-value = 0.0248
+alternative hypothesis: true mean is not equal to 0.5
+95 percent confidence interval:
+ 0.5014224 0.5210220
+sample estimates:
+mean of x 
+0.5112222 
+
+#+end_example
+
+
+从结果来看，
+
+\[|z| = |\frac{\bar{x} - \mu_0}{\sigma/\sqrt{n}}| = 2.2444\]
+
+p值（p-value）为 0.0248。p值是根据实际观察值计算出来的显著性水平。
+
+因为
+
+\[ P\{\text{当} H_0 \text{为真时，拒绝} H_0\}
+= P_{\mu_0} \{ \frac{|\bar{x} - \mu_0|}{\sigma / \sqrt{n}} \geq k \}
+= \alpha
+\]
+
+所以，当p值越小，表示表示“当原假设为真时，拒绝该假设的概率越小。一般以
+小于 p值小于 0.05 为拒绝原假设的普遍标准。
