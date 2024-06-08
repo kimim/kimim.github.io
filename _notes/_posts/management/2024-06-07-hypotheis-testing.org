@@ -116,7 +116,7 @@ region）* ，拒绝域的边界点称为 *临界点（threshold）* 。
 首先，我们用直方图看看样本观察值：
 
 #+header: :output-dir images :file R-histo.svg
-#+begin_src R :results file graphics :eval no-export
+#+begin_src R :results file graphics :eval no-export :exports both
 library(rcompanion)
 data <- c(0.497, 0.506, 0.518, 0.524, 0.498, 0.511, 0.520, 0.515, 0.512)
 plotNormalHistogram(data)
@@ -128,7 +128,7 @@ plotNormalHistogram(data)
 正态概率图（Normal Quantile-Quantile Plot）:
 
 #+header: :output-dir images :file R-norm.svg
-#+begin_src R :results file graphics :eval no-export
+#+begin_src R :results file graphics :eval no-export :exports both
 library(rcompanion)
 data <- c(0.497, 0.506, 0.518, 0.524, 0.498, 0.511, 0.520, 0.515, 0.512)
 qqnorm(data)
@@ -140,7 +140,7 @@ qqline(data, col="red")
 
 调用 ~z.test~ 进行假设验证测试：
 
-#+begin_src R :results output
+#+begin_src R :results output :exports both
 library("BSDA")
 data <- c(0.497, 0.506, 0.518, 0.524, 0.498, 0.511, 0.520, 0.515, 0.512)
 z.test(x = data,

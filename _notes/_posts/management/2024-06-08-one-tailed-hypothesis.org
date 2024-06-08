@@ -84,7 +84,7 @@ P\{\text{当}H_0\text{为真拒绝}H_0\} &= P_{\mu \in H_0}\{\bar{X} \geq k\} \\
 \[ H_1 : \mu < \mu_0 \] 认为不合格
 
 #+header: :output-dir images :file R-norm-one-tailed.svg
-#+begin_src R :results file graphics :eval no-export
+#+begin_src R :results file graphics :eval no-export :exports both
 library(rcompanion)
 data <- c(950, 920, 970, 949, 920, 920, 955, 950, 990, 910, 920,
           950, 911, 956, 1019, 930, 890, 980, 1020, 990)
@@ -95,7 +95,7 @@ qqline(data, col="red")
 #+RESULTS:
 [[file:images/R-norm-one-tailed.svg]]
 
-#+begin_src R :results output
+#+begin_src R :results output :exports both
 library("BSDA")
 data <- c(950, 920, 970, 949, 920, 920, 955, 950, 990, 910, 920,
           950, 911, 956, 1019, 930, 890, 980, 1020, 990)
