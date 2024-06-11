@@ -1,64 +1,63 @@
 ---
 layout: post
 title: CppCoreGuidelines C.10 具体类比层级继承好
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Prefer concrete types over class hierarchies&rdquo;
+C.10: Prefer concrete types over class hierarchies
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-具体类比层级类更基础简单：容易设计、容易实现、容易使用、容易推导分析、轻巧、快速。如果要使用类层级，最好有充足的理由。
+具体类比层级继承类更基础简单，有这些好处：容易设计、容易实现、容易使用、容易推导分析、轻巧、快速。如果要使用类层级，最好有充足的理由。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point1</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>, <span style="color: #000000;">y</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... operations ...</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no virtual functions ...</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point1</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">x</span>, <span style="color: #000000; font-style: italic;">y</span>;
+    <span style="color: #3F7F5F;">// ... operations ...</span>
+    <span style="color: #3F7F5F;">// ... no virtual functions ...</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point2</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>, <span style="color: #000000;">y</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... operations, some virtual ...</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">Point2</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">x</span>, <span style="color: #000000; font-style: italic;">y</span>;
+    <span style="color: #3F7F5F;">// ... operations, some virtual ...</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">~</span>Point2<span style="color: #7388d6;">()</span>;
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Point1</span> <span style="color: #000000;">p11</span> <span style="color: #7388d6;">{</span>1, 2<span style="color: #7388d6;">}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">make an object on the stack</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Point1</span> <span style="color: #000000;">p12</span> <span style="color: #7388d6;">{</span>p11<span style="color: #7388d6;">}</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">a copy</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Point1</span> <span style="color: #000000;">p11</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span><span style="color: #7388d6;">}</span>;   <span style="color: #3F7F5F;">// make an object on the stack</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Point1</span> <span style="color: #000000;">p12</span> <span style="color: #7388d6;">{</span>p11<span style="color: #7388d6;">}</span>;    <span style="color: #3F7F5F;">// a copy</span>
 
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p21</span> = make_unique<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point2</span><span style="color: #7388d6;">&gt;(</span>1, 2<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">make an object on the free store</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p22</span> = p21-&gt;clone<span style="color: #7388d6;">()</span>;                <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">make a copy</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p21</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_unique</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point2</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span><span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// make an object on the free store</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p22</span> <span style="color: #7F0055; font-weight: bold;">=</span> p21<span style="color: #7F0055; font-weight: bold;">-&gt;</span><span style="color: #3a5fcd; font-weight: bold; font-style: italic;">clone</span><span style="color: #7388d6;">()</span>;                <span style="color: #3F7F5F;">// make a copy</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-如果一个类位于类层级中，你需要通过对象指针或引用去操作它。这意味着更多的内存开销、更多的内存分配和内存释放、更多的运行时开销、非直接的访问。
+如果一个类位于类层级中，你需要通过对象的指针或引用去访问操作它。这意味着更多的内存开销、更多的内存分配和内存释放、更多的运行时开销、间接的数据访问。
 </p>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
