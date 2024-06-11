@@ -1,3 +1,7 @@
 *.bib
 images/
 *.svg
+*.bbl
+*.pdf
+*.tex
+_minted-*
