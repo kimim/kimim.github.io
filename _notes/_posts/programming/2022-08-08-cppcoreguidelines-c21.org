@@ -1,32 +1,32 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.21 复制、移动和析构函数要同时定义或同时删除
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.21 复制、移动和析构函数要同时定义或同时删除
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"If you define or delete any copy, move, or destructor function, define or delete them all"
-
-理由
-
-移动、复制、析构函数紧密相关，所以定义了其中任何一个，就要考虑其他函数。
-
-声明任何一个移动、复制、析构函数，就阻止生成隐含的移动构造、移动赋值操
-作。即使是把其中一个函数声明成 ~= default~ 或 ~= delete~ ，也会产生一样的
-效果。
-
-声明移动构造或移动赋值函数，就会隐含地导致复制构造函数或复制赋值函数定
-义为删除状态。所以，声明了其中任意一个函数，就要同时定义其他函数，以确
-保不会产生不想要的效果，比如把本可以移动的变成复制（开销更大）；使得一
-个类变成只能进行移动操作。
+C.21: If you define or ~=delete~ any copy, move, or destructor function,
+define or ~=delete~ them all
 
 
-错误的例子
+*理由*
 
+移动、复制、析构函数紧密相关，所以定义了其中任何一个，就要考虑是否需要
+定义其他函数。
+
+声明任何一个移动、复制、析构函数，就阻止编译器生成隐含的移动构造、移动
+赋值操作。即使是把其中一个函数声明成 ~= default~ 或 ~= delete~ ，也会产生
+一样的效果。
+
+声明移动构造、或移动赋值函数，就会隐含地导致复制构造函数、或复制赋值函
+数被定义为删除状态。所以，声明了其中任意一个函数，就要同时定义其他函数，
+以确保不会产生不想要的效果，比如把本可以移动的变成复制（开销更大）；使
+得一个类变成只能进行移动操作。
+
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 struct M2 {   // bad: incomplete set of copy/move/destructor operations
 public:
@@ -51,31 +51,32 @@ void use()
 制和移动赋值操作出错（指针删除两次）。
 
 
-注意
+*注意*
 
 此规则又叫“五”规则。即五个相关的函数要一起定义，或全都默认。
 
 
-注意
+*注意*
 
 如果你想要某个函数为默认实现，请在函数后面写上 ~= default~ ，标明你的目
 的。如果你不想要自动生成的默认函数，请添加 ~= delete~ 。
 
 
-正确的例子
+*例子*
 
-如果需要声明一个构造函数，可以将它标记为 virtual，可以设置为默认定义的。
+如果需要声明一个构造函数，可以将它标记为 ~virtual~ ，可以设置为默认定义的。
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class AbstractBase {
 public:
+    virtual void foo() = 0;  // at least one abstract method to make the class abstract    
     virtual ~AbstractBase() = default;
     // ...
 };
 #+end_src
 
-为避免多态类被切块，数据不统一，请将复制和移动操作设置为 protected 或
-~= delete~ ，并增加一个 clone 函数。
+为避免多态类实例的数据被切片，导致数据不统一，请将复制和移动操作设置为
+~protected~ 或 ~= delete~ ，并增加一个 ~clone~ 函数。
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class ClonableBase {
@@ -95,17 +96,17 @@ public:
 按照以上例子，把代码写得清晰一些。
 
 
-注意
+*注意*
 
 编译器通常会强化此规则，更理想的是能够针对违规提出警告。
 
 
-注意
+*注意*
 
-针对只有一个构造函数的类，不建议使用隐式生成的复制操作。
+以下情况已经不再支持：只有析构函数，然后想要有隐式的拷贝操作
 
 
-注意
+*注意*
 
 编写以下函数很容易出错。注意他们的参数类型：
 
@@ -122,11 +123,12 @@ public:
 };
 #+end_src
 
-一个小错误（比如拼写错误、忘记写 const、使用 & 的地方用了 &&、忘记写某
-个特殊函数）都会导致错误和报警。为避免此类繁琐且易出错的工作，请考虑遵循“最小化原则”。
+一个小错误（比如拼写错误、忘记写 ~const~ 、使用 ~&~ 的地方用了 ~&&~ 、忘记写某个
+特殊函数）都会导致错误和报警。为避免此类繁琐且易出错的工作，请考虑遵循
+“最小化原则”。
 
 
-强化
+*强化*
 - （简单）一个类要么定义了所有五个特殊函数（复制构造/复制赋值/移动构造
   /移动赋值/析构），哪怕其中有标记为 ~= delete~ 的；要么一个也不声明，由
   编译器隐式生成。
