@@ -1,22 +1,19 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.20 尽量不去修改类的默认操作
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.20 尽量不去修改类的默认操作
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"If you can avoid defining default operations, do"
+C.20: If you can avoid defining default operations, do
 
-理由
+
+*理由*
 
 简单，清晰，语义明确。
 
 
-例子
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 struct Named_map {
@@ -31,16 +28,16 @@ Named_map nm;        // default construct
 Named_map nm2 {nm};  // copy construct
 #+end_src
 
-因为 ~std::map~ 和 ~string~ 都有相应的默认函数，所以不需要额外处理。
+因为 ~std::map~ 和 ~string~ 都有相应的默认构造和拷贝操作符，所以不需要额外处理。
 
 
-注意
+*注意*
 
-此之谓：零规则（the rule of zero）
+这就是所谓的零规则（the rule of zero）
 
 
-强化
+*强化*
 
-好的静态代码分析工具能够检测到遵从此规则的改进点。比如一个类有指针和数
-组大小这样的成员数据对，还有析构函数删除指针指向的内存，静态代码分析工
-具可以提示此处用 ~vector~ 是否更好。
+好的静态代码分析工具能够检测到可能存在的改进点。比如一个类有指针和数组
+大小这样的成员数据对，还有析构函数删除指针指向的内存，静态代码分析工具
+可以提示此处用 ~vector~ 是否更好。

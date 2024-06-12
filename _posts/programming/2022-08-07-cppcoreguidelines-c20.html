@@ -1,20 +1,20 @@
 ---
 layout: post
 title: CppCoreGuidelines C.20 尽量不去修改类的默认操作
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;If you can avoid defining default operations, do&rdquo;
+C.20: If you can avoid defining default operations, do
 </p>
 
+
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
@@ -23,41 +23,41 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Named_map</span> <span style="color: #707183;">{</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Named_map</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no default operations declared ...</span>
+    <span style="color: #3F7F5F;">// ... no default operations declared ...</span>
 <span style="color: #7F0055; font-weight: bold;">private</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">name</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">map</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">rep</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">name</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">map</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span>, <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic;">rep</span>;
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Named_map</span> <span style="color: #000000;">nm</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">default construct</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Named_map</span> <span style="color: #000000;">nm2</span> <span style="color: #707183;">{</span>nm<span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy construct</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Named_map</span> <span style="color: #000000;">nm</span>;        <span style="color: #3F7F5F;">// default construct</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Named_map</span> <span style="color: #000000;">nm2</span> <span style="color: #707183;">{</span>nm<span style="color: #707183;">}</span>;  <span style="color: #3F7F5F;">// copy construct</span>
 </pre>
 </div>
 
 <p>
-因为 <code>std::map</code> 和 <code>string</code> 都有相应的默认函数，所以不需要额外处理。
+因为<code>std::map</code>和 <code>string</code> 都有相应的默认构造和拷贝操作符，所以不需要额外处理。
 </p>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-此之谓：零规则（the rule of zero）
+这就是所谓的零规则（the rule of zero）
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 
 <p>
-好的静态代码分析工具能够检测到遵从此规则的改进点。比如一个类有指针和数组大小这样的成员数据对，还有析构函数删除指针指向的内存，静态代码分析工具可以提示此处用 <code>vector</code> 是否更好。
+好的静态代码分析工具能够检测到可能存在的改进点。比如一个类有指针和数组大小这样的成员数据对，还有析构函数删除指针指向的内存，静态代码分析工具可以提示此处用 <code>vector</code> 是否更好。
 </p>
