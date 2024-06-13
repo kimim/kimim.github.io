@@ -1,25 +1,24 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.22 保持默认操作一致性
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.22 保持一致的默认操作函数
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Make default operations consistent"
+C.22: Make default operations consistent
 
-理由
 
-默认操作，是一组概念上匹配的操作集。其语义是相关联的。如果 copy/move
-构造函数、 copy/move 赋值函数的逻辑行为不一致，会让用户很抓狂。如果构
-造和析构函数对资源的操作不一致，用户会觉得很惊讶。如果复制和移动操作和
-构造和析构操作不对应，用户也会很惊讶。
+*理由*
 
-坏例子
+默认操作函数，是一组概念上匹配的操作函数集。其语义是相关联的。如果 拷
+贝/移动构造函数、 拷贝/移动赋值函数的逻辑行为不一致，会让用户很抓狂。
+如果构造和析构函数对资源的操作方式不一致，用户也会觉得很惊讶。如果拷贝
+和移动操作、构造和析构操作不对应，用户也会很惊讶。
 
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class Silly {   // BAD: Inconsistent copy operations
     class Impl {
@@ -35,15 +34,15 @@ public:
 };
 #+end_src
 
-以上，构造函数和复制构造函数的操作不一致，一个是深复制，一个是浅复制。
+以上，构造函数和拷贝构造函数的操作不一致，一个是深复制，一个是浅复制。
 这会导致误解，产生bug。
 
 
-强化
-- （复杂）复制/移动构造函数与对应的复制/移动赋值函数要在成员变量的同一
+*强化*
+- （复杂）拷贝/移动构造函数与对应的拷贝/移动赋值函数要在成员变量的同一
   层级进行读写操作。
-- （复杂）任何在复制/移动构造函数中改写的成员变量要在其他构造函数中初始化。
-- （复杂）如果复制/移动构造函数对一个成员变量进行深复制，析构函数也应
+- （复杂）任何在拷贝/移动构造函数中改写的成员变量要在其他构造函数中初始化。
+- （复杂）如果拷贝/移动构造函数对一个成员变量进行深复制，析构函数也应
   该修改此成员变量。
-- （复杂）如果析构函数要修改一个成员变量，这个变量必须是在其他复制/移
+- （复杂）如果析构函数要修改一个成员变量，这个变量必须是在其他拷贝/移
   动构造或赋值函数中修改过。
