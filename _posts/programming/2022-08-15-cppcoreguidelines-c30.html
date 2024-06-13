@@ -1,58 +1,59 @@
 ---
 layout: post
-title: CppCoreGuidelines C.30 如果某个类需要特定的对象析构，请定义析构函数
+title: CppCoreGuidelines C.30 如果某个类需销毁某特定对象，请定义析构函数
 categories: [technology]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Define a destructor if a class needs an explicit action at object destruction&rdquo;
+C.30: Define a destructor if a class needs an explicit action at object destruction
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-在对象生命周期结束的时候，会隐式地调用析构函数。如果默认析构函数够用了，就用默认的。如果类的析构函数还会处理一些不在其成员的析构函数中处理的逻辑，才需要手工定义一个析构函数。
+在对象生命周期结束的时候，会隐式地调用析构函数。如果默认析构函数够用了，就用默认的析构函数。如果类的析构函数还会处理一些不在其成员变量的析构函数中处理的逻辑，才需要手工定义一个析构函数。
 </p>
 
+
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #707183;">&lt;</span><span style="color: #2A00FF;">iostream</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> <span style="color: #110099;">std</span>;
-<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">A</span><span style="color: #707183;">&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">final_action</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">slightly simplified</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">A</span> <span style="color: #000000;">act</span>;
-    <span style="color: #0000ff; font-weight: bold;">final_action</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">A</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> : act<span style="color: #7388d6;">{</span>a<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
-    ~<span style="color: #0000ff; font-weight: bold;">final_action</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> act<span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">#include</span> <span style="color: #2A00FF;">&lt;iostream&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #7F0055; font-weight: bold;">namespace</span> std;
+
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">A</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">final_action</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// slightly simplified</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">A</span> <span style="color: #000000; font-style: italic;">act</span>;
+    <span style="color: #0000ff; font-weight: bold;">final_action</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">A</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> : <span style="color: #110099; font-style: italic;">act</span><span style="color: #7388d6;">{</span>a<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #7F0055; font-weight: bold;">~</span>final_action<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #3a5fcd; font-weight: bold;">act</span><span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">A</span><span style="color: #707183;">&gt;</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">final_action</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">A</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">finally</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">A</span> <span style="color: #000000;">act</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">deduce action type</span>
+<span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">A</span><span style="color: #707183; font-weight: bold;">&gt;</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">final_action</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">A</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">finally</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">A</span> <span style="color: #000000;">act</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// deduce action type</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">final_action</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">A</span><span style="color: #7388d6;">&gt;{</span>act<span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">final_action</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">A</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">{</span>act<span style="color: #7388d6;">}</span>;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">test</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">test</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">act</span> = finally<span style="color: #7388d6;">(</span><span style="color: #909183;">[]</span> <span style="color: #909183;">{</span> cout &lt;&lt; <span style="color: #2A00FF;">"Exit test\n"</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">establish exit action</span>
-    cout &lt;&lt; <span style="color: #2A00FF;">"testing..."</span> &lt;&lt; endl;
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #110099;">true</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">act done here</span>
-<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">act done here</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">act</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">finally</span><span style="color: #7388d6;">(</span><span style="color: #909183;">[]</span> <span style="color: #909183;">{</span> cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"Exit test\n"</span>; <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// establish exit action</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"testing..."</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">true</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span>; <span style="color: #3F7F5F;">// act done here</span>
+<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// act done here</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    test<span style="color: #7388d6;">()</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">test</span><span style="color: #7388d6;">()</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -64,61 +65,63 @@ Exit test
 
 
 <p>
-<code>final_action</code> 的主要目的就是在对象析构的时候，执行一个 lambda 函数。
+<code>final_action</code> 的主要目的就是在对象析构的时候，执行一个 <code>lambda</code> 函数。
 </p>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-一般有2中类需要自定义的析构函数
+一般有 2 种类需要自定义的析构函数
 </p>
 <ol class="org-ol">
-<li>类中有不能用带析构函数的类表示的资源，如 vector、transaction 类等。</li>
-<li>类的主要目的是在析构的时候执行某些动作，如一个 tracer（追踪类）、以及以上例子的 <code>final_action</code> 类。</li>
+<li>类中有资源无法用自带析构函数的类表示的情况，所谓自带析构函数是指
+<code>vector</code> 、 <code>transaction</code> 等类。</li>
+<li>类的主要目的是在析构的时候执行某些动作，如一个 <code>tracer</code> （追踪类）、以及以上例子的<code>final_action</code>类。</li>
 </ol>
 
+
 <p>
-错误例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad; use the default destructor</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// bad; use the default destructor</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    ~<span style="color: #0000ff; font-weight: bold;">Foo</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> s = <span style="color: #2A00FF;">""</span>; i = 0; vi.clear<span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">clean up</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">~</span>Foo<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #000000;">s</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #2A00FF;">""</span>; <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>; vi.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">clear</span><span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// clean up</span>
 <span style="color: #7F0055; font-weight: bold;">private</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">vi</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">s</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">i</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic;">vi</span>;
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 <p>
-以上代码中，成员对象的默认析构已经够用了，无需再手工析构。这样效率低、且容易出错。
+以上代码中，成员对象的默认析构函数已经够用了，无需再手工进行销毁。这样效率低、且容易出错。
 </p>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-如果需要默认析构，但是被抑制了（当定义了移动构造函数，就不会隐式生成默认析构函数）。这时候，可以用 <code>= default</code> 。
+如果需要默认析构函数，但是被抑制了（当我们定义了移动构造函数，就不会隐式生成默认析构函数）。这时候，可以用<code>= default</code>表示我们需要一个默认析构函数。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 
 <p>
-找到含有可能隐式资源（implicit resource）的类。隐式资源如指针、引用。
+找到含有可能隐式资源（implicit resource）的类。隐式资源如指针、引用。那么我们需要为其定义一个特定的析构函数。
 </p>
 
 <p>
-找到定义了析构函数（多余的）的类，而其成员数据都有析构函数。
+找到定义了析构函数（多余的）的类，而其成员数据都有析构函数。那么，我们不需要在自定义一个析构函数。
 </p>

@@ -1,23 +1,26 @@
 #+layout: post
-#+title: CppCoreGuidelines C.30 如果某个类需要特定的对象析构，请定义析构函数
+#+title: CppCoreGuidelines C.30 如果某个类需销毁某特定对象，请定义析构函数
 #+categories: technology
 #+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Define a destructor if a class needs an explicit action at object destruction"
+C.30: Define a destructor if a class needs an explicit action at object destruction
 
-理由
+
+*理由*
 
 在对象生命周期结束的时候，会隐式地调用析构函数。如果默认析构函数够用了，
-就用默认的。如果类的析构函数还会处理一些不在其成员变量的析构函数中处理
-的逻辑，才需要手工定义一个析构函数。
+就用默认的析构函数。如果类的析构函数还会处理一些不在其成员变量的析构函
+数中处理的逻辑，才需要手工定义一个析构函数。
 
-例子
+
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 #include <iostream>
 using namespace std;
+
 template<typename A>
 struct final_action {   // slightly simplified
     A act;
@@ -49,17 +52,19 @@ int main()
 : testing...
 : Exit test
 
-~final_action~ 的主要目的就是在对象析构的时候，执行一个 lambda 函数。
+~final_action~ 的主要目的就是在对象析构的时候，执行一个 ~lambda~ 函数。
 
 
-注意
+*注意*
 
-一般有2中类需要自定义的析构函数
-1. 类中有不能用带析构函数的类表示的资源，如 vector、transaction 类等。
-2. 类的主要目的是在析构的时候执行某些动作，如一个 tracer（追踪类）、以
+一般有2种类需要自定义的析构函数
+1. 类中有资源无法用自带析构函数的类表示的情况，所谓自带析构函数是指
+   ~vector~ 、 ~transaction~ 等类。
+2. 类的主要目的是在析构的时候执行某些动作，如一个 ~tracer~ （追踪类）、以
    及以上例子的 ~final_action~ 类。
 
-错误例子
+
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class Foo {   // bad; use the default destructor
@@ -73,16 +78,21 @@ private:
 };
 #+end_src
 
-以上代码中，成员对象的默认析构已经够用了，无需再手工析构。这样效率低、且容易出错。
+以上代码中，成员对象的默认析构函数已经够用了，无需再手工进行销毁。这样
+效率低、且容易出错。
 
 
-注意
+*注意*
 
-如果需要默认析构，但是被抑制了（当定义了移动构造函数，就不会隐式生成默认析构函数）。这时候，可以用 ~= default~ 。
+如果需要默认析构函数，但是被抑制了（当我们定义了移动构造函数，就不会隐
+式生成默认析构函数）。这时候，可以用 ~= default~ 表示我们需要一个默认析
+构函数。
 
 
-强化
+*强化*
 
 找到含有可能隐式资源（implicit resource）的类。隐式资源如指针、引用。
+那么我们需要为其定义一个特定的析构函数。
 
-找到定义了析构函数（多余的）的类，而其成员数据都有析构函数。
+找到定义了析构函数（多余的）的类，而其成员数据都有析构函数。那么，我们
+不需要在自定义一个析构函数。
