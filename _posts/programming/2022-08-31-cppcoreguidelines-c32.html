@@ -1,23 +1,22 @@
 ---
 layout: post
 title: CppCoreGuidelines C.32 考虑类是否可以拥有其成员原始指针和引用
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;If a class has a raw pointer (T*) or reference (T&amp;), consider whether it might be owning&rdquo;
+C.32: If a class has a raw pointer (<code>T*</code>) or reference (<code>T&amp;</code>), consider
+whether it might be owning
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
-
 
 <p>
 很多代码里的所有权信息是不明确的。
@@ -25,17 +24,33 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-注意
+<b>例子</b>
 </p>
 
+<div class="org-src-container">
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">legacy_class</span>
+<span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">foo</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">m_owning</span>;   <span style="color: #3F7F5F;">// Bad: change to unique_ptr&lt;T&gt; or owner&lt;T*&gt;</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">bar</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">m_observer</span>; <span style="color: #3F7F5F;">// OK: keep</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
 
 <p>
-如果类可以拥有 T* 或 T&amp;，将其改成类所有的。如果不能拥有 T*，考虑改为 ptr。从而避免额外的辅助文档和分析。
+这里，<code>m_owning</code>成员变量是由<code>legacy_class</code>类所有的，所以要改成
+<code>unique_ptr&lt;T&gt;</code> 或<code>owner&lt;T*&gt;</code>。而<code>m_observer</code>则是引用了外部的变量，所以可以保留这么写。
 </p>
 
+<p>
+<b>注意</b>
+</p>
 
 <p>
-强化
+在新写的代码里，明确表明哪些指针是类所有，哪些指针是类外面的变量。类不能保有引用的所有权。
+</p>
+
+<p>
+<b>强化</b>
 </p>
 
 <p>

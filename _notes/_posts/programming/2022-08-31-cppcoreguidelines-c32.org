@@ -1,29 +1,42 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.32 考虑类是否可以拥有其成员原始指针和引用
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.32 考虑类是否可以拥有其成员原始指针和引用
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"If a class has a raw pointer (T*) or reference (T&), consider whether it might be owning"
+C.32: If a class has a raw pointer (~T*~) or reference (~T&~), consider
+whether it might be owning
 
 
-理由
-
+*理由*
 
 很多代码里的所有权信息是不明确的。
 
 
-注意
+*例子*
 
+#+attr_latex: :options linenos, numbersep=5pt
+#+header: :flags -std=c++20
+#+header: :namespaces std :includes  <iostream> <vector> <algorithm>
+#+header: :exports both :eval no-export :results output
+#+begin_src C++ :noweb strip-export
+class legacy_class
+{
+    foo* m_owning;   // Bad: change to unique_ptr<T> or owner<T*>
+    bar* m_observer; // OK: keep
+}
+#+end_src
 
-如果类可以拥有 T* 或 T&，将其改成类所有的。如果不能拥有 T*，考虑改为 ptr。从而避免额外的辅助文档和分析。
+这里， ~m_owning~ 成员变量是由 ~legacy_class~ 类所有的，所以要改成
+~unique_ptr<T>~ 或 ~owner<T*>~ 。而 ~m_observer~ 则是引用了外部的变量，所以可
+以保留这么写。
 
+*注意*
 
-强化
+在新写的代码里，明确表明哪些指针是类所有，哪些指针是类外面的变量。类不
+能保有引用的所有权。
+
+*强化*
 
 查看原始成员指针和成员引用，是否初始化的时候分配了内存。
