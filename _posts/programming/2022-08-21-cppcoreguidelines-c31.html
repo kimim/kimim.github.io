@@ -1,103 +1,113 @@
 ---
 layout: post
-title: CppCoreGuidelines C.31 类获取的资源必须在析构函数中释放
-categories: [technology]
+title: CppCoreGuidelines C.31 类获取的所有资源必须在析构函数中释放
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;All resources acquired by a class must be released by the class&rsquo;s destructor&rdquo;
-</p>
-
-<p>
-理由
-</p>
-
-<p>
-防止资源泄漏（尤其是错误情况下）
+C.31: All resources acquired by a class must be released by the
+class&rsquo;s destructor
 </p>
 
 
 <p>
-注意
+<b>理由</b>
 </p>
 
 <p>
-对于有默认操作类，资源可以自动申请释放。
+防止资源泄漏
 </p>
 
 
 <p>
-例子
+<b>注意</b>
+</p>
+
+<p>
+对于有默认运算符的类，资源可以自动申请释放。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">ifstream</span> <span style="color: #000000;">f</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">might own a file</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no default operations defined or =deleted ...</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">ifstream</span> <span style="color: #000000; font-style: italic;">f</span>;   <span style="color: #3F7F5F;">// might own a file</span>
+    <span style="color: #3F7F5F;">// ... no default operations defined or =deleted ...</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 <p>
-类 X 的输入流 ifstream 会在 X 的析构过程中，隐式地关闭其打开的文件。
+类 X 的输入流 <code>ifstream</code> 会在 X 的析构过程中，隐式地关闭其打开的文件。
 </p>
+
 
 
 <p>
-错误例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #707183;">{</span>     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">FILE</span>* <span style="color: #000000;">f</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">might own a file</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no default operations defined or =deleted ...</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #707183;">{</span>     <span style="color: #3F7F5F;">// bad</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">FILE</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">f</span>;   <span style="color: #3F7F5F;">// might own a file</span>
+    <span style="color: #3F7F5F;">// ... no default operations defined or =deleted ...</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 <p>
-X2 可能会导致一个文件句柄（file handle）内存泄漏。
+X2 可能会泄露文件句柄（file handle）的内存。
 </p>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-如果套接字不能关闭怎么办？析构函数、关闭、清理操作不可以失败。但是如果失败了会怎么样？析构函数的开发者不知道何时会调用该函数，不能抛出异常。而且很多关闭/释放操作不能重试。目前来说，没有一般的解决方案。如果可行，可以认为关闭/清理失败是设计错误，直接结束程序。
+如果套接字不能关闭怎么办？
+</p>
+
+<p>
+析构函数、关闭、清理操作不可以失败。
+</p>
+
+<p>
+但是如果确实失败了会怎么样？析构函数的开发者不知道什么时候会调用到这个函数，不能通过抛出异常而拒绝后续操作。而且很多关闭/释放操作不能重试。目前来说，没有通用的解决方案。如果行得通，可以认为关闭/清理操作失败的话，本身就是一种设计错误，直接结束程序。
 </p>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-类里面可以有指向不为其所管理的指针或引用。很明显，这些对象不能在类的析构函数中释放。比如：
+类里面可以有指向不是该类的对象所管理的资源，这些资源通常以指针或引用的方式间接访问。很明显，这些对象不可以在类的析构函数中释放。比如：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Preprocessor</span> <span style="color: #000000;">pp</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Parser</span> <span style="color: #000000;">p</span> <span style="color: #707183;">{</span> pp, <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Type_checker</span> <span style="color: #000000;">tc</span> <span style="color: #707183;">{</span> p, <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #707183;">}</span>;
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Preprocessor</span> <span style="color: #000000;">pp</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">/* ... */</span> <span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Parser</span> <span style="color: #000000;">p</span> <span style="color: #707183;">{</span> pp, <span style="color: #3F7F5F;">/* ... */</span> <span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Type_checker</span> <span style="color: #000000;">tc</span> <span style="color: #707183;">{</span> p, <span style="color: #3F7F5F;">/* ... */</span> <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 <p>
-这里，p 指向的 pp 不是 p 管理的对象。
+这里， <code>p</code> 指向的 <code>pp</code> 不是 <code>p</code> 管理的对象。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>（简单）如果类中的指针或引用指向的变量属于这个类，那么类的析构函数中也要释放这些资源。</li>
-<li>（复杂）如果类中有显式的所有权描述语句（比如在构造函数中），那么指针和引用成员变量属于此类。</li>
+<li>（复杂）如果类中有显式的所有权描述语句（比如在构造函数中描述），那么指针和引用成员变量就属于此类。</li>
 </ul>
