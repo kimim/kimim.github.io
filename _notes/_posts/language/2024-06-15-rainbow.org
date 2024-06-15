@@ -1,0 +1,32 @@
+#+LAYOUT: post
+#+TITLE: 单词本：rainbow
+#+TAGS: English
+#+CATEGORIES: language
+
+可以说，已经在学单词的路上走火入魔了。
+
+梅雨季节天气热的慌，难得周末，约艾薇姐出去喝咖啡。她买了买了 rainbow
+牌的抹茶甜橙蛋糕，就着星巴克的海盐焦糖慕斯浓缩咖啡，肆无忌惮的吃起来。
+哦，对了，这次星巴克啡快的取单口令是“爱你所爱”。
+
+至于我呢，考虑到甘油三酯还是偏高一丢丢，没敢吃蛋糕。于是开始在电子词典
+上查 rainbow 这个单词。
+
+原来英语 rain 是来自原始日耳曼语的 regna。在德语里就成了 regnen，名词
+der Regen。瑞典语比较古早，还是 regna，名词为 regn。
+
+拉丁语则有 rigare 是打湿、引领的意思。所有就有 irrigate 灌溉、冲洗。灌
+溉这个动作，德语走另外一个路子用了 Wasser，即 bewässern。
+
+#+chatu: :plantuml "rigare"
+#+results:
+[[file:./draws_out/rigare.svg]]
+
+而下雨，在法语也另辟蹊径，从表示流动的原始印欧词根 pleu 转变来，下雨
+pleuvoir，雨 la pluie 。英语属于雨的，雨的形容词就是 pluvial。如
+pluvial region 多雨地区。pluvial climate 多雨气候。pluvial index 降雨
+指数等。
+
+#+chatu: :plantuml "pleu"
+#+results:
+[[file:./draws_out/pleu.svg]]
