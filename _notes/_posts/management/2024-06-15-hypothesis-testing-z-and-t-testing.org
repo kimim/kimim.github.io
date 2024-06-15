@@ -1,0 +1,121 @@
+#+LAYOUT: post
+#+TITLE: 假设检验 Hypothesis Testing 之关于 μ 检验
+#+TAGS: statistics,l6s
+#+CATEGORIES: management
+#+LATEX_HEADER: \usepackage{ctex}
+#+LATEX_HEADER: \usepackage{amsmath}
+
+在 \(\sigma\) 已知的条件下，关于 \(\mu\) 的检验，称为 Z 检验，
+z-testing。
+
+因为这种检验法是利用统计量 Z 来确定拒绝域的。
+
+\begin{equation}
+Z = \frac{\bar{X} - \mu_0}{\sigma / \sqrt{n}}
+\end{equation}
+
+当 \(\sigma\) 未知的时候，关于 \(\mu\) 的检验，称为 t 检验，t-testing。
+
+设总体 \( X \sim N(\mu, \sigma^2) \)，其中 \(\mu\), \(\sigma\) 未知。我们求检验问题
+
+\[H_0 : \mu = \mu_0, ~~ H_1 : \mu \neq \mu_0\]
+
+的拒绝域（其中，显著性水平为 \(\alpha\) ）。
+
+由于 \(S^2\) 是 \(\sigma^2\) 的无偏估计，用 \(S\) 取代 \(\sigma\) 得到
+
+\begin{equation}
+t = \frac{\bar{X} - \mu_0}{S / \sqrt{n}}
+\end{equation}
+
+作为检验统计量。当观察值
+
+\begin{equation}
+|t| = |\frac{\bar{x} - \mu_0}{s / \sqrt{n}}|
+\end{equation}
+
+过分大时，就拒绝 \(H_0\)，拒绝域的形式为
+
+\begin{equation}
+|t| = |\frac{\bar{x} - \mu_0}{s / \sqrt{n}}| \geq k
+\end{equation}
+
+当 \(H_0\) 为真时，则有
+
+\begin{equation}
+\frac{\bar{X} - \mu}{S / \sqrt{n}} \sim t(n - 1)
+\end{equation}
+
+故有：
+
+\begin{equation}
+P\{\text{当}H_0\text{为真拒绝}H_0\}
+= P_{\mu_0} \{|\frac{\bar{X} - \mu_0}{S / \sqrt{n}}| \geq k|\}
+= \alpha
+\end{equation}
+
+得到
+
+\begin{equation}
+k = t_{\alhpa/2}(n - 1)
+\end{equation}
+
+即得拒绝域为：
+
+\begin{equation}
+|t| = |\frac{\bar{x} - \mu_0}{s / \sqrt{n}}| \geq t_{\alpha / 2}(n - 1)
+\end{equation}
+
+对于左单边检验，假设问题为：
+
+\[H_0 : \mu \leq \mu_0, ~~ H_1 : \mu > \mu_0\]
+
+拒绝域为
+
+\begin{equation}
+|t| = |\frac{\bar{x} - \mu_0}{s / \sqrt{n}}| \geq t_{\alpha}(n - 1)
+\end{equation}
+
+对于右单边检验，假设问题为：
+
+\[H_0 : \mu \geq \mu_0, ~~ H_1 : \mu < \mu_0\]
+
+拒绝域为
+
+\begin{equation}
+|t| = |\frac{\bar{x} - \mu_0}{s / \sqrt{n}}| \leq - t_{\alpha}(n - 1)
+\end{equation}
+
+
+例题：对于某批次砂矿的 5 个样品中镍的含量，经过测定为（%）：
+
+3.25, 3.27, 3.24, 3.26, 3.24
+
+设测定值总体服从正态分布，但参数均未知。问在 \( \alpha = 0.01 \) 下能
+否接受假设：这批矿砂的镍含量的均值为 3.25？
+
+下面用 R 语言解答：
+
+#+begin_src R :results output :exports both
+data <- c(3.25, 3.27, 3.24, 3.26, 3.24)
+t.test(data, var.equal=TRUE, mu=3.25) 
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+	One Sample t-test
+
+data:  data
+t = 0.343, df = 4, p-value = 0.7489
+alternative hypothesis: true mean is not equal to 3.25
+95 percent confidence interval:
+ 3.235811 3.268189
+sample estimates:
+mean of x 
+    3.252 
+
+#+end_example
+
+p-value = 0.7489 大于 0.05 ，所以我们在显著性水平 \(\alpha = 0.05 \)
+下，接受 \(\H_0\)，即认为总体均值为 3.25 比较靠谱。
