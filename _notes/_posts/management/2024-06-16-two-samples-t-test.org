@@ -1,0 +1,96 @@
+:PROPERTIES:
+:ID:       1BD935B6-B18A-40E8-B34D-7761EE18F347
+:END:
+#+TITLE: 假设检验 Hypothesis Testing 之双样本 t 检验
+#+LAYOUT: post
+#+TAGS: statistics,l6s
+#+CATEGORIES: management
+#+LATEX_HEADER: \usepackage{ctex}
+#+LATEX_HEADER: \usepackage{amsmath}
+
+t 检验还可用于检验具有相同方差的两个正态总体均值差的假设。
+
+设 \(X_1, X_2, \dots, X_{n_1}\) 是来自正态总体 \(\mu_1, \sigma^2\) 的
+样本， \(Y_1, Y_2, \dots, Y_{n_2}\) 是来自正态总体 \(N(\mu_2,
+\sigma^2)\) 的样本，且设两样本独立。记它们的样本均值为 \(\overline{X},
+\overline{Y}\)，样本方差 \(S_1^2,S_2^2\)。设 \(\mu_1, \mu_2,
+\sigma^2\) 均未知。求检验问题：
+
+\[H_0 : \mu_1 - \mu_2 = \delta, ~~ H_1 : \mu_1 - \mu_2 \neq \delta\]
+
+（ \(\delta\) 为已知常数）的拒绝域，取显著性是水平为 \(\alpha\) 。
+
+\begin{equation}
+t = \frac{(\overline{X} - \overline{Y}) - \delta}{S_w \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}
+\end{equation}
+
+其中
+
+\begin{equation}
+S_w = \sqrt{\frac{(n_1 - 1)S_1^2 + (n_2 - 1)S_2^2}{n_1 + n_2 - 2}}
+\end{equation}
+
+当 \(N_0\) 为真时， \(t \sim t(n_1 + n_2 -2)\)，其拒绝域的形式为：
+
+\begin{equation}
+|\frac{(\overline{x} - \overline{y}) - \delta}{s_w \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}| \geq k
+\end{equation}
+
+由
+
+\begin{equation}
+P\{\text{当}H_0\text{为真拒绝}H_0\} = P_{\mu_1-\mu_2=\delta}\{|\frac{(\overline{X} - \overline{Y}) - \delta}{S_w \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}} \geq k|\} = \alpha
+\end{equation}
+
+可得 \(k = t_{\alpha / 2}(n_1 + n_2 - 2)\)。 于是，拒绝域为
+
+\begin{equation}
+|t| = \frac{|(\overline{x} - \overline{y}) - \delta|}{s_w \sqrt{\frac{1}{n_1} + \frac{1}{n_2}}} \geq t_{\alpha / 2}(n_1 + n_2 - 2)
+\end{equation}
+
+常用情况为 \(\delta = 0\) 。
+
+例子：
+
+标准方法钢铁提炼比率为
+
+78.1, 72.4, 76.2, 74.3, 77.4, 78.4, 76.0, 75.5, 76.7, 77.3 
+
+新方法提炼比率为
+
+79.1, 81.0, 77.3, 79.1, 80.0, 79.1, 79.1, 77.3, 80.2, 82.1
+
+设两个样本相互独立，且分别来自正态总体 \(N(\mu_1, \sigma^2)\) 和
+\(N(\mu_2, \sigma^2)\)， \(\mu_1, \mu_2, \sigma^2\) 均未知。问建议的新
+方法能否提高提炼比率？（取 \(\alpha = 0.05\) ）
+
+需要检验的假设
+
+\[H_0 : \mu_1 - \mu_2 \geq 0, ~~ H_1 : \mu_1 - \mu_2 < 0\]
+
+用 R 的 t.test 进行检验：
+
+#+begin_src R :results output :exports both
+x <- c(78.1, 72.4, 76.2, 74.3, 77.4, 78.4, 76.0, 75.5, 76.7, 77.3)
+y <- c(79.1, 81.0, 77.3, 79.1, 80.0, 79.1, 79.1, 77.3, 80.2, 82.1)
+t.test(x, y, alternative="less") 
+#+end_src
+
+#+RESULTS:
+#+begin_example
+
+	Welch Two Sample t-test
+
+data:  x and y
+t = -4.2957, df = 17.319, p-value = 0.0002355
+alternative hypothesis: true difference in means is less than 0
+95 percent confidence interval:
+    -Inf -1.9055
+sample estimates:
+mean of x mean of y 
+    76.23     79.43 
+
+#+end_example
+
+p-value = 0.0004352 小于 0.05 ，所以我们认为在显著性水平 \(\alpha =
+0.05 \)下，拒绝 \(H_0\) ，即认为建议的方法比原方法更优。
