@@ -27,6 +27,7 @@ shtick 还有一个意思是个人的特别喜好：
 比如 movies about ordinary women who do extraordinary things - that's
 my *shtick*. 就好比中专学生姜萍获得数学竞赛12名这类例子。
 
-
+*References*
+[[bibliography:~/docs/references.bib]]
 
 
