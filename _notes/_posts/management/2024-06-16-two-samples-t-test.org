@@ -7,6 +7,7 @@
 #+CATEGORIES: management
 #+LATEX_HEADER: \usepackage{ctex}
 #+LATEX_HEADER: \usepackage{amsmath}
+#+STARTUP: latexpreview
 
 t 检验还可用于检验具有相同方差的两个正态总体均值差的假设。
 
