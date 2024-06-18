@@ -1,0 +1,30 @@
+#+LAYOUT: post
+#+TITLE: 单词本：tantamount
+#+TAGS: English
+#+CATEGORIES: language
+
+今天听 World Today 国际新闻听到这个单词 tantamount ：
+
+Hamas has responded to a US ceasefire proposal to end the war in Gaza,
+but Israel says the response is *tantamount* to a rejection.
+
+哈马斯回复停火建议，但是以色列却认为哈马斯的回复等同于拒绝停火。
+
+tantamount 相当于、相等于、等同于
+
+来源于拉丁语 tandem amonter = so amount to
+
+一般都是跟着 to 一起使用 tantamount to：
+
+Not to give an answer is *tantamount to* a refusal. 不答覆等於拒绝
+
+Zuma's MK party asks electoral court to order a rerun of May vote: The
+MK Party won 14.5 percent of the vote, which translates into 58 seats
+in the National Assembly, but claims that the declared result and
+Ramaphosa's re-election was *tantamount to* a coup. 南非前总统雅各布·祖
+玛要求五月选举重来，认为现总统马塔梅拉·西里尔·拉马福萨再次参选等同于政
+变。
+
+法语 être équivalent à
+
+德语 gleichbedeutend mit etw. sein 
