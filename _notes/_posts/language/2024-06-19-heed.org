@@ -1,0 +1,33 @@
+#+LAYOUT: post
+#+TITLE: 单词本：heed
+#+TAGS: English
+#+CATEGORIES: language
+
+以前，各种盗版软件野蛮生长的时候，我们好像下载软件也不验证，就直接安装
+了用了。其实存在这很多安全隐患。现在，我们安装软件前，操作系统都会检验
+软件的签名是否有效。不然就跳出红色警告。苹果强制开发者提交的软件要有软
+件签名。
+
+这里，弹出的警告消息用的单词是 heed：
+
+Code Signing offers a method of stopping the distribution of malicious
+software to vulnerable individuals, as long as warnings of a lack of a
+code signing certificate are *heeded*.
+
+heed 的意思是注意、留心，比如
+
+heed a warning 注意一项警告。
+
+heed the advice of the old man 要听老人言。
+
+做名词用：Take heed of your doctor's advice. 听医生的话吧。
+
+这个 heed 原来和德语的 hüten 是同源的。看起来有点相似。
+
+而 hüten 的意思是保护、保管、监管的意思。
+
+比如 ein Geheimnis hüten 保守一个秘密。
+
+hüten 当作反身动词的时候有注意、小心避免的意思：
+
+sich hüten etw. zu tun 小心不要做某事。
