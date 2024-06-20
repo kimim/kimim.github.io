@@ -96,3 +96,6 @@ chmod +x print.bb
 
   #+RESULTS:
   : 6
+
+
+平时工作中已经用 bb 写了不少脚本，感觉还是满方便的。
