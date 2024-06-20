@@ -18,6 +18,18 @@
 pacman -Syu
 #+end_src
 
+考虑到 msys2 官网建议使用 ucrt64 https://www.msys2.org/docs/environments/
+
+#+begin_quote
+MSYS2 comes with different environments and the first thing you have
+to decide is which one to use. The differences among the environments
+are mainly environment variables, default compilers/linkers,
+architecture, system libraries used etc. If you are unsure, go with
+UCRT64.
+#+end_quote
+
+所以我们就用 ucrt64 版本的 emacs。
+
 安装 emacs 以及需要用到的工具：
 
 #+begin_src shell
@@ -73,6 +85,14 @@ pacman -S mingw-w64-ucrt-x86_64-clang-analyzer  \
 - rust 支持 Rust 的 LSP
 - python-lsp-server 支持 python 的 LSP 
 
+如果还需要文件加解密，可以安装 gpg
+
+#+begin_src shell
+pacman -S msys/gnupg
+#+end_src
+
+注意，不是 ucrt64 的 gnupg，不知道为何，ucrt64 版本的工作不正常。
+
 然后，获取 emacs 配置文件：
 
 #+begin_src shell
@@ -102,8 +122,12 @@ emacs
 
 此外，还可以考虑把 emacs 固定在任务栏：
 - 右键选择 emacs 图标，选择 Pin to taskbar 或者“固定到任务栏”
-- Target/目标填入： ~C:\emacs.vbs~
-
+- 右键点击 emacs 图标，再右键点弹出菜单的 emacs 图标，选择“Property/属
+  性”，然后在“Target/目标”填入： ~C:\emacs.vbs~ 。这样就不会弹出 CMD 命
+  令行黑色窗口了。
+- 点击“Change Icon.../修改图标”，选择 ~C:\msys64\ucrt64\bin\emacs.exe~
+  。这样就就能正常显示 emacs 紫色的logo。
+   
 emacs.vbs 的内容为：
 
 #+begin_src basic
@@ -125,3 +149,32 @@ set MSYS2_PATH_TYPE=strict
 #+end_src
 
 这样可以避免弹出 CMD 终端框。
+
+还有一些性能方面的考虑，可以把用户组设置为缓存，这样 emacs 的启动速度
+和文件读写速度都会快很多。
+
+首先设置缓存：
+
+#+begin_src shell
+getent passwd $(id -u) > /etc/passwd
+getent group $(id -G) > /etc/group
+#+end_src
+
+然后修改 ~C:/msys64/etc/nsswitch.conf~ 删除 db：
+
+#+begin_src diff
+# Begin /etc/nsswitch.conf
+
+-passwd: files db
++passwd: files
+-group: files db         
++group: files
+
+db_enum: cache builtin
+
+db_home: cygwin desc
+db_shell: cygwin desc
+db_gecos: cygwin desc
+
+# End /etc/nsswitch.conf
+#+end_src

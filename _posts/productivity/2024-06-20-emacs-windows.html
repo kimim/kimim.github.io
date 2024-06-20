@@ -30,6 +30,24 @@ categories: [productivity]
 </div>
 
 <p>
+考虑到 msys2 官网建议使用 ucrt64 <a href="https://www.msys2.org/docs/environments/">https://www.msys2.org/docs/environments/</a>
+</p>
+
+<blockquote>
+<p>
+MSYS2 comes with different environments and the first thing you have
+to decide is which one to use. The differences among the environments
+are mainly environment variables, default compilers/linkers,
+architecture, system libraries used etc. If you are unsure, go with
+UCRT64.
+</p>
+</blockquote>
+
+<p>
+所以我们就用 ucrt64 版本的 emacs。
+</p>
+
+<p>
 安装 emacs 以及需要用到的工具：
 </p>
 
@@ -107,6 +125,19 @@ categories: [productivity]
 </ul>
 
 <p>
+如果还需要文件加解密，可以安装 gpg
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">pacman -S msys/gnupg
+</pre>
+</div>
+
+<p>
+注意，不是 ucrt64 的 gnupg，不知道为何，ucrt64 版本的工作不正常。
+</p>
+
+<p>
 然后，获取 emacs 配置文件：
 </p>
 
@@ -149,7 +180,9 @@ mingw32-make.exe
 </p>
 <ul class="org-ul">
 <li>右键选择 emacs 图标，选择Pin to taskbar或者“固定到任务栏”</li>
-<li>Target/目标填入： <code>C:\emacs.vbs</code></li>
+<li>右键点击 emacs 图标，再右键点弹出菜单的 emacs 图标，选择“Property/属性”，然后在“Target/目标”填入：<code>C:\emacs.vbs</code>。这样就不会弹出 CMD 命令行黑色窗口了。</li>
+<li>点击“Change Icon&#x2026;/修改图标”，选择 <code>C:\msys64\ucrt64\bin\emacs.exe</code>
+。这样就就能正常显示 emacs 紫色的 logo 。</li>
 </ul>
 
 <p>
@@ -181,3 +214,39 @@ CreateObject("Wscript.Shell").Run emacspath, 0, True
 <p>
 这样可以避免弹出 CMD 终端框。
 </p>
+
+<p>
+还有一些性能方面的考虑，可以把用户组设置为缓存，这样 emacs 的启动速度和文件读写速度都会快很多。
+</p>
+
+<p>
+首先设置缓存：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">getent passwd $<span style="color: #707183;">(</span><span style="color: #ff00ff;">id -u</span><span style="color: #707183;">)</span> &gt; /etc/passwd
+getent group $<span style="color: #707183;">(</span><span style="color: #ff00ff;">id -G</span><span style="color: #707183;">)</span> &gt; /etc/group
+</pre>
+</div>
+
+<p>
+然后修改<code>C:/msys64/etc/nsswitch.conf</code>删除 db：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-diff"><span style="color: #3F7F5F;">#</span><span style="color: #3F7F5F;"> Begin /etc/nsswitch.conf</span>
+
+<span style="color: #aa2222; background-color: #ffeeee;">-</span><span style="background-color: #ffeeee;">passwd: files db</span>
+<span style="color: #22aa22; background-color: #eeffee;">+</span><span style="background-color: #eeffee;">passwd: files</span>
+<span style="color: #aa2222; background-color: #ffeeee;">-</span><span style="background-color: #ffeeee;">group: files db         </span>
+<span style="color: #22aa22; background-color: #eeffee;">+</span><span style="background-color: #eeffee;">group: files</span>
+
+db_enum: cache builtin
+
+db_home: cygwin desc
+db_shell: cygwin desc
+db_gecos: cygwin desc
+
+<span style="color: #3F7F5F;">#</span><span style="color: #3F7F5F;"> End /etc/nsswitch.conf</span>
+</pre>
+</div>
