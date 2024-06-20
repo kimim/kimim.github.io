@@ -77,13 +77,13 @@ export PATH=$PATH:/c/texlive/windows/2024/bin
 pacman -S mingw-w64-ucrt-x86_64-clang-analyzer  \
        mingw-w64-ucrt-x86_64-clang-tools-extra  \
        mingw-w64-ucrt-x86_64-rust               \
-       mingw-w64-ucrt-x86_64-python-lsp-server  
+       mingw-w64-ucrt-x86_64-python-lsp-server
 #+end_src
 
 - clang-analyzer, clang-tools-extra 支持 C/C++ 的语法检查和 LSP
   （Language Server Protocol）
 - rust 支持 Rust 的 LSP
-- python-lsp-server 支持 python 的 LSP 
+- python-lsp-server 支持 python 的 LSP
 
 如果还需要文件加解密，可以安装 gpg
 
@@ -112,7 +112,7 @@ git submodule update --init --recursive
 mingw32-make.exe
 #+end_src
 
-最后，启动 emacs，mintty bash 命令行中输入 emacs 
+最后，启动 emacs，mintty bash 命令行中输入 emacs
 
 #+begin_src shell
 emacs
@@ -127,7 +127,7 @@ emacs
   令行黑色窗口了。
 - 点击“Change Icon.../修改图标”，选择 ~C:\msys64\ucrt64\bin\emacs.exe~
   。这样就就能正常显示 emacs 紫色的logo。
-   
+
 emacs.vbs 的内容为：
 
 #+begin_src basic
@@ -167,7 +167,7 @@ getent group $(id -G) > /etc/group
 
 -passwd: files db
 +passwd: files
--group: files db         
+-group: files db
 +group: files
 
 db_enum: cache builtin
