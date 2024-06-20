@@ -1,0 +1,142 @@
+---
+layout: post
+title: babashka - 有趣又便捷巴布什卡头巾
+tags: [Clojure]
+categories: [productivity]
+---
+<p>
+本来，Clojure 已经很好用了。它的好处数不胜数，以下简单罗列几个：
+</p>
+<ul class="org-ul">
+<li>REPL，可以实时看到代码语句的运行结果，调试超级方便</li>
+<li>基于 Java ，可以无缝调用大量 Java类库。而 ClojureScript 则基于
+JavaScript，随手一个npm/yarn add就可以调用 JS 库。常见的功能，基本都能找得到</li>
+<li>immutable async 都用起来很方便</li>
+<li>有了 Clojure 和 ClojureScript 前后端可以用一套语言通吃</li>
+</ul>
+
+<p>
+既然，Clojure 已经那么好了，为什么还要有 babashka？
+</p>
+
+<p>
+因为，Clojure 主要还是用来开发应用的。桌面，或者网络，或者移动端应用，可以用 Clojure 或者 ClojureScript 编写。
+</p>
+
+<p>
+但是，它们不适用于命令行脚本编写。没法像 shell 那样，串联起几个命令，就解决一个重复处理的小任务。比如批量查找替换文件中的字符串，批量修改文件名。
+</p>
+
+<p>
+所以，正如 babashka 项目首页说的：babashka is a fast native Clojure
+scripting runtime. 用上它，Clojure 程序员就不用在 Clojure 和 bash 之间来回切换了。因为，考虑到一些项目任务管理、文件管理、文本替换之类的工作还需要写 shell 脚本处理。
+</p>
+
+<p>
+babashka 本来是俄罗斯妇女戴在头上的漂亮头巾。在 Clojure 世界，它意味着
+beyond bash。项目主页： <a href="https://babashka.org">https://babashka.org</a>
+</p>
+
+<p>
+<b>babashka 的特色功能</b>
+</p>
+
+<ul class="org-ul">
+<li><p>
+<b>启动速度快</b>
+</p>
+
+<p>
+第一，它通过 GraalVM 编译成 native-image ；第二，它内嵌了一个小型 Clojure解析器。
+</p></li>
+
+<li><p>
+<b>内置常用库</b>
+</p>
+
+<p>
+比如 cheshire 解析 json 文件，babashka.fs 操作文件系统，
+babashka.process 进程管理，java.time 时间日期库。
+</p></li>
+
+<li><p>
+<b>扩展很方便</b>
+</p>
+
+<p>
+除了内置的这些常用库，babashka 也可以加载 Clojure 库。更神奇的是，它可以动态添加扩展库，直接从网上下来，导入使用。
+</p>
+
+<p>
+另外，也可以通过 pod 协议集成其他各种语言开发的程序。
+</p></li>
+
+<li><p>
+<b>支持多线程</b>
+</p>
+
+<p>
+基于 JVM 线程，支持异步操作。
+</p></li>
+
+<li><p>
+<b>可管理任务</b>
+</p>
+
+<p>
+内置了task runner，能像 make， npm 那样管理脚本任务。
+</p></li>
+</ul>
+
+<p>
+<b>运行 babashka</b>
+</p>
+
+<ol class="org-ol">
+<li><p>
+解析 Clojure 表达式
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">bb -m clojure.core/prn 1 2 3
+</pre>
+</div></li>
+
+<li>运行脚本任务，通过bb.edn设置任务，然后调用 bb 运行任务。</li>
+
+<li><p>
+在 shell 调用 shebang 文件，比如将以下内容保存为 print.bb 
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-clojure"><span style="color: #000000; font-style: italic; text-decoration: underline;">#!</span>/usr/bin/env bb
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">println</span> <span style="color: #7388d6;">(</span>+ 1 2 3<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<p>
+然后，在 shell 执行。
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">chmod +x print.bb
+./print.bb
+</pre>
+</div></li>
+
+<li><p>
+orgmode 代码块
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-org">'#+begin_src bb
+(println (+ 1 2 3))
+'#+end_src
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src- src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">println</span> <span style="color: #7388d6;">(</span>+ 1 2 3<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div></li>
+</ol>
