@@ -1,0 +1,127 @@
+#+LAYOUT: post
+#+TITLE: Windows msys2 emacs
+#+TAGS: emacs
+#+CATEGORIES: productivity
+
+之前有介绍怎么在 macOS 安装使用 emacs。最近有同学问我怎么在 Windows 上
+顺畅的使用 emacs。那就分享下我的安装过程吧。
+
+首先是下载安装 msys2
+
+从项目主页找到安装文件 ~.exe~ 下载安装 https://www.msys2.org/
+
+假设我们安装到 ~C:/msys64~
+
+然后打开 ~C:/msys64/msys2.exe~ 对程序包进行整体升级：
+
+#+begin_src shell
+pacman -Syu
+#+end_src
+
+安装 emacs 以及需要用到的工具：
+
+#+begin_src shell
+pacman -S mingw-w64-ucrt-x86_64-emacs       \
+       mingw-w64-ucrt-x86_64-librsvg        \
+       mingw-w64-ucrt-x86_64-pdf2svg        \
+       mingw-w64-ucrt-x86_64-ripgrep        \
+       mingw-w64-ucrt-x86_64-ripgrep-all    \
+       mingw-w64-ucrt-x86_64-hunspell       \
+       mingw-w64-ucrt-x86_64-hunspell-en    \
+       mingw-w64-ucrt-x86_64-sdcv           \
+       mingw-w64-ucrt-x86_64-emacs-pdf-tools-server \
+#+end_src
+
+以上是一些基本工具：
+- librsvg 在 emacs 中显示 svg 图片
+- pdf2svg 在 org mode 显示 pdf
+- ripgrep，ripgrep-all 文本搜索
+- hunspell，hunspell-en 英语拼写检查
+- sdcv 单词查找
+- emacs-pdf-tools-server 在 emacs 中查阅 pdf 文件
+
+如果需要从 org mode 导出 pdf 还需要以下工具：
+
+#+begin_src shell
+pacman -S mingw-w64-ucrt-x86_64-python-pygments \
+       mingw-w64-ucrt-x86_64-inkscape
+#+end_src
+
+- python-pygments 导出的 pdf 中代码语法高亮
+- inkscape 通过 latex 导出 orgmode 的时候，把 svg 嵌入到 pdf 中
+
+还需要 texlive，请另外从 https://tug.org/texlive/windows.html 下载
+~install-tl-windows.exe~ 安装 texlive 到 ~C:/texlive~
+
+添加以下内容到 ~~/.bashrc~ 以可以使用 latex 工具：
+
+#+begin_src shell
+export PATH=$PATH:/c/texlive/windows/2024/bin
+#+end_src
+
+开发的同学还可以考虑安装开发相关的工具：
+
+#+begin_src shell
+pacman -S mingw-w64-ucrt-x86_64-clang-analyzer  \
+       mingw-w64-ucrt-x86_64-clang-tools-extra  \
+       mingw-w64-ucrt-x86_64-rust               \
+       mingw-w64-ucrt-x86_64-python-lsp-server  
+#+end_src
+
+- clang-analyzer, clang-tools-extra 支持 C/C++ 的语法检查和 LSP
+  （Language Server Protocol）
+- rust 支持 Rust 的 LSP
+- python-lsp-server 支持 python 的 LSP 
+
+然后，获取 emacs 配置文件：
+
+#+begin_src shell
+cd ~
+git clone --recurse-submodules git@github.com:kimim/kimim-emacs.git
+cp kimim-emacs/.emacs .
+#+end_src
+
+最后，其他的一些工具还需要额外编译，汉语分词：
+
+#+begin_src shell
+pacman -S ucrt64/mingw-w64-ucrt-x86_64-make
+pacman -S ucrt64/mingw-w64-ucrt-x86_64-gcc
+
+cd kimim-emacs/site-lisp/cns/
+git submodule update --init --recursive
+mingw32-make.exe
+#+end_src
+
+最后，启动 emacs，mintty bash 命令行中输入 emacs 
+
+#+begin_src shell
+emacs
+#+end_src
+
+等几分钟，emacs 下载好 elpa 上的扩展包，就可以愉快地使用 emacs 了。
+
+此外，还可以考虑把 emacs 固定在任务栏：
+- 右键选择 emacs 图标，选择 Pin to taskbar 或者“固定到任务栏”
+- Target/目标填入： ~C:\emacs.vbs~
+
+emacs.vbs 的内容为：
+
+#+begin_src basic
+p = CreateObject("Scripting.FileSystemObject").GetParentFolderName(WScript.ScriptFullName)
+emacspath = p & "\emacs.bat"
+'WScript.Echo emacspath 'get absolute path
+CreateObject("Wscript.Shell").Run emacspath, 0, True
+#+end_src
+
+而 emacs 的启动脚本为 ~C:\emacs.bat~
+
+#+begin_src bat
+@echo off
+
+set HOME=%USERPROFILE%
+set MSYS_ROOT=%USERPROFILE%\msys64
+set MSYS2_PATH_TYPE=strict
+%MSYS_ROOT%\\usr\\bin\\env MSYSTEM=UCRT64 /usr/bin/bash -lc "source $HOME/.bashrc && emacs"
+#+end_src
+
+这样可以避免弹出 CMD 终端框。

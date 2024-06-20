@@ -1,0 +1,183 @@
+---
+layout: post
+title: Windows msys2 emacs
+tags: [emacs]
+categories: [productivity]
+---
+<p>
+之前有介绍怎么在 macOS 安装使用 emacs 。最近有同学问我怎么在 Windows上顺畅的使用 emacs。那就分享下我的安装过程吧。
+</p>
+
+<p>
+首先是下载安装 msys2
+</p>
+
+<p>
+从项目主页找到安装文件<code>.exe</code>下载安装 <a href="https://www.msys2.org/">https://www.msys2.org/</a>
+</p>
+
+<p>
+假设我们安装到 <code>C:/msys64</code>
+</p>
+
+<p>
+然后打开<code>C:/msys64/msys2.exe</code>对程序包进行整体升级：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">pacman -Syu
+</pre>
+</div>
+
+<p>
+安装 emacs 以及需要用到的工具：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">pacman -S mingw-w64-ucrt-x86_64-emacs       <span style="color: #2A00FF;">\</span>
+       mingw-w64-ucrt-x86_64-librsvg        <span style="color: #2A00FF;">\</span>
+       mingw-w64-ucrt-x86_64-pdf2svg        <span style="color: #2A00FF;">\</span>
+       mingw-w64-ucrt-x86_64-ripgrep        <span style="color: #2A00FF;">\</span>
+       mingw-w64-ucrt-x86_64-ripgrep-all    <span style="color: #2A00FF;">\</span>
+       mingw-w64-ucrt-x86_64-hunspell       <span style="color: #2A00FF;">\</span>
+       mingw-w64-ucrt-x86_64-hunspell-en    <span style="color: #2A00FF;">\</span>
+       mingw-w64-ucrt-x86_64-sdcv           <span style="color: #2A00FF;">\</span>
+       mingw-w64-ucrt-x86_64-emacs-pdf-tools-server <span style="color: #2A00FF;">\</span>
+</pre>
+</div>
+
+<p>
+以上是一些基本工具：
+</p>
+<ul class="org-ul">
+<li>librsvg 在 emacs 中显示 svg 图片</li>
+<li>pdf2svg 在org mode显示 pdf</li>
+<li>ripgrep，ripgrep-all 文本搜索</li>
+<li>hunspell，hunspell-en 英语拼写检查</li>
+<li>sdcv 单词查找</li>
+<li>emacs-pdf-tools-server 在 emacs 中查阅 pdf 文件</li>
+</ul>
+
+<p>
+如果需要从org mode导出 pdf 还需要以下工具：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">pacman -S mingw-w64-ucrt-x86_64-python-pygments <span style="color: #2A00FF;">\</span>
+       mingw-w64-ucrt-x86_64-inkscape
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>python-pygments 导出的 pdf 中代码语法高亮</li>
+<li>inkscape 通过 latex 导出 orgmode 的时候，把 svg 嵌入到 pdf 中</li>
+</ul>
+
+<p>
+还需要 texlive ，请另外从 <a href="https://tug.org/texlive/windows.html">https://tug.org/texlive/windows.html</a>下载
+<code>install-tl-windows.exe</code> 安装 texlive 到 <code>C:/texlive</code>
+</p>
+
+<p>
+添加以下内容到<code>~/.bashrc</code>以可以使用 latex 工具：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell"><span style="color: #7F0055; font-weight: bold;">export</span> <span style="color: #000000;">PATH</span>=$<span style="color: #000000;">PATH</span>:/c/texlive/windows/2024/bin
+</pre>
+</div>
+
+<p>
+开发的同学还可以考虑安装开发相关的工具：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">pacman -S mingw-w64-ucrt-x86_64-clang-analyzer  <span style="color: #2A00FF;">\</span>
+       mingw-w64-ucrt-x86_64-clang-tools-extra  <span style="color: #2A00FF;">\</span>
+       mingw-w64-ucrt-x86_64-rust               <span style="color: #2A00FF;">\</span>
+       mingw-w64-ucrt-x86_64-python-lsp-server  
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>clang-analyzer, clang-tools-extra 支持C/C++的语法检查和 LSP
+（Language Server Protocol）</li>
+<li>rust 支持 Rust 的 LSP</li>
+<li>python-lsp-server 支持 python 的 LSP</li>
+</ul>
+
+<p>
+然后，获取 emacs 配置文件：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell"><span style="color: #7F0055; font-weight: bold;">cd</span> ~
+git clone --recurse-submodules git@github.com:kimim/kimim-emacs.git
+cp kimim-emacs/.emacs .
+</pre>
+</div>
+
+<p>
+最后，其他的一些工具还需要额外编译，汉语分词：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">pacman -S ucrt64/mingw-w64-ucrt-x86_64-make
+pacman -S ucrt64/mingw-w64-ucrt-x86_64-gcc
+
+<span style="color: #7F0055; font-weight: bold;">cd</span> kimim-emacs/site-lisp/cns/
+git submodule update --init --recursive
+mingw32-make.exe
+</pre>
+</div>
+
+<p>
+最后，启动 emacs ，mintty bash命令行中输入 emacs 
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-shell">emacs
+</pre>
+</div>
+
+<p>
+等几分钟，emacs 下载好 elpa 上的扩展包，就可以愉快地使用 emacs 了。
+</p>
+
+<p>
+此外，还可以考虑把 emacs 固定在任务栏：
+</p>
+<ul class="org-ul">
+<li>右键选择 emacs 图标，选择Pin to taskbar或者“固定到任务栏”</li>
+<li>Target/目标填入： <code>C:\emacs.vbs</code></li>
+</ul>
+
+<p>
+emacs.vbs 的内容为：
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-basic">p = CreateObject("Scripting.FileSystemObject").GetParentFolderName(WScript.ScriptFullName)
+emacspath = p &amp; "\emacs.bat"
+'WScript.Echo emacspath 'get absolute path
+CreateObject("Wscript.Shell").Run emacspath, 0, True
+</pre>
+</div>
+
+<p>
+而 emacs 的启动脚本为 <code>C:\emacs.bat</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bat">@<span style="color: #7F0055; font-weight: bold;">echo</span> off
+
+<span style="color: #7F0055; font-weight: bold;">set</span> <span style="color: #000000;">HOME</span>=%<span style="color: #000000;">USERPROFILE</span>%
+<span style="color: #7F0055; font-weight: bold;">set</span> <span style="color: #000000;">MSYS_ROOT</span>=%<span style="color: #000000;">USERPROFILE</span>%\msys64
+<span style="color: #7F0055; font-weight: bold;">set</span> <span style="color: #000000;">MSYS2_PATH_TYPE</span>=strict
+%<span style="color: #000000;">MSYS_ROOT</span>%\\usr\\bin\\env MSYSTEM=UCRT64 /<span style="color: #000000; font-style: italic; text-decoration: underline;">usr</span>/bin/bash -<span style="color: #000000; font-style: italic; text-decoration: underline;">lc</span> <span style="color: #2A00FF;">"source $HOME/.bashrc &amp;&amp; emacs"</span>
+</pre>
+</div>
+
+<p>
+这样可以避免弹出 CMD 终端框。
+</p>
