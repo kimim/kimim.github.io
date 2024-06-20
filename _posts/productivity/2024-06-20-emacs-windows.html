@@ -205,7 +205,7 @@ CreateObject("Wscript.Shell").Run emacspath, 0, True
 <pre class="src src- src-bat">@<span style="color: #7F0055; font-weight: bold;">echo</span> off
 
 <span style="color: #7F0055; font-weight: bold;">set</span> <span style="color: #000000;">HOME</span>=%<span style="color: #000000;">USERPROFILE</span>%
-<span style="color: #7F0055; font-weight: bold;">set</span> <span style="color: #000000;">MSYS_ROOT</span>=%<span style="color: #000000;">USERPROFILE</span>%\msys64
+<span style="color: #7F0055; font-weight: bold;">set</span> <span style="color: #000000;">MSYS_ROOT</span>=C:\msys64
 <span style="color: #7F0055; font-weight: bold;">set</span> <span style="color: #000000;">MSYS2_PATH_TYPE</span>=strict
 %<span style="color: #000000;">MSYS_ROOT</span>%\\usr\\bin\\env MSYSTEM=UCRT64 /<span style="color: #000000; font-style: italic; text-decoration: underline;">usr</span>/bin/bash -<span style="color: #000000; font-style: italic; text-decoration: underline;">lc</span> <span style="color: #2A00FF;">"source $HOME/.bashrc &amp;&amp; emacs"</span>
 </pre>
@@ -224,8 +224,8 @@ CreateObject("Wscript.Shell").Run emacspath, 0, True
 </p>
 
 <div class="org-src-container">
-<pre class="src src- src-shell">getent passwd $<span style="color: #707183;">(</span><span style="color: #ff00ff;">id -u</span><span style="color: #707183;">)</span> &gt; /etc/passwd
-getent group $<span style="color: #707183;">(</span><span style="color: #ff00ff;">id -G</span><span style="color: #707183;">)</span> &gt; /etc/group
+<pre class="src src- src-shell">getent passwd $<span style="color: #707183;">(</span>id -u<span style="color: #707183;">)</span> &gt; /etc/passwd
+getent group $<span style="color: #707183;">(</span>id -G<span style="color: #707183;">)</span> &gt; /etc/group
 </pre>
 </div>
 

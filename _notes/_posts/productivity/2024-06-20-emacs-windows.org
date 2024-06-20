@@ -143,7 +143,7 @@ CreateObject("Wscript.Shell").Run emacspath, 0, True
 @echo off
 
 set HOME=%USERPROFILE%
-set MSYS_ROOT=%USERPROFILE%\msys64
+set MSYS_ROOT=C:\msys64
 set MSYS2_PATH_TYPE=strict
 %MSYS_ROOT%\\usr\\bin\\env MSYSTEM=UCRT64 /usr/bin/bash -lc "source $HOME/.bashrc && emacs"
 #+end_src
