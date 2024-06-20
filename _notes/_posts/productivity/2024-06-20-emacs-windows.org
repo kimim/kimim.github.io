@@ -41,7 +41,8 @@ pacman -S mingw-w64-ucrt-x86_64-emacs       \
        mingw-w64-ucrt-x86_64-hunspell       \
        mingw-w64-ucrt-x86_64-hunspell-en    \
        mingw-w64-ucrt-x86_64-sdcv           \
-       mingw-w64-ucrt-x86_64-emacs-pdf-tools-server \
+       mingw-w64-ucrt-x86_64-mpg123         \
+       mingw-w64-ucrt-x86_64-emacs-pdf-tools-server
 #+end_src
 
 以上是一些基本工具：
@@ -50,6 +51,7 @@ pacman -S mingw-w64-ucrt-x86_64-emacs       \
 - ripgrep，ripgrep-all 文本搜索
 - hunspell，hunspell-en 英语拼写检查
 - sdcv 单词查找
+- mpg123 播放 sdcv 以及 fanyi.el 查到的单词的读音
 - emacs-pdf-tools-server 在 emacs 中查阅 pdf 文件
 
 如果需要从 org mode 导出 pdf 还需要以下工具：
