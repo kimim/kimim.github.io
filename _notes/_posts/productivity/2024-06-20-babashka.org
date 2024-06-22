@@ -73,7 +73,7 @@ bb -m clojure.core/prn 1 2 3
    
 3. 在 shell 调用 shebang 文件，比如将以下内容保存为 print.bb 
 
-   #+begin_src clojure
+   #+begin_src bb
 #!/usr/bin/env bb
 (println (+ 1 2 3))
    #+end_src
@@ -88,12 +88,12 @@ chmod +x print.bb
 4. orgmode 代码块
 
    #+begin_src org
-'#+begin_src bb
+#+begin_src bb
 (println (+ 1 2 3))
-'#+end_src
+#+end_src
    #+end_src
 
-  #+begin_src clojure
+  #+begin_src bb :exports both
 (println (+ 1 2 3))
   #+end_src
 

@@ -109,8 +109,8 @@ babashka.process 进程管理，java.time 时间日期库。
 </p>
 
 <div class="org-src-container">
-<pre class="src src- src-clojure"><span style="color: #000000; font-style: italic; text-decoration: underline;">#!</span>/usr/bin/env bb
-<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">println</span> <span style="color: #7388d6;">(</span>+ 1 2 3<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+<pre class="src src- src-bb"><span style="color: #000000; font-style: italic; text-decoration: underline;">#!</span>/usr/bin/env bb
+<span style="color: #707183;">(</span>println <span style="color: #7388d6;">(</span>+ 1 2 3<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
 </pre>
 </div>
 
@@ -129,16 +129,22 @@ orgmode 代码块
 </p>
 
 <div class="org-src-container">
-<pre class="src src- src-org">'#+begin_src bb
+<pre class="src src- src-org">#+begin_src bb
 (println (+ 1 2 3))
-'#+end_src
+</pre>
+</div>
+<p>
+#+end_src
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb"><span style="color: #707183;">(</span>println <span style="color: #7388d6;">(</span>+ 1 2 3<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
 </pre>
 </div>
 
-<div class="org-src-container">
-<pre class="src src- src-clojure"><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">println</span> <span style="color: #7388d6;">(</span>+ 1 2 3<span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
-</pre>
-</div></li>
+<pre class="example">
+6
+</pre></li>
 </ol>
 
 
