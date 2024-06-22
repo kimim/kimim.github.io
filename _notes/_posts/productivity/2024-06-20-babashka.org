@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       8D27FCBF-6919-4067-B556-5142F0849CE0
+:END:
 #+LAYOUT: post
 #+TITLE: babashka - 有趣又便捷巴布什卡头巾
 #+TAGS: Clojure

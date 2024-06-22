@@ -1,0 +1,453 @@
+---
+layout: post
+title: babashka 函数库之文件路径和属性函数
+tags: [programming]
+categories: [productivity]
+---
+<p>
+之前介绍过<a href="2024-06-20-babashka.html#ID-8D27FCBF-6919-4067-B556-5142F0849CE0">babashka - 有趣又便捷巴布什卡头巾</a>，用 clojure 处理脚本任务方便又快捷，还有很多上手能用的内置函数库可以用。
+</p>
+
+<p>
+一般脚本处理，文件操作是必不可少的任务。这篇文章介绍下 babashka 的文件系统库。
+</p>
+
+<p>
+首先要用过 require 把函数库加载进来。然后，我们定义一组文件路径进行测试。
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb" id="orgbd99d2d"><span style="color: #707183;">(</span>require '<span style="color: #7388d6;">[</span>babashka.fs <span style="color: #110099;">:as</span> fs<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">test-paths</span>
+  <span style="color: #7388d6;">[</span><span style="color: #2A00FF;">"."</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;</span>
+   <span style="color: #2A00FF;">".."</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;&#65292;&#38544;&#34255;&#25991;&#20214;</span>
+   <span style="color: #2A00FF;">"~"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#24403;&#20316;&#26222;&#36890;&#25991;&#20214;&#21517;&#22788;&#29702;&#65292;&#25152;&#20197;&#26159;&#35813;&#25991;&#20214;&#19981;&#23384;&#22312;</span>
+   <span style="color: #2A00FF;">"bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#21487;&#25191;&#34892;&#25991;&#20214;&#65292;&#19981;&#21487;&#20889;</span>
+   <span style="color: #2A00FF;">"babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#65292;&#25991;&#26412;&#25991;&#20214;</span>
+   <span style="color: #2A00FF;">"/"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26681;&#30446;&#24405;</span>
+   <span style="color: #2A00FF;">"/Users/kimim/babashka"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#19978;&#23618;&#30446;&#24405;</span>
+   <span style="color: #2A00FF;">"/Users/kimim/babashka/babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#32477;&#23545;&#36335;&#24452;</span>
+   <span style="color: #2A00FF;">"/opt/homebrew/bin/bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">bb &#30340;&#31526;&#21495;&#38142;&#25509;&#25991;&#20214;&#65292;&#21487;&#25191;&#34892;</span>
+   <span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+#'user/test-paths
+</pre>
+
+
+<p>
+然后，检查下，我们的操作系统是不是 Windows
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb"><span style="color: #707183;">(</span>require '<span style="color: #7388d6;">[</span>babashka.fs <span style="color: #110099;">:as</span> fs<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">test-paths</span>
+  <span style="color: #7388d6;">[</span><span style="color: #2A00FF;">"."</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;</span>
+   <span style="color: #2A00FF;">".."</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;&#65292;&#38544;&#34255;&#25991;&#20214;</span>
+   <span style="color: #2A00FF;">"~"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#24403;&#20316;&#26222;&#36890;&#25991;&#20214;&#21517;&#22788;&#29702;&#65292;&#25152;&#20197;&#26159;&#35813;&#25991;&#20214;&#19981;&#23384;&#22312;</span>
+   <span style="color: #2A00FF;">"bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#21487;&#25191;&#34892;&#25991;&#20214;&#65292;&#19981;&#21487;&#20889;</span>
+   <span style="color: #2A00FF;">"babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#65292;&#25991;&#26412;&#25991;&#20214;</span>
+   <span style="color: #2A00FF;">"/"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26681;&#30446;&#24405;</span>
+   <span style="color: #2A00FF;">"/Users/kimim/babashka"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#19978;&#23618;&#30446;&#24405;</span>
+   <span style="color: #2A00FF;">"/Users/kimim/babashka/babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#32477;&#23545;&#36335;&#24452;</span>
+   <span style="color: #2A00FF;">"/opt/homebrew/bin/bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">bb &#30340;&#31526;&#21495;&#38142;&#25509;&#25991;&#20214;&#65292;&#21487;&#25191;&#34892;</span>
+   <span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/windows?<span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+false
+</pre>
+
+
+<p>
+因为，现在用的是 macOS ，所以返回结果为 false。
+</p>
+
+<p>
+<b>检查文件路径是不是绝对路径</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb"><span style="color: #707183;">(</span>require '<span style="color: #7388d6;">[</span>babashka.fs <span style="color: #110099;">:as</span> fs<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">test-paths</span>
+  <span style="color: #7388d6;">[</span><span style="color: #2A00FF;">"."</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;</span>
+   <span style="color: #2A00FF;">".."</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;&#65292;&#38544;&#34255;&#25991;&#20214;</span>
+   <span style="color: #2A00FF;">"~"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#24403;&#20316;&#26222;&#36890;&#25991;&#20214;&#21517;&#22788;&#29702;&#65292;&#25152;&#20197;&#26159;&#35813;&#25991;&#20214;&#19981;&#23384;&#22312;</span>
+   <span style="color: #2A00FF;">"bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#21487;&#25191;&#34892;&#25991;&#20214;&#65292;&#19981;&#21487;&#20889;</span>
+   <span style="color: #2A00FF;">"babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#65292;&#25991;&#26412;&#25991;&#20214;</span>
+   <span style="color: #2A00FF;">"/"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26681;&#30446;&#24405;</span>
+   <span style="color: #2A00FF;">"/Users/kimim/babashka"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#19978;&#23618;&#30446;&#24405;</span>
+   <span style="color: #2A00FF;">"/Users/kimim/babashka/babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#32477;&#23545;&#36335;&#24452;</span>
+   <span style="color: #2A00FF;">"/opt/homebrew/bin/bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">bb &#30340;&#31526;&#21495;&#38142;&#25509;&#25991;&#20214;&#65292;&#21487;&#25191;&#34892;</span>
+   <span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">:"</span><span style="color: #909183;">)</span>
+         <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/absolute? path<span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+".": false 
+"..": false 
+"~": false 
+"bb": false 
+"babashka-fs.org": false 
+"/": true 
+"/Users/kimim/babashka": true 
+"/Users/kimim/babashka/babashka-fs.org": true 
+"/opt/homebrew/bin/bb": true
+</pre>
+
+
+<p>
+只有<code>/</code>开头的路径才是绝对路径。如果是绝对路径，<code>fs/absolute?</code>返回 <code>true</code>
+，不然返回 <code>false</code> 。
+</p>
+
+<p>
+<b>是否为相对路径</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb"><span style="color: #707183;">(</span>require '<span style="color: #7388d6;">[</span>babashka.fs <span style="color: #110099;">:as</span> fs<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">test-paths</span>
+  <span style="color: #7388d6;">[</span><span style="color: #2A00FF;">"."</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;</span>
+   <span style="color: #2A00FF;">".."</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;&#65292;&#38544;&#34255;&#25991;&#20214;</span>
+   <span style="color: #2A00FF;">"~"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#24403;&#20316;&#26222;&#36890;&#25991;&#20214;&#21517;&#22788;&#29702;&#65292;&#25152;&#20197;&#26159;&#35813;&#25991;&#20214;&#19981;&#23384;&#22312;</span>
+   <span style="color: #2A00FF;">"bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#21487;&#25191;&#34892;&#25991;&#20214;&#65292;&#19981;&#21487;&#20889;</span>
+   <span style="color: #2A00FF;">"babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#65292;&#25991;&#26412;&#25991;&#20214;</span>
+   <span style="color: #2A00FF;">"/"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26681;&#30446;&#24405;</span>
+   <span style="color: #2A00FF;">"/Users/kimim/babashka"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#19978;&#23618;&#30446;&#24405;</span>
+   <span style="color: #2A00FF;">"/Users/kimim/babashka/babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#32477;&#23545;&#36335;&#24452;</span>
+   <span style="color: #2A00FF;">"/opt/homebrew/bin/bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">bb &#30340;&#31526;&#21495;&#38142;&#25509;&#25991;&#20214;&#65292;&#21487;&#25191;&#34892;</span>
+   <span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
+         <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/relative? path<span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+"." true 
+".." true 
+"~" true 
+"bb" true 
+"babashka-fs.org" true 
+"/" false 
+"/Users/kimim/babashka" false 
+"/Users/kimim/babashka/babashka-fs.org" false 
+"/opt/homebrew/bin/bb" false
+</pre>
+
+
+<p>
+也就是<code>fs/absolutize</code>和 <code>fs/relative?</code> 是一对互补查询函数。
+</p>
+
+
+<p>
+<b>检查文件是否存在</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb"><span style="color: #707183;">(</span>require '<span style="color: #7388d6;">[</span>babashka.fs <span style="color: #110099;">:as</span> fs<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">test-paths</span>
+  <span style="color: #7388d6;">[</span><span style="color: #2A00FF;">"."</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;</span>
+   <span style="color: #2A00FF;">".."</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;&#65292;&#38544;&#34255;&#25991;&#20214;</span>
+   <span style="color: #2A00FF;">"~"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#24403;&#20316;&#26222;&#36890;&#25991;&#20214;&#21517;&#22788;&#29702;&#65292;&#25152;&#20197;&#26159;&#35813;&#25991;&#20214;&#19981;&#23384;&#22312;</span>
+   <span style="color: #2A00FF;">"bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#21487;&#25191;&#34892;&#25991;&#20214;&#65292;&#19981;&#21487;&#20889;</span>
+   <span style="color: #2A00FF;">"babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#65292;&#25991;&#26412;&#25991;&#20214;</span>
+   <span style="color: #2A00FF;">"/"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26681;&#30446;&#24405;</span>
+   <span style="color: #2A00FF;">"/Users/kimim/babashka"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#19978;&#23618;&#30446;&#24405;</span>
+   <span style="color: #2A00FF;">"/Users/kimim/babashka/babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#32477;&#23545;&#36335;&#24452;</span>
+   <span style="color: #2A00FF;">"/opt/homebrew/bin/bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">bb &#30340;&#31526;&#21495;&#38142;&#25509;&#25991;&#20214;&#65292;&#21487;&#25191;&#34892;</span>
+   <span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
+         <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/exists? path<span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+"." true 
+".." true 
+"~" false 
+"bb" false 
+"babashka-fs.org" false 
+"/" true 
+"/Users/kimim/babashka" true 
+"/Users/kimim/babashka/babashka-fs.org" false 
+"/opt/homebrew/bin/bb" true
+</pre>
+
+
+<p>
+<b>注意</b> <code>babashka/fs</code> 不把波浪线当作特殊字符处理。
+</p>
+
+<p>
+需要<code>fs/expand-home</code>把波浪线转成系统的<code>user.home</code>环境变量。
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb"><span style="color: #707183;">(</span>require '<span style="color: #7388d6;">[</span>babashka.fs <span style="color: #110099;">:as</span> fs<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">test-paths</span>
+  <span style="color: #7388d6;">[</span><span style="color: #2A00FF;">"."</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;</span>
+   <span style="color: #2A00FF;">".."</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;&#65292;&#38544;&#34255;&#25991;&#20214;</span>
+   <span style="color: #2A00FF;">"~"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#24403;&#20316;&#26222;&#36890;&#25991;&#20214;&#21517;&#22788;&#29702;&#65292;&#25152;&#20197;&#26159;&#35813;&#25991;&#20214;&#19981;&#23384;&#22312;</span>
+   <span style="color: #2A00FF;">"bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#21487;&#25191;&#34892;&#25991;&#20214;&#65292;&#19981;&#21487;&#20889;</span>
+   <span style="color: #2A00FF;">"babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#65292;&#25991;&#26412;&#25991;&#20214;</span>
+   <span style="color: #2A00FF;">"/"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26681;&#30446;&#24405;</span>
+   <span style="color: #2A00FF;">"/Users/kimim/babashka"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#19978;&#23618;&#30446;&#24405;</span>
+   <span style="color: #2A00FF;">"/Users/kimim/babashka/babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#32477;&#23545;&#36335;&#24452;</span>
+   <span style="color: #2A00FF;">"/opt/homebrew/bin/bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">bb &#30340;&#31526;&#21495;&#38142;&#25509;&#25991;&#20214;&#65292;&#21487;&#25191;&#34892;</span>
+   <span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #707183;">(</span>str <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/expand-home <span style="color: #2A00FF;">"~"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+/Users/kimim
+</pre>
+
+
+
+<p>
+<b>检查文件是否为文件夹</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb">
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
+         <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/directory? path<span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+"." true 
+".." true 
+"~" false 
+"bb" false 
+"babashka-fs.org" false 
+"/" true 
+"/Users/kimim/babashka" true 
+"/Users/kimim/babashka/babashka-fs.org" false 
+"/opt/homebrew/bin/bb" false
+</pre>
+
+
+
+<p>
+<b>是否可执行</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb">
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
+         <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/executable? path<span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+"." true 
+".." true 
+"~" false 
+"bb" false 
+"babashka-fs.org" false 
+"/" true 
+"/Users/kimim/babashka" true 
+"/Users/kimim/babashka/babashka-fs.org" false 
+"/opt/homebrew/bin/bb" true
+</pre>
+
+
+
+<p>
+<b>是否隐藏文件</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb">
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
+         <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/hidden? path<span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+"." true 
+".." true 
+"~" false 
+"bb" false 
+"babashka-fs.org" false 
+"/" false 
+"/Users/kimim/babashka" false 
+"/Users/kimim/babashka/babashka-fs.org" false 
+"/opt/homebrew/bin/bb" false
+</pre>
+
+
+
+<p>
+<b>是否可读取</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb">
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
+         <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/readable? path<span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+"." true 
+".." true 
+"~" false 
+"bb" true 
+"babashka-fs.org" true 
+"/" true 
+"/Users/kimim/babashka" true 
+"/Users/kimim/babashka/babashka-fs.org" true 
+"/opt/homebrew/bin/bb" true
+</pre>
+
+
+
+<p>
+<b>是否可写</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb">
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
+         <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/writable? path<span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+"." true 
+".." true 
+"~" false 
+"bb" false 
+"babashka-fs.org" true 
+"/" false 
+"/Users/kimim/babashka" true 
+"/Users/kimim/babashka/babashka-fs.org" true 
+"/opt/homebrew/bin/bb" false
+</pre>
+
+
+
+<p>
+<b>是否符号连接</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb">
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
+         <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/sym-link? path<span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+"." false 
+".." false 
+"~" false 
+"bb" false 
+"babashka-fs.org" false 
+"/" false 
+"/Users/kimim/babashka" false 
+"/Users/kimim/babashka/babashka-fs.org" false 
+"/opt/homebrew/bin/bb" true
+</pre>
+
+
+
+
+<p>
+<b>把文件路径变成绝对路径</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb">
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
+         <span style="color: #909183;">(</span>str <span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/absolutize path<span style="color: #709870;">)</span><span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+"." /Users/kimim/babashka/. 
+".." /Users/kimim/babashka/.. 
+"~" /Users/kimim/babashka/~ 
+"bb" /Users/kimim/babashka/bb 
+"babashka-fs.org" /Users/kimim/babashka/babashka-fs.org 
+"/" / 
+"/Users/kimim/babashka" /Users/kimim/babashka 
+"/Users/kimim/babashka/babashka-fs.org" /Users/kimim/babashka/babashka-fs.org 
+"/opt/homebrew/bin/bb" /opt/homebrew/bin/bb
+</pre>
+
+
+<p>
+<code>fs/absolutize</code> 返回文件对象<code>sun.nio.fs.UnixPath</code>，为了显示清晰，我们把它转成字符串输出。
+</p>
+
+<p>
+<b>把文件路径正规化</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb">
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
+         <span style="color: #909183;">(</span>str <span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/canonicalize path<span style="color: #709870;">)</span><span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+"." /Users/kimim/babashka 
+".." /Users/kimim 
+"~" /Users/kimim/babashka/~ 
+"bb" /Users/kimim/babashka/bb 
+"babashka-fs.org" /Users/kimim/babashka/babashka-fs.org 
+"/" / 
+"/Users/kimim/babashka" /Users/kimim/babashka 
+"/Users/kimim/babashka/babashka-fs.org" /Users/kimim/babashka/babashka-fs.org 
+"/opt/homebrew/bin/bb" /opt/homebrew/Cellar/babashka/1.3.190/bin/bb
+</pre>
+
+
+
+<p>
+<b>把文件路径变成 Unix 风格的路径</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src- src-bb">
+<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
+  <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
+         <span style="color: #909183;">(</span>str <span style="color: #709870;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/unixify path<span style="color: #709870;">)</span><span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+"." . 
+".." .. 
+"~" ~ 
+"bb" bb 
+"babashka-fs.org" babashka-fs.org 
+"/" / 
+"/Users/kimim/babashka" /Users/kimim/babashka 
+"/Users/kimim/babashka/babashka-fs.org" /Users/kimim/babashka/babashka-fs.org 
+"/opt/homebrew/bin/bb" /opt/homebrew/bin/bb
+</pre>
