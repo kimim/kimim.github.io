@@ -42,18 +42,7 @@ categories: [productivity]
 </p>
 
 <div class="org-src-container">
-<pre class="src src- src-bb"><span style="color: #707183;">(</span>require '<span style="color: #7388d6;">[</span>babashka.fs <span style="color: #110099;">:as</span> fs<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
-<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">test-paths</span>
-  <span style="color: #7388d6;">[</span><span style="color: #2A00FF;">"."</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;</span>
-   <span style="color: #2A00FF;">".."</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;&#65292;&#38544;&#34255;&#25991;&#20214;</span>
-   <span style="color: #2A00FF;">"~"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#24403;&#20316;&#26222;&#36890;&#25991;&#20214;&#21517;&#22788;&#29702;&#65292;&#25152;&#20197;&#26159;&#35813;&#25991;&#20214;&#19981;&#23384;&#22312;</span>
-   <span style="color: #2A00FF;">"bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#21487;&#25191;&#34892;&#25991;&#20214;&#65292;&#19981;&#21487;&#20889;</span>
-   <span style="color: #2A00FF;">"babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#65292;&#25991;&#26412;&#25991;&#20214;</span>
-   <span style="color: #2A00FF;">"/"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26681;&#30446;&#24405;</span>
-   <span style="color: #2A00FF;">"/Users/kimim/babashka"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#19978;&#23618;&#30446;&#24405;</span>
-   <span style="color: #2A00FF;">"/Users/kimim/babashka/babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#32477;&#23545;&#36335;&#24452;</span>
-   <span style="color: #2A00FF;">"/opt/homebrew/bin/bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">bb &#30340;&#31526;&#21495;&#38142;&#25509;&#25991;&#20214;&#65292;&#21487;&#25191;&#34892;</span>
-   <span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<pre class="src src- src-bb">
 <span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/windows?<span style="color: #707183;">)</span>
 </pre>
 </div>
@@ -72,18 +61,7 @@ false
 </p>
 
 <div class="org-src-container">
-<pre class="src src- src-bb"><span style="color: #707183;">(</span>require '<span style="color: #7388d6;">[</span>babashka.fs <span style="color: #110099;">:as</span> fs<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
-<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">test-paths</span>
-  <span style="color: #7388d6;">[</span><span style="color: #2A00FF;">"."</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;</span>
-   <span style="color: #2A00FF;">".."</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;&#65292;&#38544;&#34255;&#25991;&#20214;</span>
-   <span style="color: #2A00FF;">"~"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#24403;&#20316;&#26222;&#36890;&#25991;&#20214;&#21517;&#22788;&#29702;&#65292;&#25152;&#20197;&#26159;&#35813;&#25991;&#20214;&#19981;&#23384;&#22312;</span>
-   <span style="color: #2A00FF;">"bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#21487;&#25191;&#34892;&#25991;&#20214;&#65292;&#19981;&#21487;&#20889;</span>
-   <span style="color: #2A00FF;">"babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#65292;&#25991;&#26412;&#25991;&#20214;</span>
-   <span style="color: #2A00FF;">"/"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26681;&#30446;&#24405;</span>
-   <span style="color: #2A00FF;">"/Users/kimim/babashka"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#19978;&#23618;&#30446;&#24405;</span>
-   <span style="color: #2A00FF;">"/Users/kimim/babashka/babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#32477;&#23545;&#36335;&#24452;</span>
-   <span style="color: #2A00FF;">"/opt/homebrew/bin/bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">bb &#30340;&#31526;&#21495;&#38142;&#25509;&#25991;&#20214;&#65292;&#21487;&#25191;&#34892;</span>
-   <span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<pre class="src src- src-bb">
 <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
   <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">:"</span><span style="color: #909183;">)</span>
          <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/absolute? path<span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
@@ -113,18 +91,7 @@ false
 </p>
 
 <div class="org-src-container">
-<pre class="src src- src-bb"><span style="color: #707183;">(</span>require '<span style="color: #7388d6;">[</span>babashka.fs <span style="color: #110099;">:as</span> fs<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
-<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">test-paths</span>
-  <span style="color: #7388d6;">[</span><span style="color: #2A00FF;">"."</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;</span>
-   <span style="color: #2A00FF;">".."</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;&#65292;&#38544;&#34255;&#25991;&#20214;</span>
-   <span style="color: #2A00FF;">"~"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#24403;&#20316;&#26222;&#36890;&#25991;&#20214;&#21517;&#22788;&#29702;&#65292;&#25152;&#20197;&#26159;&#35813;&#25991;&#20214;&#19981;&#23384;&#22312;</span>
-   <span style="color: #2A00FF;">"bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#21487;&#25191;&#34892;&#25991;&#20214;&#65292;&#19981;&#21487;&#20889;</span>
-   <span style="color: #2A00FF;">"babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#65292;&#25991;&#26412;&#25991;&#20214;</span>
-   <span style="color: #2A00FF;">"/"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26681;&#30446;&#24405;</span>
-   <span style="color: #2A00FF;">"/Users/kimim/babashka"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#19978;&#23618;&#30446;&#24405;</span>
-   <span style="color: #2A00FF;">"/Users/kimim/babashka/babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#32477;&#23545;&#36335;&#24452;</span>
-   <span style="color: #2A00FF;">"/opt/homebrew/bin/bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">bb &#30340;&#31526;&#21495;&#38142;&#25509;&#25991;&#20214;&#65292;&#21487;&#25191;&#34892;</span>
-   <span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<pre class="src src- src-bb">
 <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
   <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
          <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/relative? path<span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
@@ -154,18 +121,7 @@ false
 </p>
 
 <div class="org-src-container">
-<pre class="src src- src-bb"><span style="color: #707183;">(</span>require '<span style="color: #7388d6;">[</span>babashka.fs <span style="color: #110099;">:as</span> fs<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
-<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">test-paths</span>
-  <span style="color: #7388d6;">[</span><span style="color: #2A00FF;">"."</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;</span>
-   <span style="color: #2A00FF;">".."</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;&#65292;&#38544;&#34255;&#25991;&#20214;</span>
-   <span style="color: #2A00FF;">"~"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#24403;&#20316;&#26222;&#36890;&#25991;&#20214;&#21517;&#22788;&#29702;&#65292;&#25152;&#20197;&#26159;&#35813;&#25991;&#20214;&#19981;&#23384;&#22312;</span>
-   <span style="color: #2A00FF;">"bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#21487;&#25191;&#34892;&#25991;&#20214;&#65292;&#19981;&#21487;&#20889;</span>
-   <span style="color: #2A00FF;">"babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#65292;&#25991;&#26412;&#25991;&#20214;</span>
-   <span style="color: #2A00FF;">"/"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26681;&#30446;&#24405;</span>
-   <span style="color: #2A00FF;">"/Users/kimim/babashka"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#19978;&#23618;&#30446;&#24405;</span>
-   <span style="color: #2A00FF;">"/Users/kimim/babashka/babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#32477;&#23545;&#36335;&#24452;</span>
-   <span style="color: #2A00FF;">"/opt/homebrew/bin/bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">bb &#30340;&#31526;&#21495;&#38142;&#25509;&#25991;&#20214;&#65292;&#21487;&#25191;&#34892;</span>
-   <span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<pre class="src src- src-bb">
 <span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">doseq</span> <span style="color: #7388d6;">[</span>path test-paths<span style="color: #7388d6;">]</span>
   <span style="color: #7388d6;">(</span>print <span style="color: #909183;">(</span>str <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span> path <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\"</span><span style="color: #2A00FF;">"</span><span style="color: #909183;">)</span>
          <span style="color: #909183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/exists? path<span style="color: #909183;">)</span> <span style="color: #2A00FF;">"</span><span style="color: #000000; background-color: #f8f8f8; font-weight: bold;">\n</span><span style="color: #2A00FF;">"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
@@ -194,18 +150,7 @@ false
 </p>
 
 <div class="org-src-container">
-<pre class="src src- src-bb"><span style="color: #707183;">(</span>require '<span style="color: #7388d6;">[</span>babashka.fs <span style="color: #110099;">:as</span> fs<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
-<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">def</span> <span style="color: #000000;">test-paths</span>
-  <span style="color: #7388d6;">[</span><span style="color: #2A00FF;">"."</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;</span>
-   <span style="color: #2A00FF;">".."</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#30456;&#23545;&#36335;&#24452;&#65292;&#38544;&#34255;&#25991;&#20214;</span>
-   <span style="color: #2A00FF;">"~"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#24403;&#20316;&#26222;&#36890;&#25991;&#20214;&#21517;&#22788;&#29702;&#65292;&#25152;&#20197;&#26159;&#35813;&#25991;&#20214;&#19981;&#23384;&#22312;</span>
-   <span style="color: #2A00FF;">"bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#21487;&#25191;&#34892;&#25991;&#20214;&#65292;&#19981;&#21487;&#20889;</span>
-   <span style="color: #2A00FF;">"babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#65292;&#25991;&#26412;&#25991;&#20214;</span>
-   <span style="color: #2A00FF;">"/"</span>  <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26681;&#30446;&#24405;</span>
-   <span style="color: #2A00FF;">"/Users/kimim/babashka"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#19978;&#23618;&#30446;&#24405;</span>
-   <span style="color: #2A00FF;">"/Users/kimim/babashka/babashka-fs.org"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">&#26412;&#25991;&#32477;&#23545;&#36335;&#24452;</span>
-   <span style="color: #2A00FF;">"/opt/homebrew/bin/bb"</span> <span style="color: #3F7F5F;">;; </span><span style="color: #3F7F5F;">bb &#30340;&#31526;&#21495;&#38142;&#25509;&#25991;&#20214;&#65292;&#21487;&#25191;&#34892;</span>
-   <span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<pre class="src src- src-bb">
 <span style="color: #707183;">(</span>str <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">fs</span>/expand-home <span style="color: #2A00FF;">"~"</span><span style="color: #7388d6;">)</span><span style="color: #707183;">)</span>
 </pre>
 </div>

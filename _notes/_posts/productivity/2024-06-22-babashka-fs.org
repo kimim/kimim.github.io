@@ -35,7 +35,7 @@
 
 然后，检查下，我们的操作系统是不是 Windows
 
-#+begin_src bb :noweb yes :exports both :eval no-export
+#+begin_src bb :noweb strip-export :exports both :eval no-export
 <<test-paths>>
 (fs/windows?)
 #+end_src
@@ -47,7 +47,7 @@
 
 *检查文件路径是不是绝对路径*
 
-#+begin_src bb :noweb yes :exports both :eval no-export
+#+begin_src bb :noweb strip-export :exports both :eval no-export
 <<test-paths>>
 (doseq [path test-paths]
   (print (str "\"" path "\":")
@@ -70,7 +70,7 @@
 
 *是否为相对路径*
 
-#+begin_src bb :noweb yes :exports both :eval no-export
+#+begin_src bb :noweb strip-export :exports both :eval no-export
 <<test-paths>>
 (doseq [path test-paths]
   (print (str "\"" path "\"")
@@ -93,7 +93,7 @@
 
 *检查文件是否存在*
 
-#+begin_src bb :noweb yes :exports both
+#+begin_src bb :noweb strip-export :exports both
 <<test-paths>>
 (doseq [path test-paths]
   (print (str "\"" path "\"")
@@ -115,7 +115,7 @@
 
 需要 ~fs/expand-home~ 把波浪线转成系统的 ~user.home~ 环境变量。
 
-#+begin_src bb :noweb yes :exports both :eval no-export
+#+begin_src bb :noweb strip-export :exports both :eval no-export
 <<test-paths>>
 (str (fs/expand-home "~"))
 #+end_src
