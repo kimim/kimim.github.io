@@ -1,23 +1,19 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.42 如果构造函数不能构造一个有效对象，抛出一个例外
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.42 如果构造函数不能构造一个有效对象，抛出一个例外
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"If a constructor cannot construct a valid object, throw an exception"
+C.42: If a constructor cannot construct a valid object, throw an exception
 
 
-理由
+*理由*
 
-放任无效对象会导致麻烦的问题。
+放任无效对象一直存在，会导致麻烦的问题。
 
 
-例子
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class X2 {
@@ -44,8 +40,9 @@ void f()
 #+end_src
 
 
-错误例子
+*例子*
 
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class X3 {     // bad: the constructor leaves a non-valid object behind
     FILE* f;   // call is_valid() before any other function
@@ -80,28 +77,28 @@ void f()
 }
 #+end_src
 
-注意
+*注意*
 
 对于变量来说，不管是在栈上的还是某个对象的成员，都没法直接通过函数调用
 获取错误信息。如果有无效的对象，然后要倚靠用户使用前自己去调用
-is_invalid() 这样的函数进行有效性检查，很麻烦、容易出错、效率不高。
+~is_invalid()~ 这样的函数进行有效性检查，很麻烦、容易出错、效率不高。
 
 
-例外
+*例外*
 
 在某些领域，比如飞机控制等硬实时系统中，为了实时性，异常出错没有额外的
-工具支持，所以就必须使用 is_valid() 这样的技巧。这种情况下，及时的调用
-is_valid() 来模拟 RAII。
+工具支持，所以就必须使用 ~is_valid()~ 这样的技巧。这种情况下，及时的调
+用 ~is_valid()~ 来模拟 RAII。
 
 
-其他情况
+*其他选项*
 
 如果你有想法使用“构造后初始化”或“两级初始化”方法，请赶紧抹杀掉。如果你
 真的要这么做，请试试工厂函数方法。
 
 
-注意
+*注意*
 
-有人为了避免代码重复，用 init() 函数，而不在构造函数中进行初始化。把构
+有人为了避免代码重复，用 ~init()~ 函数，而不在构造函数中进行初始化。把构
 造过程交给成员的默认初始化会更好。还有人觉得应该延迟到对象使用的时候再
-初始化，这种情况的解决办法是不要声明变量，指导要用的时候再声明并初始化。
+初始化，这种情况的解决办法是不要声明变量，知道要用的时候再声明并初始化。
