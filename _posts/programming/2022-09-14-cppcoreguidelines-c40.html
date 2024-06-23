@@ -1,110 +1,101 @@
 ---
 layout: post
 title: CppCoreGuidelines C.40 如果类中有固定结构，为其定义一个构造函数
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Define a constructor if a class has an invariant&rdquo;
+C.40: Define a constructor if a class has an invariant
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-这是构造函数的目的。
+构造函数的目的就是为了建立类中数据的不变式约束条件。
 </p>
 
+
 <p>
-例如
+<b>例如</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">a Date represents a valid date</span>
-              <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">in the January 1, 1900 to December 31, 2100 range</span>
-    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">dd</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">mm</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">yy</span><span style="color: #7388d6;">)</span>
-        :d<span style="color: #7388d6;">{</span>dd<span style="color: #7388d6;">}</span>, m<span style="color: #7388d6;">{</span>mm<span style="color: #7388d6;">}</span>, y<span style="color: #7388d6;">{</span>yy<span style="color: #7388d6;">}</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Date</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// a Date represents a valid date</span>
+              <span style="color: #3F7F5F;">// in the January 1, 1900 to December 31, 2100 range</span>
+    <span style="color: #0000ff; font-weight: bold;">Date</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">dd</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">mm</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">yy</span><span style="color: #7388d6;">)</span>
+        :<span style="color: #110099; font-style: italic;">d</span><span style="color: #7388d6;">{</span>dd<span style="color: #7388d6;">}</span>, <span style="color: #110099; font-style: italic;">m</span><span style="color: #7388d6;">{</span>mm<span style="color: #7388d6;">}</span>, <span style="color: #110099; font-style: italic;">y</span><span style="color: #7388d6;">{</span>yy<span style="color: #7388d6;">}</span>
     <span style="color: #7388d6;">{</span>
-        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>!is_valid<span style="color: #709870;">(</span>d, m, y<span style="color: #709870;">)</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad_date<span style="color: #909183;">{}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">enforce invariant</span>
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span><span style="color: #7F0055; font-weight: bold;">!</span><span style="color: #3a5fcd; font-weight: bold;">is_valid</span><span style="color: #709870;">(</span>d, m, y<span style="color: #709870;">)</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bad_date</span><span style="color: #909183;">{}</span>;  <span style="color: #3F7F5F;">// enforce invariant</span>
     <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">private</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">d</span>, <span style="color: #000000;">m</span>, <span style="color: #000000;">y</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">d</span>, <span style="color: #000000; font-style: italic;">m</span>, <span style="color: #000000; font-style: italic;">y</span>;
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
-
 <p>
-最好通过构造函数来表达某种固定结构。
+最好通过构造函数来表达某种固定约束。
 </p>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-就算类中没有固定结构，为了使用方便，也会用到构造函数。
-</p>
-
-<p>
-例如
+就算类中没有固定约束，为了使用方便，也会用到构造函数。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span> <span style="color: #7388d6;">{</span>0<span style="color: #7388d6;">}</span>;
-    <span style="color: #0000ff; font-weight: bold;">Rec</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">ss</span><span style="color: #7388d6;">)</span> : s<span style="color: #7388d6;">{</span>ss<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
-    <span style="color: #0000ff; font-weight: bold;">Rec</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">ii</span><span style="color: #7388d6;">)</span> :i<span style="color: #7388d6;">{</span>ii<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">s</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">i</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">0</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #0000ff; font-weight: bold;">Rec</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">ss</span><span style="color: #7388d6;">)</span> : <span style="color: #110099; font-style: italic;">s</span><span style="color: #7388d6;">{</span>ss<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #0000ff; font-weight: bold;">Rec</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">ii</span><span style="color: #7388d6;">)</span> :<span style="color: #110099; font-style: italic;">i</span><span style="color: #7388d6;">{</span>ii<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span> <span style="color: #000000;">r1</span> <span style="color: #707183;">{</span>7<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span> <span style="color: #000000;">r1</span> <span style="color: #707183;">{</span><span style="color: #110099;">7</span><span style="color: #707183;">}</span>;
 <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span> <span style="color: #000000;">r2</span> <span style="color: #707183;">{</span><span style="color: #2A00FF;">"Foo bar"</span><span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-很多情况下，用了 C++11 的初始化列表，就不需要构造函数了。
-</p>
-
-<p>
-比如
+很多情况下，C++11 的初始化列表，可以减少构造函数。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec2</span><span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>;
-    <span style="color: #0000ff; font-weight: bold;">Rec2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">ss</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">ii</span> = 0<span style="color: #7388d6;">)</span> :s<span style="color: #7388d6;">{</span>ss<span style="color: #7388d6;">}</span>, i<span style="color: #7388d6;">{</span>ii<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">redundant</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec2</span><span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">s</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">i</span>;
+    <span style="color: #0000ff; font-weight: bold;">Rec2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">ss</span>, <span style="color: #7F0055; font-weight: bold;">int</span> ii <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span><span style="color: #7388d6;">)</span> :<span style="color: #110099; font-style: italic;">s</span><span style="color: #7388d6;">{</span>ss<span style="color: #7388d6;">}</span>, <span style="color: #110099; font-style: italic;">i</span><span style="color: #7388d6;">{</span>ii<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>   <span style="color: #3F7F5F;">// redundant</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Rec2</span> <span style="color: #000000;">r1</span> <span style="color: #707183;">{</span><span style="color: #2A00FF;">"Foo"</span>, 7<span style="color: #707183;">}</span>;
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Rec2</span> <span style="color: #000000;">r1</span> <span style="color: #707183;">{</span><span style="color: #2A00FF;">"Foo"</span>, <span style="color: #110099;">7</span><span style="color: #707183;">}</span>;
 <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec2</span> <span style="color: #000000;">r2</span> <span style="color: #707183;">{</span><span style="color: #2A00FF;">"Bar"</span><span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-Rec2 的构造函数就是多余的了。这个构造函数中 ii 的默认值，最好在成员定义的时候进行初始化。
+<code>Rec2</code> 的构造函数就是多余的了。这个构造函数中 <code>ii</code> 的默认值，最好在成员定义的时候进行初始化。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>标记那些有自定义的复制操作，却没有构造函数的类。自定义的复制造作意味着类中有某种固定结构。</li>

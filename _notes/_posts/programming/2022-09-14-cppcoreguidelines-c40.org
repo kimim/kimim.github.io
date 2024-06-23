@@ -1,22 +1,19 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.40 如果类中有固定结构，为其定义一个构造函数
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.40 如果类中有固定结构，为其定义一个构造函数
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Define a constructor if a class has an invariant"
+C.40: Define a constructor if a class has an invariant
 
 
-理由
+*理由*
 
-这是构造函数的目的。
+构造函数的目的就是为了建立类中数据的不变式约束条件。
 
-例如
+
+*例如*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class Date {  // a Date represents a valid date
@@ -32,15 +29,12 @@ private:
 };
 #+end_src
 
+最好通过构造函数来表达某种固定约束。
 
-最好通过构造函数来表达某种固定结构。
 
+*注意*
 
-注意
-
-就算类中没有固定结构，为了使用方便，也会用到构造函数。
-
-例如
+就算类中没有固定约束，为了使用方便，也会用到构造函数。
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 struct Rec {
@@ -55,11 +49,9 @@ Rec r2 {"Foo bar"};
 #+end_src
 
 
-注意
+*注意*
 
-很多情况下，用了 C++11 的初始化列表，就不需要构造函数了。
-
-比如
+很多情况下，C++11 的初始化列表，可以减少构造函数。
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 struct Rec2{
@@ -73,10 +65,10 @@ Rec2 r2 {"Bar"};
 #+end_src
 
 
-Rec2 的构造函数就是多余的了。这个构造函数中 ii 的默认值，最好在成员定
+~Rec2~ 的构造函数就是多余的了。这个构造函数中 ~ii~ 的默认值，最好在成员定
 义的时候进行初始化。
 
 
-强化
+*强化*
 - 标记那些有自定义的复制操作，却没有构造函数的类。自定义的复制造作意味
   着类中有某种固定结构。
