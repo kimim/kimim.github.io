@@ -1,37 +1,36 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.35 基类的析构函数须为public且virtual，或protected且非virtual
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.35 基类的析构函数须为public且virtual，或protected且非virtual
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"A base class destructor should be either public and virtual, or protected and non-virtual"
+C.35: A base class destructor should be either public and virtual, or
+protected and non-virtual
 
 
-理由
+*理由*
 
-为了避免未定义的行为。如果析构函数为public，则调用处的代码就可以通过基
-类对象的指针释放继承类对象。如果基类的析构函数不是virtual，这样操作的
-结果是未定义的。
+为了避免未定义的行为。如果析构函数为 ~public~ ，则调用处的代码就可以通过
+基类对象的指针释放继承类对象。如果基类的析构函数不是 ~virtual~ ，这样操
+作的结果是未定义的。
 
-如果基类的析构函数添加了 protected 修饰符，则调用处的代码无法通过继承
+如果基类的析构函数添加了 ~protected~ 修饰符，则调用处的代码无法通过继承
 类对象的基类的指针指向的析构函数销毁释放该对象。此时，基类的析构函数不
-必是 virtual 的，但必须是 protected，不能是 private。因为继承类中可以
-在其析构函数内调用基类的析构函数。
+必是 ~virtual~ 的，但必须是 ~protected~ ，不能是 ~private~ 。因为继承类中可
+以在其析构函数内调用基类的析构函数。
 
 一般来说，编写基类的程序员不需要知道析构过程中需要哪些具体操作，继承类
 必须处理好析构过程。
 
 
-错误例子
+*例子*
 
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 struct Base { // BAD: implicitly has a public non-virtual destructor
     virtual void f();
+    // 此处有一个隐藏的 public 且非 virtual 的析构函数
 };
 
 struct D : Base {
@@ -49,17 +48,18 @@ void use()
 #+end_src
 
 
-注意
+*注意*
 
 虚函数定义了一个接口，使用的时候，只需关注接口就可以了，不需要了解继承
 类的具体实现。如果析构函数是基类的接口，那么就要允许安全的进行释放销毁
 操作。
 
 
-注意
+*注意*
 
-析构函数不能为 private，不然会导致该对象无法使用：
+析构函数不能为 ~private~ ，不然会导致该对象无法使用：
 
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class X {
     ~X();   // private destructor
@@ -74,14 +74,14 @@ void use()
 #+end_src
 
 
-例外
+*例外*
 
-以下情况你可能需要 protected virtual 析构函数：一个继承的对象可以通
+以下情况你可能需要 ~protected virtual~ 析构函数：一个继承的对象可以通
 过基类指针释放另一对象。但是很少使用。
 
 
-强化
-- 一个类如果有虚函数，则必须定义 public 且 virtual 的析构函数，或者
-  protected 且非 virtual 的析构函数。
-- 如果类公开继承了一个基类，则基类必须有 public 且 virtual，或
-  protected 且非 virtual 的析构函数。
+*强化*
+- 一个类如果有虚函数，则必须定义 ~public~ 且 ~virtual~ 的析构函数，或者
+  ~protected~ 且非 ~virtual~ 的析构函数。
+- 如果类公开继承了一个基类，则基类必须有 ~public~ 且 ~virtual~ ，或
+  ~protected~ 且非 ~virtual~ 的析构函数。

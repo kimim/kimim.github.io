@@ -1,29 +1,29 @@
 ---
 layout: post
 title: CppCoreGuidelines C.35 基类的析构函数须为public且virtual，或protected且非virtual
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;A base class destructor should be either public and virtual, or protected and non-virtual&rdquo;
+C.35: A base class destructor should be either public and virtual, or
+protected and non-virtual
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-为了避免未定义的行为。如果析构函数为public，则调用处的代码就可以通过基类对象的指针释放继承类对象。如果基类的析构函数不是virtual，这样操作的结果是未定义的。
+为了避免未定义的行为。如果析构函数为 <code>public</code> ，则调用处的代码就可以通过基类对象的指针释放继承类对象。如果基类的析构函数不是 <code>virtual</code> ，这样操作的结果是未定义的。
 </p>
 
 <p>
-如果基类的析构函数添加了 protected 修饰符，则调用处的代码无法通过继承类对象的基类的指针指向的析构函数销毁释放该对象。此时，基类的析构函数不必是 virtual 的，但必须是 protected，不能是 private。因为继承类中可以在其析构函数内调用基类的析构函数。
+如果基类的析构函数添加了 <code>protected</code> 修饰符，则调用处的代码无法通过继承类对象的基类的指针指向的析构函数销毁释放该对象。此时，基类的析构函数不必是 <code>virtual</code> 的，但必须是 <code>protected</code> ，不能是 <code>private</code> 。因为继承类中可以在其析构函数内调用基类的析构函数。
 </p>
 
 <p>
@@ -32,32 +32,33 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-错误例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: implicitly has a public non-virtual destructor</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">()</span>;
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// BAD: implicitly has a public non-virtual destructor</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// &#27492;&#22788;&#26377;&#19968;&#20010;&#38544;&#34255;&#30340; public &#19988;&#38750; virtual &#30340;&#26512;&#26500;&#20989;&#25968;</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span> <span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"a resource needing cleanup"</span><span style="color: #7388d6;">}</span>;
-    ~<span style="color: #0000ff; font-weight: bold;">D</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* </span><span style="color: #3F7F5F;">... do some cleanup ...</span><span style="color: #3F7F5F;"> */</span> <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">s</span> <span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"a resource needing cleanup"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">~</span><span style="color: #110099;">D</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #3F7F5F;">/* ... do some cleanup ... */</span> <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span> = make_unique<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #7388d6;">&gt;()</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">p's destruction calls ~Base(), not ~D(),</span>
-  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">which leaks D::s and possibly more</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_unique</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// p's destruction calls ~Base(), not ~D(),</span>
+  <span style="color: #3F7F5F;">// which leaks D::s and possibly more</span>
 </pre>
 </div>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
@@ -66,43 +67,43 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-析构函数不能为 private，不然会导致该对象无法使用：
+析构函数不能为 <code>private</code> ，不然会导致该对象无法使用：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
-    ~<span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">private destructor</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">~</span><span style="color: #110099;">X</span><span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// private destructor</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">a</span>;                        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: cannot destroy</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = make_unique<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6;">&gt;()</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: cannot destroy</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">a</span>;                        <span style="color: #3F7F5F;">// error: cannot destroy</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_unique</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">()</span>;  <span style="color: #3F7F5F;">// error: cannot destroy</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 
 <p>
-例外
+<b>例外</b>
 </p>
 
 <p>
-以下情况你可能需要 protected virtual 析构函数：一个继承的对象可以通过基类指针释放另一对象。但是很少使用。
+以下情况你可能需要<code>protected virtual</code>析构函数：一个继承的对象可以通过基类指针释放另一对象。但是很少使用。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>一个类如果有虚函数，则必须定义 public 且 virtual 的析构函数，或者
-protected 且非 virtual 的析构函数。</li>
-<li>如果类公开继承了一个基类，则基类必须有 public 且 virtual，或
-protected 且非 virtual 的析构函数。</li>
+<li>一个类如果有虚函数，则必须定义 <code>public</code> 且 <code>virtual</code> 的析构函数，或者
+<code>protected</code> 且非 <code>virtual</code> 的析构函数。</li>
+<li>如果类公开继承了一个基类，则基类必须有 <code>public</code> 且 <code>virtual</code> ，或
+<code>protected</code> 且非 <code>virtual</code> 的析构函数。</li>
 </ul>
