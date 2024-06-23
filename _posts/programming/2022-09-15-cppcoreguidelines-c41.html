@@ -1,57 +1,55 @@
 ---
 layout: post
 title: CppCoreGuidelines C.41 构造函数须创建初始化完全的对象
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;A constructor should create a fully initialized object&rdquo;
+C.41: A constructor should create a fully initialized object
 </p>
 
 
 <p>
-理由
+<b>理由</b>
+</p>
+
+<p>
+构造函数在类中建立一种特定约束的不变式。必须允许类的用户认为构造好的对象就能正常地使用。
 </p>
 
 
 <p>
-构造函数在类中建立一种固定结构。类的用户必须可以认为构造好的对象是可以正常使用的。
-</p>
-
-
-<p>
-不好的例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X1</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">FILE</span>* <span style="color: #000000;">f</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">call init() before any other function</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X1</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">FILE</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">f</span>;   <span style="color: #3F7F5F;">// call init() before any other function</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
     <span style="color: #0000ff; font-weight: bold;">X1</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{}</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">init</span><span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">initialize f</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">read</span><span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">read from f</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">init</span><span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// initialize f</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">read</span><span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// read from f</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">X1</span> <span style="color: #000000;">file</span>;
-    file.read<span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">crash or bad read!</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    file.init<span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">too late</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    file.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">read</span><span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// crash or bad read!</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    file.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">init</span><span style="color: #7388d6;">()</span>;   <span style="color: #3F7F5F;">// too late</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-以上代码中， X1 构造完成后还需要调用 init 函数才完成成员的初始化，在这之前调用其他函数就出错了。
+以上代码中，我们构造了 <code>X1</code> 之后还需要调用它的 <code>init</code> 函数才完成其成员的初始化，在这之前调用其他函数就出错了。
 </p>
 
 <p>
@@ -60,7 +58,7 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-例外
+<b>例外</b>
 </p>
 
 <p>
@@ -69,17 +67,16 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>（简单）每一个构造函数都要能够完全初始化每一个成员变量（直接，间接调用其他构造函数，或默认构造函数）。</li>
-
-<li>如果构造函数有 Ensures 合约，请注意是否符合条件。</li>
+<li>如果构造函数有 <code>Ensures</code> 合约，注意其是否包含一个后置条件。</li>
 </ul>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>

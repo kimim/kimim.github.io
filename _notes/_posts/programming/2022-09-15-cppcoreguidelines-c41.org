@@ -1,26 +1,22 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.41 构造函数须创建初始化完全的对象
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.41 构造函数须创建初始化完全的对象
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"A constructor should create a fully initialized object"
+C.41: A constructor should create a fully initialized object
 
 
-理由
+*理由*
+
+构造函数在类中建立一种特定约束的不变式。必须允许类的用户认为构造好的对
+象就能正常地使用。
 
 
-构造函数在类中建立一种固定结构。类的用户必须可以认为构造好的对象是可以
-正常使用的。
+*例子*
 
-
-不好的例子
-
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class X1 {
     FILE* f;   // call init() before any other function
@@ -42,25 +38,24 @@ void f()
 }
 #+end_src
 
-以上代码中， X1 构造完成后还需要调用 init 函数才完成成员的初始化，在这
-之前调用其他函数就出错了。
+以上代码中，我们构造了 ~X1~ 之后还需要调用它的 ~init~ 函数才完成其成员的初
+始化，在这之前调用其他函数就出错了。
 
 请注意，编译器不会解析代码注释。
 
 
-例外
+*例外*
 
 如果某个对象不能很方便地通过构造函数初始化，就请使用工厂函数。
 
 
-强化
+*强化*
 - （简单）每一个构造函数都要能够完全初始化每一个成员变量（直接，间接调
   用其他构造函数，或默认构造函数）。
+- 如果构造函数有 ~Ensures~ 合约，注意其是否包含一个后置条件。
 
-- 如果构造函数有 Ensures 合约，请注意是否符合条件。
 
-
-注意
+*注意*
 
 如果构造函数需要一个资源来创建一个有效的对象。那么这个资源必须由析构函
 数释放。构造函数获取资源，析构函数释放资源就是所谓的 RAII（Resource
