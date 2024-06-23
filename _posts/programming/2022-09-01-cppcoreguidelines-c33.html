@@ -1,21 +1,20 @@
 ---
 layout: post
 title: CppCoreGuidelines C.33 如果类拥有指针成员的所有权，则须定义析构函数
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;If a class has an owning pointer member, define a destructor&rdquo;
+C.33: If a class has an owning pointer member, define a destructor
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
@@ -24,26 +23,26 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-举例
+<b>例子</b>
 </p>
 
 <p>
-指针成员代表着一个资源。不建议这样使用用 T*，但是在早期代码里，这种用法很常见。考虑到 T* 可能占有资源，以下代码就可能有问题了。
+指针成员代表着一个资源。不建议这样使用<code>T*</code>，但是在早期代码里，这种用法很常见。考虑到<code>T*</code>可能占有资源，以下代码就可能有问题了。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Smart_ptr</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">p</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: vague about ownership of *p</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">p</span>;   <span style="color: #3F7F5F;">// BAD: vague about ownership of *p</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no user-defined default operations ...</span>
+    <span style="color: #3F7F5F;">// ... no user-defined default operations ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Smart_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p1</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Smart_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">p1</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: p2.p leaked (if not nullptr and not owned by some other code)</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p2</span> = p1;
+    <span style="color: #3F7F5F;">// error: p2.p leaked (if not nullptr and not owned by some other code)</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">p1</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -53,48 +52,47 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Smart_ptr2</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">p</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: vague about ownership of *p</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">p</span>;   <span style="color: #3F7F5F;">// BAD: vague about ownership of *p</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no user-defined copy operations ...</span>
-    ~<span style="color: #0000ff; font-weight: bold;">Smart_ptr2</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">delete</span> p; <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">p is an owner!</span>
+    <span style="color: #3F7F5F;">// ... no user-defined copy operations ...</span>
+    <span style="color: #7F0055; font-weight: bold;">~</span>Smart_ptr2<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">delete</span> p; <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// p is an owner!</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Smart_ptr2</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p1</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Smart_ptr2</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">p1</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p2</span> = p1;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error: double deletion</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">p1</span>;   <span style="color: #3F7F5F;">// error: double deletion</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-默认的复制操作只会浅浅地将 <code>p1.p</code> 复制到 <code>p2.p</code> ，从而导致重复释放 <code>p1.p</code> 。注意以下代码中的所有权关系：
+默认的复制操作只会浅浅地将<code>p1.p</code>复制到<code>p2.p</code>，从而导致重复释放<code>p1.p</code>。注意以下代码中的所有权关系：
 </p>
 
-
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Smart_ptr3</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>*<span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: explicit about ownership of *p</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">owner</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000; font-style: italic;">p</span>;   <span style="color: #3F7F5F;">// OK: explicit about ownership of *p</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... copy and move operations ...</span>
-    ~<span style="color: #0000ff; font-weight: bold;">Smart_ptr3</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">delete</span> p; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #3F7F5F;">// ... copy and move operations ...</span>
+    <span style="color: #7F0055; font-weight: bold;">~</span>Smart_ptr3<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">delete</span> p; <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Smart_ptr3</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p1</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Smart_ptr3</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">p1</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p2</span> = p1;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: no double deletion</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">p1</span>;   <span style="color: #3F7F5F;">// OK: no double deletion</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
@@ -104,7 +102,7 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
@@ -113,9 +111,9 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>类中如果有指针成员数据，就要仔细检查下是否有问题</li>
-<li>类中如果有 <code>owner&lt;T*&gt;</code> 就必须定义其默认操作函数</li>
+<li>类中如果有<code>owner&lt;T*&gt;</code>就必须定义其默认操作函数</li>
 </ul>
