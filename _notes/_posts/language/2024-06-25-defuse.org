@@ -1,0 +1,31 @@
+#+LAYOUT: post
+#+TITLE: 单词本：defuse
+#+TAGS: English
+#+CATEGORIES: language
+
+最近上下班路上听 World Today，英语口语水平确实提升不少呀。今天下班路上
+听了 2024-06-24 的新闻，说德国副总理出访中国，来缓和贸易紧张状态：
+
+Can German Vice Chancellor Habeck's China trip help *defuse* trade tensions?  
+
+这里用了 *defuse* 缓解、缓和、平息。
+
+这个词的本意是拆除炸弹的引信，也就能避免炸弹爆炸了。de- 的意思就是离开、
+拆开、拿开的开，而 fuse 则是保险丝，也是炸弹上面的引信。因为 fuse 本来
+是溶解的意思，而以前的炸弹，包括烟花，都是在细细的纸管里放进流动状的火
+药。导火索或引信由此而得名。
+
+所以，defuse 从熄灭炸弹，引申为平息缓和矛盾。
+
+德语翻译 entschärfen。ent- 就是英语的 de- 去除，而 scharf 是热、辣、锋
+利 sharp，合起来就是去除热辣锋利，反话正说就是平息矛盾了。
+
+eine Bombe entschärfen = defuse a bomb.
+
+ein Problem entschärfen = to alleviate a problem
+
+die menschlichen Konflikte wurden durch die Inszenierung entschärft 通
+过进步化解人类的矛盾
+
+World Today 主持人刘琨的口语真好听啊。不知道是不是这么写，反正她说的是
+I'm Liu Kun in Beijing.
