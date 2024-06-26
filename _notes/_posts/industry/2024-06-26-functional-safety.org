@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       4078B9F4-D07D-4FE1-9C00-970604B77333
+:END:
 #+LAYOUT: post
 #+TITLE: 功能安全的价值和出现
 #+TAGS: Safety
