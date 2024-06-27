@@ -1,0 +1,45 @@
+#+LAYOUT: post
+#+TITLE: 单词本：imbue
+#+TAGS: English
+#+CATEGORIES: language
+
+据说 Rust 比 C++ 安全，所以就看看 Rust 怎么安全了。
+
+在 cpp to rust book：
+
+C++ first appeared in 1983 as C with classes. It was invented by
+Bjarne Stroustrop as a way to *imbue* C with Simula-like object-oriented
+features.
+
+这里介绍的是 C++ 的历史，说是 Bjarn 在 C 中 *imbue* 了 Simula 风格的面向
+对象编程功能。
+
+*imbue* 的意思是充满、浸透、感染的意思。显然，引文用的是它的引申意思。
+
+*imbue* 一般会和 with 一起使用。
+
+*imbue* 来自拉丁语单词 *imbuere* 打湿。
+
+This is a work *imbued* with the revolutionary spirit. 这是一份充满了革
+新精神的工作。
+
+His poetry is *imbued* with deep, religious feeling. 他的诗歌充满了深沉
+的宗教感情。
+
+She aims to *imbue* her liquors with the identity of Jeju, and the brand
+name Jeju Gott Batt embodies Ha's vision for a "Jeju Botanical
+Brewery." [fn:1] 韩国济州岛的 Ha Min-ju 在她的酒中注入济州岛的味道。估计
+是橘子的味道。
+
+另一个单词 *imbibe* 饮酒，引申意为吸收、接受知识。来自拉丁语 *imbibere* 可
+能和 *imbuere* 有关。
+
+She *imbibed* vast quantities of coffee. 她喝了大量咖啡。以前，我也一天
+喝两三杯。后来觉得咖啡对肠胃刺激太大，也就不喝了。最近听说公司的咖啡机
+内部因为潮湿发霉严重，暗自庆幸……
+
+*imbibe* moral principles 接受道德原则。这里用了 *imbibe* 的引申义。
+
+[fn:1] INTERVIEW: Jeju's botanical brewer Ha Min-ju turns local produce
+into unique spirits
+https://www.koreatimes.co.kr/www/art/2024/06/141_377420.html
