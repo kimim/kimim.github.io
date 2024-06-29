@@ -1,0 +1,24 @@
+#+LAYOUT: post
+#+TITLE: 单词本：rocket science
+#+TAGS: English
+#+CATEGORIES: language
+
+上周一周都在跟瑞典退休老专家学功能安全。功能安全老专家很喜欢说 it not
+*rocket science*. 这不是火箭科学。确实，在功能安全领域，很多失效数据的估
+计，并没有彻底的数学公式支撑，所以，不能算得上 *rocket science* 。
+
+所谓 *rocket science* 就是 the science of designing or building rockets，
+引申意为 something that is very difficult to learn or understand The
+job is challenging, but it's not exactly rocket science.
+
+比如：My coach always said, "Basketball is not *rocket science*. It's
+about putting the ball in the basket."
+
+其他相似的表达：
+
+Learning German, it's *not like brain surgery*.
+
+There is no challenge in this racing game, it's *a walk in the park*.
+
+Learning how to ride a bike is *a piece of cake*, it just takes a little
+practice.
