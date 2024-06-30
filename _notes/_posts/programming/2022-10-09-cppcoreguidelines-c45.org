@@ -1,24 +1,21 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.45 如果只是初始化数据成员变量，不需要定义默认构造函数，用类内成员初始式即可
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.45 如果只是初始化数据成员变量，不需要定义默认构造函数，用类内成员初始式即可
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Don't define a default constructor that only initializes data
-members; use in-class member initializers instead"
+C.45: Don't define a default constructor that only initializes data
+members; use default member initializers instead
 
-理由
+*理由*
 
 使用类内成员初始式（member initializer）可以让编译器自动生成函数。编译
 器生成的函数效率更好。
 
-错误例子
+*例子*
 
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class X1 { // BAD: doesn't use member initializers
     string s;
@@ -30,7 +27,7 @@ public:
 #+end_src
 
 
-例子
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class X2 {
