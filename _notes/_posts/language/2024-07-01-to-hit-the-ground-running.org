@@ -1,0 +1,32 @@
+#+LAYOUT: post
+#+TITLE: 单词本：to hit the ground running
+#+TAGS: English
+#+CATEGORIES: language
+
+上次讲过，最近在做信息安全的培训PPT，学习哈佛商业评论的PPT制作课程时，
+遇到过在[[id:A64947B3-8F21-4216-BF0A-287A48613265][flesh out]]这个词。后面课程也提到，如何给演讲给个好头：
+
+First up is your opening - how are you going to start your
+presentation?  Here, Kevin Friesen, director of academy at Duarte,
+breaks down the best way *to hit the ground running*.
+
+这里用了一个习惯用语 *to hit the ground running* ，字面看好像是把大地打
+跑起来。实际意思是一举成功。
+
+比如：She studied the reports over the weekend so she could *hit the
+ground running* when the meeting began. 她在周末学习报告，这样就能在会
+议开始的时候一举成功。
+
+The Hire Firm 咨询网站的 Silas Peterson 写过一篇文章[fn:1]，给出了一些建议，
+如何在新任岗位上一举成功。文章标题为《5 Steps to Hit the Ground
+Running in Your New Role》。大概步骤如下：
+1. Prepare for a Professional Impression 给人留下一个专业工作者的初步印象
+2. Be Ready to Absorb Knowledge 随时准备快速吸收知识
+3. Get to Know People 快速熟悉工作相关的同事
+4. Observe the Culture 观察了解企业文化，做事风格
+5. Focus on Adding Value 专注于为企业、老板和同事带来新的价值
+
+* Footnotes
+
+[fn:1] 5 Steps to Hit the Ground Running in Your New Role
+https://www.thehirefirm.com/2024/06/26/5-steps-to-hit-the-ground-running-in-your-new-role/
