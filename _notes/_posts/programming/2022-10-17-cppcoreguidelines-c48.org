@@ -1,22 +1,23 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.48 对于初始化为常量的成员，用类内成员初始化方法
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.48 对于初始化为常量的成员，用类内成员初始化方法
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Prefer in-class initializers to member initializers in constructors for constant initializers"
+C.48: Prefer default member initializers to member initializers in
+constructors for constant initializers
 
-理由
 
-这样可以明确所有构造函数中都用一样的值初始化成员变量。避免重复，减少维护问题。代码更短更高效。
+*理由*
 
-错误例子
+这样可以明确表示：所有构造函数中都用一样的值初始化成员变量。可以避免重
+复，减少代码维护时候遇到的问题，使得代码更短更高效。
 
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results raw
 class X {   // BAD
 public:
@@ -37,11 +38,12 @@ cout << x2.i << "\t" << x2.s << "\t" << x2.j << endl;
 666	qqq	66
 11		24
 
-后期维护代码的人怎么会知道你是故意不初始化 j 还是因为其他什么原因？是
-有意赋值给 s 一个默认的空字符串吗？那 qqq 是不是一个 bug？像 j 这样的
-没初始化的变量往往是后期修改代码的时候增加了变量，却漏掉添加到初始化列
-表里。
+后期维护代码的人怎么会知道你是故意不把 ~j~ 初始化，还是因为其他什么原因？
+是有意给 ~s~ 赋值一个默认的空字符串吗？那 ~qqq~ 是不是一个 ~bug~ ？像 ~j~ 这样
+的没初始化的变量往往是后期修改代码的时候增加了变量，变量虽然增加了，却
+忘记把它添加到初始化列表里。
 
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results raw
 class X2 {
@@ -61,10 +63,13 @@ cout << x.i << ", " << x.s << ", " << x.j;
 111, qqq, 0
 
 
-另外，我们也可以通过设定构造函数的默认参数的地方那个是来指定默认初始值。
-这在老代码中比较常见。但是这样会导致传递的参数比较多，而且如果要增加一
-个构造函数，还要重复这些参数列表。
+*其他选项*
 
+我们也可以通过设定构造函数的默认参数来明确默认的初始值。这在老代码中比
+较常见。但是这样做，会导致传递的参数过多，而且如果要增加一个新的构造函
+数，还要重复这些参数列表。
+
+#+attr_html: :class bad
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 class X3 {   // BAD: inexplicit, argument passing overhead
 public:
@@ -83,7 +88,8 @@ cout << x.i;
 #+RESULTS:
 : 666
 
-强化
-- （简单）每个构造函数都要能够初始化所有的成员变量，通过执行构造函数体
-  或者默认构造函数。
-- （简单）类内的成员变量初始化比构造函数的默认参数更好。
+
+*强化*
+- （简单）每个构造函数都要能够通过执行构造函数体或者默认构造函数，初始
+  化所有的成员变量。
+- （简单）使用类内的成员变量初始值比构造函数的默认参数更好。
