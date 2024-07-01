@@ -1,0 +1,330 @@
+#+LAYOUT: post
+#+TITLE: babashka 函数库之路径判断函数
+#+TAGS: programming
+#+CATEGORIES: productivity
+
+之前介绍过[[id:8D27FCBF-6919-4067-B556-5142F0849CE0][babashka - 有趣又便捷巴布什卡头巾]]，用 clojure 处理脚本任务方
+便又快捷，还有很多上手能用的内置函数库可以用。
+
+我们对文件进行操作之前，可能会确定文件的属性，根据某些属性进行过滤，然
+后针对过滤出来的文件进行操作。babashka 的 filesystem 内置库提供了属性
+的断言函数和属性的查询函数。
+
+首先，按照惯例，先引入 fs 内置库，设置几个测试路径：
+
+#+name: test-paths
+#+begin_src bb :exports both :eval no-export
+(require '[babashka.fs :as fs])
+(def test-paths
+  ["."  ;; 相对路径
+   ".." ;; 相对路径，隐藏文件
+   "bb" ;; 可执行文件，不可写
+   "nbb" ;; 不存在的文件
+   "nbbs/" ;; 不存在的文件夹
+   "babashka-fs.org" ;; 本文，文本文件
+   "/"  ;; 根目录
+   "/usr/bin/vim"
+   "/Users/kimim/babashka" ;; 本文上层目录
+   "/Users/kimim/babashka/babashka-fs.org" ;; 本文绝对路径
+   "/opt/homebrew/bin/bb" ;; bb 的符号链接文件，可执行
+   "/opt/homebrew/bin/../bin/bb" ;; bb 的符号链接文件，可执行
+   ])
+(defn doseq-test [func]
+  (doseq [path test-paths]
+    (print (str "\"" path "\":")
+           (func path) "\n")))
+#+end_src
+
+~fs/windows?~ 断言函数和文件无关，用来判断当前操作系统是否 Windows ，因
+为 Windows 的文件操作和遵循 posix 的 macOS 和 Linux 差别显著，所以单独
+有 ~fs/windows?~ 这一断言函数。
+
+因为当前我在 macOS 下编辑本文，显然返回值为 ~false~ 。
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+(fs/windows?)
+#+end_src
+
+#+RESULTS:
+: false
+
+~uname~ 查询结果如下：
+
+#+begin_src shell :exports both
+uname -mo
+#+end_src
+
+#+RESULTS:
+: Darwin arm64
+
+~fs/exists?~ 判断文件或者文件夹是否存在。
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(doseq-test fs/exists?)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+".": true 
+"..": true 
+"bb": true 
+"nbb": false 
+"nbbs/": false 
+"babashka-fs.org": true 
+"/": true 
+"/usr/bin/vim": true 
+"/Users/kimim/babashka": true 
+"/Users/kimim/babashka/babashka-fs.org": true 
+"/opt/homebrew/bin/bb": true 
+"/opt/homebrew/bin/../bin/bb": true
+#+end_example
+
+当前目录没有 nbb 和 nbbs 所以返回结果为 ~false~ 。
+
+~fs/absolute?~ 判断路径是否为绝对路径。
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(doseq-test fs/absolute?)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+".": false 
+"..": false 
+"bb": false 
+"nbb": false 
+"nbbs/": false 
+"babashka-fs.org": false 
+"/": true 
+"/usr/bin/vim": true 
+"/Users/kimim/babashka": true 
+"/Users/kimim/babashka/babashka-fs.org": true 
+"/opt/homebrew/bin/bb": true 
+"/opt/homebrew/bin/../bin/bb": true
+#+end_example
+
+只有从根目录 ~/~ 开始的路径为绝对路径。
+
+相反的， ~fs/relative?~ 判断是否相对路径：
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(doseq-test fs/relative?)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+".": true 
+"..": true 
+"bb": true 
+"nbb": true 
+"nbbs/": true 
+"babashka-fs.org": true 
+"/": false 
+"/usr/bin/vim": false 
+"/Users/kimim/babashka": false 
+"/Users/kimim/babashka/babashka-fs.org": false 
+"/opt/homebrew/bin/bb": false 
+"/opt/homebrew/bin/../bin/bb": false
+#+end_example
+
+~fs/directory?~  判断路径是否为文件夹：
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(doseq-test fs/directory?)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+".": true 
+"..": true 
+"bb": false 
+"nbb": false 
+"nbbs/": false 
+"babashka-fs.org": false 
+"/": true 
+"/usr/bin/vim": false 
+"/Users/kimim/babashka": true 
+"/Users/kimim/babashka/babashka-fs.org": false 
+"/opt/homebrew/bin/bb": false 
+"/opt/homebrew/bin/../bin/bb": false
+#+end_example
+
+不存在的文件，当然也就不是文件夹了。
+
+~fs/executable?~ 判断是否可执行。
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(doseq-test fs/executable?)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+".": true 
+"..": true 
+"bb": true 
+"nbb": false 
+"nbbs/": false 
+"babashka-fs.org": false 
+"/": true 
+"/usr/bin/vim": true 
+"/Users/kimim/babashka": true 
+"/Users/kimim/babashka/babashka-fs.org": false 
+"/opt/homebrew/bin/bb": true 
+"/opt/homebrew/bin/../bin/bb": true
+#+end_example
+
+~fs/writable?~ 判断是否可写：
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(doseq-test fs/writable?)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+".": true 
+"..": true 
+"bb": false 
+"nbb": false 
+"nbbs/": false 
+"babashka-fs.org": true 
+"/": false 
+"/usr/bin/vim": false 
+"/Users/kimim/babashka": true 
+"/Users/kimim/babashka/babashka-fs.org": true 
+"/opt/homebrew/bin/bb": false 
+"/opt/homebrew/bin/../bin/bb": false
+#+end_example
+
+不存在的文件不可写，可执行文件也不可写。
+
+~fs/hidden?~ 判断路径是否隐藏。
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(doseq-test fs/hidden?)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+".": true 
+"..": true 
+"bb": false 
+"nbb": false 
+"nbbs/": false 
+"babashka-fs.org": false 
+"/": false 
+"/usr/bin/vim": false 
+"/Users/kimim/babashka": false 
+"/Users/kimim/babashka/babashka-fs.org": false 
+"/opt/homebrew/bin/bb": false 
+"/opt/homebrew/bin/../bin/bb": false
+#+end_example
+
+不存在的文件无法判断是否隐藏，所以也是返回 ~false~
+
+~fs/sym-link?~ 判断是否为符号链接。
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(doseq-test fs/sym-link?)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+".": false 
+"..": false 
+"bb": false 
+"nbb": false 
+"nbbs/": false 
+"babashka-fs.org": false 
+"/": false 
+"/usr/bin/vim": false 
+"/Users/kimim/babashka": false 
+"/Users/kimim/babashka/babashka-fs.org": false 
+"/opt/homebrew/bin/bb": true 
+"/opt/homebrew/bin/../bin/bb": true
+#+end_example
+
+只有 ~/opt/homebrew/bin/bb~ 是符号链接：
+
+#+begin_src shell :exports both
+ls -l /opt/homebrew/bin/bb
+#+end_src
+
+#+RESULTS:
+: lrwxr-xr-x  1 kimim  admin  33 Jul  1 10:25 /opt/homebrew/bin/bb -> ../Cellar/babashka/1.3.191/bin/bb
+
+~fs/starts-with?~ 判断路径的前序是否为某路径。
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(fs/starts-with? "/opt/homebrew/bin/bb" "/opt")
+#+end_src
+
+#+RESULTS:
+: true
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(fs/starts-with? "/opt/homebrew/bin/bb" "/ops")
+#+end_src
+
+#+RESULTS:
+: false
+
+~fs/ends-with?~ 判断路径是否以某路径结束。
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(fs/ends-with? "/opt/homebrew/bin/bb" "bin/bb")
+#+end_src
+
+#+RESULTS:
+: true
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(fs/ends-with? "/opt/homebrew/bin/bb" "in/bb")
+#+end_src
+
+#+RESULTS:
+: false
+
+最后， ~fs/same-file?~ 用以判断两路径是否为同一个文件。
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(fs/same-file? "/opt/homebrew/bin/bb" "bb")
+#+end_src
+
+#+RESULTS:
+: false
+
+系统目录中的 ~bb~ 和当前目录的 ~bb~ 不是同一个文件。尽管 ~bb~ 是
+~/opt/homebrew/bin/bb~ 的一个副本。
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(fs/same-file? "/Users/kimim/babashka/bb" "bb")
+#+end_src
+
+#+RESULTS:
+: true
+
+相对路径和绝对路径
+
+#+begin_src bb :noweb strip-export :exports both :eval no-export
+<<test-paths>>
+(fs/same-file? "/opt/homebrew/bin/bb" "/opt/homebrew/Cellar/babashka/1.3.191/bin/bb")
+#+end_src
+
+#+RESULTS:
+: true
+
+符号链接和所指向的文件是同一个文件。
