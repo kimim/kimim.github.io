@@ -1,42 +1,41 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.49 在构造函数中进行初始化操作，不要进行赋值操作
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.49 在构造函数中进行初始化操作，不要进行赋值操作
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Prefer initialization to assignment in constructors"
+C.49: Prefer initialization to assignment in constructors
 
-理由
 
-所谓初始化，就是要进行初始化，而不是赋值。初始化操作更优雅，效率更高。
-可以防止设置之前使用（use before set）之类的错误。
+*理由*
 
-好例子
+所谓初始化，就是要设置初始值，而不是进行赋值。初始化操作更优雅，效率更
+高。可以防止值确定之前被误用之类的错误。
+
+
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> <string> :eval no-export
 class A {   // Good
     string s1;
   public:
-    A(czstring p) : s1{p} { }    // GOOD: directly construct (and the C-string is explicitly named)
+    A(czstring p) : s1{p} { }
+    // GOOD: directly construct (and the C-string is explicitly named)
     // ...
 };
 #+end_src
 
-#+RESULTS:
 
+*例子*
 
-坏例子
-
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class B {   // BAD
     string s1;
 public:
-    B(const char* p) { s1 = p; }   // BAD: default constructor followed by assignment
+    B(const char* p) { s1 = p; }
+    // BAD: default constructor followed by assignment
     // ...
 };
 
@@ -48,10 +47,10 @@ public:
 };
 #+end_src
 
-更好地例子
+*例子*
 
 这里我们不用 ~const char* s~ 我们用 C++17 中的 ~std::string_view~ 或
-~gsl::span<char>~ 做函数的参数：
+~gsl::span<char>~ 做函数的参数。
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class D {   // Good
