@@ -1,22 +1,21 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.51 把类里通用的构造部分放到一个共用构造函数里
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.51 把类里通用的构造部分放到一个共用构造函数里
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Use delegating constructors to represent common actions for all constructors of a class"
+C.51: Use delegating constructors to represent common actions for all constructors of a class
 
-理由
 
-避免重复和无意导致的差异。
+*理由*
 
-坏例子
+避免重复和不小心编写导致的差异。
 
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class Date {   // BAD: repetitive
     int d;
@@ -36,7 +35,7 @@ public:
 
 重复相同的动作繁琐又容易出错。
 
-例子
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class Date2 {
@@ -54,11 +53,12 @@ public:
 };
 #+end_src
 
-Data2 中第二个构造函数调用第一个构造函数做一些共用的初始化过程。
+*Data2* 中第二个构造函数调用第一个构造函数做一些共用的初始化过程。
 
 
-See also: 如果重复动作只是简单的初始化，可以考虑类中的成员初始化。
+如果重复动作只是简单的初始化，可以考虑类成员的默认初始化值。
 
 
-强化
+*强化*
+
 - 查找构造函数体内相似的部分
