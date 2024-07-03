@@ -1,21 +1,20 @@
 ---
 layout: post
 title: CppCoreGuidelines C.52 用继承的构造函数为子类导入构造函数，从而无需重复初始化成员变量
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Use inheriting constructors to import constructors into a derived class that does not need further explicit initialization&rdquo;
+C.52: Use inheriting constructors to import constructors into a derived class that does not need further explicit initialization
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
@@ -24,7 +23,7 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <p>
@@ -32,38 +31,39 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span> <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... data and lots of nice constructors ...</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span> <span style="color: #707183;">{</span>
+    <span style="color: #3F7F5F;">// ... data and lots of nice constructors ...</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Oper</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span> <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #110099;">Rec</span>::Rec;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no data members ...</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... lots of nice utility functions ...</span>
+    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span>::Rec;
+    <span style="color: #3F7F5F;">// ... no data members ...</span>
+    <span style="color: #3F7F5F;">// ... lots of nice utility functions ...</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-坏例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec2</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
-    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #110099;">Rec</span>::Rec;
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec2</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">x</span>;
+    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Rec</span>::Rec;
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Rec2</span> <span style="color: #000000;">r</span> <span style="color: #707183;">{</span><span style="color: #2A00FF;">"foo"</span>, 7<span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">val</span> = r.x;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">uninitialized</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Rec2</span> <span style="color: #000000;">r</span> <span style="color: #707183;">{</span><span style="color: #2A00FF;">"foo"</span>, <span style="color: #110099;">7</span><span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">val</span> <span style="color: #7F0055; font-weight: bold;">=</span> r.<span style="color: #110099; font-style: italic;">x</span>;   <span style="color: #3F7F5F;">// uninitialized</span>
 </pre>
 </div>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
+
 <ul class="org-ul">
 <li>确保继承类中的每个成员都初始化过。</li>
 </ul>
