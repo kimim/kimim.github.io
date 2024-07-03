@@ -31,7 +31,8 @@ categories 。
 - 工作经验
 - 收入水平
 - 宗教信仰 Religious beliefs 
-- 婚姻状况 Marital status
+- 婚姻状况 Marital status。marital 源自拉丁语 maritus，意思是丈夫
+  Husband。
 - 生育情况 Parental status
 - 个人行为风格 personal style
 - 等等
