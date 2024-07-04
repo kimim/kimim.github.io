@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       E2092812-E43C-4772-A899-F7F610C31388
+:END:
 #+LAYOUT: post
 #+TITLE: 单词本：zuversichtlich
 #+TAGS: Deutsch
