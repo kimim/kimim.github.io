@@ -1,92 +1,94 @@
 ---
 layout: post
-title: CppCoreGuidelines C.60 拷贝赋值/复制赋值函数应为非虚的，并接受 const& 参数，返回非 const& 结果
-categories: [technology]
+title: CppCoreGuidelines C.60 拷贝赋值/复制赋值不可为虚，且以 const& 为参数，以 非 const& 为结果
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Make copy assignment non-virtual, take the parameter by const&amp;, and return by non-const&amp;&rdquo;
+C.60: Make copy assignment non-<code>virtual</code>, take the parameter by <code>const&amp;</code>,
+and return by non-<code>const&amp;</code>
+</p>
+
+
+<p>
+<b>理由</b>
 </p>
 
 <p>
-理由
+如此操作，简单高效。如想针对右值进行优化，可提供一个重载的函数，接受一个<code>&amp;&amp;</code>右值引用作为参数。
 </p>
 
-<p>
-如此操作，简单高效。如想针对 rvalue 右值进行优化，可提供一个重载的函数，接受一个 &amp;&amp; 右值引用作为参数。
-</p>
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span>
     <span style="color: #7388d6;">{</span>
-        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">GOOD: no need to check for self-assignment (other than performance)</span>
-        <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">tmp</span> = x;
-        swap<span style="color: #909183;">(</span>tmp<span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">see C.83</span>
-        <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+        <span style="color: #3F7F5F;">// GOOD: no need to check for self-assignment (other than performance)</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">tmp</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">x</span>;
+        <span style="color: #3a5fcd; font-weight: bold;">swap</span><span style="color: #909183;">(</span>tmp<span style="color: #909183;">)</span>; <span style="color: #3F7F5F;">// see C.83</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">this</span>;
     <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #000000;">a</span>;
 <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #000000;">b</span>;
 <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>;
 
-a = b;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assign lvalue: copy</span>
-a = f<span style="color: #707183;">()</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assign rvalue: potentially move</span>
+<span style="color: #000000;">a</span> <span style="color: #7F0055; font-weight: bold;">=</span> b;    <span style="color: #3F7F5F;">// assign lvalue: copy</span>
+<span style="color: #000000;">a</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #707183;">()</span>;  <span style="color: #3F7F5F;">// assign rvalue: potentially move</span>
 </pre>
 </div>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-swap 实现技术提供有效保障。
+<code>swap</code> 实现技术提供有效保障。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <p>
-但是，如果你想要避免临时副本，获取更好的性能。考虑一个简单的 Vector 情况，包含元素比较多，且大小一样的 Vector 之间赋值的情况就比较常见。这种情况，用 swap 实现就会导致比较大的性能开销。
+但是，如果你想要避免临时副本，获取更好的性能。考虑一个简单的 <code>Vector</code> 情况，包含元素比较多，且大小一样的 <code>Vector</code> 之间赋值的情况就比较常见。这种情况，用 <code>swap</code> 实现就会导致比较大的性能开销。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span>&amp;<span style="color: #7388d6;">)</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">private</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">elem</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sz</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">elem</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">sz</span>;
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span>&amp; <span style="color: #110099;">Vector</span>::<span style="color: #7F0055; font-weight: bold;">operator</span>=<span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span>&amp; <span style="color: #000000;">a</span><span style="color: #707183;">)</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span>::<span style="color: #0000ff; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>a.sz &gt; sz<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... use the swap technique, it can't be bettered ...</span>
-        <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>a.<span style="color: #110099; font-style: italic;">sz</span> <span style="color: #7F0055; font-weight: bold;">&gt;</span> sz<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// ... use the swap technique, it can't be bettered ...</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">this</span>;
     <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... copy sz elements from *a.elem to elem ...</span>
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>a.sz &lt; sz<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... destroy the surplus elements in *this and adjust size ...</span>
+    <span style="color: #3F7F5F;">// ... copy sz elements from *a.elem to elem ...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>a.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">sz</span> <span style="color: #7F0055; font-weight: bold;">&lt;</span> sz<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// ... destroy the surplus elements in *this and adjust size ...</span>
     <span style="color: #7388d6;">}</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">this</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -97,19 +99,20 @@ swap 实现技术提供有效保障。
 
 
 <p>
-其他选项：
+<b>其他选项</b>
 </p>
 
 <p>
-如果你需要一个虚的赋值操作符，但是明白可能有深层次的问题，那可以不称之为 <code>operator=</code> ，而取名为 <code>virtual void assign(const Foo&amp;)</code>
+如果你需要一个虚的赋值操作符，但是明白可能有深层次的问题，那可以不叫它为<code>operator=</code>，而取名为 <code>virtual void assign(const Foo&amp;)</code>
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>（简单）赋值操作符必须是 virtual 的。小心恶龙。</li>
-<li>（简单）赋值操作符要返回 T&amp;，从而可以串接起来使用。不要用 const T&amp;，这样会影响代码编排以及把对象放入容器。</li>
+<li>（简单）赋值操作符必须不能是 <code>virtual</code> 的。小心恶龙出没。</li>
+<li>（简单）赋值操作符要返回<code>T&amp;</code>，从而可以串接起来使用。不要用 <code>const T&amp;</code>
+，这样会影响代码编排，无法把对象放入容器。</li>
 <li>（中等难度）赋值操作符应该（隐式或显示）地调用基类和成员的赋值操作符。查看析构函数确定类型是否有指针语义或值语义。</li>
 </ul>
