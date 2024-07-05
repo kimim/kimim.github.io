@@ -1,26 +1,22 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.63 移动赋值操做不能是虚的，接收 && 参数，返回非常量引用&
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.63 移动赋值操做不能是虚的，接收 && 参数，返回引用变量
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Make move assignment non-virtual, take the parameter by &&, and return by non-const&"
+C.63: Make move assignment non-~virtual~, take the parameter by ~&&~, and return by non-~const&~
 
-理由
+*理由*
 
 简单又高效。
 
 
-强化
+*强化*
 
-这样操作就和拷贝赋值操作一样对对齐了。
-- （简单）赋值操作不能是虚的，此处有恶龙！
-- （简单）赋值操作应该返回 T&，从而可以串联起来调用。不要返回 const T&，
+这样操作就和拷贝赋值操作对齐了。
+- （简单）赋值操作不能是虚函数，此处有恶龙出没！
+- （简单）赋值操作应该返回 ~T&~ ，从而可以串联起来调用。不要返回 ~const T&~ ，
   这样的话，串联操作、把对象放入容器的操作就会收到影响。
 - （中等难度）移动操作应该（隐式或显式）地调用其基类和成员变量的移动操
   作。
