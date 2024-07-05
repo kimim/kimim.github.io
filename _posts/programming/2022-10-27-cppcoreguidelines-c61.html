@@ -1,113 +1,113 @@
 ---
 layout: post
 title: CppCoreGuidelines C.61 赋值拷贝操作须拷贝
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;A copy operation should copy&rdquo;
+C.61: A copy operation should copy
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-这条指南讲的是一般人们使用时所假定的语义。在进行 <code>x = y</code> 操作后，我们得到结果 <code>x == y</code>
+这条指南讲的是一般人们使用时所假定的语义。在进行<code>x = y</code>操作后，我们得到结果 <code>x == y</code>
 </p>
 
 <p>
-在赋值拷贝操作之后， <code>x</code> 和 <code>y</code> 应该是独立的对象（数值语义，非指针的内置类型和标准库类型的工作方式），或者， <code>x</code> 和 <code>y</code> 指向一个共享的对象（指针语义，指针的工作方式）。
+在赋值拷贝操作之后， <code>x</code> 和 <code>y</code> 应该是独立的对象（值类型，非指针的内置类型和标准库类型的工作方式），或者， <code>x</code> 和 <code>y</code> 指向一个共享的对象（指针类型，指针的工作方式）。
 </p>
 
+
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>;
-<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bad</span> = <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span>;
-<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: value semantics</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">int</span>;
+<span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bad</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">int</span>;
+<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// OK: value semantics</span>
   <span style="color: #7F0055; font-weight: bold;">public</span>:
     <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{}</span>;
-    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp;<span style="color: #7388d6;">)</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy X</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">copy</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">src</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">src_end</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">dst</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{}</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">modify</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">change the value of X</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    ~<span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">delete</span><span style="color: #909183;">[]</span> p; <span style="color: #7388d6;">}</span>;
-    <span style="color: #7F0055; font-weight: bold;">friend</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">b</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #7388d6;">)</span>;     <span style="color: #3F7F5F;">// copy X</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">copy</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">src</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">src_end</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">dst</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{}</span>;
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">modify</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{}</span>;   <span style="color: #3F7F5F;">// change the value of X</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">~</span><span style="color: #110099;">X</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">delete</span><span style="color: #909183;">[]</span> p; <span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">friend</span> <span style="color: #7F0055; font-weight: bold;">bool</span> operator<span style="color: #7F0055; font-weight: bold;">==</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">b</span><span style="color: #7388d6;">)</span>;
   <span style="color: #7F0055; font-weight: bold;">private</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">p</span><span style="color: #7388d6;">{}</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sz</span><span style="color: #7388d6;">{}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">p</span><span style="color: #7388d6;">{}</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">sz</span><span style="color: #7388d6;">{}</span>;
 <span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #0000ff; font-weight: bold;">equal</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">a0</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">a1</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">b0</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">b1</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">true</span>;
+<span style="color: #7F0055; font-weight: bold;">bool</span> <span style="color: #0000ff; font-weight: bold;">equal</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">a0</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">a1</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">b0</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">b1</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">true</span>;
 <span style="color: #707183;">}</span>
 
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">bool</span> operator<span style="color: #7F0055; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> a.sz == b.sz &amp;&amp; equal<span style="color: #7388d6;">(</span>a.p, a.p + a.sz, b.p, b.p + b.sz<span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> a.<span style="color: #110099; font-style: italic;">sz</span> <span style="color: #7F0055; font-weight: bold;">==</span> b.<span style="color: #110099; font-style: italic;">sz</span> <span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #3a5fcd; font-weight: bold;">equal</span><span style="color: #7388d6;">(</span>a.<span style="color: #110099; font-style: italic;">p</span>, a.<span style="color: #110099; font-style: italic;">p</span> <span style="color: #7F0055; font-weight: bold;">+</span> a.<span style="color: #110099; font-style: italic;">sz</span>, b.<span style="color: #110099; font-style: italic;">p</span>, b.<span style="color: #110099; font-style: italic;">p</span> <span style="color: #7F0055; font-weight: bold;">+</span> b.<span style="color: #110099; font-style: italic;">sz</span><span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 
-<span style="color: #110099;">X</span>::<span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>&amp; <span style="color: #000000;">a</span><span style="color: #707183;">)</span>
-    :p<span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">[</span>a.sz<span style="color: #7388d6;">]</span><span style="color: #707183;">}</span>, sz<span style="color: #707183;">{</span>a.sz<span style="color: #707183;">}</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X</span>::<span style="color: #0000ff; font-weight: bold;">X</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span><span style="color: #707183;">)</span>
+    :<span style="color: #110099; font-style: italic;">p</span><span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7388d6;">[</span>a.<span style="color: #110099; font-style: italic;">sz</span><span style="color: #7388d6;">]</span><span style="color: #707183;">}</span>, <span style="color: #110099; font-style: italic;">sz</span><span style="color: #707183;">{</span>a.<span style="color: #110099; font-style: italic;">sz</span><span style="color: #707183;">}</span>
 <span style="color: #707183;">{</span>
-    copy<span style="color: #7388d6;">(</span>a.p, a.p + sz, p<span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">copy</span><span style="color: #7388d6;">(</span>a.<span style="color: #110099; font-style: italic;">p</span>, a.<span style="color: #110099; font-style: italic;">p</span> <span style="color: #7F0055; font-weight: bold;">+</span> sz, p<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">x</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">y</span> = x;
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x != y<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad<span style="color: #7388d6;">{}</span>;
-    x.modify<span style="color: #7388d6;">()</span>;
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x == y<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad<span style="color: #7388d6;">{}</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assume value semantics</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span> <span style="color: #000000;">y</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">x</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x <span style="color: #7F0055; font-weight: bold;">!=</span> y<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bad</span><span style="color: #7388d6;">{}</span>;
+    x.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">modify</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>x <span style="color: #7F0055; font-weight: bold;">==</span> y<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bad</span><span style="color: #7388d6;">{}</span>;   <span style="color: #3F7F5F;">// assume value semantics</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: pointer semantics</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// OK: pointer semantics</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
     <span style="color: #0000ff; font-weight: bold;">X2</span><span style="color: #7388d6;">()</span>;
-    <span style="color: #0000ff; font-weight: bold;">X2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">shallow copy</span>
-    ~<span style="color: #0000ff; font-weight: bold;">X2</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">modify</span><span style="color: #7388d6;">()</span>;          <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">change the pointed-to value</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #0000ff; font-weight: bold;">X2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">default</span>; <span style="color: #3F7F5F;">// shallow copy</span>
+    <span style="color: #7F0055; font-weight: bold;">~</span><span style="color: #110099;">X2</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">modify</span><span style="color: #7388d6;">()</span>;          <span style="color: #3F7F5F;">// change the pointed-to value</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">private</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">p</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sz</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">p</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">sz</span>;
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span>&amp; <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">bool</span> operator<span style="color: #7F0055; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> a.sz == b.sz &amp;&amp; a.p == b.p;
+    <span style="color: #7F0055; font-weight: bold;">return</span> a.<span style="color: #110099; font-style: italic;">sz</span> <span style="color: #7F0055; font-weight: bold;">==</span> b.<span style="color: #110099; font-style: italic;">sz</span> <span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> a.<span style="color: #110099; font-style: italic;">p</span> <span style="color: #7F0055; font-weight: bold;">==</span> b.<span style="color: #110099; font-style: italic;">p</span>;
 <span style="color: #707183;">}</span>
 
 <span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #000000;">x</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #000000;">y</span> = x;
-<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>x != y<span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad<span style="color: #707183;">{}</span>;
-x.modify<span style="color: #707183;">()</span>;
-<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>x != y<span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad<span style="color: #707183;">{}</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assume pointer semantics</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">X2</span> <span style="color: #000000;">y</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">x</span>;
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>x <span style="color: #7F0055; font-weight: bold;">!=</span> y<span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bad</span><span style="color: #707183;">{}</span>;
+x.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">modify</span><span style="color: #707183;">()</span>;
+<span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #707183;">(</span>x <span style="color: #7F0055; font-weight: bold;">!=</span> y<span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bad</span><span style="color: #707183;">{}</span>;  <span style="color: #3F7F5F;">// assume pointer semantics</span>
 </pre>
 </div>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 <ul class="org-ul">
-<li>尽量选择数值语义，除非你要实现智能指针类型。数值语义更简单，更容易分析，标准库也主要接收数值语义类型的数据。</li>
+<li>尽量选择值类型，除非你要实现智能指针类型。值类型更简单，更容易分析，标准库也主要接收值类型的数据。</li>
 </ul>

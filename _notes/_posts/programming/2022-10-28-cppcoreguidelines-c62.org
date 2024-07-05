@@ -1,15 +1,11 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.62 自拷贝应当安全可行
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.62 自拷贝应当安全可行
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Make copy assignment safe for self-assignment"
+C.61: A copy operation should copy
 
 理由
 

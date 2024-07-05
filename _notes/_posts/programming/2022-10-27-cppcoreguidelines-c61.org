@@ -1,27 +1,24 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.61 赋值拷贝操作须拷贝
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.61 赋值拷贝操作须拷贝
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"A copy operation should copy"
+C.61: A copy operation should copy
 
 
-理由
+*理由*
 
 这条指南讲的是一般人们使用时所假定的语义。在进行 ~x = y~ 操作后，我们得
 到结果 ~x == y~
 
-在赋值拷贝操作之后， ~x~ 和 ~y~ 应该是独立的对象（数值语义，非指针的内置类
-型和标准库类型的工作方式），或者， ~x~ 和 ~y~ 指向一个共享的对象（指针语义，
+在赋值拷贝操作之后， ~x~ 和 ~y~ 应该是独立的对象（值类型，非指针的内置类型
+和标准库类型的工作方式），或者， ~x~ 和 ~y~ 指向一个共享的对象（指针类型，
 指针的工作方式）。
 
-例子
+
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 using T = int;
@@ -66,7 +63,7 @@ int main()
 #+end_src
 
 
-例子
+*例子*
 
 #+begin_src C++ :flags -std=c++20 :results output :exports both :eval no-export
 class X2 {  // OK: pointer semantics
@@ -94,6 +91,6 @@ if (x != y) throw Bad{};  // assume pointer semantics
 #+end_src
 
 
-注意
-- 尽量选择数值语义，除非你要实现智能指针类型。数值语义更简单，更容易分
-  析，标准库也主要接收数值语义类型的数据。
+*注意*
+- 尽量选择值类型，除非你要实现智能指针类型。值类型更简单，更容易分析，
+  标准库也主要接收值类型的数据。
