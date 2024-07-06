@@ -1,60 +1,59 @@
 ---
 layout: post
 title: CppCoreGuidelines C.67 一个多态类应该隐藏公开的赋值和移动操作
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;A polymorphic class should suppress public copy/move&rdquo;
+C.67: A polymorphic class should suppress public copy/move
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-多态类定义或继承至少一个虚函数。多态类很可能被当成基类用。这样基类就可以代表多个多态子类，从而实现多态行为。如果不小心以值传递，编译器会隐式地调用拷贝构造函数和赋值操作。我们可能会遇到类切片（slicing）的风险：继承对象的部分数据当作基类的数据使用。于是，多态行为就失效了。
+多态类定义或继承了至少一个虚函数。多态类很可能被当成基类用。这样的基类就可以代表多个多态子类，就能实现多态行为。如果多态类对象如果不小心以值传参，编译器会隐式地调用拷贝构造函数和赋值操作。我们可能会遇到对象切片（ slicing ）的风险：继承类对象的部分数据被当作基类对象的数据使用。于是，多态行为就失效了。
 </p>
 
 <p>
-如果类中没有数据，请将拷贝和移动函数设置为 <code>= delete</code> 。不然将他们设置为
-<code>protected</code> 。
+如果类中没有数据，请将拷贝和移动函数设置为<code>= delete</code>。如果有数据，则将他们设置为 <code>protected</code> 。
 </p>
 
+
 <p>
-错误例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD: polymorphic base class doesn't suppress copying</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// BAD: polymorphic base class doesn't suppress copying</span>
   <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #0000ff; font-weight: bold;">m</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">'B'</span>; <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... nothing about copy operations, so uses default ...</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">m</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">'B'</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// ... nothing about copy operations, so uses default ...</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
   <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #0000ff; font-weight: bold;">m</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">'D'</span>; <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">m</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">'D'</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">b2</span> = b; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">oops, slices the object; b2.m() will return 'B'</span>
-    cout &lt;&lt; <span style="color: #2A00FF;">"b2.m() = "</span> &lt;&lt; b2.m<span style="color: #7388d6;">()</span> &lt;&lt; <span style="color: #2A00FF;">"\n"</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">b2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">b</span>; <span style="color: #3F7F5F;">// oops, slices the object; b2.m() will return 'B'</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"b2.m() = "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> b2.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">m</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"\n"</span>;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #000000;">d</span>;
-    cout &lt;&lt; <span style="color: #2A00FF;">"d.m() = "</span> &lt;&lt; d.m<span style="color: #7388d6;">()</span> &lt;&lt; <span style="color: #2A00FF;">"\n"</span>;
-    f<span style="color: #7388d6;">(</span>d<span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"d.m() = "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> d.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">m</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"\n"</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>d<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -65,43 +64,47 @@ b2.m() = B
 </pre>
 
 
+<p>
+在<code>f()</code>中，~D~ 类型的对象 <code>d</code> 被当成了 <code>B</code> 类型的对象使用了！
+</p>
+
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">GOOD: polymorphic class suppresses copying</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span> <span style="color: #3F7F5F;">// GOOD: polymorphic class suppresses copying</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
-    <span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">delete</span>;
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #0000ff; font-weight: bold;">m</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">'B'</span>; <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">delete</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">delete</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">m</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">'B'</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span> <span style="color: #0000ff; font-weight: bold;">m</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">'D'</span>; <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">char</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">m</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #110099;">'D'</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">b2</span> = b; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">ok, compiler will detect inadvertent copying, and protest</span>
-    cout &lt;&lt; <span style="color: #2A00FF;">"b2.m() = "</span> &lt;&lt; b2.m<span style="color: #7388d6;">()</span> &lt;&lt; <span style="color: #2A00FF;">"\n"</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">b2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">b</span>; <span style="color: #3F7F5F;">// ok, compiler will detect inadvertent copying, and protest</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"b2.m() = "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> b2.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">m</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"\n"</span>;
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #000000;">d</span>;
-    cout &lt;&lt; <span style="color: #2A00FF;">"d.m() = "</span> &lt;&lt; d.m<span style="color: #7388d6;">()</span> &lt;&lt; <span style="color: #2A00FF;">"\n"</span>;
-    f<span style="color: #7388d6;">(</span>d<span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"d.m() = "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> d.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">m</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"\n"</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>d<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
-<pre class="example" id="org8772eda">
+<pre class="example" id="org00559ee">
 C-src-s0pxn3.cpp: In function 'void f(B&amp;)':
 C-src-s0pxn3.cpp:27:15: error: use of deleted function 'B::B(const B&amp;)'
    27 |     auto b2 = b; // ok, compiler will detect inadvertent copying, and protest
@@ -112,18 +115,22 @@ C-src-s0pxn3.cpp:13:5: note: declared here
 
 </pre>
 
-
 <p>
-注意
-</p>
-
-<p>
-如果你需要多态对象的深度副本，请使用 <code>clone()</code> 函数。
+这时候，编译器给出警告，基类 <code>B</code> 的拷贝构造函数没有定义！
 </p>
 
 
 <p>
-例外
+<b>注意</b>
+</p>
+
+<p>
+如果你需要多态对象的深度副本，请使用<code>clone()</code>函数。
+</p>
+
+
+<p>
+<b>例外</b>
 </p>
 
 <p>
@@ -131,9 +138,9 @@ C-src-s0pxn3.cpp:13:5: note: declared here
 </p>
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>标记有公开拷贝操作的多态类</li>
-<li>标记有赋值操作的多态类</li>
+<li>标记有公开拷贝构造函数的多态类</li>
+<li>标记有赋值构造函数的多态类</li>
 </ul>
