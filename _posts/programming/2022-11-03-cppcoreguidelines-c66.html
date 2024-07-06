@@ -1,50 +1,49 @@
 ---
 layout: post
 title: CppCoreGuidelines C.66 移动操作应是 noexcept
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
+
 <p>
-&ldquo;Make move operations noexcept&rdquo;
+C.66: Make move operations <code>noexcept</code>
 </p>
 
 
 <p>
-理由
+<b>理由</b>
+</p>
+
+<p>
+在移动操作过程中抛出异常，违反了大多数人的常理。在标准库和语言工具中使用时，一个不抛出异常的移动操作效率会更高。
 </p>
 
 
 <p>
-移动操作过程中抛出异常，有违大多数人的常理。在标准库和语言工具中使用时，一个不抛出异常的移动操作效率更高。
-</p>
-
-
-<p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span> <span style="color: #707183;">{</span>
   <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #0000ff; font-weight: bold;">Vector</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>
-        :elem<span style="color: #7388d6;">{</span>a.elem<span style="color: #7388d6;">}</span>, sz<span style="color: #7388d6;">{</span>a.sz<span style="color: #7388d6;">}</span>
+    <span style="color: #0000ff; font-weight: bold;">Vector</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>
+        :<span style="color: #110099; font-style: italic;">elem</span><span style="color: #7388d6;">{</span>a.<span style="color: #110099; font-style: italic;">elem</span><span style="color: #7388d6;">}</span>, <span style="color: #110099; font-style: italic;">sz</span><span style="color: #7388d6;">{</span>a.<span style="color: #110099; font-style: italic;">sz</span><span style="color: #7388d6;">}</span>
         <span style="color: #7388d6;">{</span>
-            a.sz = 0; a.elem = <span style="color: #110099;">nullptr</span>;
+            a.<span style="color: #000000; font-style: italic;">sz</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>; a.<span style="color: #000000; font-style: italic;">elem</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099; font-weight: bold;">nullptr</span>;
         <span style="color: #7388d6;">}</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>
         <span style="color: #7388d6;">{</span>
-            elem = a.elem; sz = a.sz; a.sz = 0; a.elem = <span style="color: #110099;">nullptr</span>;
+            <span style="color: #000000;">elem</span> <span style="color: #7F0055; font-weight: bold;">=</span> a.<span style="color: #110099; font-style: italic;">elem</span>; <span style="color: #000000;">sz</span> <span style="color: #7F0055; font-weight: bold;">=</span> a.<span style="color: #110099; font-style: italic;">sz</span>; a.<span style="color: #000000; font-style: italic;">sz</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>; a.<span style="color: #000000; font-style: italic;">elem</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099; font-weight: bold;">nullptr</span>;
         <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">private</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">elem</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sz</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">elem</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">sz</span>;
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
@@ -52,30 +51,30 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-坏例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector2</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #0000ff; font-weight: bold;">Vector2</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Vector2</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> *<span style="color: #7F0055; font-weight: bold;">this</span> = a; <span style="color: #7388d6;">}</span>             <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">just use the copy</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector2</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Vector2</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> *<span style="color: #7F0055; font-weight: bold;">this</span> = a; <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">just use the copy</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #0000ff; font-weight: bold;">Vector2</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Vector2</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">this</span> <span style="color: #7F0055; font-weight: bold;">=</span> a; <span style="color: #7388d6;">}</span>             <span style="color: #3F7F5F;">// just use the copy</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector2</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Vector2</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">this</span> <span style="color: #7F0055; font-weight: bold;">=</span> a; <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// just use the copy</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #7F0055; font-weight: bold;">private</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">elem</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sz</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">elem</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">sz</span>;
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 <p>
-Vector2 不仅效率不高，而且因为 vector 的复制/拷贝操作需要分配内存，会抛出异常。
+<code>Vector2</code> 不仅效率不高，而且因为 <code>vector</code> 的复制/拷贝操作需要分配内存，会抛出异常。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>（简单）移动操作应该标记为 <code>noexcept</code></li>
