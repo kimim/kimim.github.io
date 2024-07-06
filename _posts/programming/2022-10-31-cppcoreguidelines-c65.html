@@ -1,64 +1,65 @@
 ---
 layout: post
 title: CppCoreGuidelines C.65 确保可以安全的自己赋值给自己
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Make move assignment safe for self-assignment&rdquo;
+C.65: Make move assignment safe for self-assignment
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-如果 <code>x = x</code> 会改变 <code>x</code> 的值，人们会觉得震惊，会引起出错。虽然，人们通常不会直接通过移动（move）来写自赋值操作，但是有些情况会使用移动操作。比如
-<code>std::swap</code> 是通过移动操作实现的，如果你在处理 <code>swap(a, b)</code> 的时候，不小心让 <code>a</code> 和 <code>b</code> 指向了同一个对象。这时候，错误的自移动操作会导致很难发现的严重故障。
+如果<code>x = x</code>会改变 <code>x</code> 的值，人们会觉得震惊，会引起出错。虽然，人们通常不会直接通过移动（ move ）来写自赋值操作，但是有些情况会使用移动操作。比如<code>std::swap</code>是通过移动操作实现的，如果你在处理<code>swap(a, b)</code>的时候，不小心让 <code>a</code> 和 <code>b</code> 指向了同一个对象。这时候，错误的自移动操作会导致很难发现的严重故障。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">i</span>;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">s</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">i</span>;
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp; <span style="color: #110099;">Foo</span>::<span style="color: #7F0055; font-weight: bold;">operator</span>=<span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, but there is a cost</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span>::<span style="color: #0000ff; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #000000;">a</span><span style="color: #707183;">)</span> <span style="color: #7F0055; font-weight: bold;">noexcept</span>  <span style="color: #3F7F5F;">// OK, but there is a cost</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">this</span> == &amp;a<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">this line is redundant</span>
-    s = <span style="color: #110099;">std</span>::move<span style="color: #7388d6;">(</span>a.s<span style="color: #7388d6;">)</span>;
-    i = a.i;
-    <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">this</span> <span style="color: #7F0055; font-weight: bold;">==</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span>a<span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">this</span>;  <span style="color: #3F7F5F;">// this line is redundant</span>
+    <span style="color: #000000;">s</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #3a5fcd; font-weight: bold;">move</span><span style="color: #7388d6;">(</span>a.<span style="color: #110099; font-style: italic;">s</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #000000;">i</span> <span style="color: #7F0055; font-weight: bold;">=</span> a.<span style="color: #110099; font-style: italic;">i</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">this</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
-
 <p>
-注意
+这一行语句<code>if (this == &amp;a) return *this;</code>并没太大作用，反而会使得程序变慢。
 </p>
 
 <p>
-ISO 标准只保障标准库容器的状态是“有效的，但不明确指定”。显然，在十多年的实验和产品使用过程中，不是什么大问题。这条指南更强调完全的安全。
+<b>注意</b>
+</p>
+
+<p>
+ISO 标准只保障标准库容器的状态是“有效的状态，但不明确指定是什么状态”。显然，在十多年的实验和产品使用过程中，不是什么大问题。这条指南更强调完全的安全。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <p>
@@ -66,19 +67,19 @@ ISO 标准只保障标准库容器的状态是“有效的，但不明确指定�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">move from other.ptr to this-&gt;ptr</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">temp</span> = other.ptr;
-other.ptr = <span style="color: #110099;">nullptr</span>;
+<pre class="src src- src-C++"><span style="color: #3F7F5F;">// move from other.ptr to this-&gt;ptr</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">temp</span> <span style="color: #7F0055; font-weight: bold;">=</span> other.<span style="color: #110099; font-style: italic;">ptr</span>;
+other.<span style="color: #000000; font-style: italic;">ptr</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099; font-weight: bold;">nullptr</span>;
 <span style="color: #7F0055; font-weight: bold;">delete</span> ptr;
-ptr = temp;
+<span style="color: #000000;">ptr</span> <span style="color: #7F0055; font-weight: bold;">=</span> temp;
 </pre>
 </div>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>（适度）在自赋值的情况，移动赋值操作不能删除对象的指针成员或设置成 nullptr。</li>
-<li>（不是强制的）查看标准库容器类型的使用方法，包括 string。确保在一般的使用过程中是安全的。</li>
+<li>（适度）在自赋值的情况下，移动赋值操作不能删除对象的指针成员，或把它设置成 <code>nullptr</code> 。</li>
+<li>（不是强制的）查看标准库容器类型的使用方法，包括 <code>string</code> 。确保在普通的使用过程中是安全的。</li>
 </ul>

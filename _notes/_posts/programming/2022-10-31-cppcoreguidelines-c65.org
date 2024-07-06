@@ -1,27 +1,23 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.65 确保可以安全的自己赋值给自己
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.65 确保可以安全的自己赋值给自己
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Make move assignment safe for self-assignment"
+C.65: Make move assignment safe for self-assignment
 
 
-理由
+*理由*
 
 如果 ~x = x~ 会改变 ~x~ 的值，人们会觉得震惊，会引起出错。虽然，人们通常不
-会直接通过移动（move）来写自赋值操作，但是有些情况会使用移动操作。比如
-~std::swap~ 是通过移动操作实现的，如果你在处理 ~swap(a, b)~ 的时候，不小心
-让 ~a~ 和 ~b~ 指向了同一个对象。这时候，错误的自移动操作会导致很难发现的严
-重故障。
+会直接通过移动（move）来写自赋值操作，但是有些情况会使用移动操作。比
+如 ~std::swap~ 是通过移动操作实现的，如果你在处理 ~swap(a, b)~ 的时候，不小
+心让 ~a~ 和 ~b~ 指向了同一个对象。这时候，错误的自移动操作会导致很难发现的
+严重故障。
 
 
-例子
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 class Foo {
@@ -41,16 +37,20 @@ Foo& Foo::operator=(Foo&& a) noexcept  // OK, but there is a cost
 }
 #+end_src
 
+这一行语句 ~if (this == &a) return *this;~ 并没太大作用，反而会使得程序
+变慢。
 
-注意
+*注意*
 
-ISO 标准只保障标准库容器的状态是“有效的，但不明确指定”。显然，在十多年
-的实验和产品使用过程中，不是什么大问题。这条指南更强调完全的安全。
+ISO 标准只保障标准库容器的状态是“有效的状态，但不明确指定是什么状态”。
+显然，在十多年的实验和产品使用过程中，不是什么大问题。这条指南更强调完
+全的安全。
 
 
-例子
+*例子*
 
-这个例子展示了不需要进行测试的情况下，移动一个指针。可以认为是 move 操作的一个实现方法：
+这个例子展示了不需要进行测试的情况下，移动一个指针。可以认为是 move 操
+作的一个实现方法：
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 // move from other.ptr to this->ptr
@@ -61,7 +61,8 @@ ptr = temp;
 #+end_src
 
 
-强化
-- （适度）在自赋值的情况，移动赋值操作不能删除对象的指针成员或设置成 nullptr。
--  （不是强制的）查看标准库容器类型的使用方法，包括 string。确保在一般
-  的使用过程中是安全的。
+*强化*
+- （适度）在自赋值的情况下，移动赋值操作不能删除对象的指针成员，或把它
+  设置成 ~nullptr~ 。
+-  （不是强制的）查看标准库容器类型的使用方法，包括 ~string~ 。确保在普
+  通的使用过程中是安全的。
