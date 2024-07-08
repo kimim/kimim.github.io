@@ -1,0 +1,34 @@
+#+LAYOUT: post
+#+TITLE: 单词本：eavesdrop
+#+TAGS: English
+#+CATEGORIES: language
+
+其实，用的很普遍，只是刚好在看 Banks 等人的论文 [[cite:&banks2021ra]] 时候
+遇到了，所以就摘录过来：
+
+A countermeasure for DoS attacks is to authenticate messages, this
+ensures the Prover does not process invalid attestation
+requests. However, a local adversary may *eavesdrop* on the
+communication and use a replay attacks to circumvent this
+countermeasure. The common countermeasure against replay attacks is
+the inclusion of nonces which is also prevalent in the domain of
+remote attestation.
+
+*eavesdrop* 的意思就是窃听、偷听。在通信网络中，如果有人在窃听通信消息，
+就可以把消息保存下来，等到下次对方发验证请求过来的时候，通过消息重播回
+复，假冒是通信对方。这种攻击称为 replay attack.
+
+最早， *eavesdropper* 这个词，表示在屋檐下偷听的人。而 *eavesdrop* 指的是
+屋檐下水滴落到的那个地方，往往是一个小坑。为什么呢，因为水滴石穿呀。
+
+一般， *eavesdrop* 都是和 *on* 组合起来用的，后面跟偷听的内容。比如
+
+we *are eavesdropping on* her telephone conversation. 我们正偷听她的电话
+通话。
+
+德语里，隔墙偷听为 an der Tür lauschen
+
+法语里，隔墙偷听则是 écouter à la porte
+
+*References*
+[[bibliography:~/docs/references.bib]]
