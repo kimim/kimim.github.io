@@ -1,0 +1,34 @@
+#+LAYOUT: post
+#+TITLE: 单词本：benign
+#+TAGS: English
+#+CATEGORIES: language
+
+在讨论到远程设备认证的时候，Banks 等人 [[cite:&banks2021ra]] 指出，一些计
+算性能比较低的设备，其可信认证的过程计算量比较大，可能被坏人利用进行拒
+绝服务攻击，大量的认证请求会导致这类设备停止工作：
+
+If an attacker can send an attestation request to a device, that
+device will waste a significant amount of computational power
+computing a proof that the software on the device is *benign*.
+
+设备通过非对称加密自证清白，即 *benign* 。
+
+*benign* 的意思是 of a kind disposition; gracious; kind; benignant;
+favourable，即某种性格好的、和善的、讨人喜欢的人或事物。这里，指的是工
+作正常、未[[./2024-07-06-compromise][被恶意软件污染]]的设备。
+
+*benign* 源自拉丁语 benignus：bene 好的，gignere 出生、产生。也就是天生
+好的。
+
+her face is calm and benign. 她的表情冷静且和蔼。
+
+而拉丁语 male 的意思是坏的、错的、恶毒的。malign 有害的、恶意的。动词
+诽谤、中伤、污蔑。
+
+to malign innocent people 污蔑好人 
+
+另外还有
+
+benignant 仁慈的、有益的、和蔼的、良性的。
+
+malignant 恶意的、恶毒的、恶性的。
