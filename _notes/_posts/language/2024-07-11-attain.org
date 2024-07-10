@@ -33,3 +33,5 @@ they can *attain* them.
 门的技术老大介绍自己的专利紧张得很，没想到，现在我成了他们一员去评审别
 人的创新想法了。
 
+*References*
+[[bibliography:~/docs/references.bib]]
