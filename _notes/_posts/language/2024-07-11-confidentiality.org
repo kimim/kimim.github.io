@@ -1,0 +1,48 @@
+#+LAYOUT: post
+#+TITLE: 单词本：confidentiality
+#+TAGS: English
+#+CATEGORIES: language
+
+信息安全的三个最主要的要求是机密、完整、可用，即 *confidentiality*,
+integrity and availability.
+
+机密性 *confidentiality* 是 *confidential* “机密的”的抽象名词形式，而
+*confidential* 来自 *confidence* 信心。
+
+*confidence* 又来自拉丁语 confidere 动词“完全信任”。而 fidere 则是动词信
+任 trust。confidentem 是 confidere 的现在分词。
+
+不过， *confidence* 有秘密的意思。比如：The two girls sat in a corner
+exchanging *confidences*. 那两个女孩子坐在角落里说着悄悄话。
+
+I'm telling you this in (strict) *confidence* so don't breathe a word of
+it. 我现在告诉你这件事是个（绝对的）秘密，千万不可外传。
+
+fidelity 忠实、忠贞、忠诚、真实、精确，应该也是源自 fidere。
+
+话说回来，其实，这次，我是想学习下 *confidence* 及其衍生词的发音。
+
+机密性 *confidentiality* 的发音是 [ˌkɒn.fɪ.den.ʃiˈæl.ə.ti] 所以，重音是
+在倒数第五个字母 a 上。
+
+机密的 *confidential* 的发音是 [ˌkɒn.fɪˈden.ʃəl]，那么其重音在 dential
+上。
+
+有信心的 *confident* 以及名词信心 confidence 的重音都在最前面。
+
+这样一列举，差不多CIA的C相关的读音就比较清楚了。
+
+*confidential* 的德语翻译为 *vertraulich* ， *confidentiality* 则是 *die
+Vertraulichkeit* 。
+
+Ist die *Vertraulichkeit* nicht gewährleistet, kann kein Vertrauen
+entstehen. 机密性无法保证，就没有可信性。
+
+德语机密性和可信性是同根的 *Vertraulichkeit* vs. Vertauen，而英语则是
+*confidentiality* vs. trust。
+
+法语不造新词， *confidentiality* 就是 *le caractère confidentiel*
+
+*Le caractère confidentiel* des informations fournies par les sujets
+intéressés à l'entité adjudicatrice en fonction des procédures
+choisies sera protégé par des règles précises.
