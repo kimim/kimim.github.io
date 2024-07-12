@@ -1,0 +1,32 @@
+#+LAYOUT: post
+#+TITLE: 单词本：curvilinear
+#+TAGS: English
+#+CATEGORIES: language
+
+我们给员工设定绩效目标的时候，要评估目标难度和员工能力的匹配度。难度太
+低，容易出现让员工萎靡不振 lackadaisicalness，难度太大，则让员工消极逃
+避。
+
+所以，在员工目标设定的过程中，需要一个调节的环节。这就是 Ed Locke 和
+Gary Latham 提出的目标设定模型中 Moderator 这一个环节。
+[[cite:&locke1990goal]]
+
+因此，需要找出目标难度和员工能力相匹配的那个最佳点。正如 Don
+Hellriegel 所说的 The relation of goal difficulty to performance is
+*curvilinear*, not linear. That is , performance levels off as the
+limits of a person's ability are approached.  [[cite:&hellriegel2005ob]]
+
+这里作者用了 *curvilinear* 表示曲线相关性，相对的是 *linear* 线性相关。所
+谓曲线相关指的是目标难度太低或太高的时候，员工绩效都不是最高。只有目标
+难度和员工能力匹配的时候，才是曲线的最高点。
+
+显然， *curvilinear* 是由 curve 和 linear 组成的。前者是曲线，后者则来自
+拉丁语 linea 即线条 line。
+
+these designs employ flowing, *curvilinear* forms. 这些设计用到了一些流
+线、曲线形状。
+
+the curvilinear motion of a thrown stone. 抛出的石头形成的抛落曲线。
+
+*References*
+[[bibliography:~/docs/references.bib]]
