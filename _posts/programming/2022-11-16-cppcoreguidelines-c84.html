@@ -1,42 +1,43 @@
 ---
 layout: post
 title: CppCoreGuidelines C.84 swap 函数不可运行失败
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;A swap function must not fail&rdquo;
+C.84: A swap function must not fail
+</p>
+
+
+<p>
+<b>理由</b>
 </p>
 
 <p>
-理由
+<code>swap</code> 的使用很广泛，一般我们假定它是不会运行失败的。如果 <code>swap</code> 会运行失败，程序就很难写正确了。对于 <code>swap</code> 会运行失败的那种类型，标准库容器和算法也不能为之正确工作了。
 </p>
 
-<p>
-swap 的使用很广泛，一般假定是不会运行失败的。如果 swap 会运行失败，程序就很难写正确。对于 swap 会运行失败的类型，标准库容器和算法也不能正确工作了。
-</p>
 
 <p>
-坏例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">swap</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">My_vector</span>&amp; <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">My_vector</span>&amp; <span style="color: #000000;">y</span><span style="color: #707183;">)</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">swap</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">My_vector</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">x</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">My_vector</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">y</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">tmp</span> = x;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">copy elements</span>
-    x = y;
-    y = tmp;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">tmp</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">x</span>;   <span style="color: #3F7F5F;">// copy elements</span>
+    <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> y;
+    <span style="color: #000000;">y</span> <span style="color: #7F0055; font-weight: bold;">=</span> tmp;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-这里不仅运行慢，而且如果 tmp 中有内存分配的话，swap 还可能抛出异常，这样就会导致 STL 算法运行失败。
+这里不仅运行慢，而且如果 <code>tmp</code> 中有内存分配的话， <code>swap</code> 还可能抛出异常，这样就会导致 <code>STL</code> 算法运行失败。
 </p>
 
 
@@ -44,5 +45,5 @@ swap 的使用很广泛，一般假定是不会运行失败的。如果 swap 会
 强化
 </p>
 <ul class="org-ul">
-<li>（简单）当一个类有 swap 成员函数时，应该声明为 noexcept</li>
+<li>（简单）当一个类有 <code>swap</code> 成员函数时，应该声明为 <code>noexcept</code></li>
 </ul>
