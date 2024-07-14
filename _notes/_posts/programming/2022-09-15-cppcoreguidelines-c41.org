@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       BEBBD42E-4E3D-4D99-A79F-82D3718AE24D
+:END:
 #+layout: post
 #+title: CppCoreGuidelines C.41 构造函数须创建初始化完全的对象
 #+categories: programming
