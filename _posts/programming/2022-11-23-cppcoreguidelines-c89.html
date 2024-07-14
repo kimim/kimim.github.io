@@ -1,65 +1,65 @@
 ---
 layout: post
 title: CppCoreGuidelines C.89 Hash 函数不可抛出异常
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Make a hash noexcept&rdquo;
-</p>
-
-<p>
-理由
-</p>
-
-<p>
-以哈希索引的容器类会间接用到hash函数，一般的设计不会考虑如此简单的操作会抛出异常。这也是标准库所要求的。
+C.89: Make a <code>hash</code> <code>noexcept</code>
 </p>
 
 
 <p>
-坏例子
+<b>理由</b>
+</p>
+
+<p>
+以哈希索引的容器类会间接用到哈希函数，一般的设计不会预期如此简单的操作会抛出异常。这也是标准库所要求的。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;&gt;</span>
-<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">hash</span><span style="color: #707183;">&lt;</span>My_type<span style="color: #707183;">&gt;</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">thoroughly bad hash specialization</span>
-    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">result_type</span> = size_t;
-    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">argument_type</span> = My_type;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;&gt;</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">hash</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">My_type</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #707183;">{</span>  <span style="color: #3F7F5F;">// thoroughly bad hash specialization</span>
+    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">result_type</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">size_t</span>;
+    <span style="color: #7F0055; font-weight: bold;">using</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">argument_type</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_type</span>;
 
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #7388d6; font-weight: bold;">()</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_type</span> &amp; <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>
+    <span style="color: #7F0055; font-weight: bold;">size_t</span> operator<span style="color: #7388d6;">()</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_type</span> <span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">x</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>
     <span style="color: #7388d6;">{</span>
-        <span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span> <span style="color: #000000;">xs</span> = x.s.size<span style="color: #909183;">()</span>;
-        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>xs &lt; 4<span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> Bad_My_type<span style="color: #909183;">{}</span>;
-        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">"Nobody expects the Spanish inquisition!"</span>
-        <span style="color: #7F0055; font-weight: bold;">return</span> hash<span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">size_t</span><span style="color: #909183;">&gt;()(</span>x.s.size<span style="color: #709870;">()</span><span style="color: #909183;">)</span> ^ trim<span style="color: #909183;">(</span>x.s<span style="color: #909183;">)</span>;
+        <span style="color: #7F0055; font-weight: bold;">size_t</span> <span style="color: #000000;">xs</span> <span style="color: #7F0055; font-weight: bold;">=</span> x.<span style="color: #110099; font-style: italic;">s</span>.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #909183;">()</span>;
+        <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #909183;">(</span>xs <span style="color: #7F0055; font-weight: bold;">&lt;</span> <span style="color: #110099;">4</span><span style="color: #909183;">)</span> <span style="color: #7F0055; font-weight: bold;">throw</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Bad_My_type</span><span style="color: #909183;">{}</span>;
+        <span style="color: #3F7F5F;">// "Nobody expects the Spanish inquisition!"</span>
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #3a5fcd; font-weight: bold;">hash</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">size_t</span><span style="color: #909183; font-weight: bold;">&gt;</span><span style="color: #909183;">()(</span>x.<span style="color: #110099; font-style: italic;">s</span>.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">size</span><span style="color: #709870;">()</span><span style="color: #909183;">)</span> ^ <span style="color: #3a5fcd; font-weight: bold;">trim</span><span style="color: #909183;">(</span>x.<span style="color: #110099; font-style: italic;">s</span><span style="color: #909183;">)</span>;
     <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>;
 
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">unordered_map</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">My_type</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">m</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unordered_map</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">My_type</span>, <span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">m</span>;
     <span style="color: #000000; font-style: italic; text-decoration: underline;">My_type</span> <span style="color: #000000;">mt</span><span style="color: #7388d6;">{</span> <span style="color: #2A00FF;">"asdfg"</span> <span style="color: #7388d6;">}</span>;
-    m<span style="color: #7388d6;">[</span>mt<span style="color: #7388d6;">]</span> = 7;
-    cout &lt;&lt; m<span style="color: #7388d6;">[</span>My_type<span style="color: #909183;">{</span> <span style="color: #2A00FF;">"asdfg"</span> <span style="color: #909183;">}</span><span style="color: #7388d6;">]</span> &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #000000;">m</span><span style="color: #7388d6;">[</span>mt<span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">7</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> m<span style="color: #7388d6;">[</span><span style="color: #000000; font-style: italic; text-decoration: underline;">My_type</span><span style="color: #909183;">{</span> <span style="color: #2A00FF;">"asdfg"</span> <span style="color: #909183;">}</span><span style="color: #7388d6;">]</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #110099;">'\n'</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-如果你必须要定义hash函数，可以简单的将标准库的hash 异或某些数据。这比假专家的小聪明方法效果更好。
+如果你必须要定义哈希函数，可以简单的跟标准库的哈希值进行异或。这比假专家的小聪明方法效果更好。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>标记抛出异常的 hash</li>
+<li>标记抛出异常的哈希</li>
 </ul>
