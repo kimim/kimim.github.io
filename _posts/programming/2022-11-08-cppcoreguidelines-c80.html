@@ -1,57 +1,62 @@
 ---
 layout: post
 title: CppCoreGuidelines C.80 如果要明确使用默认机制，请添加 =default
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Use =default if you have to be explicit about using the default semantics&rdquo;
+C.80: Use <code>=default</code> if you have to be explicit about using the default
+semantics
 </p>
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-编译器通常可以很好的生产默认机制，一般比自己实现效果要好。
+编译器生成的默认操作，通常比自己手工实现的效果要好。
 </p>
 
+
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">message</span>;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">message</span>;
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #0000ff; font-weight: bold;">Tracer</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">m</span><span style="color: #7388d6;">)</span>
-        : message<span style="color: #7388d6;">{</span>m<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span>
-        cout &lt;&lt; <span style="color: #2A00FF;">"entering "</span> &lt;&lt; message &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #0000ff; font-weight: bold;">Tracer</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">m</span><span style="color: #7388d6;">)</span>
+        : <span style="color: #110099; font-style: italic;">message</span><span style="color: #7388d6;">{</span>m<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span>
+        cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"entering "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> message <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #110099;">'\n'</span>;
     <span style="color: #7388d6;">}</span>
-    ~<span style="color: #0000ff; font-weight: bold;">Tracer</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
-        cout &lt;&lt; <span style="color: #2A00FF;">"exiting "</span> &lt;&lt; message &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #7F0055; font-weight: bold;">~</span>Tracer<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"exiting "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> message <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #110099;">'\n'</span>;
     <span style="color: #7388d6;">}</span>
 
-    <span style="color: #0000ff; font-weight: bold;">Tracer</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span>&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
-    <span style="color: #0000ff; font-weight: bold;">Tracer</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span>&amp;&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span>&amp;&amp;<span style="color: #7388d6;">)</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #0000ff; font-weight: bold;">Tracer</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #0000ff; font-weight: bold;">Tracer</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">default</span>;
 <span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span> <span style="color: #000000;">t</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"hi"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer</span> <span style="color: #000000;">k</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"lo"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000;">t</span> <span style="color: #7F0055; font-weight: bold;">=</span> k;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <pre class="example">
 entering hi
-exiting hi
+entering lo
+exiting lo
+exiting lo
 </pre>
 
 
@@ -60,54 +65,59 @@ exiting hi
 是最好最简单的办法。
 </p>
 
+
 <p>
-坏例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">message</span>;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">message</span>;
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #0000ff; font-weight: bold;">Tracer2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp; <span style="color: #000000;">m</span><span style="color: #7388d6;">)</span>
-        : message<span style="color: #7388d6;">{</span>m<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span>
-        cout &lt;&lt; <span style="color: #2A00FF;">"entering "</span> &lt;&lt; message &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #0000ff; font-weight: bold;">Tracer2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">m</span><span style="color: #7388d6;">)</span>
+        : <span style="color: #110099; font-style: italic;">message</span><span style="color: #7388d6;">{</span>m<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span>
+        cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"entering "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> message <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #110099;">'\n'</span>;
     <span style="color: #7388d6;">}</span>
-    ~<span style="color: #0000ff; font-weight: bold;">Tracer2</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
-        cout &lt;&lt; <span style="color: #2A00FF;">"exiting "</span> &lt;&lt; message &lt;&lt; <span style="color: #2A00FF;">'\n'</span>;
+    <span style="color: #7F0055; font-weight: bold;">~</span>Tracer2<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+        cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"exiting "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> message <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #110099;">'\n'</span>;
     <span style="color: #7388d6;">}</span>
-    <span style="color: #0000ff; font-weight: bold;">Tracer2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span>&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> : message<span style="color: #7388d6;">{</span>a.message<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span>&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        message = a.message;
-        <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+    <span style="color: #0000ff; font-weight: bold;">Tracer2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> : <span style="color: #110099; font-style: italic;">message</span><span style="color: #7388d6;">{</span>a.<span style="color: #110099; font-style: italic;">message</span><span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000;">message</span> <span style="color: #7F0055; font-weight: bold;">=</span> a.<span style="color: #110099; font-style: italic;">message</span>;
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">this</span>;
     <span style="color: #7388d6;">}</span>
-    <span style="color: #0000ff; font-weight: bold;">Tracer2</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> :message<span style="color: #7388d6;">{</span>a.message<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span>&amp;&amp; <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        message = a.message;
-        <span style="color: #7F0055; font-weight: bold;">return</span> *<span style="color: #7F0055; font-weight: bold;">this</span>;
+    <span style="color: #0000ff; font-weight: bold;">Tracer2</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> :<span style="color: #110099; font-style: italic;">message</span><span style="color: #7388d6;">{</span>a.<span style="color: #110099; font-style: italic;">message</span><span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7F0055; font-weight: bold;">=</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span><span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #000000;">message</span> <span style="color: #7F0055; font-weight: bold;">=</span> a.<span style="color: #110099; font-style: italic;">message</span>;
+        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7F0055; font-weight: bold;">this</span>;
     <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span> <span style="color: #000000;">t2</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"bonjour"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span> <span style="color: #000000;">t2</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"bonjour"</span><span style="color: #7388d6;">}</span>;    
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Tracer2</span> <span style="color: #000000;">k2</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"halo"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #000000;">t2</span> <span style="color: #7F0055; font-weight: bold;">=</span> k2;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <pre class="example">
 entering bonjour
-exiting bonjour
+entering halo
+exiting halo
+exiting halo
 </pre>
 
 
 
 <p>
-编写复制、移动操作繁琐、麻烦、并且容易出错。编译器会做的更好。
+手工编写拷贝和移动操作，又繁琐又麻烦，并且容易出错。还是交给编译器去处理吧。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>（一般）自己编写的这些特殊操作不要跟编译器生产的版本的访问度或语义一致，这是多余的。</li>
+<li>（一般）除非和编译器生成的操作一样，不然不要自己手动编写，画蛇添足。</li>
 </ul>

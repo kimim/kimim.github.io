@@ -1,21 +1,19 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.80 如果要明确使用默认机制，请添加 =default
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.80 如果要明确使用默认机制，请添加 =default
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Use =default if you have to be explicit about using the default semantics"
+C.80: Use ~=default~ if you have to be explicit about using the default
+semantics
 
-理由
+*理由*
 
-编译器通常可以很好的生产默认机制，一般比自己实现效果要好。
+编译器生成的默认操作，通常比自己手工实现的效果要好。
 
-例子
+
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results pp
 class Tracer {
@@ -37,17 +35,22 @@ public:
 int main()
 {
     Tracer t{"hi"};
+    Tracer k{"lo"};
+    t = k;
 }
 #+end_src
 
 #+RESULTS:
 : entering hi
-: exiting hi
+: entering lo
+: exiting lo
+: exiting lo
 
 因为我们定义了析构函数，所以我们必须定义复制和移动操作。用上 ~= default~
 是最好最简单的办法。
 
-坏例子
+
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results pp
 class Tracer2 {
@@ -73,18 +76,22 @@ public:
 };
 int main()
 {
-    Tracer2 t2{"bonjour"};
+    Tracer2 t2{"bonjour"};    
+    Tracer2 k2{"halo"};
+    t2 = k2;
 }
 #+end_src
 
 #+RESULTS:
 : entering bonjour
-: exiting bonjour
+: entering halo
+: exiting halo
+: exiting halo
 
 
-编写复制、移动操作繁琐、麻烦、并且容易出错。编译器会做的更好。
+手工编写拷贝和移动操作，又繁琐又麻烦，并且容易出错。还是交给编译器去处
+理吧。
 
 
-强化
-- （一般）自己编写的这些特殊操作不要跟编译器生产的版本的访问度或语义一
-  致，这是多余的。
+*强化*
+- （一般）除非和编译器生成的操作一样，不然不要自己手动编写，画蛇添足。
