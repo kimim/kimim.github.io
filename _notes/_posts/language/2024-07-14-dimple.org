@@ -33,3 +33,6 @@ The child dimpled up to the man. 小孩对着那人笑出了酒窝。
 里，让我们欣赏到女神的美颜。
 
 所以，很多女孩子以拥有一对维纳斯的腰窝为美。
+
+*References*
+[[bibliography:~/docs/references.bib]]
