@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       AFC7B930-59F8-418B-AF59-06530F03AC9F
+:END:
 #+layout: post
 #+title: CppCoreGuidelines C.50 如果初始化阶段需要一些虚行为，可以用工厂函数
 #+categories: programming
