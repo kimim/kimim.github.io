@@ -1,0 +1,45 @@
+#+LAYOUT: post
+#+TITLE: 单词本：infighting
+#+TAGS: English
+#+CATEGORIES: language
+
+根据布鲁斯•塔克曼 (Bruce Tuckman)的团队发展阶段（Stages of Team
+Development）模型。团队发展分为五个阶段：组建期（Forming）、激荡期
+（Storming）、规范期（Norming）、执行期（Performing）和休整期
+（Adjourning）。[[cite:&tuckman1977stages]]
+
+根据 Tuckman，所有五个阶段都是必须的、不可逾越的，团队在成长、迎接挑战、
+处理问题、发现方案、规划、处置结果等一系列经历过程中必然要经过上述五个
+阶段。
+
+Hellriegel [[cite:&hellriegel2005ob]] 介绍了一个团队激荡期的案例，在能力层
+次不起的一个团队中，出现了以下这些情况：
+
+But, in most cases, the teams seemed to become stuck in the storming
+stage. The more skilled employees on many of the teams pitted
+themselves against slower team members, which damaged morale and
+triggered *infighting*. Threats and insults became common. Longtime
+friendships dissolved as faster workers tried to banish slower ones.
+
+这里，作者用了 infighting 表示内讧。很容易理解，in- 表示内部，fighting
+则是争斗。也就是内部的争斗，内讧。
+
+*infighting* between departments grew worse. 部门间的内讧变得严重了。
+
+the split was designed to end political *infighting*. 部门划分是为了结束
+内部的政治斗争。
+
+前面那段文字里还用到了 pit oneself against sb 与某人竞争。
+
+to pit one's wits against sb. 与某人斗智斗勇。
+
+团队的激荡期是比较关键的时期，如果没处理好，会出现混乱，原来的好同事也
+会成为敌人了。这时候也不能选择逃避 suppress 和退缩 withdraw ，要公开公
+平的表达各个团队成员的意见，才能达成共识。逃避和退缩只会留下后患，成为
+定时炸弹随时爆炸。
+
+顺利经过了 Storming stage ，就到了 Norming stage，大家理性的坐下来建立
+团队合作的规章制度和准则。之后，才能输出团队效能。
+
+*References*
+[[bibliography:~/docs/references.bib]]
