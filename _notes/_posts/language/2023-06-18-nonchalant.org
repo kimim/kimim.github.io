@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       53ADB451-5D41-4EC9-97E6-F41C9E423C65
+:END:
 #+LAYOUT: post
 #+TITLE: 单词本：nonchalant
 #+TAGS: English Français Latin

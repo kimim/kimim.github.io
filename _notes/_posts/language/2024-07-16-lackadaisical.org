@@ -1,0 +1,51 @@
+#+LAYOUT: post
+#+TITLE: 单词：lackadaisical
+#+TAGS: English
+#+CATEGORIES: language
+
+管理员工绩效的时候，目标设定非常重要。目标设定就是给员工或团体设定一个
+有挑战的目标。
+
+设定目标要遵循两个原则，第一，目标要有一定的难度，第二，目标设定要清晰
+明确。
+
+如果目标设定不够有挑战。If it is too easy, the individual may delay or
+approach the goal *lackadaisically*. [[cite:&hellriegel2005ob]]
+
+这里，Don Hellriegel 等人用了这个很生僻的单词 *lackadaisical* 。它的意思
+是萎靡不振。
+
+据说，这个词来自 alack-a-day，是一个语气词，表示后悔叹气：啊，今天真倒霉！
+
+也简写称 alack ，大概是 ah + lack 组成的。啊，少了。相当于我们的：啊，
+亏大了。
+
+lackaday 就是 alack-a-day 的一种变体。有时候又变成 lackadaisy，再一变
+称为形容词 lackadaisical，意思是懒散的、萎靡不振的。
+
+这个词，跟法语里来的 [[id:53ADB451-5D41-4EC9-97E6-F41C9E423C65][nonchalant]] 意思差不多。
+
+这则新闻说英国北爱尔兰议会议员、社会民主工党成员 Mark H. Durkan 批评教
+育部长对Holiday Hunger 的提议好不感兴趣。15th July 2024, SDLP MLA Mark
+H. Durkan criticises *lackadaisical* response from Education Minister on
+holiday hunger. [fn:1] 所谓的 Holiday Hunger 指的是 Holiday Hunger
+Payment Scheme，北爱尔兰的小朋友除了免费上学，暑假还能得到一笔伙食补贴。
+但是伙食补贴只覆盖 30% 的小朋友。Durkan 议员可能提议扩大覆盖范围。英国
+百姓日子不太好过，政府好像也没多少钱了。
+
+在印度，国会职责莫迪政府执行《安得拉邦重组法》进度懒散：
+
+The Congress on Thursday claimed that the Andhra Pradesh
+Reorganisation Act[fn:2] 2014 was implemented by the Modi government at a
+"*lackadaisical* pace".[fn:3]
+
+*References*
+[[bibliography:~/docs/references.bib]]
+
+* Footnotes
+
+[fn:1] https://www.derryjournal.com/news/people/derry-mla-criticises-lackadaisical-response-from-education-minister-on-holiday-hunger-4703521
+
+[fn:2] https://www.indiacode.nic.in/bitstream/123456789/2123/1/A2014-6.pdf
+
+[fn:3] https://www.business-standard.com/politics/can-expect-implementation-of-ap-reorganisation-act-now-cong-s-jab-at-pm-124071100332_1.html
