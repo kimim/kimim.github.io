@@ -1,0 +1,37 @@
+#+LAYOUT: post
+#+TITLE: 单词本：confection
+#+TAGS: English
+#+CATEGORIES: language
+
+Hellriegel的“Organizational Behavior”一书 [[cite:&hellriegel2005ob]] 在讲
+到跨职能团队的时候，举了雀巢的例子。雀巢曾有一次调整他们分布式的职能部
+门，改成跨职能团队：
+
+Nestlé changed its decentralized functional organization in its
+chocolate and *confections* division to cross-functional teams.
+
+这里说雀巢的职能团队主要有两个业务部门，分别是 chocolate 巧克力和
+*confection* 糕点部门。
+
+有的词典说这个 *confection* 糕饼和蜜饯 [[cite:&appledict]] ，应该是那种甜甜
+的，需要一定的制作工艺的甜品吧。
+
+从词源上看， *confection* 是由 con- 和 fection 组成。con- 不用说，我们已
+经见过很多次了，比如[[id:E32D3FCB-97F5-4EAE-96F0-039821A2005B][单词本：confiscate]]，它的意思是一块儿、一起。而
+fection 则来自 ficere 制作的意思。法语 faire 应该也是源自 ficere。那么
+confection 就是一起制作，或者制作在一起。也就是把糖啊、水果啊、奶油啊、
+坚果啊什么的放在一起，做出来的东西了。
+
+当然，除了糕饼、蜜饯外，confection 还表示精工制作的物品。这个词义可以
+理解为很多人一块儿制作吧。
+
+比如 the mosque was a confection of domes and minarets. 这座清真寺由拱
+顶和光塔组成，工艺复杂精美。[[cite:&appledict]]
+
+德语为 das Konfekt，法语为 la confiserie看起来和英语 *confection* 是三个
+同源的好兄弟姐妹。其中德语是中性的，法语是阴性的。
+
+德语 die Konfiserie 又是甜品糕点店的意思。这一层又好像是从法语里学去的。
+
+*References*
+[[bibliography:~/docs/references.bib]]

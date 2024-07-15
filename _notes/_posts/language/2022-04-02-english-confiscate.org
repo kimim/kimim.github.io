@@ -1,11 +1,10 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: 单词本：confiscate
-categories: [language]
-tags: [English]
----
-#+END_EXPORT
+:PROPERTIES:
+:ID:       E32D3FCB-97F5-4EAE-96F0-039821A2005B
+:END:
+#+layout: post
+#+title: 单词本：confiscate
+#+categories: language
+#+tags: English
 
 这几天还是继续在学隐私计算、加密技术。
 
