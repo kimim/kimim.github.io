@@ -1,0 +1,44 @@
+#+LAYOUT: post
+#+TITLE: 单词：sedentary
+#+TAGS: English
+#+CATEGORIES: language
+
+美国有个非营利性机构 Wellness Council of America （WELLCOA），其存在的
+目的主要是为了推进健康工作和生活习惯。[[cite:&hellriegel2005ob]] 根据统计，
+很多问题是跟职业压力相关：
+
+The leading causes of illness are often preventable. Such causes
+include tobacco use, alcohol and substance abuses, *sedentary*
+lifestyles, poor nutritional habits, excessive and unnecessary
+stressors in the workplace, and inadequate employee abilities to cope
+with stress.
+
+这里列举了很多和职业压力相关的不健康习惯，其中一个 *sedentary* lifestyle
+就是久坐的生活方式。很容易推断出来， *sedentary* 源自拉丁语 sedere 也就
+是英语里的 sit。
+
+we all walk a certain amount every day even if we are
+*sedentary*. [[cite:&appledict]]
+
+德语是久坐的形容词是 sitzend 看起来和 sit 更接近写。eine *sitzende*
+Lebensweise haben 拥有一个久坐的人生。法语为 sédentaire 可以看出，英语
+的 sedentary 是从法语来传进来的。
+
+瑞典语和德语比较接近 sittande 近似 sitzend 了。
+
+久坐肯定不好，所以，我弄了一个显示器之家，立柱款的，高度50cm。这样我的
+显示器就可以上下调节，拉高了可以站着，拉低了可以坐着。为了保持桌面干净，
+我没有考虑升降台那种的。因为它会占据一大片桌面。
+
+我的做法是一个立柱，加一个键盘托和鼠标托。键盘托鼠标托根据实际高度要求
+从淘宝定制的长方体环状松木架，没上油漆，天然环保。
+
+这样一来，我要立着办公的话，就把木架一摆，显示器往上一拉就可以了。我要
+坐着办公的话，把把显示器拉下来，木架撤到桌子底下，这样桌面还是保持清爽。
+我尽量让桌面整片都是空的。去除各种干扰，比较有助于专注。
+
+一般来说，我上午站立办公，下午坐着办公。或者换一换。一天下来，就不存在
+久坐的问题啦。
+
+*References*
+[[bibliography:~/docs/references.bib]]
