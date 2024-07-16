@@ -1,0 +1,22 @@
+#+LAYOUT: post
+#+TITLE: 单词本：hillibilly
+#+TAGS: English
+#+CATEGORIES: language
+
+7曰15日，特朗普提名了副总统候选人，39岁的俄亥俄州参议员 James David
+Vance 。这个年轻的副总统候选人是草根出生，曾写过一本书叫作 Hillbilly
+Elegy，翻译为乡巴佬的悲歌。
+
+这本书以 J. D. Vance 自己的成长经历为蓝本，描绘了美国底层白人向上流动
+过程的艰辛。
+
+Billy 是这些人常用的名字，而 Hill 则是小山，合在一起的 Hillbilly 是比
+较有歧视意思的区乡巴佬的称呼了。其实 Billy 是 William 的一个昵称形式。
+看来有时候 W 和 B 也会互换着使用的么。
+
+Elegy 则来自拉丁语 elegos 悲伤的诗歌、挽歌、悼文。比如 he wrote
+*elegies* for friends who died during the war. [[cite:&appledict]]
+
+*References*
+[[bibliography:~/docs/references.bib]]
+
