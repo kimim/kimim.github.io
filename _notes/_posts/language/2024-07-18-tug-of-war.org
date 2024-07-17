@@ -1,0 +1,42 @@
+#+LAYOUT: post
+#+TITLE: 单词本：tug-of-war
+#+TAGS: English
+#+CATEGORIES: language
+
+昨天看信息安全论文，文中提到信息安全专家和他们的对手实际上一直在进行这
+无休止的拔河比赛：
+
+Cyber security experts and cyber adversaries are effectively in a
+continuous *tug-of-war*.
+
+三等黑客利用已经发现的系统漏洞进行攻击，二等黑客发掘系统漏洞，一等黑客
+制造系统漏洞。系统漏洞不断被探测出来，信息安全人员也要不断的去修补漏洞，
+检测攻击软件。于是就有了文中 *tug-of-war* 这一形象的说法。
+
+*tug-of-war* 直面意思就是战争的拖拉，也就是拔河比赛，引申为激烈的争夺。
+
+比如印度快报的这则消息：Railways, Sundargarh administration in *tug of
+war* over squatters in stalled construction project in Odisha 因为印度
+建设铁路速度慢，铁路工地又被人非法占据了。于是建设局和非法占地者展开了
+激烈的拔河式争夺。[fn:1]
+
+最近 Hillbilly Elegy 的作者 James David Vance 被提名为副总统候选人。背
+后似乎也是很多的权力竞争，特朗普的儿子 Donald Trump Jr. 似乎花了精力：
+
+Trump Jr. had spent months correcting what he calls the “lies of
+omission” from Republicans who wanted to keep Vance from becoming vice
+president.
+
+所以才会在拔河般竞争之后露出笑容：Don Jr basks in Vance spotlight
+after VP *tug of war*. [fn:2]
+
+法语里拔河是 le gagne-terrain 土地上的战争。瑞典语则是 dragkamp 拖拉战。
+
+* Footnotes
+
+[fn:1] 印度快报，Indian Express,
+https://www.newindianexpress.com/states/odisha/2024/Jul/17/railways-sundargarh-administration-in-tug-of-war-over-squatters-in-stalled-construction-project-in-odisha
+
+[fn:2] 华盛顿观察家报 Washington Examiner, Don Jr basks in Vance
+spotlight after VP tug of war,
+https://www.washingtonexaminer.com/news/campaigns/presidential/3086517/don-jr-vance-spotlight-vp-tug-of-war/
