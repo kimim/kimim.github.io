@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       35C1D482-7BCA-4A5E-BF5F-AE122891E33A
+:END:
 #+LAYOUT: post
 #+TITLE: 单词本：hillibilly
 #+TAGS: English
