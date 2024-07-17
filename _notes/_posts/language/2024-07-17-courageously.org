@@ -1,0 +1,34 @@
+#+LAYOUT: post
+#+TITLE: 单词本：courageously
+#+TAGS: English
+#+CATEGORIES: language
+
+昨天看到公司董事长发了一个文章表扬一个印度人勇敢的对当地政府的索贿行为
+提出质疑。在文章中，他用到了 courageously ：
+
+employees have *courageously* spoken up and taken the right actions.
+
+一直以来，我知道勇敢勇气的名词是 courage 原来还能改成形容词副词用：
+courageous/courageously。
+
+不过，读音也变化了。courage 是 [ˈkʌrɪdʒ] 而 courageous 则是
+[kəˈreɪdʒəs]，而且重音还在第二音节。
+
+China Daily 用了这个词介绍胡友平女士英勇救人的事迹：Hu Youping, the
+Chinese woman who *courageously* intervened to prevent a criminal from
+harming a Japanese mother and child, has passed away despite rescue
+efforts, according to an announcement released by the Suzhou Public
+Security Bureau in Jiangsu province on Friday morning. [fn:1]
+
+好莱坞明星 Shelly Duvall 勇敢地说出自己的心理问题：In 2016, Duvall
+*courageously* appeared on Dr. Phil, opening up about her mental health
+struggles and stating: "I am very sick. I need help." [fn:2]
+
+* Footnotes
+
+[fn:1] Suzhou woman who intervened to save Japanese dies
+http://www.chinadailyglobal.com/a/202406/28/WS667e1c88a31095c51c50b551.html
+
+[fn:2] Shelley Duvall cause of death: What did the legendary 'The
+Shining' actress die of?
+https://www.marca.com/en/lifestyle/movies/2024/07/11/668ffedb22601d2c208b4573.html

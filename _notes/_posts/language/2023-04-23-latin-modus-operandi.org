@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       4e53f0ea-ae71-42cb-822d-1076fc76fdbf
+:END:
 #+LAYOUT: post
 #+TITLE: 单词本：modus operandi
 #+TAGS: Latin English
