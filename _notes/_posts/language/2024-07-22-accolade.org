@@ -24,3 +24,6 @@ Poof! They were yesterday. It's today, and we've got to do it again.
 
 *accolade* 的本意是古时候骑士称号的授予仪式，君主会用剑搭在骑士的肩膀上，
 把奖牌挂在骑士的脖子上。
+
+*References*
+[[bibliography:~/docs/references.bib]]
