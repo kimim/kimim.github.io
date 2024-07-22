@@ -1,0 +1,40 @@
+#+LAYOUT: post
+#+TITLE: 单词本：ropes
+#+TAGS: English
+#+CATEGORIES: language
+
+这几天看《组织行为学》[[cite:&hellriegel2005ob]]，看到组织文化这一章，介绍
+了什么是组织文化：
+
+Organizational culture represents a complex pattern of beliefs,
+expectations, ideas, values, attitudes, and behaviours shared by the
+members of an organization that evolve over time.
+
+所谓组织文化就是一个组织经过长时间的磨合，形成的一系列复杂的模式，这些
+模式由信仰、期许、想法、价值观、态度、成员共有的行为组成。
+
+具体来说，组织文化可以是：
+- 重复使用的沟通方式
+- 员工共同遵守的规则，如领导是否有专属车位
+- 重要的价值观，如质量文化、价格策略
+- 管理层制定决策的逻辑和哲学
+- 环境和氛围，比如领导是单独大办公室，还是和普通员工一样用格子间
+- 在组织中如鱼得水的游戏规则。这里，作者提到这些规则就是 *the ropes*
+  that a newcomer must learn in order to become an accepted member
+
+the ropes 字面看起来就是绳索的复数形式呀。其实它的意思是办事的既定程序。
+这个词其实是水手的黑话。大概在船上工作的话，一定要知道绳子在哪里，所以
+是新手的第一课。
+
+于是，to know the ropes 意思是知道办事规矩。
+
+to show sb the ropes 向某人演示操作程序。[[cite:&appledict]]
+
+除此之外，on the ropes 也有特殊的意义。在拳击赛场周围会有围绳。如果有
+个拳击手已经被逼到了围绳上了。那就是濒临失败了。
+
+behind its apparent success the bank was actually *on the ropes*. 银行看
+起来很成功，其实已经濒临破产了。
+
+*References*
+[[bibliography:~/docs/references.bib]]
