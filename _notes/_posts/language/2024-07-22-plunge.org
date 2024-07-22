@@ -1,0 +1,41 @@
+#+LAYOUT: post
+#+TITLE: 单词本：plunge
+#+TAGS: English
+#+CATEGORIES: language
+
+还是在组织行为学一书[[cite:&hellriegel2005ob]]中看到。看了两个星期了，已经
+看到倒数第二章，培养组织文化。
+
+这里引用了一个TDIndustries 的案例，引出企业文化的重要性。要了解一个组
+织的灵魂的话：
+
+To understand the soul of an organization requires *plunging* below the
+charts, financial numbers, machines, and buildings into the world of
+organizational culture.
+
+这里，作者用了 *plunge* 一词，意思是纵身跳下。其实，仔细观察，可以发现，
+这个词跟 plumb 有些相似。我们之前在《[[id:E0A84A31-E788-4CE3-BDA2-1569F630A4CE][单词本：aplomb]]》学到过，aplomb 源
+自 plumb 铅锤。拉丁语 plumbum，也是铅的元素名。
+
+我们知道，语言的演进都是先实物，后抽象。先具体，后概念的。plumbum 铅，
+很重，就会快速落下，所以就由铅引申为重，由重引申为俯冲。
+
+to *plunge* into the river. 纵身跳进河里。
+
+由俯冲引申为陷入。
+
+the country *plunged* into chaos. 这个国家陷入混乱。
+
+还有股票价格暴跌。a *plunge* in share prices. 注意，这里 plunge 已经变成
+名词了。
+
+它还能当形容词 a *plunging* neckline 很低的领口，也就是深V字领。法语叫un
+décolleté plongeant.
+
+另外，有没有发现，这个词和之前学到过的词语类似，这个词也是来自法语：
+- [[id:EAE526DC-AF26-432B-BA14-E99149097F82][单词本：triage]]
+- [[id:CCD154D0-E341-4CD4-A4B3-1A92096348DD][单词本：sabotage]]
+- [[id:E3AD9BD4-09F6-4FA0-98CF-5AEF6BE8533E][单词本：arbitrage]]
+
+*References*
+[[bibliography:~/docs/references.bib]]

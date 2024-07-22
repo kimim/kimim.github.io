@@ -1,11 +1,10 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: 单词本：sabotage
-categories: [language]
-tags: [Français, English]
----
-#+END_EXPORT
+:PROPERTIES:
+:ID:       CCD154D0-E341-4CD4-A4B3-1A92096348DD
+:END:
+#+layout: post
+#+title: 单词本：sabotage
+#+categories: language
+#+tags: Français, English
 
 最近看工业信息安全资料，读到这段：
 

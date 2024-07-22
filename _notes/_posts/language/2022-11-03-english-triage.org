@@ -1,11 +1,10 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: 单词本：triage
-categories: [language]
-tags: [English]
----
-#+END_EXPORT
+:PROPERTIES:
+:ID:       EAE526DC-AF26-432B-BA14-E99149097F82
+:END:
+#+layout: post
+#+title: 单词本：triage
+#+categories: language
+#+tags: English
 
 最近的工作重点是工业信息安全，所以呢，大量阅读安全相关的标准文献是免不
 了的。工业控制系统方面最主要的安全标准是 IEC 62443 Security for

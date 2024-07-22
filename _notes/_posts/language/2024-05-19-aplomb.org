@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       E0A84A31-E788-4CE3-BDA2-1569F630A4CE
+:END:
 #+LAYOUT: post
 #+TITLE: 单词本：aplomb
 #+TAGS: English

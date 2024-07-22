@@ -1,11 +1,10 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: 单词本：arbitrage
-categories: [language]
-tags: [Français, English]
----
-#+END_EXPORT
+:PROPERTIES:
+:ID:       E3AD9BD4-09F6-4FA0-98CF-5AEF6BE8533E
+:END:
+#+layout: post
+#+title: 单词本：arbitrage
+#+categories: language
+#+tags: Français, English
 
 英国社会活动家 Erica Stanford 写的一本书叫做："Crypto Wars Faked
 Deaths, Missing Billions and Industry Disruption"，里面写道：
