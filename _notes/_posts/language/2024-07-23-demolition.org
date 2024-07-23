@@ -1,0 +1,27 @@
+#+LAYOUT: post
+#+TITLE: 单词本：demolition
+#+TAGS: English
+#+CATEGORIES: language
+
+Symphony Plus S+ Turbine [[cite:&3BUS095400]] 介绍了企业提供的服务：
+
+Our services include custom component design and mounting, speed wheel
+and speed probe mounting, system *demolition* and installation
+engineering, as well as oil system piping.
+
+这里 system *demolition* 指的是系统拆除。我一般会写成 system
+installation and uninstallation，但是其实可能并没有 uninstallation 这
+个词，或者用 destruction，但它可能有破坏的意思。
+
+其实，从源头上看，demolition 是拉丁语 de- 和 moliri 的组合。de- 表示分
+离、落下，而 moliri 是建造的意思。合起来就是把建筑拉倒。
+
+拉丁语 moles 是堆砌的屏障的意思。所以英语 mole 法语 môle 德语 die Mole
+的意思是 breakwater 防波堤。
+
+英语里 mole 还有很多其他意思啊。
+
+鼹鼠也是 mole，德语是 der Maulwurf。法语是 la taupe。
+
+痣也是 mole。德语叫 der Leberfleck，统称 Mal，das Muttermal 就是妈妈给
+的痣，就是胎记。法语给了它一个很好听的名字 la grain de beauté，美丽点？
