@@ -1,0 +1,45 @@
+#+LAYOUT: post
+#+TITLE: 单词本：throttle
+#+TAGS: English
+#+CATEGORIES: language
+
+最近由于开发项目的测试需要，要去采购一批涡轮监控保护设备。于是就看看相
+应的手册 [[cite:&3BUS095400]] 。以下一段介绍了该产品的涡轮转自压力的计算
+和监控功能。
+
+The rotor stress application calculates and monitors the turbine rotor stress levels to initiate speed or load limiting actions, as needed. The key features are:
+- Calculation of *throttle* and reheat steam temperature window
+- Computing of rotor temperature and evaluation of the rotor stress (HP and IP)
+- Evaluation of the allowable stress based on the different max. cycle times
+- Evaluation of the max. allowable speed and load gradients during the transients
+- Calculation of rotor thermal life expenditure (monthly, yearly and total)
+
+总结来说，它可以计算节流阀和再加热蒸气的温度窗口、计算转子温度、评估转
+子压力、计算最大允许转速、以及转子的热力损耗等。
+
+其中，有个单词 *throttle* 它和 throat 喉咙长得有点像。
+
+事实上，这个词就是从 throat 演变来的。throttle 做动词用的话，意思是掐
+喉咙、使……窒息。
+
+Sometimes he annoys me so much that I could *throttle*
+him. [[cite:&cambridgedict]] 他有时候真讨厌，我都想掐死他。
+
+那么，也 throttle 可以引申为扼杀。The reduction in funds is *throttling*
+the development of new programmes. 经费消减将扼杀新项目。
+
+而引文中则是用作名词，节流阀或者进气阀。也可以是汽车的油门踏板，因为它
+是用来控制油门进气的速度的。take one's foot off the *throttle*
+[[cite:&oxforddict]] 就是松开油门。
+
+He twisted the *throttle* control to max power. 他把节气门的开关拧到最大。
+
+那么，把进气阀全部打开，就可以引申为充满活力了：
+
+He lived his life at full *throttle*. 他过着激情四射的生活。[[cite:&collinsdict]]
+
+从 throat 到 throttle 的转变，添加了 -le 后缀。这个 -le 其实叫作
+utensil suffix 器物后缀。即把某个名词器物化。比如 hand 手，handle 手柄。
+
+*References*
+[[bibliography:~/docs/references.bib]]
