@@ -25,3 +25,6 @@ installation and uninstallation，但是其实可能并没有 uninstallation 这
 
 痣也是 mole。德语叫 der Leberfleck，统称 Mal，das Muttermal 就是妈妈给
 的痣，就是胎记。法语给了它一个很好听的名字 la grain de beauté，美丽点？
+
+*References*
+[[bibliography:~/docs/references.bib]]
