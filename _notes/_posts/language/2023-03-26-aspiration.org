@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       C4DCC461-D06C-4036-A29F-2A81FA5FA64C
+:END:
 #+LAYOUT: post
 #+TITLE: 单词本：aspiration
 #+TAGS: English
