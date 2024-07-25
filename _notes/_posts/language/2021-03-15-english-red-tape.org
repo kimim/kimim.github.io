@@ -1,18 +1,14 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: 单词本：red tape
-categories: [language]
-tags: [English]
----
-#+END_EXPORT
+#+layout: post
+#+title: 单词本：red tape
+#+categories: language
+#+tags: English
 
 今天学了跨国管理相关的文章，其中提到作为跨国公司的管理者，必须熟悉世界各国的政策、
 制度、经济和文化等。其中有这样一句话：
 
 #+begin_quote
-Swedish retailer Ikea has halted further investment in Russia because of
-continual governmental red tape delays.
+Swedish retailer Ikea has halted further investment in Russia because
+of continual governmental *red tape* delays.
 #+end_quote
 
 大概意思是说：因为俄罗斯政府审批流程的 *繁文缛节* ，瑞典的宜家暂停在俄罗斯的投资。
@@ -49,3 +45,13 @@ hinder the relatively nascent battery industry with *red tape*.
 读到这段话，我就不需要查字典就懂了。仿佛是一种默契。这就是学语言学单
 词的乐趣呀。这种不期而遇的学语言的惊喜，从初中到高中，一直伴随我到现
 在。
+
+还有组织行为学 [[cite:&hellriegel2005ob]] 管理组织变革这一章举的例子：
+
+ABB, which owns power generation facilities in 16 countries, is well
+positioned to take advantage of deregulation in the electric power
+industry as governments around the world seek to reduce government
+regulation and *red tape*.
+
+*References*
+[[bibliography:~/docs/references.bib]]
