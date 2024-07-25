@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       292203B9-DF85-48A2-ACB0-57558750273B
+:END:
 #+LAYOUT: post
 #+TITLE: 单词本：intractable
 #+TAGS: English

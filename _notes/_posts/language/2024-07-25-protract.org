@@ -1,0 +1,27 @@
+#+LAYOUT: post
+#+TITLE: 单词本：protract
+#+TAGS: English
+#+CATEGORIES: language
+
+还是台风的应急通知。其中提到，有些商业、交通、物流会因为暴风的原因而拖
+延。
+
+Plan accordingly for *protracted* commercial, transport, and logistics
+disruptions in areas in the storm's path, especially if vital
+infrastructure is damaged.
+
+显然，这个 protract 是由 pro- 和 tract 组成的。tract 我们之前在[[id:292203B9-DF85-48A2-ACB0-57558750273B][单词本：
+intractable]] 中学到过。它源自拉丁语 trahere 也就是 draw 拖拉的意思。
+前缀 pro- 有 forward 向前和 out 出来的意思。这里应该类似 prolong 延长。
+也就是拖拉延长，即拖延。
+
+其实 portray 描绘这个词跟 protract 都是源自拉丁语 protrahere ，但是意
+思就差别很大。
+
+新闻例子：
+
+Harris is armed with a readymade general election campaign she now
+inherits from her former running mate, a powerful war chest, and party
+allies eager to avoid *protracting* an intraparty battle that already
+took down the candidacy of a sitting president. 民主党们在极力避免被拖
+延的党内斗争？也就是说美国民主党内内斗蓄势待发？
