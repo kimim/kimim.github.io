@@ -1,0 +1,38 @@
+#+LAYOUT: post
+#+TITLE: 单词本：torrential
+#+TAGS: English
+#+CATEGORIES: language
+
+今天台风格美 Gaemi 登陆，公司发了应急邮件：
+
+Heavy-to-*torrential* rainfall of 25-50 cm (10-20 inches) is expected
+over most of Fujian, eastern Guangdong, and southern Zhejiang
+provinces through early July 26.
+
+这里 Heavy-to-*torrential* rainfall 是指大到暴雨。
+
+*torrential* 的名词形式是 torrent 急流。
+
+比如 the stream had become a raging torrent 小溪变成了汹涌的急流。
+
+torrent 也形象的表示连发、并发。
+
+a torrent of questions from the reporters. 记者们提出连珠炮似的问题。
+[[cite:&appledict]]
+
+法语也有 la torrent：il pleut à torrents. 大雨如注。
+
+菲律宾就比较惨了，他们那儿整个城市被淹没了：
+
+Much of the Philippine capital remained underwater Thursday after
+deadly Typhoon Gaemi worsened *torrential* monsoon rains that lashed the
+country, trapping thousands of people in rising flood waters and
+causing widespread damage. (from CNN July 25, 2024. Floods inundate
+Philippine capital, oil tanker sinks as deadly typhoon prompts calls
+for climate action)
+
+然而，torrent 其实源自拉丁语 torrere，意思是烧烤。或者可以这么认为，水
+被烧烤煮沸的时候，就是奔流沸腾的样子了。
+
+*References*
+[[bibliography:~/docs/references.bib]]
