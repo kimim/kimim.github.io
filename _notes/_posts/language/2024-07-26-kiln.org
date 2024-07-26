@@ -1,0 +1,26 @@
+#+LAYOUT: post
+#+TITLE: 单词本：kiln
+#+TAGS: English
+#+CATEGORIES: language
+
+今天看到一条消息，说水泥行业的碳减排之路任重道远。水泥是我们生活中很重
+要的一种工业品。然而……
+
+Cement production is not easy to decarbonize due to the high
+temperatures required in the *kiln* and the emissions from the
+calcination of limestone.
+
+水泥生产是能耗很大的工业过程。这里， *kiln* 是烧制水泥的高温窑。这个词其
+实来自拉丁语 cocina，法语单词cuisine 也是源自 culina，我们之前遇到过：
+[[id:2242725a-6861-4763-b1b5-e07f20c730db][单词本：cuisine]]。
+
+cocina 的拉丁语意思是厨房、炉灶。 *kiln* 窑不就是个放大的炉灶么。
+
+而 cocina 又来自拉丁语 coquere 的 cook 烹饪。
+
+那么，整理一下同源的单词：
+- cook 烹饪，德语 kochen 法语 fare cuire
+- Kuchen 德语糕点，英语里则是德式糕点
+- kitchen 厨房，德语 die Küchen 法语 la cuisine
+- kiln 窑
+

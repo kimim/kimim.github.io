@@ -1,12 +1,10 @@
-#+BEGIN_HTML
----
-layout: post
-title: 單詞本：法語單詞 cuisine
-categories: [language]
-tags:
-  - Français
----
-#+END_HTML
+:PROPERTIES:
+:ID:       2242725a-6861-4763-b1b5-e07f20c730db
+:END:
+#+layout: post
+#+title: 单词本：cuisine
+#+categories: language
+#+tags: Français
 
 #+BEGIN_HTML
 <a href="http://www.flickr.com/photos/kimim-photo/12147699886/" title="Flickr 上 kimim-photo 的 cuisiner"><img src="http://farm3.staticflickr.com/2806/12147699886_c11350f9f8_z.jpg" width="640" height="426" alt="cuisiner"></a>
@@ -89,7 +87,7 @@ tags:
 
 [fn:1]  A refrigerator accessory that can make and remake small uniform ice cubes.
 
-[fn:2] ŏ 這個字符的名字是 LATIN SMALL LETTER O BREVE. http://en.wikipedia.org/wiki/Breve. 和這個字符很相似的字符ǒ叫做 LATIN SMALL LEtter O WITH CARON. 前者是圓形的下半部，後者則是 V 字形。差不多是我們的第三聲符號。ī 這個字符則叫做 LATIN SMALL LETTER I MACRON. http://en.wikipedia.org/wiki/Macron
+[fn:2] ŏ 這個字符的名字是 LATIN SMALL LETTER O BREVE. http://en.wikipedia.org/wiki/Breve. 和這個字符很相似的字符ǒ叫做 LATIN SMALL LETTER O WITH CARON. 前者是圓形的下半部，後者則是 V 字形。差不多是我們的第三聲符號。ī 這個字符則叫做 LATIN SMALL LETTER I MACRON. http://en.wikipedia.org/wiki/Macron
 
 [fn:3] http://dict.youdao.com/search?q=cuisine&keyfrom=dict.index
 
