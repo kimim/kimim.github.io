@@ -1,0 +1,31 @@
+#+LAYOUT: post
+#+TITLE: 单词本：inclement
+#+TAGS: English
+#+CATEGORIES: language
+
+最近台风天气，我们公司里预警邮件频发。比如：
+
+*Inclement* weather could trigger localized business, transport, and
+utility disruptions, rendering some bridges or roadways impassable.
+
+恶劣天气会导致商业、交通、基础设施受损，桥梁、道路不通。
+
+这里形容恶劣天气用的是 *inclement* 。in- 是否定前缀，clement 的意思是仁
+慈的、（天气）温和的、和蔼的、宽厚的。clement 的反面就是不仁慈、不温和
+的意思了。也就是恶劣。
+
+clement 源自拉丁语 clemens 以及 clemens 的呼格 clementem 。意思是温和的。
+
+古代人男子喜欢用 Clement 做名字。现在好像不流行了。
+
+女子也有对应的名字：Clementina 或 Clementine 。
+
+大概都是父母希望小孩子温柔、听话，不要惹是生非吧。
+
+inclement 这个词大都是用来形容天气的，比如：
+
+The Premier Volleyball League (PVL) has announced that all games
+scheduled for Thursday, July 25, have been canceled due to the
+*inclement* weather brought by Typhoon Carina.
+
+希望大家都没事。再见。
