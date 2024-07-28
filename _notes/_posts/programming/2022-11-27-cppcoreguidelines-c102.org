@@ -1,26 +1,20 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.102 赋予容器移动操作
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.102 赋予容器移动操作
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Give a container move operations"
+C.102: Give a container move operations
+
+*理由*
+
+容器很容易变得很大，如果没有移动构造函数和复制构造函数，移动容器对象会
+变得很耗计算资源。因此，人们倾向于使用指针操作容器，但是这样就会遇到内
+存管理的问题。
 
 
-理由
-
-容器很容易变得很大，如果没有移动构造函数和复制构造函数，容器对象的移动
-会变得很耗资源。因此，人们倾向于使用指针操作容器，就会遇到内存管理的问
-题。
-
-
-例子
-
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 Sorted_vector<int> read_sorted(istream& is)
@@ -32,4 +26,5 @@ Sorted_vector<int> read_sorted(istream& is)
 }
 #+end_src
 
-返回一个符合标准的容器应该很节省资源。
+我们应该允许用户认为返回一个符合标准的容器是很节省资源的。只有我们定义
+的容器类实现了移动构造函数，才能为用户提供这种保证。

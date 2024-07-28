@@ -1,44 +1,41 @@
 ---
 layout: post
 title: CppCoreGuidelines C.102 赋予容器移动操作
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Give a container move operations&rdquo;
+C.102: Give a container move operations
+</p>
+
+<p>
+<b>理由</b>
+</p>
+
+<p>
+容器很容易变得很大，如果没有移动构造函数和复制构造函数，移动容器对象会变得很耗计算资源。因此，人们倾向于使用指针操作容器，但是这样就会遇到内存管理的问题。
 </p>
 
 
 <p>
-理由
+<b>例子</b>
 </p>
-
-<p>
-容器很容易变得很大，如果没有移动构造函数和复制构造函数，容器对象的移动会变得很耗资源。因此，人们倾向于使用指针操作容器，就会遇到内存管理的问题。
-</p>
-
-
-<p>
-例子
-</p>
-
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">read_sorted</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>&amp; <span style="color: #000000;">is</span><span style="color: #707183;">)</span>
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #0000ff; font-weight: bold;">read_sorted</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">is</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">v</span>;
-    cin &gt;&gt; v;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">assume we have a read operation for vectors</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">sv</span> = v;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">sorts</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">v</span>;
+    cin <span style="color: #7F0055; font-weight: bold;">&gt;&gt;</span> v;   <span style="color: #3F7F5F;">// assume we have a read operation for vectors</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">sv</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">v</span>;  <span style="color: #3F7F5F;">// sorts</span>
     <span style="color: #7F0055; font-weight: bold;">return</span> sv;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-返回一个符合标准的容器应该很节省资源。
+我们应该允许用户认为返回一个符合标准的容器是很节省资源的。只有我们定义的容器类实现了移动构造函数，才能为用户提供这种保证。
 </p>
