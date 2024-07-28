@@ -1,32 +1,29 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.100 参考 STL 实现容器类
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.100 参考 STL 实现容器类
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Follow the STL when defining a container"
+C.100: Follow the STL when defining a container
 
 
-理由
+*理由*
 
-大部分 C++ 程序员熟悉 STL 容器。STL 容器的定义很周全。
-
-
-注意
-
-当然也有其他非常完美的设计风格，偶尔也有充足理由不遵循标准库设计风格。
-但是如果没有做过充分的分析，最简单最容易的方法还是遵循标准库的设计风格。
+大部分 C++ 程序员熟悉 STL 容器。STL 容器的设计考虑很周全。
 
 
-尤其是 std::vector 和 std::map 提供相对简单有用的模型。
+*注意*
+
+当然也有其他非常考虑周全的设计风格，偶尔也有理由不遵循标准库设计风格。
+但是如果没有做过充分的分析，遵循标准库的设计风格还是一种最简单最容易的
+方法。
 
 
-例子
+尤其是 ~std::vector~ 和 ~std::map~ 提供相对简单有用的模型。
+
+
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 // simplified (e.g., no allocators):
@@ -66,4 +63,4 @@ template<typename T> bool operator!=(const Sorted_vector<T>&, const Sorted_vecto
 这里遵循的 STL 的风格，但是没有实现所有的接口。一般来说，对于特定容器
 提供足够的功能接口就可以了。关键是要定义约定俗成的构造、复制、析构、迭
 代器函数，并遵循特定容器的工作机制。以此为基础，这个容器也可以根据需要
-扩展。此处，添加了 std::vector 的一个特殊构造函数。
+扩展。此处，添加了从 ~std::vector~ 进行构造的特殊构造函数。
