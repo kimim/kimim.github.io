@@ -5,7 +5,7 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Give a container an initializer list constructor"
+C.103: Give a container an initializer list constructor
 
 
 *理由*
