@@ -1,10 +1,9 @@
 ---
 layout: post
 title: CppCoreGuidelines C.103 赋予容器初始化列表构造函数
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
@@ -13,20 +12,21 @@ tags: [CppCoreGuidelines]
 &ldquo;Give a container an initializer list constructor&rdquo;
 </p>
 
+
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-用户期望用一组值初始化一个容器。
+用户期望能够用一组值初始化一个容器。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">sv</span> <span style="color: #707183;">{</span>1, 3, -1, 7, 0, 0<span style="color: #707183;">}</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Sorted_vector sorts elements as needed</span>
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">sv</span> <span style="color: #707183;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">3</span>, <span style="color: #110099;">-1</span>, <span style="color: #110099;">7</span>, <span style="color: #110099;">0</span>, <span style="color: #110099;">0</span><span style="color: #707183;">}</span>; <span style="color: #3F7F5F;">// Sorted_vector sorts elements as needed</span>
 </pre>
 </div>
