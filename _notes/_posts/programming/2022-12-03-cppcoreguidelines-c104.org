@@ -1,23 +1,19 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.104 赋予容器一个默认构造函数构造一个空容器
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.104 赋予容器一个默认构造函数构造一个空容器
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Give a container a default constructor that sets it to empty"
+C.104: Give a container a default constructor that sets it to empty
 
 
-理由
+*理由*
 
-使得容器更正规。符合用户熟悉的习惯。
+这样做可以使得容器更正规。更符合用户熟悉的习惯。
 
 
-例子
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 vector<Sorted_sequence<string>> vs(100);    // 100 Sorted_sequences each with the value ""

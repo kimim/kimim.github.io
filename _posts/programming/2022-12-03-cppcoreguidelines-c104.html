@@ -1,33 +1,32 @@
 ---
 layout: post
 title: CppCoreGuidelines C.104 赋予容器一个默认构造函数构造一个空容器
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Give a container a default constructor that sets it to empty&rdquo;
+C.104: Give a container a default constructor that sets it to empty
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-使得容器更正规。符合用户熟悉的习惯。
+这样做可以使得容器更正规。更符合用户熟悉的习惯。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_sequence</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6;">&gt;</span><span style="color: #707183;">&gt;</span> <span style="color: #000000;">vs</span><span style="color: #707183;">(</span>100<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">100 Sorted_sequences each with the value ""</span>
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">vector</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Sorted_sequence</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">vs</span><span style="color: #707183;">(</span><span style="color: #110099;">100</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// 100 Sorted_sequences each with the value ""</span>
 </pre>
 </div>
