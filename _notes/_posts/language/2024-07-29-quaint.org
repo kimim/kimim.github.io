@@ -1,0 +1,51 @@
+#+LAYOUT: post
+#+TITLE: 单词本：quaint
+#+TAGS: English
+#+CATEGORIES: language
+
+企业服务器市场一直在进行虚拟化变革。以至于物理CPU和硬盘已经成了老古董
+概念了：
+
+Just as virtualization made knowledge of your physical CPUs and disk
+layouts a *quaint* concept, so too are technologies like Docker and
+Kubernetes making the very notion of a server or virtual machine
+something of a bygone era. [fn:1]
+
+这则关于文章，云原生的安全建议。里面用了 quaint。意思是古色古香的、离
+奇有趣的、做工精巧的。
+
+显然，在这篇文章里 quaint 带有一些变异，所以翻译为古色古香不如翻译为老
+里老气。
+
+这个词源自拉丁语。拉丁语 cognoscere 的意思是变得出名，它的过去分词是
+cognitus，一转变就成了 quaint 了。我们可以理解 quaint 是古时候出名的。
+那从现在视角看，就是古色古香了。出名的东西肯定做工也精巧吧。
+
+cognize，cognition 认知的动词和名词形式应该直接就来自 cognoscere 了。
+
+在这批关于英格兰西南部多塞特的介绍中，也用到了 quaint ：
+
+Dorset is known for its alluring beaches and dramatic, 95-mile-long
+Jurassic coastline with many of its villages providing a *quaint*,
+picture-perfect setting for people keen to live a quintessential
+country lifestyle - and for those who want to experience it on
+holiday. [fn:2]
+
+多塞特这个地方因为中世纪的黑死病，死了无数人，所以会有一些诡异的传说。
+
+In fact, according to a guide on dorset coastal cottages, visitors
+often comment on its melancholy atmosphere, with its website citing:
+“It is said that the souls of the dead linger here.” “Ghostly faces
+have been seen at the doors and windows, and reports of a weeping nun
+apparition kneeling beyond the church walls exist too. Scariest of all
+is the phantom horse and rider that gallops across the site just
+before dawn when the night is at its darkest," it says rather
+spookily. So while Wimborne St Giles might be worth a visit, a trip to
+Knowlton Church might only favour the brave.
+
+* Footnotes
+
+[fn:1] Cloud native and security today: secure the app. https://www.csoonline.com/article/563719/the-modern-security-landscape-is-evolving-what-you-need-to-know.html
+
+[fn:2] https://www.mirror.co.uk/travel/uk-ireland/stunning-quaint-english-village-15-33255896
+
