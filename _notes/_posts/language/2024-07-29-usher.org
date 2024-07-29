@@ -1,0 +1,32 @@
+#+LAYOUT: post
+#+TITLE: 单词本：usher
+#+TAGS: English
+#+CATEGORIES: language
+
+看一个云原生安全相关的文章，遇到 usher 这个单词：
+
+Containers and microservices are *ushering* in an entirely new operating
+pattern for organizations, one in which the infrastructure is even
+more abstracted and ephemeral than the cloud and virtualization
+patterns that preceded it. [fn:1]
+
+usher 是引座员、引领的意思。这段文字的意思是说容器和微服务引领了一个全
+新的操作模式。计算机服务器基础设施变得更加的抽象化、按需快速分配使用。
+
+这个词源自通俗拉丁语 ustiarius 看门人，也就是拉丁语的 ostiarius。而
+ostium 则是门的意思。ostium 又来自 os，嘴巴的意思。
+
+所以 os 的派生词 oral 的意思是口头的。
+
+而 os 如果发音不一样，又是骨头的意思。比如骨科就是 orthopaedics 。
+
+因为 usher 从拉丁语到法语兜了一圈，所以女引座员就是 usherette，这里用
+了法语的女性化后缀。
+
+usher out 的意思就是引出，也就是送出。所以 usher out the old, greet
+the new 就是辞旧迎新的意思。
+
+* Footnotes
+
+[fn:1] Cloud native and security today: secure the app.
+https://www.csoonline.com/article/563719/the-modern-security-landscape-is-evolving-what-you-need-to-know.html
