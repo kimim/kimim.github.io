@@ -1,11 +1,10 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: 单词本：pro forma
-categories: [language]
-tags: [English, Latin]
----
-#+END_EXPORT
+:PROPERTIES:
+:ID:       4A3BAF76-324A-44E0-8F23-BC907DF21319
+:END:
+#+layout: post
+#+title: 单词本：pro forma
+#+categories: language
+#+tags: English, Latin
 
 前不久，公司 CMD 的 PPT。公司进行了一系列的财务优化，比如项目评估选择、
 NWC 优化，ROC 不断提升，全球市场占有率也稳居第一。

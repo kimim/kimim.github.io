@@ -1,0 +1,33 @@
+#+LAYOUT: post
+#+TITLE: 单词本：provident
+#+TAGS: English
+#+CATEGORIES: language
+
+最近各市的社会平均工资出炉了。我们公司人事就发出邮件跟大家沟通，公积金
+的调整计划。
+
+According to relevant polices issued by human resources and social
+security bureau as well as housing *provident* fund management center,
+most regions will adjust the base of social insurance and housing fund
+from July in 2024.
+
+这个邮件中 housing *provident* fund management center 是住房公积金中心的
+意思。前面 human resources and social security bureau 是人力资源与社会
+保障局。
+
+*provident* 的意思是未雨绸缪的、有远虑的。一般用于储蓄、存款。在这里也就
+是公积金的积。
+
+这个词来自拉丁语 providere，pro- 表示提前的、即 fore，而 videre 则是看
+见的意思。providere 的本意是提前看见。
+
+provide 也来自 providere，应为提前看见，所以 provide against 有防备的
+意思，provide for 有供养、考虑的意思。
+
+I have to provide for my old age. 我必须为老年时做准备。
+
+提供东西给别人也是因为提前看见别人需要某样东西才会做的事情吧。
+
+provident 是 provide 的形容词，但是只保留防备的意思。
+
+我们之前学到过 [[id:4A3BAF76-324A-44E0-8F23-BC907DF21319][单词本：pro forma]]，这里 pro 也是提前的意思。
