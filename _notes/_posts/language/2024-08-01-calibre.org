@@ -1,0 +1,39 @@
+#+LAYOUT: post
+#+TITLE: 单词：calibre
+#+TAGS: English
+#+CATEGORIES: language
+
+在 Don Hellriegel 的组织行为学 [[cite:&hellriegel2005ob]] 中，他介绍了团队
+的几种组织形式，functional team，problem-solving team,
+cross-functional team, self-managed team, and virtual team.
+
+其中一个案例介绍了他们选择组件跨区域的在线的 virtual team 的原因：
+
+One of the reasons we went to virtual teams in our support centres is
+that it's difficult to attract the *calibre* of people you want who are
+willing to work at 2:00 and 3:00 in the morning on Saturday and
+Sunday.
+
+因为他们是 IT 支持部门，在一个时区没法提供 7 x 24 小时的技术支持，所以
+团队成员来自多个不同时区。
+
+这里 calibre 的意思是能力、素质。其实还有水准、口径等意思。这个词据说
+来自阿拉伯语的 qālib 模具。模具当然是制作器物的参考表准了。
+
+也有说来自希腊语的 kalapous 即 shoemaker's last。等等，什么是 last?
+last 作为形容词是最后、最近、剩下的。最为动词是持续。但是其实上它还有
+一个意思是鞋楦。鞋楦就是鞋匠做鞋子时候用的模具。last 的这个意思又是来
+自德语 Leisten。
+
+alles über einen Leisten schlagen 大家按照鞋楦敲，引申为大家一起行动。
+
+后来在系统工程相关文章里看到系统规格书的介绍，也用到了 calibre 这个词：
+
+System Specifications are a cardinal part of the process, safeguarding
+against misinterpretations and guiding the creation of high-*calibre*
+systems in Systems Engineering.
+
+high-calibre 即“高水准的”。
+
+*References*
+[[bibliography:~/docs/references.bib]]
