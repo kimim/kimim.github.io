@@ -1,0 +1,38 @@
+#+LAYOUT: post
+#+TITLE: 单词本：at bay
+#+TAGS: English
+#+CATEGORIES: language
+
+我看了篇文章，对比了用户需求和系统规格书的区别。前者从用户功能角度规定
+用户想要哪些功能，而后者则从技术角度规定实现过程有哪些约束。
+
+System Specifications meticulously direct the implementation of a
+system, keeping ambiguity *at bay*.
+
+这里说系统规格书小心翼翼地指导系统的实现过程，让模糊无处可逃。
+
+这里 at bay 的意思是陷入绝境、无处可逃。
+
+这个意思要从 bay 的意思说起了。
+
+bay 有一个词义是海湾，另一个意思是动物低沉连续的叫 deep-toned howl of
+a dog。
+
+第二个意思动物低声的叫是从拉丁语 baubari 变过来的，当动物陷入牢笼，无
+法逃脱的时候，就会无助的嚎叫了。其实 bark 狗狗叫也是从 baubari 演变过
+来的呢。
+
+所以，at bay 的意思是指动物被捕捉陷入绝境，只能低声无助嚎叫。
+
+那么，回到前面这句话， keep ambiguity at bay 就是形象的把模糊不清比作
+动物，让它无处可逃，也就是不让模糊不清的系统设计出现。
+
+再比如
+
+Monstrously inflated prices are designed to keep people like us *at
+bay*. 疯狂的物价会使我们这些人走投无路。
+
+Eating oranges keeps colds *at bay*. 吃橙子补充维生素C可以预防感冒。
+
+The stag *at bay* is a dangerous foe. 受困的雄鹿是危险的对手。也就是孙子
+兵法所说的“穷寇勿迫，此用兵之法也”。即穷寇莫追。
