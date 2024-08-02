@@ -1,0 +1,35 @@
+:PROPERTIES:
+:ID:       8c547872-b601-4d88-b7bb-179533203e58
+:END:
+#+LAYOUT: post
+#+TITLE: 单词本：stamina
+#+TAGS: English
+#+CATEGORIES: language
+
+在 Don Hellriegel 的组织行为学中 [[cite:&hellriegel2005ob]]，引用了一个李
+维斯 Linda Glick 的案例。她拥抱变化，挑战自我，事业上实现了很多突破。
+她的人生哲学：
+
+Linda Glick's philosophy is: "Change is painful and hard. We all
+gravitate toward the comfortable, familiar and cozy. We don't know if
+we have the *stamina* and resilience to take on change and see it
+through successfully."
+
+这里，用到了 stamina 这个词，也就是耐力。这个词的来源倒是有些神奇。拉
+丁语里 stamina 是 stamen 的复数形式，意思是纱线，而且是那种竖着的经纱。
+
+“竖着的”这个词义可以联系到 stare 即站立 stand 的拉丁语祖先。经纱不就是
+垂直地面的么。
+
+stamen 演变到现在，意思成了花朵的雄蕊。可能也是因为花蕊是竖着长的，从
+而得名。而 stamina 的意思确实耐力。有可能是因为经纱很结实，组成了很牢
+固衣服。
+
+比如：The triathlon is a great test of *stamina*. 铁人三项是耐力的考验。
+
+另外，故事里的李维斯（Levi's）是著名的牛仔裤品牌，由犹太商人Levi
+Strauss（李维·斯特劳斯）创立。 1853年，Levi Strauss成立了生产帆布工装
+裤的 Levi Strauss & Co.公司。
+
+*References*
+[[bibliography:~/docs/references.bib]]
