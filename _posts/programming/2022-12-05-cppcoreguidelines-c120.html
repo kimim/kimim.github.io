@@ -1,64 +1,64 @@
 ---
 layout: post
-title: CppCoreGuidelines C.120 用类层级表示层级继承结构的概念
-categories: [technology]
+title: CppCoreGuidelines C.120 用类层级表示具有层级继承结构的概念
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Use class hierarchies to represent concepts with inherent hierarchical structure (only)&rdquo;
+C.120: Use class hierarchies to represent concepts with inherent
+hierarchical structure (only)
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-在代码中直接表达这种思想，更容易理解和维护。请确保基类所表达的思想，在继承类中保持一致，并且无法用其他更好的方式表达这种紧耦合的继承。
+在代码中直接表达设计思想，更容易理解和维护。请确保基类所表达的思想，保持在继承类中一致，并且没有其他更好的方式表达这种紧耦合的继承。
 </p>
 
 <p>
-如果数据成员可以实现相同的目的，就不要使用继承。这种情况下，通常在继承类中会重载基类虚函数或需要访问保护成员数据。
+如果使用成员数据可以实现相同的目的，就不要使用继承。这种情况下，通常在继承类中，会重载基类的虚函数，或访问受保护的基类成员数据。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">DrawableUIElement</span> <span style="color: #707183;">{</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">DrawableUIElement</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">render</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> = 0;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">render</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">AbstractButton</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">DrawableUIElement</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">onClick</span><span style="color: #7388d6;">()</span> = 0;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">onClick</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">PushButton</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">AbstractButton</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">render</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">onClick</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">render</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">onClick</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Checkbox</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">AbstractButton</span> <span style="color: #707183;">{</span>
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-坏例子
+<b>例子</b>
 </p>
 
 <p>
@@ -66,34 +66,34 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Container</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">list operations:</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp; <span style="color: #0000ff; font-weight: bold;">get</span><span style="color: #7388d6;">()</span> = 0;
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">put</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp;<span style="color: #7388d6;">)</span> = 0;
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">insert</span><span style="color: #7388d6;">(</span>Position<span style="color: #7388d6;">)</span> = 0;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">vector operations:</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>&amp; <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #7388d6; font-weight: bold;">[]</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span> = 0;
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">sort</span><span style="color: #7388d6;">()</span> = 0;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">tree operations:</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">balance</span><span style="color: #7388d6;">()</span> = 0;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// list operations:</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">get</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">put</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">insert</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Position</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #3F7F5F;">// vector operations:</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> operator<span style="color: #7388d6;">[]</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">sort</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #3F7F5F;">// tree operations:</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">balance</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 <p>
-此处，大部分继承的类无法实现结构要求的函数。因此基类成了实现过程的负担。更进一步， Container 的用户无法倚靠成员函数高效地执行某些操作。还可能会抛出异常。因此用户要倚靠运行时检查或者不用这些通用的接口，而是通过运行时类型查询调用特定的接口（dynamic<sub>cast</sub>）。
+此处，很多继承类无法很好实现这些接口函数。因此基类成了实现过程的负担。更进一步， <code>Container</code> 的用户无法依靠成员函数高效地执行某些操作。还可能会抛出异常。因此用户要依靠运行时检查或者干脆不使用这些过于通用的接口，转而利用运行时类型查询来调用特定的接口（比如<code>dynamic_cast</code>）。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>如果类有很多成员，并且这些成员函数什么也不做，只是抛出异常。</li>
+<li>查看是否存在这种情况：类有很多成员，并且这些成员函数什么也不做，只是抛出异常。</li>
 <li>标记非公开的基类 B 的子类 D 没有重载 B 中的虚函数或者会访问 B 中的保护成员。并且 B 不是以下类型：空类，D 的模板参数，D 的模板实例化。</li>
 </ul>
