@@ -1,74 +1,76 @@
 ---
 layout: post
 title: CppCoreGuidelines C.121 如果基类用来表示接口，请将其设为纯抽象类
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;If a base class is used as an interface, make it a pure abstract class&rdquo;
+C.121: If a base class is used as an interface, make it a pure
+abstract class
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-一个类如果不含有数据，会更加稳定。接口一般应该由公开的纯虚函数+一个默认/空的虚析构函数组成。
+一个类如果不含有数据，会更加稳定。接口一般应该由公开的纯虚函数+一个默认或空的虚析构函数组成。
 </p>
 
+
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_interface</span> <span style="color: #707183;">{</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">My_interface</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...only pure virtual functions here ...</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">My_interface</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{}</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">or =default</span>
+    <span style="color: #3F7F5F;">// ...only pure virtual functions here ...</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">~</span>My_interface<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{}</span>   <span style="color: #3F7F5F;">// or =default</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-坏例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Goof</span> <span style="color: #707183;">{</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Goof</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...only pure virtual functions here ...</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">no virtual destructor</span>
+    <span style="color: #3F7F5F;">// ...only pure virtual functions here ...</span>
+    <span style="color: #3F7F5F;">// no virtual destructor</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Goof</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">s</span>;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Goof</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span> <span style="color: #7388d6;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span><span style="color: #909183;">{</span><span style="color: #2A00FF;">"here we go"</span><span style="color: #909183;">}</span><span style="color: #7388d6;">}</span>;
-    f<span style="color: #7388d6;">(</span>p.get<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">use Derived through the Goof interface</span>
-    g<span style="color: #7388d6;">(</span>p.get<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">use Derived through the Goof interface</span>
-<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">leak</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Goof</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">p</span> <span style="color: #7388d6;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span><span style="color: #909183;">{</span><span style="color: #2A00FF;">"here we go"</span><span style="color: #909183;">}</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>p.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">get</span><span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// use Derived through the Goof interface</span>
+    <span style="color: #3a5fcd; font-weight: bold;">g</span><span style="color: #7388d6;">(</span>p.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">get</span><span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// use Derived through the Goof interface</span>
+<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// leak</span>
 </pre>
 </div>
 
 <p>
-Derived 对象通过 Goof 接口删除，因此它的字符串内存泄漏。如果 Goof 有一个虚析构函数，就可以确保 Derived 的析构正常。
+<code>Derived</code> 对象通过 <code>Goof</code> 的接口函数进行析构，因此它的字符串内存泄漏，因为
+<code>Goof</code> 的析构函数并不会处理 <code>Derived</code> 的字符串析构。如果 <code>Goof</code> 有一个虚的析构函数，就可以确保 <code>Derived</code> 的析构正常。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>（警告）如果某个类中有成员数据，又有一个从基类继承的可重载的虚函数（非final）</li>
+<li>（警告）如果某个类中有成员数据，又有一个不是从基类继承的可重载的虚函数（非 <code>final</code> ）</li>
 </ul>
