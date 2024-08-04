@@ -1,75 +1,77 @@
 ---
 layout: post
 title: CppCoreGuidelines C.128 必须指定虚函数为 virtual, override 或 final
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Virtual functions should specify exactly one of virtual, override, or final&rdquo;
+C.128: Virtual functions should specify exactly one of <code>virtual</code>,
+<code>override</code>, or <code>final</code>
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-更好的可读性。更快的检测到错误。明确指定是 virtual, override 或 final，使得代码说明更清楚，让编译器捕捉类型错误：是基类还是继承类。然而，添加两个以上这三个关键字就多余了，也容易导致错误。
+更好的可读性。更快的检测到错误。明确指定是<code>virtual</code>, <code>override</code>或 <code>final</code>,
+可以更清楚的说明代码意图，让编译器捕捉到基类和继承类之间的类型不匹配错误。然而，添加两个以上这三个关键字就多余了，也容易导致错误。
 </p>
 
-
 <p>
-更简单更清晰。
+简单的说：
 </p>
 <ul class="org-ul">
-<li>virtual 只意味着“这是一个新的虚函数”</li>
-<li>override 只意味着“这是不是一个 final 的重载”</li>
-<li>final 只意味着“这是一个 final 的重载”</li>
+<li><code>virtual</code> 只意味着“这是一个新的虚函数”</li>
+<li><code>override</code> 只意味着“这是不是一个 <code>final</code> 的重载”</li>
+<li><code>final</code> 只意味着“这是一个 <code>final</code> 的重载”</li>
 </ul>
 
 
 <p>
-坏例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span>;
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f3</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f1</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f3</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span>;        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad (hope for a warning): D::f1() hides B::f1()</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad (but conventional and valid): no explicit override</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f3</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #7388d6;">)</span>;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad (hope for a warning): D::f3() hides B::f3()</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f1</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span>;        <span style="color: #3F7F5F;">// bad (hope for a warning): D::f1() hides B::f1()</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span>;  <span style="color: #3F7F5F;">// bad (but conventional and valid): no explicit override</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f3</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #7388d6;">)</span>;     <span style="color: #3F7F5F;">// bad (hope for a warning): D::f3() hides B::f3()</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-好例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Better</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error (caught):</span>
-    <span style="color: #110099;">Better</span>::f1<span style="color: #7388d6;">()</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">hides</span> <span style="color: #110099;">B</span>::<span style="color: #0000ff; font-weight: bold;">f1</span><span style="color: #7388d6;">()</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f2</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">override</span>; <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span>
-    <span style="color: #0000ff; font-weight: bold;">f3</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">double</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error (caught): Better::f3() hides B::f3()</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...  };</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Better</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f1</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span>;        <span style="color: #3F7F5F;">// error (caught): Better::f1() hides B::f1()</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f3</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">double</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span>;     <span style="color: #3F7F5F;">// error (caught): Better::f3() hides B::f3()</span>
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-讨论
+<b>讨论</b>
 </p>
 
 <p>
@@ -77,35 +79,34 @@ tags: [CppCoreGuidelines]
 </p>
 <ul class="org-ul">
 <li>隐式的虚函数：程序员想设计一个函数为隐式的虚函数，事实上也是虚函数（但是读代码的人分辩不出来）；或者程序员计划设计一个隐式的虚函数，但是其实上不是虚函数（比如因为某些席位的参数列表不匹配）；或者程序员不想把一个函数设计成虚函数，但是其实上是虚函数（因为该函数刚好和基类的虚函数签名一致）。</li>
-
 <li>隐式的重载：程序员计划设计一个函数是重载函数，事实上也是一个重载函数（但是读代码的人看不出来）；或者程序员计划设计一个函数为重载函数，但是其实上不是（比如，因为某些细微的参数列表不匹配）；或者程序员不想把一个函数设计成重载函数，但是其实上是一个重载（因为刚好该函数与基类的虚函数签名一致，注意，不论该函数是声明为虚函数还是非虚函数，这个问题都可能出现。因为程序员可能计划创建一个新的虚函数或者一个新的非虚函数）。</li>
 </ul>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-当一个类被声明为 final 的时候，不管你把一个虚函数设置为 override 或
-final 无关紧要了。
-</p>
-
-
-<p>
-注意
-</p>
-
-<p>
-减少使用 final 函数，因为不会使得代码更优化，只是防止被重载。
+当一个类被声明为 <code>final</code> 的时候，不管你把一个虚函数设置为 <code>override</code> 或
+<code>final</code> 无关紧要了。
 </p>
 
 
 <p>
-强化
+<b>注意</b>
+</p>
+
+<p>
+减少使用 <code>final</code> 函数，因为 <code>final</code> 不会使得代码更好，只是防止被重载。
+</p>
+
+
+<p>
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>比较基类和派生类中的虚函数名字，标记用了同一个名字，却不是重载的情况</li>
-<li>标记没有用 override 或 final 的重载函数</li>
-<li>标记使用了一个以上 virtual、override 和 final 的函数声明</li>
+<li>标记没有用 <code>override</code> 或 <code>final</code> 的重载函数</li>
+<li>标记使用了一个以上<code>virtual</code>, <code>override</code>和 <code>final</code> 的函数声明</li>
 </ul>

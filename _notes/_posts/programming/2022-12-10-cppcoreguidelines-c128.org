@@ -1,32 +1,29 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.128 必须指定虚函数为 virtual, override 或 final
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.128 必须指定虚函数为 virtual, override 或 final
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Virtual functions should specify exactly one of virtual, override, or final"
+C.128: Virtual functions should specify exactly one of ~virtual~,
+~override~, or ~final~
 
 
-理由
+*理由*
 
-更好的可读性。更快的检测到错误。明确指定是 virtual, override 或 final，
-使得代码说明更清楚，让编译器捕捉类型错误：是基类还是继承类。然而，添加
-两个以上这三个关键字就多余了，也容易导致错误。
+更好的可读性。更快的检测到错误。明确指定是 ~virtual~, ~override~ 或 ~final~,
+可以更清楚的说明代码意图，让编译器捕捉到基类和继承类之间的类型不匹配错
+误。然而，添加两个以上这三个关键字就多余了，也容易导致错误。
+
+简单的说：
+- ~virtual~ 只意味着“这是一个新的虚函数”
+- ~override~ 只意味着“这是不是一个 ~final~ 的重载”
+- ~final~ 只意味着“这是一个 ~final~ 的重载”
 
 
-更简单更清晰。
-- virtual 只意味着“这是一个新的虚函数”
-- override 只意味着“这是不是一个 final 的重载”
-- final 只意味着“这是一个 final 的重载”
+*例子*
 
-
-坏例子
-
+#+attr_html: :class bad
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 struct B {
     void f1(int);
@@ -44,17 +41,19 @@ struct D : B {
 #+end_src
 
 
-好例子
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
-struct Better : B { void f1(int) override; // error (caught):
-    Better::f1() hides B::f1() void f2(int) const override; void
-    f3(double) override; // error (caught): Better::f3() hides B::f3()
-    // ...  };
+struct Better : B {
+    void f1(int) override;        // error (caught): Better::f1() hides B::f1()
+    void f2(int) const override;
+    void f3(double) override;     // error (caught): Better::f3() hides B::f3()
+    // ...
+};
 #+end_src
 
 
-讨论
+*讨论*
 
 我们想避免某些类型的错误：
 - 隐式的虚函数：程序员想设计一个函数为隐式的虚函数，事实上也是虚函数
@@ -62,7 +61,6 @@ struct Better : B { void f1(int) override; // error (caught):
   是其实上不是虚函数（比如因为某些席位的参数列表不匹配）；或者程序员不
   想把一个函数设计成虚函数，但是其实上是虚函数（因为该函数刚好和基类的
   虚函数签名一致）。
-
 - 隐式的重载：程序员计划设计一个函数是重载函数，事实上也是一个重载函数
   （但是读代码的人看不出来）；或者程序员计划设计一个函数为重载函数，但
   是其实上不是（比如，因为某些细微的参数列表不匹配）；或者程序员不想把
@@ -72,18 +70,18 @@ struct Better : B { void f1(int) override; // error (caught):
   数）。
 
 
-注意
+*注意*
 
-当一个类被声明为 final 的时候，不管你把一个虚函数设置为 override 或
-final 无关紧要了。
-
-
-注意
-
-减少使用 final 函数，因为不会使得代码更优化，只是防止被重载。
+当一个类被声明为 ~final~ 的时候，不管你把一个虚函数设置为 ~override~ 或
+~final~ 无关紧要了。
 
 
-强化
+*注意*
+
+减少使用 ~final~ 函数，因为 ~final~ 不会使得代码更好，只是防止被重载。
+
+
+*强化*
 - 比较基类和派生类中的虚函数名字，标记用了同一个名字，却不是重载的情况
-- 标记没有用 override 或 final 的重载函数
-- 标记使用了一个以上 virtual、override 和 final 的函数声明
+- 标记没有用 ~override~ 或 ~final~ 的重载函数
+- 标记使用了一个以上 ~virtual~, ~override~ 和 ~final~ 的函数声明
