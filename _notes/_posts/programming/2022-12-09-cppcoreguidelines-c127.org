@@ -1,29 +1,27 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.127 一个有虚函数的类应该也要有一个虚的或保护的析构函数
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.127 有虚函数的类应该也要有虚的或保护的析构函数
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"A class with a virtual function should have a virtual or protected destructor"
+"A class with a virtual function should have a virtual or protected
+destructor"
 
 
-理由
+*理由*
 
-一个类如果有虚函数，经常是通过其基类类型的指针间接访问使用。最后用户必
-须调用 delete 删除其基类类型的指针。并且，通常会通过基类的智能指针使用。
-因此，析构函数应该是公开的虚函数。
+类如果有虚函数，那么我们经常是通过其基类类型的指针间接访问使用这个类。
+最后用户必须调用 ~delete~ 删除其基类类型的指针。而且，我们通常会通过其基
+类的智能指针使用该类。因此，基类的析构函数应该是公开的虚函数。
 
 不常见的情况是，如果不允许通过基类的指针删除对象，可以将析构函数设置为
 保护的非虚函数。see [[http://kimi.im/2022-09-02-cppcoreguidelines-c35][C.35]]
 
 
-坏例子
+*例子*
 
+#+attr_html: :class bad
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 struct B {
     virtual int f() = 0;
@@ -44,18 +42,19 @@ void use()
 #+end_src
 
 
-注意
+*注意*
 
-很多人计划只通过 shared_ptr 使用，如 ~std::shared_ptr<B> p =
-std::make_shared<D>(args);~ ，因此不遵循这条指南建议。因为共享指针会处
-理好删除操作，所以不会导致因为不恰当的使用基类的 delete 造成内存泄漏。
-人们习惯这个操作，会导致一种不会出错的假象。但是这条指南很重要。如果有
-人使用 ~make_unique~ 分配内存怎么办？这样会有不安全的行为。除非 B 的作者
-确保不会误用 B，比如将所有的构造函数设置为 private，并提供一个工厂函数，
-确保通过 ~make_shared~ 分配资源。
+很多人不遵循本条建议，他们计划只通过共享指针 ~shared_ptr~ 使用这些类，如
+~std::shared_ptr<B> p = std::make_shared<D>(args)~ 。因为共享指针会处理
+好删除操作，所以不会导致不恰当的使用基类的 ~delete~ 而造成的内存泄漏。人
+们习惯了这个操作，会产生一种不会出错的假象。但是这条指南很重要。如果有
+人使用 ~make_unique~ 分配内存怎么办？这样会有不安全的行为。除非 ~B~ 的作者
+确保别人不会误用 ~B~ ，比如将所有的构造函数设置为 ~private~ ，并提供一个工
+厂函数，确保通过 ~make_shared~ 分配资源。
 
 
-强化
-- 一个类如果有虚函数，则应该有一个析构函数，要么是公开的虚函数，要么是
-  保护的非虚函数。
--   标记删除一个有虚函数，但是没有虚析构函数的类的对象的操作
+*强化*
+- 类如果有虚函数，则应该有一个析构函数，要么是公开的虚函数，要么是保护
+  的非虚函数。
+- 标记这类情况：删除一个类对象的时候用了 ~delete~ 而这个类有虚函数，但是
+  没有虚析构函数。

@@ -1,25 +1,25 @@
 ---
 layout: post
-title: CppCoreGuidelines C.127 一个有虚函数的类应该也要有一个虚的或保护的析构函数
-categories: [technology]
+title: CppCoreGuidelines C.127 有虚函数的类应该也要有虚的或保护的析构函数
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;A class with a virtual function should have a virtual or protected destructor&rdquo;
+&ldquo;A class with a virtual function should have a virtual or protected
+destructor&rdquo;
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-一个类如果有虚函数，经常是通过其基类类型的指针间接访问使用。最后用户必须调用 delete 删除其基类类型的指针。并且，通常会通过基类的智能指针使用。因此，析构函数应该是公开的虚函数。
+类如果有虚函数，那么我们经常是通过其基类类型的指针间接访问使用这个类。最后用户必须调用 <code>delete</code> 删除其基类类型的指针。而且，我们通常会通过其基类的智能指针使用该类。因此，基类的析构函数应该是公开的虚函数。
 </p>
 
 <p>
@@ -28,44 +28,44 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-坏例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">()</span> = 0;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... no user-written destructor, defaults to public non-virtual ...</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #3F7F5F;">// ... no user-written destructor, defaults to public non-virtual ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: derived from a class without a virtual destructor</span>
+<span style="color: #3F7F5F;">// bad: derived from a class without a virtual destructor</span>
 <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span> <span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"default"</span><span style="color: #7388d6;">}</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">s</span> <span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"default"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7388d6;">&gt;</span> <span style="color: #000000;">p</span> = make_unique<span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #7388d6;">&gt;()</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">undefined behavior, might call B::~B only and leak the string</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7388d6; font-weight: bold;">&gt;</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_unique</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">()</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+<span style="color: #707183;">}</span> <span style="color: #3F7F5F;">// undefined behavior, might call B::~B only and leak the string</span>
 </pre>
 </div>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-很多人计划只通过 shared<sub>ptr</sub> 使用，如 <code>std::shared_ptr&lt;B&gt; p =
-std::make_shared&lt;D&gt;(args);</code> ，因此不遵循这条指南建议。因为共享指针会处理好删除操作，所以不会导致因为不恰当的使用基类的 delete 造成内存泄漏。人们习惯这个操作，会导致一种不会出错的假象。但是这条指南很重要。如果有人使用 <code>make_unique</code> 分配内存怎么办？这样会有不安全的行为。除非 B 的作者确保不会误用 B，比如将所有的构造函数设置为 private，并提供一个工厂函数，确保通过 <code>make_shared</code> 分配资源。
+很多人不遵循本条建议，他们计划只通过共享指针<code>shared_ptr</code>使用这些类，如
+<code>std::shared_ptr&lt;B&gt; p = std::make_shared&lt;D&gt;(args)</code> 。因为共享指针会处理好删除操作，所以不会导致不恰当的使用基类的 <code>delete</code> 而造成的内存泄漏。人们习惯了这个操作，会产生一种不会出错的假象。但是这条指南很重要。如果有人使用<code>make_unique</code>分配内存怎么办？这样会有不安全的行为。除非 <code>B</code> 的作者确保别人不会误用 <code>B</code> ，比如将所有的构造函数设置为 <code>private</code> ，并提供一个工厂函数，确保通过<code>make_shared</code>分配资源。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>一个类如果有虚函数，则应该有一个析构函数，要么是公开的虚函数，要么是保护的非虚函数。</li>
-<li>标记删除一个有虚函数，但是没有虚析构函数的类的对象的操作</li>
+<li>类如果有虚函数，则应该有一个析构函数，要么是公开的虚函数，要么是保护的非虚函数。</li>
+<li>标记这类情况：删除一个类对象的时候用了 <code>delete</code> 而这个类有虚函数，但是没有虚析构函数。</li>
 </ul>
