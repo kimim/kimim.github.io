@@ -5,8 +5,7 @@
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"A class with a virtual function should have a virtual or protected
-destructor"
+C.127: A class with a virtual function should have a virtual or protected destructor
 
 
 *理由*
