@@ -1,23 +1,20 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.126 抽象类一般不需要用户提供一个构造函数
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.126 抽象类一般不需要编写构造函数
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"An abstract class typically doesn't need a user-written constructor"
+C.126: An abstract class typically doesn't need a user-written
+constructor
 
 
-理由
+*理由*
 
 抽象类没有数据需要构造函数进行初始化。
 
 
-例子
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 class Shape {
@@ -37,12 +34,14 @@ public:
 #+end_src
 
 
-例外
+*例外*
 
-某些情况下，基类的构造函数可能会有用，比如注册一个对象到某个地方，可能需要用到构造函数。
+- 某些情况下，基类的构造函数可能会有用，比如注册一个对象到某个地方，可
+  能需要用到构造函数。
+- 极其少见的情况：抽象类要保留一些数据，给继承类共享（统计数据、 ~debug~
+  信息等）。这种类一般会有构造函数。但是请注意，这种类也倾向与要求虚继
+  承。
 
-极其少见的情况：抽象类要保留一些数据，给继承类共享（统计数据、debug信息等）。这种类一般会有构造函数。但是请注意，这种类也倾向与要求虚继承。
 
-
-强化
+*强化*
 - 标记有构造函数的抽象类。

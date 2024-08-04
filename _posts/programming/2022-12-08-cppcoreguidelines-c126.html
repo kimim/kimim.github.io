@@ -1,21 +1,21 @@
 ---
 layout: post
-title: CppCoreGuidelines C.126 抽象类一般不需要用户提供一个构造函数
-categories: [technology]
+title: CppCoreGuidelines C.126 抽象类一般不需要编写构造函数
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;An abstract class typically doesn&rsquo;t need a user-written constructor&rdquo;
+C.126: An abstract class typically doesn&rsquo;t need a user-written
+constructor
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
@@ -24,43 +24,41 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">no user-written constructor needed in abstract base class</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #0000ff; font-weight: bold;">center</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> = 0;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">pure virtual</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">move</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">to</span><span style="color: #7388d6;">)</span> = 0;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... more pure virtual functions...</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">Shape</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{}</span>                 <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">destructor</span>
+    <span style="color: #3F7F5F;">// no user-written constructor needed in abstract base class</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">center</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;    <span style="color: #3F7F5F;">// pure virtual</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">move</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">to</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #3F7F5F;">// ... more pure virtual functions...</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">~</span>Shape<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{}</span>                 <span style="color: #3F7F5F;">// destructor</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Circle</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #0000ff; font-weight: bold;">Circle</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">p</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">rad</span><span style="color: #7388d6;">)</span>;           <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">constructor in derived class</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #0000ff; font-weight: bold;">center</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x; <span style="color: #7388d6;">}</span>
+    <span style="color: #0000ff; font-weight: bold;">Circle</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">p</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">rad</span><span style="color: #7388d6;">)</span>;           <span style="color: #3F7F5F;">// constructor in derived class</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">center</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x; <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-例外
+<b>例外</b>
 </p>
 
-<p>
-某些情况下，基类的构造函数可能会有用，比如注册一个对象到某个地方，可能需要用到构造函数。
-</p>
-
-<p>
-极其少见的情况：抽象类要保留一些数据，给继承类共享（统计数据、debug信息等）。这种类一般会有构造函数。但是请注意，这种类也倾向与要求虚继承。
-</p>
+<ul class="org-ul">
+<li>某些情况下，基类的构造函数可能会有用，比如注册一个对象到某个地方，可能需要用到构造函数。</li>
+<li>极其少见的情况：抽象类要保留一些数据，给继承类共享（统计数据、 <code>debug</code>
+信息等）。这种类一般会有构造函数。但是请注意，这种类也倾向与要求虚继承。</li>
+</ul>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>标记有构造函数的抽象类。</li>
