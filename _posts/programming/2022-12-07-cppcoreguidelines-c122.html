@@ -1,56 +1,56 @@
 ---
 layout: post
 title: CppCoreGuidelines C.122 如果接口和实现要彻底分开，请使用抽象类作为接口
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Use abstract classes as interfaces when complete separation of interface and implementation is needed&rdquo;
+C.122: Use abstract classes as interfaces when complete separation of
+interface and implementation is needed
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-表达一种应用二进制接口。
+表达应用二进制接口范围。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Device</span> <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">Device</span><span style="color: #7388d6;">()</span> = <span style="color: #7F0055; font-weight: bold;">default</span>;
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">write</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span><span style="color: #909183;">&gt;</span> <span style="color: #000000;">outbuf</span><span style="color: #7388d6;">)</span> = 0;
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">read</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span><span style="color: #909183;">&gt;</span> <span style="color: #000000;">inbuf</span><span style="color: #7388d6;">)</span> = 0;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Device</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">~</span>Device<span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">default</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">write</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #909183; font-weight: bold;">&gt;</span> <span style="color: #000000;">outbuf</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">read</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #909183; font-weight: bold;">&gt;</span> <span style="color: #000000;">inbuf</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">0</span>;
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D1</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Device</span> <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... data ...</span>
+    <span style="color: #3F7F5F;">// ... data ...</span>
 
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">write</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span><span style="color: #909183;">&gt;</span> <span style="color: #000000;">outbuf</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">read</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span><span style="color: #909183;">&gt;</span> <span style="color: #000000;">inbuf</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">write</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #909183; font-weight: bold;">&gt;</span> <span style="color: #000000;">outbuf</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">read</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #909183; font-weight: bold;">&gt;</span> <span style="color: #000000;">inbuf</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D2</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Device</span> <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... different data ...</span>
+    <span style="color: #3F7F5F;">// ... different data ...</span>
 
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">write</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span><span style="color: #909183;">&gt;</span> <span style="color: #000000;">outbuf</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">read</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span><span style="color: #909183;">&gt;</span> <span style="color: #000000;">inbuf</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">write</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #909183; font-weight: bold;">&gt;</span> <span style="color: #000000;">outbuf</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">read</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">span</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #909183; font-weight: bold;">&gt;</span> <span style="color: #000000;">inbuf</span><span style="color: #7388d6;">)</span> <span style="color: #7F0055; font-weight: bold;">override</span>;
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-用户可以通过 Device 的接口无差别的使用 D1 或 D2。进一步，如果我们更新了 D1 和 D2，变得二进制不兼容，我们依然可以确保使用 Device 访问所有接口。
+用户可以通过 <code>Device</code> 的接口无差别的使用 <code>D1</code> 或 <code>D2</code> 。进一步，如果我们更新了 <code>D1</code> 和 <code>D2</code> ，变得二进制不兼容，我们依然可以确保使用 <code>Device</code> 访问所有接口。
 </p>
