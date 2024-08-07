@@ -1,0 +1,27 @@
+#+LAYOUT: post
+#+TITLE: 单词本：stem
+#+TAGS: English
+#+CATEGORIES: language
+
+最近花了两个兴起看完了《organizational behavior》
+[[cite:&hellriegel2005ob]]，也学了不少管理学知识以及英语单词。在组织的社会
+道德章节，作者说有道德的业务行为根植于有道德的组织文化。
+
+In short, ethical business practices *stem* from ethical organizational
+cultures.
+
+这里，stem 的意思可以翻译为根植于。而其本意则是花草的茎、树木的干。以
+及高脚杯的脚。烟斗的柄。词语的词干。从源头看，这个词和[[id:8c547872-b601-4d88-b7bb-179533203e58][单词本：stamina]]
+一样，也是源自 stare 站立。即立着的树干。
+
+很巧，最近我们公司的大老板也用到了这个词。他在内网发文说我们这种跨国跨
+文化的人才布局，有好处也有很大的挑战。
+
+The benefits and the challenges *stem* from a multicultural workforce.
+
+德语 der Stamm
+
+eine alte Eiche mit mächtigem Stamm, an old oak with a massive trunk.
+
+*References*
+[[bibliography:~/docs/references.bib]]
