@@ -1,0 +1,36 @@
+#+LAYOUT: post
+#+TITLE: 单词本：commensurate
+#+TAGS: English
+#+CATEGORIES: language
+
+最近给我可爱的同事们做了一期信息安全开发生命周期（SDLC）课程。从培训后
+的反馈来看，不少同事还是有所收获的。
+
+在看相关标准文档的时候，我读到了 *commensurate* 这个单词：
+
+Application of the [security development lifecycle] framework is
+intended to provide confidence that the component, product or system
+has security *commensurate* with its expected level of risk throughout
+the product's life-cycle. [[cite:&iec62443-4-1]]
+
+这里是说 SDLC 的应用是为了使得最终开发出来的产品和系统的安全与其整个产
+品生命周期中的信息安全风险相称。
+
+*commensurate* 这个单词的意思就是“相称的”。
+
+如果我们把它拆开来看，就是 com- 和 mensurate。而 com 在拉丁语里有 with
+的意思。mensurate 则来自 mensurare 的过去分词 mensuratus。mensurare 就
+是现在英语的 measure 测量计量。因此，with measure 就可以理解为测量相当
+的。
+
+再看一例：
+
+Ensure vendors enforce supply chain security requirements *commensurate*
+with those used by the organization acquiring the vendor’s products
+and services. [[cite:&cisa2021sca]]
+
+这篇文章是讲从供应链角度规避信息安全风险。这里说针对供应链的信息安全的
+需求，要与组织实施的流程相称。
+
+*References*
+[[bibliography:~/docs/references.bib]]
