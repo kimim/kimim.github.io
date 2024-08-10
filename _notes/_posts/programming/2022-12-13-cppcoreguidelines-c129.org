@@ -1,29 +1,27 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.129 设计类层级时，请区分实现继承与接口继承
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.129 设计类层级时，请区分实现继承与接口继承
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"When designing a class hierarchy, distinguish between implementation inheritance and interface inheritance"
+C.129: When designing a class hierarchy, distinguish between
+implementation inheritance and interface inheritance
 
 
-理由
+*理由*
 
-接口的实现细节导致接口更脆弱。脆弱意味着每次修改实现，都需要重新编译。基类中的数据导致基类的实现变得复杂、代码重复。
+在接口中实现细节会使得接口变得脆弱。脆弱意味着每次修改实现，都需要重新
+编译。基类中的数据导致基类的实现变得复杂、代码重复。
 
-注意
 
+*注意*
 
 定义：
-- 接口继承指的是利用继承的方法，分离接口的实现，允许增加继承类，而不影
-  响使用基类的用户。
-- 实现继承指的是利用继承的方法，简化实现新功能的过程，通过使用已经实现
-  的有用的操作，创建相关的新操作。（有时候称之为 “programming by
+- 接口继承，指的是利用继承的方法，分离接口的实现，允许增加继承类，而不
+  影响使用基类的用户。
+- 实现继承，指的是利用继承的方法，简化实现新功能的过程，通过使用已经实
+  现的有用的操作，创建相关的新操作。（有时候称之为 “programming by
   difference”，差异化编程）。
 
 一个纯接口类就是一组纯虚函数。详见 [[http://kimi.im/2022-03-31-cppcoreguidelines-i25][I.25]]
@@ -37,8 +35,9 @@ tags: [CppCoreGuidelines]
 - 使用继承层级的组织数量增长（往往很难发布基类的实现更新）
 
 
-坏例子
+*例子*
 
+#+attr_html: :class bad
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 class Shape {   // BAD, mixed interface and implementation
 public:
@@ -76,19 +75,20 @@ public:
 #+end_src
 
 存在的问题：
-- 随着继承层级增长，Shape 上会添加越来越多的数据，构造函数变得越来越难编写和维护
+- 随着继承层级增长， ~Shape~ 上会添加越来越多的数据，构造函数变得越来越
+  难编写和维护
 - 为什么要计算三角形的中心？我们可能永远也不会用到。
-- 在 Shape 中添加新的数据成员（绘制风格或 canvas 绘图板），所有从
-  Shape 继承的类，所有使用了 Shape 的代码都要重新评审，修改或重编译。
+- 在 ~Shape~ 中添加新的数据成员（绘制风格或 ~canvas~ 绘图板），所有从
+  ~Shape~ 继承的类，所有使用了 ~Shape~ 的代码都要重新评审，修改或重编译。
 
 ~Shape::move()~ 的实现实现继承的一个例子。我们定义 ~move()~ 一次，然后所有
 继承类都能使用。在基类的这种成员函数中，数据越多，共享越多，实现越轻松，
 但是继承层级就越不稳定。
 
 
-例子
+*例子*
 
-Shape 的继承层级可以通过接口继承重写：
+~Shape~ 的继承层级可以通过接口继承重写：
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 class Shape {  // pure interface
@@ -125,10 +125,12 @@ private:
 #+end_src
 
 这样，接口变得更稳定。但是成员函数的实现工作就更多了。比如每一个继承类
-都要实现一个 center 函数。
+都要实现一个 ~center~ 函数。
 
 
-例子，双重继承
+*例子*
+
+双重继承
 
 我们如何从继承层级中获得稳定性，同时又获得可重用性呢？一个流行的方法是
 双重层级。可以通过多种方法实现。这里，我们使用多继承实现。
