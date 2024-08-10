@@ -1,0 +1,30 @@
+#+LAYOUT: post
+#+TITLE: 单词本：astute
+#+TAGS: English
+#+CATEGORIES: language
+
+CISA 的一篇供应链信息信息安全文章 [[cite:&cisa2021sca]] 中提到，软件供应链
+过程中充满了各种安全攻击，简直防不胜防：
+
+Even a vendor's well-implemented SDLC and a customer's *astute*
+procurement due diligence and contracting provisions will not
+eliminate all vulnerabilities from entering the software supply chain. 
+
+这里， *astute* 是精明的意思。这个词来自希腊语 asty 城镇。拉丁语 astus
+心灵手巧的，astutus 能工巧匠的。我怀疑，那时候城镇里住着很多手工艺人，
+所以城镇可以称为手工艺人聚集的地方，也就有了能工巧匠这一层意思。
+
+在这篇名为"Is Development Still Financeable? That Depends"
+[[cite:&kirk2024dev]] 的商业地产分析文章中，我们也读到了 *astute* 这个词:
+
+“The challenge for developers is to find a bank *astute* enough to
+recognize the difference between ordinary and unique” Barkidjija
+continued. ”This is why it is so important to partner with a bank that
+has deep expertise in commercial real estate, as well as
+specialization in your target asset class, across a variety of market
+cycles. This industry expertise, combined with a bank that is
+structured in a way to really get to know the customer, market and the
+asset, helps ensure a comprehensive, nuanced evaluation of the deal.”
+
+*References*
+bibliography:~/docs/webref.bib
