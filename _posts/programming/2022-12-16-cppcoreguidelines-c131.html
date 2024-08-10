@@ -1,43 +1,43 @@
 ---
 layout: post
 title: CppCoreGuidelines C.131 避免使用细枝末节的 getter 和 setter
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Avoid trivial getters and setters&rdquo;
+C.131: Avoid trivial getters and setters
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-繁琐细枝末节的 getter 和 setter 不增加语义价值；数据要么就直接 public 就好了。
+繁琐细枝末节的 getter 和 setter 不增加语义价值；数据要么就直接 public
+就好了。
 </p>
 
 
 <p>
-坏例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Bad: verbose</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span>;
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// Bad: verbose</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">x</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">y</span>;
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #0000ff; font-weight: bold;">Point</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">xx</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">yy</span><span style="color: #7388d6;">)</span> : x<span style="color: #7388d6;">{</span>xx<span style="color: #7388d6;">}</span>, y<span style="color: #7388d6;">{</span>yy<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_x</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x; <span style="color: #7388d6;">}</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">set_x</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">xx</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> x = xx; <span style="color: #7388d6;">}</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">get_y</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> y; <span style="color: #7388d6;">}</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">set_y</span><span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">yy</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> y = yy; <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">no behavioral member functions</span>
+    <span style="color: #0000ff; font-weight: bold;">Point</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">xx</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">yy</span><span style="color: #7388d6;">)</span> : <span style="color: #110099; font-style: italic;">x</span><span style="color: #7388d6;">{</span>xx<span style="color: #7388d6;">}</span>, <span style="color: #110099; font-style: italic;">y</span><span style="color: #7388d6;">{</span>yy<span style="color: #7388d6;">}</span> <span style="color: #7388d6;">{</span> <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">get_x</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> x; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">set_x</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">xx</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #000000;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> xx; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">get_y</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> y; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">set_y</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">yy</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span> <span style="color: #000000;">y</span> <span style="color: #7F0055; font-weight: bold;">=</span> yy; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// no behavioral member functions</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
@@ -47,29 +47,30 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span> <span style="color: #7388d6;">{</span>0<span style="color: #7388d6;">}</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span> <span style="color: #7388d6;">{</span>0<span style="color: #7388d6;">}</span>;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">x</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">0</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">y</span> <span style="color: #7388d6;">{</span><span style="color: #110099;">0</span><span style="color: #7388d6;">}</span>;
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-注意，我们可以在成员变量上添加默认初始值。<a href="http://kimi.im/2022-10-18-cppcoreguidelines-c49">C.49</a> 在构造函数中进行初始化操作，不要进行赋。
+注意，我们可以在成员变量上添加默认初始值。<a href="http://kimi.im/2022-10-18-cppcoreguidelines-c49">C.49</a> 在构造函数中进行初始化操作，不要进行赋值。
 </p>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-此规则的关键是 getter/setter 的语义是否重要。虽然很难定义是否重要，但是可以考虑如果将 getter/setter 改成公开的数据是否导致任何语法上的差异。不重要的语义就是如果转换内部类型和接口类型，依然能保持类的不变式，那就是语义不重要。
+此规则的关键是getter/setter的语义是否重要。虽然很难定义是否重要，但是可以考虑如果将getter/setter改成公开的数据是否导致任何语法上的差异。不重要的语义就是如果转换内部类型和接口类型，依然能保持类的不变式，那就是语义不重要。
 </p>
 
+
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>标注有多个 get 和 set 成员函数只是访问成员数据，而不增加语义的类。</li>
