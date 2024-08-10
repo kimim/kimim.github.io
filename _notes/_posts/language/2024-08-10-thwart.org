@@ -28,6 +28,10 @@ attempting to *thwart* each mitigation.
 风险规避测试就是构建一个测试执行计划尝试阻挠这些规避安全的措施。通过攻
 击者视角审查防范措施是不是实施到位。
 
+A Euro-Zone Inflation *Hiccup* Is Unlikely to Thwart ECB Rate
+Cut. [[cite:&stirling2024hiccup]] 这则新闻是说欧洲德法西三国通胀指数略微上
+涨的小问题，不会导致 ECB 降息。
+
 thwart 的本意据说是跟 transverse 里的verse相似，有穿过的意思。也可能跟
 拉丁语 torquere 转动，twist 相关。有点乃意会，大概就是这样子。
 
