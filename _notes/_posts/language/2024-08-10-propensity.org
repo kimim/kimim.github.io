@@ -1,0 +1,26 @@
+#+LAYOUT: post
+#+TITLE: 单词本：propensity
+#+TAGS: English
+#+CATEGORIES: language
+
+这几天一直在陆陆续续看信息安全标准，在安全产品开发过程要求这个标准分册
+[[cite:&iec62443-4-1]] 介绍什么是 Banned function:
+
+Banned function: software method that is no longer recommended to be
+used in software because more secure versions exist with less
+*propensity* for misuse
+
+这里 propensity 是习性、本性、倾向的名词意思。比如 a *propensity* for
+violence 暴力倾向 [[cite:&appledict]]。
+
+从词源上看，这个词有 pro 向前、向下 以及 pendere 悬挂组成。这就好像是
+天平的两端，如果，你就是喜欢某一端，就会在上面悬挂重物。也就是一种倾向
+性。
+
+还有很多源自 pendere 的单词，比如
+- append 附加（额外挂上去）
+- depend 依靠（挂在下面）
+- suspend 悬挂、挂起、暂停（从下挂上去）
+
+*References*
+[[bibliography:~/docs/webref.bib]]
