@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       DEABB792-8E17-4F57-B582-55A7BD2A63EC
+:END:
 #+LAYOUT: post
 #+TITLE: 单词本：diversity
 #+TAGS: English
