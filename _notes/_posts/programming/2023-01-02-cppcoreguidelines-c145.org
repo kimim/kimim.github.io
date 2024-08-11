@@ -1,33 +1,47 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.145 通过指针或引用访问多态对象
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.145 通过指针或引用访问多态对象
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Access polymorphic objects through pointers and references"
+C.145: Access polymorphic objects through pointers and references
 
 
-理由
+*理由*
 
 如果你有一个提供虚函数的类，你一般不知道哪个派生类提供这个函数。
 
 
-例子
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
-struct B { int a; virtual int f(); virtual ~B() = default };
-struct D : B { int b; int f() override; };
+struct B {
+    int a;
+    virtual int f() {
+        cout << "B::f()\n";
+        return 0;
+    };
+    virtual ~B() = default;
+};
+
+struct D : B {
+    int b;
+    int f() override {
+        cout << "D::f()\n";
+        return 0;
+    };
+};
 
 void use(B b)
 {
+    b.f();
     D d;
+    d.f();
     B b2 = d;   // slice
+    b2.f();
     B b3 = b;
+    b3.f();
 }
 
 void use2()
@@ -35,14 +49,25 @@ void use2()
     D d;
     use(d);   // slice
 }
+
+int main()
+{
+    use2();
+}
 #+end_src
 
-上面例子，d 都被切片（slice）了。
+#+RESULTS:
+| B::f() |
+| D::f() |
+| B::f() |
+| B::f() |
+
+上面例子， ~d~ 都被切片（slice）了。
 
 
-例外
+*例外*
 
-你也可以定义范围内安全的访问有变量名的多态对象。这种操作没有切片。
+你也可以在定义范围内安全的访问有变量名的多态对象。这种操作没有切片。
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 void use3()
@@ -53,5 +78,5 @@ void use3()
 #+end_src
 
 
-强化
+*强化*
 - 标注所有存在切片（slicing）的情况。
