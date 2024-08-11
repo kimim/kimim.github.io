@@ -1,23 +1,20 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.163 只重载大体相似的操作符
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.163 只重载大体相似的操作符
+#+categories: prog
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Overload only for operations that are roughly equivalent"
+C.163: Overload only for operations that are roughly equivalent
 
 
-理由
+*理由*
 
 逻辑上相似的操作函数，使用不同的参数类型，却用了不同的名字，容易让人费
 解。在使用泛型编程的时候，容易出错。
 
-例子
+
+*例子*
 
 考虑：
 
@@ -30,15 +27,16 @@ void fopen(const char* name, const char* mode);   // open file
 
 相反的：
 
+#+attr_html: :class bad
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
 void open(Gate& g);   // remove obstacle from garage exit lane
 void open(const char* name, const char* mode ="r");   // open file
 #+end_src
 
-这两个函数也是完全不同不想管的，但是名字却取的一样，这样很容易令人误解。
+这两个函数也是完全不同不想关的，但是名字却取的一样，这样很容易令人误解。
 好在类型系统会捕捉相关的错误。
 
 
-注意
+*注意*
 
-一定要小心一些常用的名字，比如 open, move, +, ==。
+一定要小心一些常用的名字，比如 ~open~, ~move~, ~+~, ~==~.
