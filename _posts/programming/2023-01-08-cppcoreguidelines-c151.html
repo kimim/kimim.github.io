@@ -1,47 +1,45 @@
 ---
 layout: post
 title: CppCoreGuidelines C.151 用 make_shared() 创建 shared_ptr
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Use <code>make_shared()</code> to construct objects owned by <code>shared_ptr</code>&rsquo;s&rdquo;
+C.151: Use <code>make_shared()</code> to construct objects owned by <code>shared_ptr</code>&rsquo;s
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-用 <code>make_shared()</code> 代码看起来更简洁。同时也能避免中间步骤分配引用计数。
+用<code>make_shared()</code>代码看起来更简洁。同时也能避免中间步骤分配引用计数。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #707183;">&lt;</span>X<span style="color: #707183;">&gt;</span> <span style="color: #000000;">p1</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6;">{</span>2<span style="color: #7388d6;">}</span> <span style="color: #707183;">}</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
-<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">p</span> = make_shared<span style="color: #707183;">&lt;</span>X<span style="color: #707183;">&gt;(</span>2<span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">good</span>
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">shared_ptr</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">p1</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #7388d6;">{</span><span style="color: #110099;">2</span><span style="color: #7388d6;">}</span> <span style="color: #707183;">}</span>; <span style="color: #3F7F5F;">// bad</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_shared</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">X</span><span style="color: #707183; font-weight: bold;">&gt;</span><span style="color: #707183;">(</span><span style="color: #110099;">2</span><span style="color: #707183;">)</span>;    <span style="color: #3F7F5F;">// good</span>
 </pre>
 </div>
 
-
 <p>
-<code>make_shared()</code> 那句只提到了一次 X，所以更精简，速度更快。
+<code>make_shared()</code> 那句只提到了一次 <code>X</code> ，所以更精简，速度更快。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>（简单）对使用 new 创建 <code>shared_ptr</code> 的情况提出报警。</li>
+<li>（简单）对使用 new 创建<code>shared_ptr</code>的情况提出报警。</li>
 </ul>
