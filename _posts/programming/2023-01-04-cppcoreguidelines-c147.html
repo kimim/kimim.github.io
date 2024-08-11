@@ -1,81 +1,65 @@
 ---
 layout: post
-title: CppCoreGuidelines C.147 使用 dynamic_cast 转换成引用类型的时候，如果无法转换，就会认为出错了，抛出异常
-categories: [technology]
+title: CppCoreGuidelines C.147 用 dynamic_cast 转换引用的时候，如果无法转换，就会认为出错了，抛出异常
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
+
 <p>
-&ldquo;Use <code>dynamic_cast</code> to a reference type when failure to find the required class is considered an error&rdquo;
+C.147: Use <code>dynamic_cast</code> to a reference type when failure to find the
+required class is considered an error
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-把一个对象转换成引用，标明你希望最终得到一个有效的对象，所以类型转换必须成功。如果失败， <code>dynamic_cast</code> 就应该抛出一个异常。
+把一个对象转换成引用，表明你希望最终得到一个有效的对象，所以类型转换必须成功。如果失败，<code>dynamic_cast</code>就应该抛出一个异常。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++" id="org8a05bc0"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
+<pre class="src src- src-C++" id="org6480c93"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
   <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">to_string</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">to_string</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
         <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">"Derived"</span>;
     <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
   <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">to_string</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">to_string</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
         <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">"Derived"</span>;
     <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span><span style="color: #7F0055; font-weight: bold;">&amp;</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">dynamic_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span>&amp;<span style="color: #7388d6;">&gt;(</span>b<span style="color: #7388d6;">)</span>.to_string<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #3a5fcd; font-weight: bold;">dynamic_cast</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span>b<span style="color: #7388d6;">)</span>.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">to_string</span><span style="color: #7388d6;">()</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-以下代码，在 f 函数中，d 被成功转换成了 Derived 本身，所以正确执行。
+以下代码，在 <code>f</code> 函数中， <code>d</code> 被成功转换成了 <code>Derived</code> 本身，所以正确执行。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
-  <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">to_string</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">"Derived"</span>;
-    <span style="color: #7388d6;">}</span>
-<span style="color: #707183;">}</span>;
-
-<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
-  <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">to_string</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">"Derived"</span>;
-    <span style="color: #7388d6;">}</span>
-<span style="color: #707183;">}</span>;
-
-<span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
-<span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">dynamic_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span>&amp;<span style="color: #7388d6;">&gt;(</span>b<span style="color: #7388d6;">)</span>.to_string<span style="color: #7388d6;">()</span>;
-<span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">$$classes$$</span>
+int <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span> <span style="color: #000000;">d</span>;
-    cout &lt;&lt; f<span style="color: #7388d6;">(</span>d<span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>d<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -86,36 +70,19 @@ Derived
 
 
 <p>
-以下代码，因为无法将 Base 转换成 Derived，所以抛出异常 <code>std::bad_cast</code>
+以下代码，因为无法将 <code>Base</code> 转换成 <code>Derived</code> ，所以抛出异常 <code>std::bad_cast</code>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
-  <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">to_string</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">"Derived"</span>;
-    <span style="color: #7388d6;">}</span>
-<span style="color: #707183;">}</span>;
-
-<span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #707183;">{</span>
-  <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">to_string</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #2A00FF;">"Derived"</span>;
-    <span style="color: #7388d6;">}</span>
-<span style="color: #707183;">}</span>;
-
-<span style="color: #110099;">std</span>::<span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span>&amp; <span style="color: #000000;">b</span><span style="color: #707183;">)</span>
-<span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #7F0055; font-weight: bold;">dynamic_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Derived</span>&amp;<span style="color: #7388d6;">&gt;(</span>b<span style="color: #7388d6;">)</span>.to_string<span style="color: #7388d6;">()</span>;
-<span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">$$classes$$</span>
+int <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">Base</span> <span style="color: #000000;">b</span>;
-    cout &lt;&lt; f<span style="color: #7388d6;">(</span>b<span style="color: #7388d6;">)</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>b<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
-<pre class="example" id="org83684bd">
+<pre class="example" id="org4f17f7b">
 terminate called after throwing an instance of 'std::bad_cast'
 </pre>
