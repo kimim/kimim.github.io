@@ -1,25 +1,23 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.133 避免使用 protected 数据
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.133 避免使用 protected 数据
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Avoid protected data"
+C.133: Avoid ~protected~ data
 
 
-理由
+*理由*
 
-protected 数据是复杂和错误的源泉。protected 数据把类的不变式弄得更复杂。
-protected 数据违反了“不要把数据放在基类”的指南，往往会导致需要处理虚继
-承关系。
+~protected~ 数据是复杂和错误的源泉。 ~protected~ 数据把类的不变式约束弄得
+更复杂。 ~protected~ 数据违反了“不要把数据放在基类”的指导方针，往往会导
+致需要处理虚继承关系。
 
-坏例子
 
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 class Shape {
 public:
@@ -32,24 +30,26 @@ protected:
 };
 #+end_src
 
-这样，就要求每个 Shape 的派生类都要能正确处理保护的数据。尽管这种做法
-很流行，但是会导致维护的问题。在大的类层级结构中，一致性的维护使用
-protected 数据很困难，因为在大量的类中隐藏这大量的代码要修改。能够接触
-这些数据的类也是开放的：任何人都可以继承一个心累，开始操作这些
-protected 数据。往往很难检查所有的类，所以修改这些类变得很困难。没有任
-何不变式约束这些 protected 数据，更像是一组全局变量。protected 数据事
-实上成了很大一片代码的全局变量。
+这样，就要求每个 ~Shape~ 的继承类都要能正确处理 ~protected~ 的数据。尽管这
+种做法很流行，但是会导致维护困难。在大的类层级结构中，维护使用
+~protected~ 数据的一致性很困难，因为在大量的类中隐藏着大量的代码要修改。
+能够接触这些数据的类也是开放的：任何人都可以继承一个新类，去操作这些
+~protected~ 数据。我们往往对所有的类进行检查，所以修改这些类变得很困难。
+没有任何不变式约束这些 ~protected~ 数据，更像是一组全局变量。 ~protected~
+数据事实上成了很大一片代码的全局变量。
 
 
-注意
+*注意*
 
-protected 数据经常看起来能够通过派生提供很多优化。然而，事实上，你经常
-得到的是无原则的修改和错误。请使用 private 私有数据，并强化不变式。另
-一个更好的改进方法，就是使用接口，不要添加数据。
+~protected~ 数据经常看起来能够通过继承提供很多优化。然而，事实上，你经常
+得到的是无原则的修改和错误。请使用 ~private~ 私有数据，并强化不变式约束。
+另一个更好的改进方法，就是使用接口，不要添加数据。
 
-注意
 
-protected 成员函数没问题。
+*注意*
 
-强化
-- 标注使用了 protected 数据的类
+~protected~ 成员函数没问题。
+
+
+*强化*
+- 标注使用了 ~protected~ 数据的类

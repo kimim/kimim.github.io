@@ -1,21 +1,21 @@
 ---
 layout: post
 title: CppCoreGuidelines C.135 使用多重继承来表达多重不同的接口
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Use multiple inheritance to represent multiple distinct interfaces&rdquo;
+C.135: Use multiple inheritance to represent multiple distinct
+interfaces
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
@@ -24,25 +24,24 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">iostream</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>, <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">very simplified</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">iostream</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>, <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// very simplified</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-istream 提供输入操作的接口，ostream 提供输出操作的接口。iostream 提供
-istream 和 ostream 操作的合集，以及输入输出需要的同步操作。
+<code>istream</code> 提供输入操作的接口， <code>ostream</code> 提供输出操作的接口。 <code>iostream</code> 提供 <code>istream</code> 和 <code>ostream</code> 操作的合集，以及输入输出需要的同步操作。
 </p>
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
