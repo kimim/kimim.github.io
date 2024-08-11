@@ -1,41 +1,41 @@
 ---
 layout: post
 title: CppCoreGuidelines C.161 对称操作符用非成员函数实现
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Use non-member functions for symmetric operators&rdquo;
+C.161: Use non-member functions for symmetric operators
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-如果你使用成员函数，就得定义两个。用了非成员函数，对于 ==， a = b，b = a 这类操作，就只要定义一次就好了。
+如果你使用成员函数，就得定义两个。不然的话，就用非成员函数，对于 <code>==</code>, <code>a
+= b</code>, <code>b = a</code> 这类操作，就只要定义一次就好了。
 </p>
 
 
 <p>
-例如
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">bool</span> <span style="color: #7F0055; font-weight: bold;">operator</span><span style="color: #0000ff; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> a.x == b.x &amp;&amp; a.y == b.y; <span style="color: #707183;">}</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">bool</span> operator<span style="color: #7F0055; font-weight: bold;">==</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">Point</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> a.<span style="color: #110099; font-style: italic;">x</span> <span style="color: #7F0055; font-weight: bold;">==</span> b.<span style="color: #110099; font-style: italic;">x</span> <span style="color: #7F0055; font-weight: bold;">&amp;&amp;</span> a.<span style="color: #110099; font-style: italic;">y</span> <span style="color: #7F0055; font-weight: bold;">==</span> b.<span style="color: #110099; font-style: italic;">y</span>; <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 
 <p>
-强化：
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>标记成员操作符函数</li>
+<li>标记操作符函数是成员函数的情况。</li>
 </ul>
