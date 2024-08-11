@@ -1,30 +1,29 @@
 ---
 layout: post
-title: CppCoreGuidelines C.162 重载大致相似的操作符
-categories: [technology]
+title: CppCoreGuidelines C.162 重载大致相似的函数
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Overload operations that are roughly equivalent&rdquo;
+C.162: Overload operations that are roughly equivalent
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-逻辑上相似的操作函数，使用不同的参数类型，却用了不同的名字，容易让人费解。导致在函数名上编码参数类型，无法实现泛型编程。
+逻辑上相似的操作函数，使用不同的参数类型，却用了不同的名字，容易让人费解。我们就要在函数名上硬编码参数类型，从而就无法实现泛型编程了。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <p>
@@ -32,14 +31,14 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #707183;">)</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">base</span><span style="color: #707183;">)</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp;<span style="color: #707183;">)</span>;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">a</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">base</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 
 <p>
-这几个函数的作用都是打印出提供给它的参数。
+这几个函数的作用都是打印出传给它的参数。
 </p>
 
 <p>
@@ -47,9 +46,9 @@ tags: [CppCoreGuidelines]
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print_int</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span><span style="color: #707183;">)</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print_based</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">a</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">base</span><span style="color: #707183;">)</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">print_string</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span>&amp;<span style="color: #707183;">)</span>;
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print_int</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">a</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print_based</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">a</span>, <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000;">base</span><span style="color: #707183;">)</span>;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">print_string</span><span style="color: #707183;">(</span><span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span><span style="color: #7F0055; font-weight: bold;">&amp;</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 

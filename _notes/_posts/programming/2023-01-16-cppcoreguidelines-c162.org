@@ -1,24 +1,20 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.162 重载大致相似的操作符
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.162 重载大致相似的函数
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Overload operations that are roughly equivalent"
+C.162: Overload operations that are roughly equivalent
 
 
-理由
+*理由*
 
 逻辑上相似的操作函数，使用不同的参数类型，却用了不同的名字，容易让人费
-解。导致在函数名上编码参数类型，无法实现泛型编程。
+解。我们就要在函数名上硬编码参数类型，从而就无法实现泛型编程了。
 
 
-例子
+*例子*
 
 考虑：
 
@@ -28,7 +24,7 @@ void print(int a, int base);
 void print(const string&);
 #+end_src
 
-这几个函数的作用都是打印出提供给它的参数。
+这几个函数的作用都是打印出传给它的参数。
 
 相反的：
 
