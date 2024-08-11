@@ -1,24 +1,22 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.152 不要把派生类的数组指针赋值给基类指针
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.152 不要把派生类的数组指针赋值给基类指针
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Never assign a pointer to an array of derived class objects to a pointer to its base"
+C.152: Never assign a pointer to an array of derived class objects to
+a pointer to its base
 
 
-理由
+*理由*
 
 对基类指针的下标访问，会访问到无效对象，甚至可能是内存数据破坏。
 
 
-例子
+*例子*
 
+#+attr_html: :class bad
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
 struct B { int x; };
 struct D : B { int y; };
@@ -41,10 +39,10 @@ int main()
 : 1 7
 : 1 7 3
 
-上面运行结果，第二行 a[0].y 被迁移行语句给覆盖成了 7。use 函数打印出
-a[0] 的 x 与 y，以及 a[1] 的 x。
+上面运行结果，第二行 ~a[0].y~ 被前一行语句给覆盖成了 ~7~ 。 ~use~ 函数打印
+出 ~a[0]~ 的 ~x~ 与 ~y~ ，以及 ~a[1]~ 的 ~x~ 。
 
 
-强化
+*强化*
 - 标记所有派生类数组指针赋值给基类指针的情况
-- 以 span 而非指针的方式传递数组，装入 span 的时候不要进行派生类到基类转换
+- 以 ~span~ 而非指针的方式传递数组，装入 ~span~ 的时候不要进行派生类到基类转换

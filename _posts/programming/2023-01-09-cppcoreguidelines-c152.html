@@ -1,21 +1,21 @@
 ---
 layout: post
 title: CppCoreGuidelines C.152 不要把派生类的数组指针赋值给基类指针
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Never assign a pointer to an array of derived class objects to a pointer to its base&rdquo;
+C.152: Never assign a pointer to an array of derived class objects to
+a pointer to its base
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
@@ -24,23 +24,23 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">x</span>; <span style="color: #707183;">}</span>;
-<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">y</span>; <span style="color: #707183;">}</span>;
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">x</span>; <span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">y</span>; <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>* <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> cout &lt;&lt; b<span style="color: #7388d6;">[</span>0<span style="color: #7388d6;">]</span>.x &lt;&lt; <span style="color: #2A00FF;">" "</span> &lt;&lt; b<span style="color: #7388d6;">[</span>1<span style="color: #7388d6;">]</span>.x &lt;&lt; <span style="color: #2A00FF;">" "</span> &lt;&lt; b<span style="color: #7388d6;">[</span>2<span style="color: #7388d6;">]</span>.x;<span style="color: #707183;">}</span>;
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">b</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span> cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> b<span style="color: #7388d6;">[</span><span style="color: #110099;">0</span><span style="color: #7388d6;">]</span>.<span style="color: #110099; font-style: italic;">x</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> b<span style="color: #7388d6;">[</span><span style="color: #110099;">1</span><span style="color: #7388d6;">]</span>.<span style="color: #110099; font-style: italic;">x</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> b<span style="color: #7388d6;">[</span><span style="color: #110099;">2</span><span style="color: #7388d6;">]</span>.<span style="color: #110099; font-style: italic;">x</span>;<span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">[]</span> = <span style="color: #7388d6;">{</span><span style="color: #909183;">{</span>1, 2<span style="color: #909183;">}</span>, <span style="color: #909183;">{</span>3, 4<span style="color: #909183;">}</span>, <span style="color: #909183;">{</span>5, 6<span style="color: #909183;">}</span><span style="color: #7388d6;">}</span>;
-    cout &lt;&lt; a<span style="color: #7388d6;">[</span>0<span style="color: #7388d6;">]</span>.x &lt;&lt; <span style="color: #2A00FF;">" "</span> &lt;&lt; a<span style="color: #7388d6;">[</span>0<span style="color: #7388d6;">]</span>.y &lt;&lt; endl;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>* <span style="color: #000000;">p</span> = a;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: a decays to &amp;a[0] which is converted to a B*</span>
-    p<span style="color: #7388d6;">[</span>1<span style="color: #7388d6;">]</span>.x = 7;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">overwrite a[0].y</span>
-    cout &lt;&lt; a<span style="color: #7388d6;">[</span>0<span style="color: #7388d6;">]</span>.x &lt;&lt; <span style="color: #2A00FF;">" "</span> &lt;&lt; a<span style="color: #7388d6;">[</span>0<span style="color: #7388d6;">]</span>.y &lt;&lt; endl;
-    use<span style="color: #7388d6;">(</span>a<span style="color: #7388d6;">)</span>;       <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: a decays to &amp;a[0] which is converted to a B*</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #000000;">a</span><span style="color: #7388d6;">[]</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7388d6;">{</span><span style="color: #909183;">{</span><span style="color: #110099;">1</span>, <span style="color: #110099;">2</span><span style="color: #909183;">}</span>, <span style="color: #909183;">{</span><span style="color: #110099;">3</span>, <span style="color: #110099;">4</span><span style="color: #909183;">}</span>, <span style="color: #909183;">{</span><span style="color: #110099;">5</span>, <span style="color: #110099;">6</span><span style="color: #909183;">}</span><span style="color: #7388d6;">}</span>;
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> a<span style="color: #7388d6;">[</span><span style="color: #110099;">0</span><span style="color: #7388d6;">]</span>.<span style="color: #110099; font-style: italic;">x</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> a<span style="color: #7388d6;">[</span><span style="color: #110099;">0</span><span style="color: #7388d6;">]</span>.<span style="color: #110099; font-style: italic;">y</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">p</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">a</span>;     <span style="color: #3F7F5F;">// bad: a decays to &amp;a[0] which is converted to a B*</span>
+    p<span style="color: #7388d6;">[</span><span style="color: #110099;">1</span><span style="color: #7388d6;">]</span>.<span style="color: #000000; font-style: italic;">x</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #110099;">7</span>;   <span style="color: #3F7F5F;">// overwrite a[0].y</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> a<span style="color: #7388d6;">[</span><span style="color: #110099;">0</span><span style="color: #7388d6;">]</span>.<span style="color: #110099; font-style: italic;">x</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">" "</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> a<span style="color: #7388d6;">[</span><span style="color: #110099;">0</span><span style="color: #7388d6;">]</span>.<span style="color: #110099; font-style: italic;">y</span> <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    <span style="color: #3a5fcd; font-weight: bold;">use</span><span style="color: #7388d6;">(</span>a<span style="color: #7388d6;">)</span>;       <span style="color: #3F7F5F;">// bad: a decays to &amp;a[0] which is converted to a B*</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -53,15 +53,14 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-上面运行结果，第二行 a[0].y 被迁移行语句给覆盖成了 7。use 函数打印出
-a[0] 的 x 与 y，以及 a[1] 的 x。
+上面运行结果，第二行<code>a[0].y</code>被前一行语句给覆盖成了 <code>7</code> 。 <code>use</code> 函数打印出<code>a[0]</code>的 <code>x</code> 与 <code>y</code> ，以及<code>a[1]</code>的 <code>x</code> 。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>标记所有派生类数组指针赋值给基类指针的情况</li>
-<li>以 span 而非指针的方式传递数组，装入 span 的时候不要进行派生类到基类转换</li>
+<li>以 <code>span</code> 而非指针的方式传递数组，装入 <code>span</code> 的时候不要进行派生类到基类转换</li>
 </ul>
