@@ -1,23 +1,22 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.138 通过 using 在派生类重载基类的函数
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.138 通过 using 在派生类中重载基类的函数
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Create an overload set for a derived class and its bases with using"
-
-理由
-
-不使用 using 的话，派生类的成员函数会覆盖从基类继承的所有重载函数。
+C.138: Create an overload set for a derived class and its bases with
+~using~
 
 
-坏例子
+*理由*
 
+不使用 ~using~ 的话，派生类的成员函数会覆盖从基类继承来的所有重载函数。
+
+
+*例子*
+
+#+attr_html: :class bad
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
 #include <iostream>
 class B {
@@ -26,10 +25,12 @@ public:
     virtual double f(double d) { std::cout << "f(double): "; return d; }
     virtual ~B() = default;
 };
+
 class D: public B {
 public:
     int f(int i) override { std::cout << "f(int): "; return i + 1; }
 };
+
 int main()
 {
     D d;
@@ -44,7 +45,7 @@ int main()
 
 
 
-好例子
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
 #include <iostream>
@@ -72,21 +73,28 @@ int main()
 : f(double): 2.3
 
 
-注意
-
+*注意*
 
 这个问题会影响到虚的以及非虚的成员函数。
 
-对于变参数模板类， C++17 提供了一个带可变参数形式的 using 声明：
+对于变参数模板类， C++17 提供了一个带可变参数形式的 ~using~ 声明：
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
 #include <iostream>
-class B {
+class B1 {
 public:
     virtual void operator()(int x) {
-        std::cout << "B( " << x << " )" << std::endl;
+        std::cout << "B1( " << x << " )" << std::endl;
     }
-    virtual ~B() = default;
+    virtual ~B1() = default;
+};
+
+class B2 {
+public:
+    virtual void operator()(double x) {
+        std::cout << "B2( " << x << " )" << std::endl;
+    }
+    virtual ~B2() = default;
 };
 
 template<class... Ts>
@@ -97,17 +105,19 @@ struct Overloader : Ts... {
 
 int main()
 {
-    Overloader<B> d;
+    Overloader<B1, B2> d;
     d(42);
+    d(42.1);
     d();
 }
 #+end_src
 
 #+RESULTS:
-: B( 42 )
+: B1( 42 )
+: B2( 42.1 )
 : Overloader()
 
 
-强化
+*强化*
 
-诊断名字隐藏的情况
+诊断名字覆盖（name hiding）的情况
