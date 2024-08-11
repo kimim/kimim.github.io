@@ -1,50 +1,51 @@
 ---
 layout: post
 title: CppCoreGuidelines C.132 不要不明所以的将一个函数设置为虚的
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Don’t make a function virtual without reason&rdquo;
+C.132: Don&rsquo;t make a function <code>virtual</code> without reason
 </p>
 
+
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
 多余的虚函数，会增加运行时间和对象内存大小。虚函数能够被重载，所以在继承类中打开了一个导致错误的大门。虚函数确保在模板化的层级中代码可复用。
 </p>
 
+
 <p>
-坏例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183;">&gt;</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #707183; font-weight: bold;">&gt;</span>
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Vector</span> <span style="color: #707183;">{</span>
 <span style="color: #7F0055; font-weight: bold;">public</span>:
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">size</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> sz; <span style="color: #7388d6;">}</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad: what good could a derived class do?</span>
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">size</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> sz; <span style="color: #7388d6;">}</span>   <span style="color: #3F7F5F;">// bad: what good could a derived class do?</span>
 <span style="color: #7F0055; font-weight: bold;">private</span>:
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span>* <span style="color: #000000;">elem</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">the elements</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #000000;">sz</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">number of elements</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">T</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">elem</span>;   <span style="color: #3F7F5F;">// the elements</span>
+    <span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #000000; font-style: italic;">sz</span>;    <span style="color: #3F7F5F;">// number of elements</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 <p>
-你根本不会通过某个基类使用这种 “vector”。
+你根本不会通过基类使用这种 “ vector ”的继承类。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>标记某个类有虚函数，却不会有继承类</li>
