@@ -1,24 +1,22 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.149 用 new 创建对象的时候，使用 unique_ptr 或 shared_ptr，避免忘记删除对象
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.149 new 对象的时候，用 unique_ptr 或 shared_ptr，避免忘记删除对象
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Use ~unique_ptr~ or ~shared_ptr~ to avoid forgetting to delete objects created using new"
+C.149: Use ~unique_ptr~ or ~shared_ptr~ to avoid forgetting to delete
+objects created using new
 
 
-理由
+*理由*
 
 避免资源泄漏。
 
 
-例子
+*例子*
 
+#+attr_html: :class bad
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 void use(int i)
 {
@@ -64,9 +62,9 @@ int main()
 : new flower 9
 : delete flower 9
 
-以上代码，如果提前return了， flower 7 就没有被删除，内存泄漏！
+以上代码，如果提前返回了， ~flower 7~ 就没有被删除，内存泄漏！
 
 
-强化
-- 标记使用原始指针接受 new 返回的结果
-- 标记对局部变量进行 delete 的操作
+*强化*
+- 标记使用原始指针接受 ~new~ 返回的结果
+- 标记对局部变量进行 ~delete~ 的操作
