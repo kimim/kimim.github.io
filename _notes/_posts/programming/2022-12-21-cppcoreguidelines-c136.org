@@ -1,23 +1,21 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.136 使用多重继承来表示实现属性的集合
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.136 用多重继承表达属性实现的集合
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Use multiple inheritance to represent the union of implementation attributes"
+C.136: Use multiple inheritance to represent the union of
+implementation attributes
 
 
-理由
+*理由*
 
-某些形式的混合类有状态，并且基于这些状态操作运行。如果这些操作是虚的，则需要使用继承。如果不是虚的，则使用继承能够避免样板代码和forwarding。
+某些形式的混合类有状态，并且基于这些状态操作运行。如果这些操作是虚的，
+则需要使用继承。如果不是虚的，则使用继承能够避免样板代码和转发。
 
 
-例子
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 class iostream : public istream, public ostream {   // very simplified
@@ -30,14 +28,13 @@ class iostream : public istream, public ostream {   // very simplified
 输出之间的同步。
 
 
-注意
+*注意*
 
-这是很少使用的方法，因为实现的时候也会组织成单根节点的继承层级。
+这是很少使用的方法，因为基于单根节点的继承层级也能实现一样的效果。
 
 
-例子
+*例子*
 
-有时候，一个“实现属性”更像一个混合类（mixin），通过注入成员来确定实现
-的某些行为，来确定需要实现的某些策略。比如
-~std::enable_shared_from_this~ 或基于 ~boost.intrusive~ 的 ~list_base_hook~
-以及 ~intrusive_ref_counter~ 。
+有时候，一个“属性的实现”更像一个混合类（mixin），通过注入成员来确定实现
+的某些行为，来确定需要实现的某些策略。比如 ~std::enable_shared_from_this~
+或基于 ~boost.intrusive~ 的 ~list_base_hook~ 以及 ~intrusive_ref_counter~ 。

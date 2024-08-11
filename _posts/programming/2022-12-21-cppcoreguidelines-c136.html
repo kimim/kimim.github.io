@@ -1,35 +1,35 @@
 ---
 layout: post
-title: CppCoreGuidelines C.136 使用多重继承来表示实现属性的集合
-categories: [technology]
+title: CppCoreGuidelines C.136 用多重继承表达属性实现的集合
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Use multiple inheritance to represent the union of implementation attributes&rdquo;
+C.136: Use multiple inheritance to represent the union of
+implementation attributes
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-某些形式的混合类有状态，并且基于这些状态操作运行。如果这些操作是虚的，则需要使用继承。如果不是虚的，则使用继承能够避免样板代码和forwarding。
+某些形式的混合类有状态，并且基于这些状态操作运行。如果这些操作是虚的，则需要使用继承。如果不是虚的，则使用继承能够避免样板代码和转发。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">iostream</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>, <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">very simplified</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">iostream</span> : <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">istream</span>, <span style="color: #7F0055; font-weight: bold;">public</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">ostream</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// very simplified</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
@@ -40,20 +40,19 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-这是很少使用的方法，因为实现的时候也会组织成单根节点的继承层级。
+这是很少使用的方法，因为基于单根节点的继承层级也能实现一样的效果。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <p>
-有时候，一个“实现属性”更像一个混合类（mixin），通过注入成员来确定实现的某些行为，来确定需要实现的某些策略。比如
-<code>std::enable_shared_from_this</code> 或基于 <code>boost.intrusive</code> 的 <code>list_base_hook</code>
-以及 <code>intrusive_ref_counter</code> 。
+有时候，一个“属性的实现”更像一个混合类（ mixin ），通过注入成员来确定实现的某些行为，来确定需要实现的某些策略。比如 <code>std::enable_shared_from_this</code>
+或基于<code>boost.intrusive</code>的 <code>list_base_hook</code> 以及<code>intrusive_ref_counter</code>。
 </p>
