@@ -15,7 +15,7 @@ C.145: Access polymorphic objects through pointers and references
 
 *例子*
 
-#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
+#+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results raw
 struct B {
     int a;
     virtual int f() {
@@ -57,10 +57,10 @@ int main()
 #+end_src
 
 #+RESULTS:
-| B::f() |
-| D::f() |
-| B::f() |
-| B::f() |
+B::f()
+D::f()
+B::f()
+B::f()
 
 上面例子， ~d~ 都被切片（slice）了。
 
