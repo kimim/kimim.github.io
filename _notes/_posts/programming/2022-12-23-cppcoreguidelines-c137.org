@@ -1,23 +1,20 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.137 使用虚的基类，避免过度通用的基类
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.137 使用虚基类避免过于通用的基类
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Use virtual bases to avoid overly general base classes"
+C.137: Use ~virtual~ bases to avoid overly general base classes
 
 
-理由
+*理由*
 
-实现共享数据和接口的分离。避免把所有共享数据放进一个最基础的基类。
+虚函数可以实现数据共享和接口分离。从而避免把所有共享数据放进一个最基础
+的基类。
 
 
-例子
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 struct Interface {
@@ -47,19 +44,19 @@ class Derive2 : public Interface, virtual protected Utility {
 };
 #+end_src
 
-如果很多派生类共享某些明显的实现细节，可以抽取处 Utility。
+如果很多派生类共享某些明显的实现细节，可以抽取出实用功能（ ~Utility~ ）。
 
 
-注意
+*注意*
 
-显然，这个例子太理论化了。但是很难找到更小的现实例子。 Interface 是接
-口层级的根节点，Utility 是实现层级的根节点。
-
-
-注意
-
-线性化的继承层级经常会是更好的解决方案。
+显然，这个例子太理论化了。但是很难找到更小的现实例子。 ~Interface~ 是接
+口层级的根节点， ~Utility~ 是实现层级的根节点。
 
 
-强化
+*注意*
+
+更好的方案可以是线性化的继承层级。
+
+
+*强化*
 - 标注混合了接口和实现继承层级的地方
