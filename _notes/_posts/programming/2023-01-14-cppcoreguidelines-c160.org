@@ -1,23 +1,19 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.160 操作符函数要模仿习惯用法
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.160 操作符函数要模仿习惯用法
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Define operators primarily to mimic conventional usage"
+C.160: Define operators primarily to mimic conventional usage
 
 
-理由
+*理由*
 
-不会感到奇怪。
+这样做就不会让人觉得奇怪。
 
 
-例子
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
 class X {
@@ -30,17 +26,18 @@ public:
 };
 #+end_src
 
-此处，我们维护了习惯语义：复制之后，进行比较，结果相等。
+此处，我们维护了习惯语义：拷贝之后，进行比较的话，结果应该是相等的。
 
 
-坏例子：
+*例子*
 
+#+attr_html: :class bad
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export :results output
 X operator+(X a, X b) { return a.v - b.v; }   // bad: makes + subtract
 #+end_src
 
 
-注意
+*注意*
 
-非成员的操作符要么是 friend，要么与操作对象一起定义在相同的名字空间。
-二元操作符应当将操作对象同等对待。
+非成员的操作符要么是友元的，要么与操作对象一起定义在相同的名字空间。二
+元操作符应当将操作对象同等对待。
