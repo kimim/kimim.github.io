@@ -1,23 +1,19 @@
-#+BEGIN_EXPORT html
----
-layout: post
-title: CppCoreGuidelines C.150 使用 make_unique() 构建 unique_ptr
-categories: [technology]
-tags: [CppCoreGuidelines]
----
-#+END_EXPORT
+#+layout: post
+#+title: CppCoreGuidelines C.150 使用 make_unique() 构建 unique_ptr
+#+categories: programming
+#+tags: CppCoreGuidelines
 
 [[http://kimi.im/tags.html#CppCoreGuidelines-ref][C++ 核心指南目录]]
 
-"Use ~make_unique()~ to construct objects owned by ~unique_ptr~'s"
+C.150: Use ~make_unique()~ to construct objects owned by ~unique_ptr~'s
 
 
-理由
+*理由*
 
 用 ~make_unique~ 进行对象构造，语句简介，在使用复杂表达式的时候能确保异常安全。
 
 
-例子
+*例子*
 
 #+begin_src C++ :exports both :flags -std=c++20 :namespaces std :includes  <iostream> <vector> <algorithm> :eval no-export
 unique_ptr<Foo> p {new Foo{7}};    // OK: but repetitive
@@ -26,5 +22,5 @@ auto q = make_unique<Foo>(7);      // Better: no repetition of Foo
 #+end_src
 
 
-强化
-- （简单）如果 ~unique_ptr~ 是通过 new ，而不是通过 ~make_unique~ 构造，警告。
+*强化*
+- （简单）如果 ~unique_ptr~ 是通过 ~new~ ，而不是通过 ~make_unique~ 构造，警告。

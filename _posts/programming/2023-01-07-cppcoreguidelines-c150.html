@@ -1,43 +1,42 @@
 ---
 layout: post
 title: CppCoreGuidelines C.150 使用 make_unique() 构建 unique_ptr
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Use <code>make_unique()</code> to construct objects owned by <code>unique_ptr</code>&rsquo;s&rdquo;
+C.150: Use <code>make_unique()</code> to construct objects owned by <code>unique_ptr</code>&rsquo;s
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-用 <code>make_unique</code> 进行对象构造，语句简介，在使用复杂表达式的时候能确保异常安全。
+用<code>make_unique</code>进行对象构造，语句简介，在使用复杂表达式的时候能确保异常安全。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #707183;">&lt;</span>Foo<span style="color: #707183;">&gt;</span> <span style="color: #000000;">p</span> <span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7388d6;">{</span>7<span style="color: #7388d6;">}</span><span style="color: #707183;">}</span>;    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK: but repetitive</span>
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">unique_ptr</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #707183; font-weight: bold;">&gt;</span> <span style="color: #000000;">p</span> <span style="color: #707183;">{</span><span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #7388d6;">{</span><span style="color: #110099;">7</span><span style="color: #7388d6;">}</span><span style="color: #707183;">}</span>;    <span style="color: #3F7F5F;">// OK: but repetitive</span>
 
-<span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">q</span> = make_unique<span style="color: #707183;">&lt;</span>Foo<span style="color: #707183;">&gt;(</span>7<span style="color: #707183;">)</span>;      <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Better: no repetition of Foo</span>
+<span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">q</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">make_unique</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Foo</span><span style="color: #707183; font-weight: bold;">&gt;</span><span style="color: #707183;">(</span><span style="color: #110099;">7</span><span style="color: #707183;">)</span>;      <span style="color: #3F7F5F;">// Better: no repetition of Foo</span>
 </pre>
 </div>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>（简单）如果 <code>unique_ptr</code> 是通过 new ，而不是通过 <code>make_unique</code> 构造，警告。</li>
+<li>（简单）如果<code>unique_ptr</code>是通过 <code>new</code> ，而不是通过<code>make_unique</code>构造，警告。</li>
 </ul>
