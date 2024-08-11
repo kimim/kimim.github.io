@@ -1,21 +1,21 @@
 ---
 layout: post
-title: CppCoreGuidelines C.148 使用 dynamic_cast 转换成指针类型的时候，无法找到要转换的类型时，不会抛出异常，可以用来进行进行分支判断
-categories: [technology]
+title: CppCoreGuidelines C.148 用 dynamic_cast 转换指针时，无法找到要转换的类型时，不会抛出异常，可以进行分支判断
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Use <code>dynamic_cast</code> to a pointer type when failure to find the required class is considered a valid alternative&rdquo;
+C.148: Use <code>dynamic_cast</code> to a pointer type when failure to find the
+required class is considered a valid alternative
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
@@ -23,41 +23,42 @@ tags: [CppCoreGuidelines]
 </p>
 
 <p>
-这里与 C.147 不同。C.147 会抛出异常，无法进行条件判断。
+这里与<a href="./2023-01-04-cppcoreguidelines-c147">C.147</a>不同。C.147 会抛出异常，无法进行条件判断。
 </p>
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <p>
-以下例子 add 函数会把形状放到形状保管器里。不同形状还会添加到形状视图中。先对形状进行动态类型转换，根据转换结果装入不同的视图。
+以下例子 <code>add</code> 函数会把形状放到形状保管器里。不同形状还会添加到形状视图中。先对形状进行动态类型转换，根据转换结果装入不同的视图。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">add</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span>* <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000;">item</span><span style="color: #707183;">)</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">add</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Shape</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000;">item</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Ownership is always taken</span>
-    owned_shapes.emplace_back<span style="color: #7388d6;">(</span>item<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// Ownership is always taken</span>
+    owned_shapes.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">emplace_back</span><span style="color: #7388d6;">(</span>item<span style="color: #7388d6;">)</span>;
 
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">Check the Geometric_attributes and add the shape to none/one/some/all of the views</span>
+    <span style="color: #3F7F5F;">// Check the Geometric_attributes and add the shape to none/one/some/all of the views</span>
 
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">even</span> = <span style="color: #7F0055; font-weight: bold;">dynamic_cast</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Even_sided</span>*<span style="color: #909183;">&gt;(</span>item<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">even</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">dynamic_cast</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Even_sided</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #909183; font-weight: bold;">&gt;</span><span style="color: #909183;">(</span>item<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
     <span style="color: #7388d6;">{</span>
-        view_of_evens.emplace_back<span style="color: #909183;">(</span>even<span style="color: #909183;">)</span>;
+        view_of_evens.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">emplace_back</span><span style="color: #909183;">(</span>even<span style="color: #909183;">)</span>;
     <span style="color: #7388d6;">}</span>
 
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">auto</span> <span style="color: #000000;">trisym</span> = <span style="color: #7F0055; font-weight: bold;">dynamic_cast</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Trilaterally_symmetrical</span>*<span style="color: #909183;">&gt;(</span>item<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">auto</span> <span style="color: #000000;">trisym</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">dynamic_cast</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">Trilaterally_symmetrical</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #909183; font-weight: bold;">&gt;</span><span style="color: #909183;">(</span>item<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
     <span style="color: #7388d6;">{</span>
-        view_of_trisyms.emplace_back<span style="color: #909183;">(</span>trisym<span style="color: #909183;">)</span>;
+        view_of_trisyms.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">emplace_back</span><span style="color: #909183;">(</span>trisym<span style="color: #909183;">)</span>;
     <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
+
 <p>
-注意
+<b>注意</b>
 </p>
 
 <p>
@@ -66,7 +67,7 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
 <li>（复杂）只有对动态类型转换的结果进行空值判断后才能取值，不然抛出警告。</li>
