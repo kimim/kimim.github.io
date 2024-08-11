@@ -1,21 +1,21 @@
 ---
 layout: post
-title: CppCoreGuidelines C.146 当在类的继承层级之间切换不可避免的时候，使用 dynamic_cast
-categories: [technology]
+title: CppCoreGuidelines C.146 不可避免要在类的继承层级之间切换时，使用 dynamic_cast
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Use <code>dynamic_cast</code> where class hierarchy navigation is unavoidable&rdquo;
+C.146: Use <code>dynamic_cast</code> where class hierarchy navigation is
+unavoidable
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
@@ -24,41 +24,41 @@ tags: [CppCoreGuidelines]
 
 
 <p>
-例子
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">an interface</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>cout &lt;&lt; <span style="color: #2A00FF;">"B::f()\n"</span>; <span style="color: #7388d6;">}</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>cout &lt;&lt; <span style="color: #2A00FF;">"B::g()\n"</span>; <span style="color: #7388d6;">}</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> ~<span style="color: #0000ff; font-weight: bold;">B</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{}</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// an interface</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"B::f()\n"</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">g</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"B::g()\n"</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">~</span><span style="color: #110099;">B</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{}</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">a wider interface</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span>cout &lt;&lt; <span style="color: #2A00FF;">"D::f()\n"</span>; <span style="color: #7388d6;">}</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">h</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> cout &lt;&lt; <span style="color: #2A00FF;">"D::h()\n"</span>; <span style="color: #7388d6;">}</span>
+<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>   <span style="color: #3F7F5F;">// a wider interface</span>
+    <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">f</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span>cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"D::f()\n"</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">h</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> <span style="color: #2A00FF;">"D::h()\n"</span>; <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">user</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>* <span style="color: #000000;">pb</span><span style="color: #707183;">)</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">user</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">pb</span><span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>* <span style="color: #000000;">pd</span> = <span style="color: #7F0055; font-weight: bold;">dynamic_cast</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>*<span style="color: #909183;">&gt;(</span>pb<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... use D's interface ...</span>
-        pd-&gt;f<span style="color: #909183;">()</span>;
-        pd-&gt;h<span style="color: #909183;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">pd</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">dynamic_cast</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #909183; font-weight: bold;">&gt;</span><span style="color: #909183;">(</span>pb<span style="color: #909183;">)</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #3F7F5F;">// ... use D's interface ...</span>
+        pd<span style="color: #7F0055; font-weight: bold;">-&gt;</span><span style="color: #3a5fcd; font-weight: bold; font-style: italic;">f</span><span style="color: #909183;">()</span>;
+        pd<span style="color: #7F0055; font-weight: bold;">-&gt;</span><span style="color: #3a5fcd; font-weight: bold; font-style: italic;">h</span><span style="color: #909183;">()</span>;
     <span style="color: #7388d6;">}</span>
     <span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... make do with B's interface ...</span>
-        pb-&gt;f<span style="color: #909183;">()</span>;
-        pb-&gt;g<span style="color: #909183;">()</span>;
+        <span style="color: #3F7F5F;">// ... make do with B's interface ...</span>
+        pb<span style="color: #7F0055; font-weight: bold;">-&gt;</span><span style="color: #3a5fcd; font-weight: bold; font-style: italic;">f</span><span style="color: #909183;">()</span>;
+        pb<span style="color: #7F0055; font-weight: bold;">-&gt;</span><span style="color: #3a5fcd; font-weight: bold; font-style: italic;">g</span><span style="color: #909183;">()</span>;
     <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #000000;">b</span>;
-    user<span style="color: #7388d6;">(</span>&amp;b<span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">user</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>b<span style="color: #7388d6;">)</span>;
     <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> <span style="color: #000000;">d</span>;
-    user<span style="color: #7388d6;">(</span>&amp;d<span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">user</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>d<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -73,57 +73,55 @@ D::h()
 
 
 <p>
-使用其他的类型转换方法会违反类型安全要求，导致程序访问 Z 的一个变量的时候，实际上访问了 X 的变量。
+使用其他的类型转换方法会违反类型安全要求，导致程序访问 <code>Z</code> 的一个变量的时候，实际上访问了 <code>X</code> 的变量。
 </p>
 
-
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">user2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>* <span style="color: #000000;">pb</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad</span>
+<pre class="src src-bad src-C++"><span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">user2</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">pb</span><span style="color: #707183;">)</span>   <span style="color: #3F7F5F;">// bad</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>* <span style="color: #000000;">pd</span> = <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>*<span style="color: #7388d6;">&gt;(</span>pb<span style="color: #7388d6;">)</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">I know that pb really points to a D; trust me</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... use D's interface ...</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">pd</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">static_cast</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span>pb<span style="color: #7388d6;">)</span>;
+    <span style="color: #3F7F5F;">// I know that pb really points to a D; trust me</span>
+    <span style="color: #3F7F5F;">// ... use D's interface ...</span>
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">user3</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>* <span style="color: #000000;">pb</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">unsafe</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">user3</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">pb</span><span style="color: #707183;">)</span>    <span style="color: #3F7F5F;">// unsafe</span>
 <span style="color: #707183;">{</span>
     <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>some_condition<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>* <span style="color: #000000;">pd</span> = <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>*<span style="color: #909183;">&gt;(</span>pb<span style="color: #909183;">)</span>;
-        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">I know that pb really points to a D; trust me</span>
-        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... use D's interface ...</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">pd</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">static_cast</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #909183; font-weight: bold;">&gt;</span><span style="color: #909183;">(</span>pb<span style="color: #909183;">)</span>;
+        <span style="color: #3F7F5F;">// I know that pb really points to a D; trust me</span>
+        <span style="color: #3F7F5F;">// ... use D's interface ...</span>
     <span style="color: #7388d6;">}</span>
     <span style="color: #7F0055; font-weight: bold;">else</span> <span style="color: #7388d6;">{</span>
-        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">... make do with B's interface ...</span>
+        <span style="color: #3F7F5F;">// ... make do with B's interface ...</span>
     <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #000000;">b</span>;
-    user<span style="color: #7388d6;">(</span>&amp;b<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK</span>
-    user2<span style="color: #7388d6;">(</span>&amp;b<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">bad error</span>
-    user3<span style="color: #7388d6;">(</span>&amp;b<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK *if* the programmer got the some_condition check right</span>
+    <span style="color: #3a5fcd; font-weight: bold;">user</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>b<span style="color: #7388d6;">)</span>;   <span style="color: #3F7F5F;">// OK</span>
+    <span style="color: #3a5fcd; font-weight: bold;">user2</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>b<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// bad error</span>
+    <span style="color: #3a5fcd; font-weight: bold;">user3</span><span style="color: #7388d6;">(</span><span style="color: #7F0055; font-weight: bold;">&amp;</span>b<span style="color: #7388d6;">)</span>;  <span style="color: #3F7F5F;">// OK *if* the programmer got the some_condition check right</span>
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 
 <p>
-注意
+<b>注意</b>
+</p>
+
+<p>
+像其他的类型转换方法一样，人们也过度使用了<code>dynamic_cast</code>。建议首先考虑是否可以用虚函数实现。建议尽可能的利用类型层级的静态多态方法，没有运行时额外开销，且相对方便。
 </p>
 
 
 <p>
-像其他的类型转换方法一样，人们也过度使用了 <code>dynamic_cast</code> 。建议首先考虑是否可以用虚函数实现。建议尽可能的利用类型层级的静态多态方法，没有运行时额外开销，且相对方便。
-</p>
-
-
-<p>
-注意
+<b>注意</b>
 </p>
 
 <p>
-有些地方使用 <code>typeid</code> 可能比 <code>dynamyc_cast</code> 更恰当。 <code>dynamic_cast</code> 为 “是某一类” 这种操作，用来发现一个对象的最佳接口；而 <code>typeid</code> 是 “给我这个类的确切类型” 这样的操作，用来发现一个对象的实际类型。后者是更简单的操作，速度应该更快。并且也更容易实现。而前者则较难正确实现。
+有些地方使用 <code>typeid</code> 可能比<code>dynamyc_cast</code>更恰当。<code>dynamic_cast</code>为 “是某一类”这种操作，用来发现一个对象的最佳接口；而 <code>typeid</code>是 “给我这个类的确切类型” 这样的操作，用来发现一个对象的实际类型。后者是更简单的操作，速度应该更快。并且也更容易实现。而前者则较难正确实现。
 </p>
 
 
@@ -132,37 +130,37 @@ D::h()
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">name</span> <span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"B"</span><span style="color: #7388d6;">}</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">if pb1-&gt;id() == pb2-&gt;id() *pb1 is the same type as *pb2</span>
-    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #0000ff; font-weight: bold;">id</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> name; <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">name</span> <span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"B"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// if pb1-&gt;id() == pb2-&gt;id() *pb1 is the same type as *pb2</span>
+    <span style="color: #7F0055; font-weight: bold;">virtual</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">id</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> name; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">name</span> <span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"D"</span><span style="color: #7388d6;">}</span>;
-    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #0000ff; font-weight: bold;">id</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> name; <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000; font-style: italic;">name</span> <span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"D"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #0000ff; font-weight: bold; font-style: italic;">id</span><span style="color: #7388d6;">()</span> <span style="color: #7F0055; font-weight: bold;">const</span> <span style="color: #7F0055; font-weight: bold;">override</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> name; <span style="color: #7388d6;">}</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #0000ff; font-weight: bold;">use</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>* <span style="color: #000000;">pb1</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>;
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>* <span style="color: #000000;">pb2</span> = <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">pb1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span>;
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">pb2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #7F0055; font-weight: bold;">new</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>;
 
-    cout &lt;&lt; pb1-&gt;id<span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">"B"</span>
-    cout &lt;&lt; pb2-&gt;id<span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">"D"</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> pb1<span style="color: #7F0055; font-weight: bold;">-&gt;</span><span style="color: #3a5fcd; font-weight: bold; font-style: italic;">id</span><span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// "B"</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> pb2<span style="color: #7F0055; font-weight: bold;">-&gt;</span><span style="color: #3a5fcd; font-weight: bold; font-style: italic;">id</span><span style="color: #7388d6;">()</span>; <span style="color: #3F7F5F;">// "D"</span>
 
-    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>pb1-&gt;id<span style="color: #909183;">()</span> == <span style="color: #2A00FF;">"D"</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>         <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">looks innocent</span>
-        <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>* <span style="color: #000000;">pd</span> = <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #909183;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span>*<span style="color: #909183;">&gt;(</span>pb1<span style="color: #909183;">)</span>;
-        <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #7F0055; font-weight: bold;">if</span> <span style="color: #7388d6;">(</span>pb1<span style="color: #7F0055; font-weight: bold;">-&gt;</span><span style="color: #3a5fcd; font-weight: bold; font-style: italic;">id</span><span style="color: #909183;">()</span> <span style="color: #7F0055; font-weight: bold;">==</span> <span style="color: #2A00FF;">"D"</span><span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>         <span style="color: #3F7F5F;">// looks innocent</span>
+        <span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">pd</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">static_cast</span><span style="color: #909183; font-weight: bold;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">D</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #909183; font-weight: bold;">&gt;</span><span style="color: #909183;">(</span>pb1<span style="color: #909183;">)</span>;
+        <span style="color: #3F7F5F;">// ...</span>
     <span style="color: #7388d6;">}</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    use<span style="color: #7388d6;">()</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">use</span><span style="color: #7388d6;">()</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -174,7 +172,7 @@ BD
 
 
 <p>
-pb2-&gt;id() 的返回值实际上不同的实现可能有不同的结果。我们添加这个函数是为了警告自己设计 RTTI 的危险。这段代码可能能按照预期正确执行很多年，但是在新的机器、新的编译器或新的连接器上运行失败。
+<code>pb2-&gt;id()</code> 的返回值实际上不同的实现可能有不同的结果。我们添加这个函数是为了警告自己设计 RTTI 的危险。这段代码可能能按照预期正确执行很多年，但是在新的机器、新的编译器或新的连接器上运行失败。
 </p>
 
 <p>
@@ -182,28 +180,27 @@ pb2-&gt;id() 的返回值实际上不同的实现可能有不同的结果。我�
 </p>
 
 
-
 <p>
-例外
+<b>例外</b>
 </p>
 
 <p>
-如果在你的实现中发现 <code>dynamic_cast</code> 运行非常慢，你可能要用一个变通的方案了。不过任何无法静态的处理的变通方案都会引入显式的类型转换，导致错误。你实际上是构建了自己的一个特殊的 <code>dynamic_cast</code> 。所以，首先确保你的
-<code>dynamic_cast</code> 是不是像你想的那么慢（有很多关于 <code>dynamic_cast</code> 速度慢传言）；再者你使用 <code>dynamic_cast</code> 的地方性能是否很关键。
+如果在你的实现中发现<code>dynamic_cast</code>运行非常慢，你可能要用一个变通的方案了。不过任何无法静态的处理的变通方案都会引入显式的类型转换，导致错误。你实际上是构建了自己的一个特殊的<code>dynamic_cast</code>。所以，首先确保你的
+<code>dynamic_cast</code> 是不是像你想的那么慢（有很多关于<code>dynamic_cast</code>速度慢传言）；再者你使用<code>dynamic_cast</code>的地方性能是否很关键。
 </p>
 
 <p>
-我们也认为目前 <code>dynamic_cast</code> 的实现有些慢。比如在某些条件下，其实是可以以更快的时间执行的。然而，因为兼容性的考虑，即使大家都认为值得优化一下，也很难修改。
+我们也认为目前<code>dynamic_cast</code>的实现有些慢。比如在某些条件下，其实是可以以更快的时间执行的。然而，因为兼容性的考虑，即使大家都认为值得优化一下，也很难修改。
 </p>
 
 <p>
-在极少的情况下，如果你发现 <code>dynamic_cast</code> 的运行开销很明显，你可以通过静态方法确保成功地向下类型转换（比如小心使用 CRTP - Curiously Recurring
-Template Pattern。从模板类继承一个新类，以继承类作为基类的模板参数）。因为没有使用虚继承，可以策略性的考虑使用 <code>static_cast</code> （请提供清晰的注释和声明，确保有人会注意，因为类型系统无法验证正确性）。尽管如此，在我们的经验里，这种“我知道我在做什么”的情况仍然是大部分 bug 的源头。
+在极少的情况下，如果你发现<code>dynamic_cast</code>的运行开销很明显，你可以通过静态方法确保成功地向下类型转换（比如小心使用 CRTP - Curiously Recurring
+Template Pattern。从模板类继承一个新类，以继承类作为基类的模板参数）。因为没有使用虚继承，可以策略性的考虑使用<code>static_cast</code>（请提供清晰的注释和声明，确保有人会注意，因为类型系统无法验证正确性）。尽管如此，在我们的经验里，这种“我知道我在做什么”的情况仍然是大部分 bug 的源头。
 </p>
 
 
 <p>
-例外
+<b>例外</b>
 </p>
 
 <p>
@@ -211,18 +208,18 @@ Template Pattern。从模板类继承一个新类，以继承类作为基类的�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #707183;">&gt;</span>
+<pre class="src src- src-C++"><span style="color: #7F0055; font-weight: bold;">template</span><span style="color: #707183; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">typename</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span><span style="color: #707183; font-weight: bold;">&gt;</span>
 <span style="color: #7F0055; font-weight: bold;">class</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">Dx</span> : <span style="color: #000000; font-style: italic; text-decoration: underline;">B</span> <span style="color: #707183;">{</span>
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
+    <span style="color: #3F7F5F;">// ...</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>标注所有使用 <code>static_cast</code> 进行向下类型转换的情况，包括 C 风格的静态转换。</li>
+<li>标注所有使用<code>static_cast</code>进行向下类型转换的情况，包括 C 风格的静态转换。</li>
 <li>此规则是类型安全的注意事项。</li>
 </ul>
