@@ -1,81 +1,70 @@
 ---
 layout: post
 title: CppCoreGuidelines C.164 避免隐式的转换操作
-categories: [technology]
+categories: [programming]
 tags: [CppCoreGuidelines]
 ---
-
 <p>
 <a href="http://kimi.im/tags.html#CppCoreGuidelines-ref">C++ 核心指南目录</a>
 </p>
 
 <p>
-&ldquo;Avoid implicit conversion operators&rdquo;
+C.164: Avoid implicit conversion operators
 </p>
 
 
 <p>
-理由
+<b>理由</b>
 </p>
 
 <p>
-隐式转换有时候是必不可少的（如 double 转成 int），但是经常导致意想不到的结果（如 String 转成 C 风格的 string）。
-</p>
-
-
-<p>
-注意
-</p>
-
-<p>
-尽量使用显示的类型转换，除非特殊情况使用隐式转换。不要因为方便而选择隐式转换。
+隐式类型转换有时候是必不可少的（如 <code>double</code> 转成 <code>int</code> ），但是也经常会导致意想不到的结果（如 <code>String</code> 转成 <code>C</code> 风格的 <code>string</code> ）。
 </p>
 
 
 <p>
-例子
+<b>注意</b>
+</p>
+
+<p>
+尽量使用显示的类型转换，除非是特殊情况才使用隐式转换。更不要因为方便而选择隐式转换。
+</p>
+
+
+<p>
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++" id="org4f6c90d"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S1</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"S1"</span><span style="color: #7388d6;">}</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #7F0055; font-weight: bold;">operator</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>*<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> s.data<span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, likely to cause surprises</span>
+<pre class="src src-bad src-C++" id="orgbba506c"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S1</span> <span style="color: #707183;">{</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">s</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"S1"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    operator <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> s.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">data</span><span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// BAD, likely to cause surprises</span>
 <span style="color: #707183;">}</span>;
 
 <span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S2</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"S2"</span><span style="color: #7388d6;">}</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #7F0055; font-weight: bold;">explicit</span> <span style="color: #7F0055; font-weight: bold;">operator</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>*<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> s.data<span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>
+    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000; font-style: italic;">s</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"S2"</span><span style="color: #7388d6;">}</span>;
+    <span style="color: #3F7F5F;">// ...</span>
+    <span style="color: #7F0055; font-weight: bold;">explicit</span> operator <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> s.<span style="color: #3a5fcd; font-weight: bold; font-style: italic;">data</span><span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>
 <span style="color: #707183;">}</span>;
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S1</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"S1"</span><span style="color: #7388d6;">}</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #7F0055; font-weight: bold;">operator</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>*<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> s.data<span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, likely to cause surprises</span>
-<span style="color: #707183;">}</span>;
-
-<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S2</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"S2"</span><span style="color: #7388d6;">}</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #7F0055; font-weight: bold;">explicit</span> <span style="color: #7F0055; font-weight: bold;">operator</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>*<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> s.data<span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>
-<span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">S1</span> <span style="color: #000000;">s1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">S2</span> <span style="color: #000000;">s2</span><span style="color: #707183;">)</span>
+<pre class="src src-bad src-C++">$$s1<span style="color: #7F0055; font-weight: bold;">-</span>and<span style="color: #7F0055; font-weight: bold;">-</span>s2$$
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #110099;">S1</span> s1, <span style="color: #110099;">S2</span> s2<span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">x1</span> = s1;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">OK, but can cause surprises in many contexts</span>
-    cout &lt;&lt; x1 &lt;&lt; endl;
-    <span style="color: #3F7F5F;">//</span><span style="color: #3F7F5F;">char* x2 = s2;     // error (and that's usually a good thing)</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">x3</span> = <span style="color: #7F0055; font-weight: bold;">static_cast</span><span style="color: #7388d6;">&lt;</span><span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>*<span style="color: #7388d6;">&gt;(</span>s2<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">we can be explicit (on your head be it)</span>
-    cout &lt;&lt; x3 &lt;&lt; endl;
+    <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">x1</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">s1</span>;     <span style="color: #3F7F5F;">// OK, but can cause surprises in many contexts</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> x1 <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
+    <span style="color: #3F7F5F;">//char* x2 = s2;     // error (and that's usually a good thing)</span>
+    <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">x3</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #3a5fcd; font-weight: bold;">static_cast</span><span style="color: #7388d6; font-weight: bold;">&lt;</span><span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span><span style="color: #7388d6; font-weight: bold;">&gt;</span><span style="color: #7388d6;">(</span>s2<span style="color: #7388d6;">)</span>; <span style="color: #3F7F5F;">// we can be explicit (on your head be it)</span>
+    cout <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> x3 <span style="color: #7F0055; font-weight: bold;">&lt;&lt;</span> endl;
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">S1</span> <span style="color: #000000;">s1</span>;
     <span style="color: #000000; font-style: italic; text-decoration: underline;">S2</span> <span style="color: #000000;">s2</span>;
-    f<span style="color: #7388d6;">(</span>s1, s2<span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>s1, s2<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
@@ -87,35 +76,25 @@ S2
 
 
 <p>
-因为转换操作符添加了 explicit，所以需要进行显式的转换。
+因为转换操作符添加了 <code>explicit</code> ，所以需要进行显式的转换。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S1</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"S1"</span><span style="color: #7388d6;">}</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #7F0055; font-weight: bold;">operator</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>*<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> s.data<span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>  <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">BAD, likely to cause surprises</span>
-<span style="color: #707183;">}</span>;
-
-<span style="color: #7F0055; font-weight: bold;">struct</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">S2</span> <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">string</span> <span style="color: #000000;">s</span><span style="color: #7388d6;">{</span><span style="color: #2A00FF;">"S2"</span><span style="color: #7388d6;">}</span>;
-    <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">...</span>
-    <span style="color: #7F0055; font-weight: bold;">explicit</span> <span style="color: #7F0055; font-weight: bold;">operator</span> <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>*<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span> <span style="color: #7F0055; font-weight: bold;">return</span> s.data<span style="color: #909183;">()</span>; <span style="color: #7388d6;">}</span>
-<span style="color: #707183;">}</span>;
-<span style="color: #000000; font-style: italic; text-decoration: underline;">void</span> <span style="color: #0000ff; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #000000; font-style: italic; text-decoration: underline;">S1</span> <span style="color: #000000;">s1</span>, <span style="color: #000000; font-style: italic; text-decoration: underline;">S2</span> <span style="color: #000000;">s2</span><span style="color: #707183;">)</span>
+<pre class="src src-bad src-C++">$$s1<span style="color: #7F0055; font-weight: bold;">-</span>and<span style="color: #7F0055; font-weight: bold;">-</span>s2$$
+<span style="color: #7F0055; font-weight: bold;">void</span> <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #707183;">(</span><span style="color: #110099;">S1</span> s1, <span style="color: #110099;">S2</span> s2<span style="color: #707183;">)</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #000000;">x2</span> = s2;     <span style="color: #3F7F5F;">// </span><span style="color: #3F7F5F;">error (and that's usually a good thing)</span>
+    <span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #000000;">x2</span> <span style="color: #7F0055; font-weight: bold;">=</span> <span style="color: #000000;">s2</span>;     <span style="color: #3F7F5F;">// error (and that's usually a good thing)</span>
 <span style="color: #707183;">}</span>
-<span style="color: #000000; font-style: italic; text-decoration: underline;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">int</span> <span style="color: #0000ff; font-weight: bold;">main</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
     <span style="color: #000000; font-style: italic; text-decoration: underline;">S1</span> <span style="color: #000000;">s1</span>;
     <span style="color: #000000; font-style: italic; text-decoration: underline;">S2</span> <span style="color: #000000;">s2</span>;
-    f<span style="color: #7388d6;">(</span>s1, s2<span style="color: #7388d6;">)</span>;
+    <span style="color: #3a5fcd; font-weight: bold;">f</span><span style="color: #7388d6;">(</span>s1, s2<span style="color: #7388d6;">)</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
-<pre class="example" id="org7c190bc">
+<pre class="example" id="orgb961480">
 C-src-gvvjq1.cpp: In function 'void f(S1, S2)':
 C-src-gvvjq1.cpp:23:16: error: cannot convert 'S2' to 'char*' in initialization
    23 |     char* x2 = s2;
@@ -124,37 +103,39 @@ C-src-gvvjq1.cpp:23:16: error: cannot convert 'S2' to 'char*' in initialization
       |                S2
 </pre>
 
+
 <p>
 不然编译器就会报错，说无法进行转换。
 </p>
 
 
 <p>
-隐式类型转换会引起意想不到的结果，和潜在的破坏。而且还很难发现。
+隐式类型转换会引起意想不到的结果和隐藏的数据损坏。而且还很难发现。
 </p>
 
+
 <p>
-比如
+<b>例子</b>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">S1</span> <span style="color: #0000ff; font-weight: bold;">ff</span><span style="color: #707183;">()</span> <span style="color: #707183;">{}</span>;
+<pre class="src src- src-C++"><span style="color: #000000; font-style: italic; text-decoration: underline;">S1</span> <span style="color: #0000ff; font-weight: bold;">ff</span><span style="color: #707183;">()</span> <span style="color: #707183;">{}</span>;
 
-<span style="color: #000000; font-style: italic; text-decoration: underline;">char</span>* <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">()</span>
+<span style="color: #7F0055; font-weight: bold;">char</span><span style="color: #7F0055; font-weight: bold;">*</span> <span style="color: #0000ff; font-weight: bold;">g</span><span style="color: #707183;">()</span>
 <span style="color: #707183;">{</span>
-    <span style="color: #7F0055; font-weight: bold;">return</span> ff<span style="color: #7388d6;">()</span>;
+    <span style="color: #7F0055; font-weight: bold;">return</span> <span style="color: #3a5fcd; font-weight: bold;">ff</span><span style="color: #7388d6;">()</span>;
 <span style="color: #707183;">}</span>
 </pre>
 </div>
 
 <p>
-ff() 返回的字符串在使用内部指针之前可能就已经被销毁。
+<code>ff()</code> 返回的字符串在使用内部指针之前可能就已经被销毁。
 </p>
 
 
 <p>
-强化
+<b>强化</b>
 </p>
 <ul class="org-ul">
-<li>标注使用非显式转换的操作。</li>
+<li>标注使用隐式类型转换的操作。</li>
 </ul>
