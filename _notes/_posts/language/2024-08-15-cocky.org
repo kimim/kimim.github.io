@@ -1,0 +1,21 @@
+#+LAYOUT: post
+#+TITLE: 单词本：cocky
+#+TAGS: English
+#+CATEGORIES: language
+在 Hellriegel 的组织行为学中 [[cite:&hellriegel2005ob]] 列举了一个案例，说
+美国安然公司（Enron）营造一种只顾追求利益的企业文化，最终导致腐败破产。
+
+Enron recruited a band of *cocky*, inexperienced MBAs and left them
+alone to do whatever it took to structure a deal, regardless of the
+consequences.
+
+他们雇佣一些没经验的 MBA 应届生，这些人很 cocky，不择手段达成交易。
+
+显然，cocky 是以物拟人的用法。cock 公鸡、雄鸡，自然是昂首阔步趾高气扬
+的骄傲样子。所以 cocky 的意思是狂妄自负、趾高气扬。
+
+比如 He remained *cocky* and arrogant despite it being clear he was to
+blame. [[cite:&cambridgedict]]
+
+*References*
+[[bibliography:~/docs/webref.bib]]
