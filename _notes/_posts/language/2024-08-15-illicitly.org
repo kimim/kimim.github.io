@@ -1,0 +1,39 @@
+#+LAYOUT: post
+#+TITLE: 单词本：illicit
+#+TAGS: English
+#+CATEGORIES: language
+
+最近看了不少信息安全相关的资料。因为信息安全涉及攻击、恶意、违法词汇，
+所以也遇到了很多描述负面的词。
+
+比如 illicit 这个词出现在威胁分析中 [[cite:&bodeau2018ctm]] ：
+
+In the FFIEC IS Handbook, threats come from agents (referred to in
+other references as threat actors or adversaries) who are internal or
+external. They have different capabilities and motivations, which
+require the use of different risk mitigation and control
+techniques. Note that this characterization does not consider threats
+from nation-state sources, which might seek competitive intelligence
+but might also try to cause harm as a national security matter,
+whether *illicitly* or openly in coordination with other international
+conflict.
+
+也出现在安全相关的论文中 [[cite:&dehozdiego2024cmx]] ：
+
+We also assume that some compromised devices in the IoT deployment
+might be trying to perform lateral movement to weaponize other devices
+or trying to access exposed services *illicitly*.
+
+这个词是由表示否定的 in-/il- 加上 licit 组成的。 licit 在拉丁语里是
+licitus 也就是合法的 lawful 之意。那么 illicit 就是非法的意思。
+
+比如 the *illicit* sale of drugs 毒品的非法贩卖，an *illicit* relationship
+不正当的关系。
+
+其实 license 也是源自 licitus。有 license 就是有一个合法的证件么。
+license 的意思就是证件、驾照、证照、执照。
+
+
+
+*References*
+[[bibliography:~/docs/webref.bib]]
