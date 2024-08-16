@@ -1,0 +1,31 @@
+#+LAYOUT: post
+#+TITLE: 单词本：volition
+#+TAGS: English
+#+CATEGORIES: language
+
+昨天看我们公司的一个内部软件模块的手册，说其他人可以根据自己的意愿连接
+到自己的解决方案中实用：
+
+the user can connect the tool according to their own *volition*.
+
+他们用到了 volition。名词行使意志。搭配短语 to do sth of/by/on one's
+own *volition*. 
+
+they choose to leave early of their own *volition*. [[cite:&appledict]]
+
+这个词来自拉丁语 volitio 的主格 volitionem 意愿。更早的词根 volo 我愿，
+velle 的第一人称动词。velle 就是 will 的前身吧。
+
+德语里 of one's volition 表达为 aus eigenem Willen，瑞典语则是 av egen
+fri vilja。 显然，德语和瑞典语更接近古老的拉丁语。而且瑞典语北欧风格，
+比德语更简化一些。
+
+比如这篇心理学论文 [[cite:&jia2024unleashing]] 研究了工作环境中数字化对员
+工工作意愿的影响。用到 volition 这个词：
+
+This study investigated the impact of psychological needs on
+employees' enjoyment and *volition* at work, leading to employees'
+intentions in digital workplace transformation.
+
+*References*
+[[bibliography:~/docs/webref.bib]]
