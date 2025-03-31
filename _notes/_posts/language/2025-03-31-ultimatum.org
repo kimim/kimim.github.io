@@ -1,0 +1,29 @@
+#+LAYOUT: post
+#+TITLE: ultimatum
+#+TAGS: English
+#+CATEGORIES: language
+
+以下，是在学习公司的谈判技巧在线课程的时候读到的。我们在和别人进行谈判
+的时候，不能把话说的太绝了。要留有余地，提供一些备选项。不然，会让人觉
+得是给他最后通牒。
+
+When given alternatives, the other party won't feel stuck with an
+*ultimatum*.
+
+*ultimatum* 最后通牒，最后条件; 最后结论。比如 "issue an *ultimatum*" 发出
+最后通牒。
+
+这个单词来自拉丁语 "/ultimatus/"  即最后的可能性、最终。
+
+"She was given an *ultimatum* - work harder or lose her job."
+[[cite:&mwdict]] 她被下最后通牒，要么努力工作，要么丢掉工作。
+
+#+BEGIN_EXPORT latex
+\iffalse
+#+END_EXPORT
+_References_
+[[bibliography:~/docs/webref.bib]]
+#+BEGIN_EXPORT latex
+\fi
+#+END_EXPORT
+
